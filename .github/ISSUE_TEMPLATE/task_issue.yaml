@@ -1,0 +1,65 @@
+
+name: Task Template
+description: This issue template is used for giving tasks to group members.
+assignees: []
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+          Please do not forget to add assignees and labels to this issue..
+          
+          ---
+          
+          State your tasks explicitly and split them between assignees equally.          
+  - type: textarea
+    id: issue-description
+    attributes:
+      placeholder: " ex. We need to add more labels since we can not label our issues in a descriptive manner."
+      label: Issue Description
+      description: "Describe the task and why wee need it. It can be multi-tasked issue also."
+    validations:
+      required: true
+  - type: textarea
+    id: step-details
+    attributes:
+      value: | 
+              Parts of the task:
+              - [ ] ...
+              - [ ] ...
+              - [ ] ...
+      label: Tasks
+      description: "Here write the parts of the task with the assignee name. Whoever finishes the her/his parts, will check the relevant box next to it."
+  - type: textarea
+    id: final-actions
+    attributes:
+      placeholder: "Please check out the information in <link>. Also you can watch <link> before startig the task."
+      label: Extra Comments
+      description: "If you have more to say, please write here. You can write any extra comments, suggestions, helper links, etc."
+  - type: input
+    id: deadline
+    attributes:
+      label: Deadline of the Issue
+      description: "Please provide a deadline for the issue."
+      placeholder: "01.01.1970 - Monday - 23:59"
+    validations:
+      required: true
+  - type : markdown
+    attributes:
+      value: |
+
+
+
+ 
+        --- 
+        
+        ⚠️ Do not forget to assign the group members and label this issue properly. ⚠️
+        
+        * After finishing the tasks, add the relevant links of the work done. Everyone who did his/her parts should add the relevant work and check the relevant box.
+        > I did the ... part, checked my boxes, here is the task <link>.
+        
+        ---
+        
+        After last box checked, the group member should give the last comments about the issue with 2-3 sentences. Then close the issue.
+
+        
