@@ -29,7 +29,7 @@ body:
               - [ ] ...
               - [ ] ...
       label: Tasks
-      description: "Here write the parts of the task with the assignee name. Whoever finishes the her/his parts, will check the relevant box next to it."
+      description: "Here write the parts of the task with the assignee name. Whoever finishes the her/his parts, will check the relevant box next to it. ( ex. Adding more labels (Melih Gezer)"
   - type: textarea
     id: final-actions
     attributes:
