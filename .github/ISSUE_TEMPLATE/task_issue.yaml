@@ -58,17 +58,17 @@ body:
       label: Reviewer
       description: "Who will review this issue?"
       options:
-        - Melih Gezer
-        - Hakan Karakus
         - Elif Kizilkaya
-        - Furkan Ulke
-        - Yunus Emre Altug
-        - Guney Yuksel
-        - Mehmet Tuluyhan Sozen
         - Fatma Sena Alci
+        - Furkan Ulke
+        - Guney Yuksel
+        - Hakan Karakus
         - Marcel Namyslo
+        - Mehmet Tuluyhan Sozen
+        - Melih Gezer
         - Muhammet Tayyip Kamiloglu
         - Omer Safak Bebek
+        - Yunus Emre Altug
   - type: input
     id: review-deadline
     attributes:
