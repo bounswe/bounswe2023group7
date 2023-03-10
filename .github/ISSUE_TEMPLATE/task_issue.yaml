@@ -7,11 +7,11 @@ body:
   - type: markdown
     attributes:
       value: |
-          Please do not forget to add assignees and labels to this issue..
+          *Please do not forget to add assignees* and *labels* to this issue.
           
           ---
           
-          State your tasks explicitly and split them between assignees equally.          
+          State your tasks explicitly and *try not to assign more than two group members.*        
   - type: textarea
     id: issue-description
     attributes:
@@ -29,13 +29,21 @@ body:
               - [ ] ...
               - [ ] ...
       label: Tasks
-      description: "Here write the parts of the task with the assignee name. Whoever finishes the her/his parts, will check the relevant box next to it. ( ex. Adding more labels (Melih Gezer)"
+      description: "Here write the parts of the task with the assignee name. Whoever finishes the her/his parts, will check the relevant box next to it."
   - type: textarea
-    id: final-actions
+    id: comments
     attributes:
       placeholder: "Please check out the information in <link>. Also you can watch <link> before startig the task."
       label: Extra Comments
       description: "If you have more to say, please write here. You can write any extra comments, suggestions, helper links, etc."
+      
+  - type: textarea
+    id: final-actions
+    attributes:
+      placeholder: "ex. After finishing this task, I will ..."
+      label: Final Step
+      description: "Describe what will be done after finishing this issue completely."
+      
   - type: input
     id: deadline
     attributes:
@@ -44,6 +52,29 @@ body:
       placeholder: "01.01.1970 - Monday - 23:59"
     validations:
       required: true
+  - type: dropdown
+    id: reviewer
+    attributes:
+      label: Reviewer
+      description: "Who will review this issue?"
+      options:
+        - Melih Gezer
+        - Hakan Karakus
+        - Elif Kizilkaya
+        - Furkan Ulke
+        - Yunus Emre Altug
+        - Guney Yuksel
+        - Mehmet Tuluyhan Sozen
+        - Fatma Sena Alci
+        - Marcel Namyslo
+        - Muhammet Tayyip Kamiloglu
+        - Omer Safak Bebek
+  - type: input
+    id: review-deadline
+    attributes:
+      label: Deadline for the Review
+      description: "Please provide a deadline for the review."
+      placeholder: "01.01.1970 - Monday - 23:59"
   - type : markdown
     attributes:
       value: |
@@ -53,13 +84,15 @@ body:
  
         --- 
         
-        ⚠️ Do not forget to assign the group members and label this issue properly. ⚠️
+        ⚠️ Do not forget to *assign* the group members, reviewer and *label* this issue properly. ⚠️
+        
+        ⚠️ *Try not to assign more than two group members.* ⚠️
         
         * After finishing the tasks, add the relevant links of the work done. Everyone who did his/her parts should add the relevant work and check the relevant box.
         > I did the ... part, checked my boxes, here is the task <link>.
         
         ---
         
-        After last box checked, the group member should give the last comments about the issue with 2-3 sentences. Then close the issue.
+        After last box checked, the reviewer should give the last comments about the issue with 2-3 sentences before closing the issue.
 
         
