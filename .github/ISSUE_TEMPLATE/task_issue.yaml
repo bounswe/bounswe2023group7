@@ -7,11 +7,11 @@ body:
   - type: markdown
     attributes:
       value: |
-          *Please do not forget to add assignees* and *labels* to this issue.
+          **Please do not forget to add assignees** and **labels** to this issue.
           
           ---
           
-          State your tasks explicitly and *try not to assign more than two group members.*        
+          State your tasks explicitly and **try not to assign more than two group members.**        
   - type: textarea
     id: issue-description
     attributes:
@@ -84,15 +84,15 @@ body:
  
         --- 
         
-        ⚠️ Do not forget to *assign* the group members, reviewer and *label* this issue properly. ⚠️
+        ⚠️ Do not forget to **assign** the group members, reviewer and **label** this issue properly. ⚠️
         
-        ⚠️ *Try not to assign more than two group members.* ⚠️
+        ⚠️ **Try not to assign more than two group members.** ⚠️
         
         * After finishing the tasks, add the relevant links of the work done. Everyone who did his/her parts should add the relevant work and check the relevant box.
         > I did the ... part, checked my boxes, here is the task <link>.
         
         ---
         
-        After last box checked, the reviewer should give the last comments about the issue with 2-3 sentences before closing the issue.
+        After last box checked, the **reviewer** should give the last comments about the issue with 2-3 sentences before closing the issue.
 
         
