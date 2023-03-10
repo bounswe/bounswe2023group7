@@ -6,8 +6,8 @@ We are the junior and senior students of Boğaziçi University. For "Fundamental
 
 |Index | Content              | 
 |-     | -                    | 
-|   1  | [Description](https://github.com/bounswe/bounswe2023group7/main/README.md#-description)          |
-|   2  | [Contributors](https://github.com/bounswe/bounswe2023group7/main/README.md#-contributors)        |
+|   1  | [Description](https://github.com/bounswe/bounswe2023group7/blob/main/README.md#-1-description-)          |
+|   2  | [Contributors](https://github.com/bounswe/bounswe2023group7/blob/main/README.md#-2-contributors-)        |
 
 </details>
 <details open><summary><h2> 1. Description </h2></summary>
