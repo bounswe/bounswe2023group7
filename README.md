@@ -21,7 +21,7 @@ This project is basically a gaming community platform where different users, inc
 - [*Güney Yüksel*](https://github.com/bounswe/bounswe2023group7/wiki/G%C3%BCney-Y%C3%BCksel)
 - [*Hakan Karakuş*](https://github.com/bounswe/bounswe2023group7/wiki/Hakan-Karaku%C5%9F)
 - [*Marcel Namyslo*](https://github.com/bounswe/bounswe2023group7/wiki/Marcel)
-- [*Mehmet Tuluyhan Sözer*](https://github.com/bounswe/bounswe2023group7/wiki/Mehmet-Tuluyhan-S%C3%B6zen)
+- [*Mehmet Tuluyhan Sözen*](https://github.com/bounswe/bounswe2023group7/wiki/Mehmet-Tuluyhan-S%C3%B6zen)
 - [*Melih Gezer*](https://github.com/bounswe/bounswe2023group7/wiki/Melih-Gezer)
 - [*Muhammet Tayyip Kamiloğlu*](https://github.com/bounswe/bounswe2023group7/wiki/Muhammet-Tayyip-Kamilo%C4%9Flu)
 - [*Ömer Şafak Bebek*](https://github.com/bounswe/bounswe2023group7/wiki/%C3%96mer-%C5%9Eafak-Bebek)
