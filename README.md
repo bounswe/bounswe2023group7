@@ -6,8 +6,8 @@ We are the junior and senior students of Boğaziçi University Computer Engineer
 
 |Index | Content              | 
 |-     | -                    | 
-|   1  | [Description](https://github.com/bounswe/bounswe2023group7#-1-description-)          |
-|   2  | [Contributors](https://github.com/bounswe/bounswe2023group7#-2-contributors-)        |
+|   1  | [Description](https://github.com/bounswe/bounswe2023group7#-clipboard-description-)          |
+|   2  | [Contributors](https://github.com/bounswe/bounswe2023group7#-busts_in_silhouette-contributors-)        |
 
 </details>
 <details open><summary><h2> :clipboard: Description </h2></summary>
