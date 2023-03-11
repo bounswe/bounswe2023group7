@@ -1,5 +1,5 @@
 <h1 align="center"> :video_game: The Game Forum Project - bounswe2023 Group 7</h1>
-We are the junior and senior students of Boğaziçi University. For "Fundamentals of Software Engineering" course in our university, we have come together and started to develop a game forum. At this stage we are working on project pre-planning.
+We are the junior and senior students of Boğaziçi University Computer Engineering Department. For "Fundamentals of Software Engineering" course in our university, we have come together and started to develop a game forum. At this stage we are working on project pre-planning.
 
 <br>To learn more about us, you can visit our [***wiki***](https://github.com/bounswe/bounswe2023group7/wiki) page.
 <details open><summary><h2>Contents</h2></summary>
