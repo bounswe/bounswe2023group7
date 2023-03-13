@@ -25,9 +25,9 @@ body:
     attributes:
       value: | 
               Parts of the task:
-              - [ ] ...
-              - [ ] ...
-              - [ ] ...
+              - [ ] ...(1)
+              - [ ] ...(2)
+              - [ ] ...(3)
       label: Tasks
       description: "Here write the parts of the task with the assignee name. Whoever finishes the her/his parts, will check the relevant box next to it."
   - type: textarea
