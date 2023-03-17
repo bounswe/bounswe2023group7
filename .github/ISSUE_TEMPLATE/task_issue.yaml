@@ -52,7 +52,7 @@ body:
       placeholder: "01.01.1970 - Monday - 23:59"
     validations:
       required: true
-  - type: input
+  - type: textarea
     id: reviewers
     attributes:
       placeholder: "ex. @melihgezerr, @elifkizilky."
