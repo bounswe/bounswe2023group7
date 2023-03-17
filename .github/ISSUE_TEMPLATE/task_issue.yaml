@@ -52,23 +52,12 @@ body:
       placeholder: "01.01.1970 - Monday - 23:59"
     validations:
       required: true
-  - type: dropdown
-    id: reviewer
+  - type: textarea
+    id: reviewers
     attributes:
+      placeholder: "ex. @melihgezerr, @elifkizilky."
       label: Reviewer
-      description: "Who will review this issue?"
-      options:
-        - Elif Kizilkaya
-        - Fatma Sena Alci
-        - Furkan Ulke
-        - Guney Yuksel
-        - Hakan Karakus
-        - Marcel Namyslo
-        - Mehmet Tuluyhan Sozen
-        - Melih Gezer
-        - Muhammet Tayyip Kamiloglu
-        - Omer Safak Bebek
-        - Yunus Emre Altug
+      description: "Please indicate the reviewer of this issue."
   - type: input
     id: review-deadline
     attributes:
