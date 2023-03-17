@@ -52,12 +52,14 @@ body:
       placeholder: "01.01.1970 - Monday - 23:59"
     validations:
       required: true
-  - type: textarea
+  - type: input
     id: reviewers
     attributes:
       placeholder: "ex. @melihgezerr, @elifkizilky."
       label: Reviewer
       description: "Please indicate the reviewer of this issue."
+    validations:
+      required: true
   - type: input
     id: review-deadline
     attributes:
