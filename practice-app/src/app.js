@@ -1,11 +1,10 @@
 import express from "express";
 import morgan from "morgan";
+import router from "./routes/index.js"
 const app = express();
 
-app.use('/', morgan('dev'));
-app.get('/', (_, res) => {
-    return res.status(200).send("Welcome to the practice app!");
-});
+app.use( morgan('dev'));
+app.use("/api", router );
 const port = 8080;
 
 
