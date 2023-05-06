@@ -1,5 +1,9 @@
 import express from "express";
+import favoriteGamesRoutes from "./favorite-games.routes.js";
 const router = express.Router();
+
+router.use("/favorite-games", favoriteGamesRoutes);
+
 /**
  * @openapi
  * '/api':
