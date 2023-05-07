@@ -17,3 +17,5 @@ app.listen(port, () => {
   swaggerDocs(app, apiUrl);
   connectToDb();
 });
+
+export default app;
