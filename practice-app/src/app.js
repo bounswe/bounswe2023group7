@@ -6,7 +6,7 @@ import { config } from "dotenv";
 import connectToDb from "./utils/db.js";
 config();
 const app = express();
-
+app.use(express.json());
 app.use(morgan('dev'));
 app.use("/api", router );
 const port = process.env.PORT || 8080;
