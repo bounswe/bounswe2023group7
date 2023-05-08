@@ -56,4 +56,17 @@ router.get(
     favoriteGamesController.searchGamesHandler
 );
 
+router.post(
+    "/",
+    favoriteGamesController.addToFavoritesHandler
+);
+
+router.delete(
+    "/",
+    favoriteGamesController.removeFromFavoritesHandler
+);
+router.get(
+    "/",
+    favoriteGamesController.getFavoritesByEmailHandler
+);
 export default router;
