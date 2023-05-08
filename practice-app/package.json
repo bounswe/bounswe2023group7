@@ -4,8 +4,13 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+<<<<<<< HEAD
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
+=======
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+>>>>>>> b22fa47e1eb5004125385e84219307f0376c774f
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "author": "",
