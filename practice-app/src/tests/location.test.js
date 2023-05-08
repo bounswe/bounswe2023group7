@@ -11,7 +11,7 @@ describe('location', () =>{
         describe('given the location does not exist', () => {
 
             //my expectation
-            it('it shoud return a <error_code>', async () => {
+            it('it shoud return a 500 code', async () => {
                 
                 await supertest(app).get('/api/location/findLocation?ip_address=0.0.0.0.12').
                 expect(500)
@@ -59,7 +59,7 @@ describe('location', () =>{
 
         describe ("if no email is provided", () => {
             //my expectation
-            it('it shoud return a <error_code>', async () => {
+            it('it shoud return a 404 code', async () => {
             
                 await supertest(app).post('/api/location/history').
                 expect(404)
