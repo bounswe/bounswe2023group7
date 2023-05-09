@@ -2,7 +2,7 @@ import express from "express";
 import gameStoresRouter from "./gameStores.routes.js";
 const router = express.Router();
 
-router.use("/gamestores",gameStoresRouter);
+router.use("/gameprices",gameStoresRouter);
 
 /**
  * @openapi

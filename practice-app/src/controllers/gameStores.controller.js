@@ -11,23 +11,28 @@ class GameStoresController {
 
     }
 
-    async getCheapestPrice(req, res) {
+
+    async getGameInfo(req, res) {
 
         const gameName = req.query.name;
-        const gameLimit = req.query.limit;
 
-        if(!gameName || !gameLimit){
+        console.log("this is the query game name " + gameName);
+
+        if(!gameName){
             return res.status(400).json({ message: "Plesae provide the required fields."});
         }
-        console.log(req.query);
-        console.log(req.params);
-        const priceURL = baseURL + `games?title=${gameName}&limit=${gameLimit}`;
 
-        const response = await axios.get(priceURL);
+        const priceURL = baseURL + `games?title=${gameName}&limit=1`;
+        const [resp] = (await axios.get(priceURL)).data;
+        const dealID = resp.cheapestDealID;
 
-        res.send(response.data);
+        const gameInfoURL = baseURL + `deals?id=${dealID}`;
 
+        const response = (await axios.get(gameInfoURL)).data;
+
+        res.send(response);
     }
+
 }
 
 const gameStoresController = new GameStoresController();

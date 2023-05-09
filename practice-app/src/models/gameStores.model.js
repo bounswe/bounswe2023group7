@@ -21,6 +21,6 @@ const gameStoresModel = new Schema ( {
     }
 });
 
-const GameStores = mongoose.model("gamestores", gameStoresModel);
+const GameStores = mongoose.model("favoritegames", gameStoresModel);
 
 export default GameStores;
