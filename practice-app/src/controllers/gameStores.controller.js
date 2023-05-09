@@ -63,9 +63,14 @@ class GameStoresController {
     async addFavoriteGame(req, res) {
 
         const email = req.body.email;
+
+        if(!email){
+            return res.status(400).json({ message: "Plesae provide the required fields."});
+        }
+
         const gameName = req.body.name;
 
-        if(!(gameName&&email)){
+        if(!(gameName)){
             return res.status(400).json({ message: "Plesae provide the required fields."});
         }
 
