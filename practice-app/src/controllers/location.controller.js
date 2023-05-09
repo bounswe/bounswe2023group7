@@ -8,7 +8,7 @@ const LocationController = {
         try {
             const email = req.query.email
             if(!email){
-                return res.status(400).json({ message: "email is not provided"})
+                return res.status(404).json({ message: "email is not provided"})
             }
             const locationHistory = await LocationModel.getLocationHistory(email);
             res.status(200).json({
