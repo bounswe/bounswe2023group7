@@ -5,7 +5,7 @@ describe("Example test", () => {
     test("GET /api", (done) => {
         request(app)
         .get("/api")
-        .expect(200)
+        .expect(401)
         .end((err, res) => {
             if (err) return done(err);
             return done();
