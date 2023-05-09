@@ -100,11 +100,13 @@ router.get(
  *                                      _id:
  *                                          type: string
  *                          example:
- *                              appId: 730
- *                              name: "Counter-Strike: Global Offensive"
- *                              header_image: "https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg?t=1683566799"
- *                              email: "omersafakbebek@gmail.com"
- *                              _id: "645a06d09d08c598c7c3f49f"
+ *                              message: "The game is added to the favorites"
+ *                              created:
+ *                                  appId: 730
+ *                                  name: "Counter-Strike: Global Offensive"
+ *                                  header_image: "https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg?t=1683566799"
+ *                                  email: "omersafakbebek@gmail.com"
+ *                                  _id: "645a06d09d08c598c7c3f49f"
  *          400:
  *              description: Bad Request
  *              content:
