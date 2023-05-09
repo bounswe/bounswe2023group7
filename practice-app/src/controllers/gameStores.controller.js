@@ -12,6 +12,21 @@ class GameStoresController {
     }
 
 
+
+    async getFavoriteGames(req, res) {
+
+        const email = req.query.email;
+
+        if(!email){
+            return res.status(400).json({ message: "Please provide an email."});
+        }
+
+        const favoriteGames = await FavoriteGames.find({ email: email });
+
+        res.status(200).json(favoriteGames);
+
+    }
+
     async getGameInfo(req, res) {
 
         const gameName = req.query.name;
@@ -35,34 +50,52 @@ class GameStoresController {
 
         const response = (await axios.get(gameInfoURL)).data;
 
-        res.status(200).send(response);
+        const shortResponse = {
+            "game_name": response.gameInfo.name,
+            "game_rating": response.gameInfo.steamRatingPercent,
+            "sale_price": response.gameInfo.salePrice,
+            "retail_price": response.gameInfo.retailPrice,
+            "img_url": response.gameInfo.thumb
+        }
+        res.status(200).send(shortResponse);
     }
 
-    async getFavoriteGames(req, res) {
+    async addFavoriteGame(req, res) {
 
-        const email = req.query.email;
+        const email = req.body.email;
+        const gameName = req.body.name;
 
-        if(!email){
-            return res.status(400).json({ message: "Please provide an email."});
+        if(!(gameName&&email)){
+            return res.status(400).json({ message: "Plesae provide the required fields."});
         }
 
-        const favoriteGames = await FavoriteGames.find({ email: email });
+        const priceURL = baseURL + `games?title=${gameName}&limit=1`;
+        const [resp] = (await axios.get(priceURL)).data;
 
-        res.status(200).json(favoriteGames);
-
-    }
-
-    async addFavoriteGames(req, res) {
-
-        const email = req.query.email;
-
-        if(!email){
-            return res.status(400).json({ message: "Please provide an email."});
+        if(!resp){
+            return res.status(400).json({ message: "Game not found."});
         }
 
-        const favoriteGames = await FavoriteGames.find({ email: email });
+        const dealID = resp.cheapestDealID;
 
-        res.status(200).json(favoriteGames);
+        const gameInfoURL = baseURL + `deals?id=${dealID}`;
+
+        const response = (await axios.get(gameInfoURL)).data;
+        
+
+        const shortResponse = {
+            "email" : email,
+            "game_name": response.gameInfo.name,
+            "game_rating": response.gameInfo.steamRatingPercent,
+            "sale_price": response.gameInfo.salePrice,
+            "retail_price": response.gameInfo.retailPrice,
+            "img_url": response.gameInfo.thumb
+        }
+
+        const favoriteGame = new FavoriteGames(shortResponse);
+        favoriteGame.save();
+
+        res.status(201).send(shortResponse);
 
     }
 

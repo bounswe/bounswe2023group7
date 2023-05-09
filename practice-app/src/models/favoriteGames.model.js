@@ -26,8 +26,10 @@ const favoriteGamesModel = new Schema ( {
     img_url : {
         type: String,
         required: true
-    } 
-});
+    }
+    },
+    { versionKey: false }
+);
 
 const FavoriteGames = mongoose.model("favoritegames", favoriteGamesModel);
 
