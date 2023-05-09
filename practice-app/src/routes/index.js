@@ -1,5 +1,9 @@
 import express from "express";
+import gameStoresRouter from "./gameStores.routes.js";
 const router = express.Router();
+
+router.use("/gamestores",gameStoresRouter);
+
 /**
  * @openapi
  * '/api':
@@ -15,5 +19,6 @@ const router = express.Router();
 router.get('/', (_, res) => {
     return res.status(200).send("Welcome to the practice app!");
 });
+
 
 export default router;
