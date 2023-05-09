@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const favoriteSchema = new mongoose.Schema({
   appId: {
-    type: String,
+    type: Number,
     required: true
   },
   name: {

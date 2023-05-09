@@ -25,7 +25,7 @@ const FavoriteGamesController = {
         try {
             const email = req.query.email;
             const appId = req.query.appId;
-            const language = req.query.l;
+            // const language = req.query.l;    
             if (!email) {
                 return res.status(400).send({message: "Provide an email"});
             }
@@ -33,12 +33,15 @@ const FavoriteGamesController = {
                 return res.status(400).send({message: "Provide an appId"});
             }
             var url = `${getDetailApiUrl}${appId}`;
-            if (language) {
-                url = url.concat(`&l=${language}`);
-            }
+            // if (language) {
+            //     url = url.concat(`&l=${language}`);
+            // }
             console.log(url);
             const response = await axios.get(url);
             if (response.status==200) {
+                if (!response.data[appId].success) {
+                    return res.status(404).send({message: "Game not found!"});
+                }
                 const game = response.data[appId].data; 
                 const created = await addToFavorites({
                     appId: game.steam_appid,
@@ -47,13 +50,12 @@ const FavoriteGamesController = {
                     email: email
                 });
                 return res.send( {message: "The game is added to the favorites", created: created});
-            } else if (response.status == 404) {
-                return res.status(404).send({message: "Game not found!"});
             }
         } catch (e) {
             if (e.code == 11000) {
-                return res.status(400).send("This game is already in favorites!");
+                return res.status(409).send({message: "This game is already in favorites!"});
             }
+            console.log(e);
             return res.status(500).send(e);
         }
     },
@@ -69,7 +71,7 @@ const FavoriteGamesController = {
             }
             const deleteResult = await removeFromFavorites(appId, email);
             if (deleteResult.acknowledged && deleteResult.deletedCount==0) {
-                return res.status(404).send({message: "The game is not in favorites"});
+                return res.status(404).send({message: "The game is not in favorites!"});
             }
             return res.status(200).send({message: "The game is removed from favorites"});
        } catch (e) {
@@ -79,6 +81,9 @@ const FavoriteGamesController = {
     getFavoritesByEmailHandler: async function (req, res) {
         try {
             const email = req.query.email;
+            if (!email) {
+                return res.status(400).send({message: "Provide an email"});
+            }
             const favorites = await getFavoritesByEmail(email);
             return res.send(favorites);
         } catch (e) {
