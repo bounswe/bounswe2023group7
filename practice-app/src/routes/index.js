@@ -1,9 +1,12 @@
 import express from "express";
+import favoriteGamesRoutes from "./favorite-games.routes.js";
 import userRoutes from "./user.routes.js";
 import verifyToken from "../utils/auth.js";
-const router = express.Router();
 
+const router = express.Router();
 router.use("/users", userRoutes);
+router.use("/favorite-games", favoriteGamesRoutes);
+
 /**
  * @openapi
  * '/api':
