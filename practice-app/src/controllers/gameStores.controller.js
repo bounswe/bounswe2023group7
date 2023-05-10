@@ -3,8 +3,9 @@ import FavoriteGames from "../models/favoriteGames.model.js";
 
 const baseURL = "https://www.cheapshark.com/api/1.0/";
 class GameStoresController {
-    async getGameStores(req, res) {
 
+
+    async getGameStores(req, res) {
         const storesURL = baseURL + "stores";
         const response = await axios.get(storesURL);
         res.status(200).send(response.data);
