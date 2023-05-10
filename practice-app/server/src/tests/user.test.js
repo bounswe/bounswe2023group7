@@ -1,14 +1,22 @@
 import request from "supertest";
 import app from "../app";
 import { User } from "../models/user.model.js";
-beforeAll(async () => {
-  try {
-    await User.deleteOne({username: "example"});
-  } catch (error) {
 
-  }
-});
 describe("User routes", () => {
+  beforeAll(async () => {
+    try {
+      await User.deleteOne({username: "example"});
+    } catch (error) {
+  
+    }
+  });
+  afterAll(async () => {
+    try {
+      await User.deleteOne({username: "example"});
+    } catch (error) {
+  
+    }
+  });
   describe("Signup route", () => {
     describe("Should return 200", () => {
       test("POST /api/users/signup", () => 

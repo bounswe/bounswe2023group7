@@ -44,7 +44,7 @@ const UserController = {
         return res.status(403).send({message: 'Bad Credentials'});
       }
       const accesToken = jwt.sign({username: user.username}, process.env.SECRET_KEY);
-      return res.send({message: "Login is successful", accesToken: accesToken});
+      return res.send({message: "Login is successful", accessToken: accesToken});
     } catch (e) {
       console.log(e);
       return res.status(500).send(e);
