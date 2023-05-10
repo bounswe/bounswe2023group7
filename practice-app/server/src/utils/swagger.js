@@ -7,7 +7,21 @@ const options = {
         info: {
             title: "bounswe2023group7 Practice App",
             version: "0.0.1"
-        }
+        },
+        components: {
+            securitySchemes: {
+              bearerAuth: {
+                type: "http",
+                scheme: "bearer",
+                bearerFormat: "JWT",
+              },
+            },
+        },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
     },
     apis: ["./src/routes/*.js"]
 };
