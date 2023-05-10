@@ -1,9 +1,11 @@
 import express from "express";
 import userRoutes from "./user.routes.js";
 import verifyToken from "../utils/auth.js";
+import gameplatformRoutes from "./game-platform.routes.js";
 const router = express.Router();
 
 router.use("/users", userRoutes);
+router.use("/game-platform", gameplatformRoutes);
 /**
  * @openapi
  * '/api':

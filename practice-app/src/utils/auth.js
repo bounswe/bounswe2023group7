@@ -13,7 +13,6 @@ const verifyToken = async (req,res,next) =>{
     if(!token) return res.status(401).send({message: 'Provide an access token'});
     try{
         const username = jwt.verify(token,process.env.SECRET_KEY).username;
-        console.log(username);
         const user = await getUserByUsername(username);
         if (!user) {
           return res.status(404).send({message: "User not found!"});
