@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import favoriteGamesController from "../controllers/favorite-games.controller.js";
+import verifyToken from "../utils/auth.js";
 /**
  * @openapi
  * '/api/favorite-games/search':
@@ -69,13 +70,6 @@ router.get(
  *            required: true
  *            type: number
  *            example: 730
- *          - in: query
- *            name: email
- *            description: email of the user 
- *            required: true
- *            type: string
- *            format: email   
- *            example: "example@gmail.com"
  *      responses:
  *          200:
  *              description: Success
@@ -118,6 +112,17 @@ router.get(
  *                                  type: string
  *                          example: 
  *                              message: "Provide an appId" 
+ *          401:
+ *              description: Unauthorized
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                          example: 
+ *                              message: "Provide an access token" 
  *          404:
  *              description: Game not found
  *              content:
@@ -145,6 +150,7 @@ router.get(
  */
 router.post(
     "/",
+    verifyToken,
     favoriteGamesController.addToFavoritesHandler
 );
 /**
@@ -161,13 +167,6 @@ router.post(
  *            required: true
  *            type: number
  *            example: 730
- *          - in: query
- *            name: email
- *            description: email of the user 
- *            required: true
- *            type: string
- *            format: email   
- *            example: "example@gmail.com"
  *      responses:
  *          200:
  *              description: Success
@@ -190,7 +189,18 @@ router.post(
  *                              message:
  *                                  type: string
  *                          example: 
- *                              message: "Provide an appId" 
+ *                              message: "Provide an appId"
+ *          401:
+ *              description: Unauthorized
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                          example: 
+ *                              message: "Provide an access token"  
  *          404:
  *              description: Game not found in favorites
  *              content:
@@ -207,6 +217,7 @@ router.post(
  */
 router.delete(
     "/",
+    verifyToken,
     favoriteGamesController.removeFromFavoritesHandler
 );
 /**
@@ -216,12 +227,6 @@ router.delete(
  *      tags:
  *      - Favorite Games
  *      summary: Get favorite games
- *      parameters:
- *          - in: query
- *            name: email
- *            description: email of the user  
- *            required: true
- *            type: string
  *      responses:
  *          200:
  *              description: Success
@@ -248,8 +253,8 @@ router.delete(
  *                                  header_image: "https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg?t=1683566799"
  *                                  email: "omersafakbebek@gmail.com"
  *                                  _id: "645a06d09d08c598c7c3f49f"
- *          400:
- *              description: Bad Request
+ *          401:
+ *              description: Unauthorized
  *              content:
  *                  application/json:
  *                      schema:
@@ -258,12 +263,13 @@ router.delete(
  *                              message:
  *                                  type: string
  *                          example: 
- *                              message: "Provide an email" 
+ *                              message: "Provide an access token" 
  *          500:
  *              description: Internal Server Error
  */
 router.get(
     "/",
+    verifyToken,
     favoriteGamesController.getFavoritesByEmailHandler
 );
 export default router;

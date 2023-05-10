@@ -23,20 +23,15 @@ const FavoriteGamesController = {
     },
     addToFavoritesHandler: async function (req, res) {
         try {
-            const email = req.query.email;
+            const email = req.email;
             const appId = req.query.appId;
-            // const language = req.query.l;    
             if (!email) {
                 return res.status(400).send({message: "Provide an email"});
             }
             if (!appId) {
                 return res.status(400).send({message: "Provide an appId"});
             }
-            var url = `${getDetailApiUrl}${appId}`;
-            // if (language) {
-            //     url = url.concat(`&l=${language}`);
-            // }
-            console.log(url);
+            var url = `${getDetailApiUrl}${appId}&l=en`;
             const response = await axios.get(url);
             if (response.status==200) {
                 if (!response.data[appId].success) {
@@ -61,7 +56,7 @@ const FavoriteGamesController = {
     },
     removeFromFavoritesHandler: async function (req, res) {
        try {
-            const email = req.query.email;
+            const email = req.email;
             const appId = req.query.appId;
             if (!email) {
                 return res.status(400).send({message: "Provide an email"});
@@ -80,7 +75,7 @@ const FavoriteGamesController = {
     },
     getFavoritesByEmailHandler: async function (req, res) {
         try {
-            const email = req.query.email;
+            const email = req.email;
             if (!email) {
                 return res.status(400).send({message: "Provide an email"});
             }
