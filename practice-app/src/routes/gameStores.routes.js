@@ -2,6 +2,7 @@ import express from "express";
 import gameStoresController from "../controllers/gameStores.controller.js";
 
 const gameStoresRouter = express.Router();
+
 /**
  * @openapi
  * '/api/gameprices/':
@@ -23,12 +24,8 @@ const gameStoresRouter = express.Router();
  *                      schema:
  *                          type: array
  *                          items:
- *                              type: object      
- *                              properties:
- *                                  gamesCart:
- *                                      type: any[]
- *                              example:
- *                                  email: "melihexample@gmail.com"
+ *                              type: object
+ *                          example:
  *                                  game_name: "LEGO Batman"
  *                                  game_rating: "80"
  *                                  sale_price: "4.19"
@@ -53,38 +50,32 @@ gameStoresRouter.get("/", gameStoresController.getGamesCart);
 
 /**
  * @openapi
- * '/api/gameprices/game/':
+ * '/api/gameprices/game':
  *  get:
  *      tags:
  *      - Game Info
- *      summary: Gets a Game Info by game name.
+ *      summary: Gets game information.
  *      parameters:
  *          - in: query
- *            name: gamename
- *            description: Name of the game whose infos to be fetched.    
+ *            name: game name
+ *            description: name of the game whose info to be fetched.    
  *            required: true
  *            type: string
  *      responses:
  *          200:
- *              description: Success indicating that the game info is returned
+ *              description: Success indicating that the game info is fetched
  *              content:
  *                  application/json:
  *                      schema:
  *                          type: object
- *                          items:
- *                              type: object      
- *                              properties:
- *                                  gameInfo:
- *                                      type: object
- *                              example:
+ *                          example:
  *                                  game_name: "LEGO Batman"
  *                                  game_rating: "80"
  *                                  sale_price: "4.19"
  *                                  retail_price: "19.99"
  *                                  img_url: "https://cdn.fanatical.com/production/product/400x225/105f34ca-7757-47ad-953e-7df7f016741e.jpeg"
- * 
  *          404:
- *              description: Name of the game is not provided
+ *              description: Game name is not provided
  *              content:
  *                  application/json:
  *                      schema: 
@@ -93,7 +84,7 @@ gameStoresRouter.get("/", gameStoresController.getGamesCart);
  *                              error:
  *                              type: string
  *                          example:
- *                              error: "Please provide an email."
+ *                              error: "Please provide a game name."
  *          500:
  *              description: Internal Server Error
  */
@@ -115,7 +106,7 @@ gameStoresRouter.get("/game", gameStoresController.getGameInfo);
  *              content:
  *                  application/json:
  *                      schema:
- *                          type: object
+ *                          type: array
  *                          items:
  *                              type: object      
  *                              properties:

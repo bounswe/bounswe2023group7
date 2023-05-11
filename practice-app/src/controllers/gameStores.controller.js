@@ -6,9 +6,14 @@ class GameStoresController {
 
 
     async getGameStores(req, res) {
-        const storesURL = baseURL + "stores";
-        const response = await axios.get(storesURL);
-        res.status(200).send(response.data);
+        try {
+            const storesURL = baseURL + "stores";
+            const response = await axios.get(storesURL);
+            res.status(200).send(response.data);
+        }
+        catch(e) {
+            res.status(500).send(e)
+        }
 
     }
 
@@ -16,93 +21,113 @@ class GameStoresController {
 
     async getGamesCart(req, res) {
 
-        const email = req.query.email;
+        try {
+            const email = req.query.email;
 
-        if(!email){
-            return res.status(400).json({ message: "Please provide an email."});
+            if(!email){
+                return res.status(400).json({ message: "Please provide an email."});
+            }
+            const gamesCart = await GamesCart.find({ email: email });
+
+            res.status(200).json(gamesCart);
         }
-
-        const gamesCart = await GamesCart.find({ email: email });
-
-        res.status(200).json(gamesCart);
-
+        catch(e) {
+            res.status(500).send(e)
+        } 
     }
 
     async getGameInfo(req, res) {
 
-        const gameName = req.query.name;
+        try {
+            const gameName = req.query.name;
 
-        console.log("this is the query game name " + gameName);
+            console.log("this is the query game name " + gameName);
 
-        if(!gameName){
-            return res.status(400).json({ message: "Plesae provide the required fields."});
+            if(!gameName){
+                return res.status(400).json({ message: "Plesae provide the required fields."});
+            }
+
+            const priceURL = baseURL + `games?title=${gameName}&limit=1`;
+            const [resp] = (await axios.get(priceURL)).data;
+
+            if(!resp){
+                return res.status(404).json({ message: "Game not found."});
+            }
+
+            const dealID = resp.cheapestDealID;
+            const gameInfoURL = baseURL + `deals?id=${dealID}`;
+
+            const response = (await axios.get(gameInfoURL)).data;
+            const shortResponse = {
+                "game_name": response.gameInfo.name,
+                "game_rating": response.gameInfo.steamRatingPercent,
+                "sale_price": response.gameInfo.salePrice,
+                "retail_price": response.gameInfo.retailPrice,
+                "img_url": response.gameInfo.thumb
+            }
+            res.status(200).send(shortResponse);
+        }
+        catch(e) {
+            res.status(500).send(e)
         }
 
-        const priceURL = baseURL + `games?title=${gameName}&limit=1`;
-        const [resp] = (await axios.get(priceURL)).data;
-
-        if(!resp){
-            return res.status(404).json({ message: "Game not found."});
-        }
-
-        const dealID = resp.cheapestDealID;
-
-        const gameInfoURL = baseURL + `deals?id=${dealID}`;
-
-        const response = (await axios.get(gameInfoURL)).data;
-
-        const shortResponse = {
-            "game_name": response.gameInfo.name,
-            "game_rating": response.gameInfo.steamRatingPercent,
-            "sale_price": response.gameInfo.salePrice,
-            "retail_price": response.gameInfo.retailPrice,
-            "img_url": response.gameInfo.thumb
-        }
-        res.status(200).send(shortResponse);
+        
     }
 
     async addGametoCart(req, res) {
 
-        const email = req.body.email;
+        try {
+            const email = req.body.email;
 
-        if(!email){
-            return res.status(400).json({ message: "Plesae provide the required fields."});
+            if(!email){
+                return res.status(400).json({ message: "Plesae provide the required fields."});
+            }
+
+            const gameName = req.body.name;
+
+            if(!(gameName)){
+                return res.status(400).json({ message: "Plesae provide the required fields."});
+            }
+
+            const priceURL = baseURL + `games?title=${gameName}&limit=1`;
+            const [resp] = (await axios.get(priceURL)).data;
+
+            if(!resp){
+                return res.status(400).json({ message: "Game not found."});
+            }
+
+            const dealID = resp.cheapestDealID;
+
+            const gameInfoURL = baseURL + `deals?id=${dealID}`;
+
+            const response = (await axios.get(gameInfoURL)).data;
+            
+
+            const shortResponse = {
+                "email" : email,
+                "game_name": response.gameInfo.name,
+                "game_rating": response.gameInfo.steamRatingPercent,
+                "sale_price": response.gameInfo.salePrice,
+                "retail_price": response.gameInfo.retailPrice,
+                "img_url": response.gameInfo.thumb
+            }
+
+            const gameInCart = await GamesCart.find({ "email": email, "game_name" : response.gameInfo.name});
+
+            if (gameInCart.length != 0) {
+                res.send("Game is already in your cart.");
+            }
+            else {
+                const game = new GamesCart(shortResponse);
+                game.save();
+                res.status(201).send(shortResponse);
+            }
+
+            
         }
-
-        const gameName = req.body.name;
-
-        if(!(gameName)){
-            return res.status(400).json({ message: "Plesae provide the required fields."});
+        catch(e) {
+            res.status(500).send(e)
         }
-
-        const priceURL = baseURL + `games?title=${gameName}&limit=1`;
-        const [resp] = (await axios.get(priceURL)).data;
-
-        if(!resp){
-            return res.status(400).json({ message: "Game not found."});
-        }
-
-        const dealID = resp.cheapestDealID;
-
-        const gameInfoURL = baseURL + `deals?id=${dealID}`;
-
-        const response = (await axios.get(gameInfoURL)).data;
-        
-
-        const shortResponse = {
-            "email" : email,
-            "game_name": response.gameInfo.name,
-            "game_rating": response.gameInfo.steamRatingPercent,
-            "sale_price": response.gameInfo.salePrice,
-            "retail_price": response.gameInfo.retailPrice,
-            "img_url": response.gameInfo.thumb
-        }
-
-        const game = new GamesCart(shortResponse);
-        game.save();
-
-        res.status(201).send(shortResponse);
-
     }
 
 
