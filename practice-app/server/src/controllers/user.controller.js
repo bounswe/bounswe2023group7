@@ -20,6 +20,9 @@ const UserController = {
       await addUser(body);
       return res.send({message: "Signup is successful"});
     } catch(e) {
+      if (e.errors && e.errors.email) {
+        return res.status(400).send({message: "Provide a valid email!"});
+      }
       if (e.code == 11000) {
         if (e.keyValue.username) {
           return res.status(409).send({message: "This username is taken!"});
