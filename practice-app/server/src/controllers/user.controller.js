@@ -20,6 +20,9 @@ const UserController = {
       await addUser(body);
       return res.send({message: "Signup is successful"});
     } catch(e) {
+      if (e.errors && e.errors.email) {
+        return res.status(400).send({message: "Provide a valid email!"});
+      }
       if (e.code == 11000) {
         if (e.keyValue.username) {
           return res.status(409).send({message: "This username is taken!"});
@@ -41,7 +44,7 @@ const UserController = {
       } 
       const user = await getUserByUsernameOrEmail(body.identifier);
       if (!(user&& await bcrypt.compare(body.password, user.password))) {
-        return res.status(403).send({message: 'Bad Credentials'});
+        return res.status(403).send({message: 'Wrong identifier or password!'});
       }
       const accesToken = jwt.sign({username: user.username}, process.env.SECRET_KEY);
       return res.send({message: "Login is successful", accessToken: accesToken});

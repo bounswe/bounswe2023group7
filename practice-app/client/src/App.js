@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, {useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LandingPage from './pages/landingPage.js';
 import Elif from './pages/elif/elif.js';
@@ -15,28 +15,34 @@ import Tuluyhan from './pages/tuluyhan/tuluyhan.js';
 import Signin from './pages/signin.js';
 import Signup from './pages/signup.js';
 import Layout from './layout.js';
-
+import { AuthContext } from './helpers/AuthContext';
 function App() {
+  const [authState, setAuthState] = useState({
+    status: false
+  });
+
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Layout><LandingPage /></Layout>} />
-          <Route path="/elif" element={<Layout><Elif /></Layout>} />
-          <Route path="/yunus" element={<Layout><Yunus /></Layout>} />
-          <Route path="/safak" element={<Layout><Safak /></Layout>} />
-          <Route path="/melih" element={<Layout><Melih /></Layout>} />
-          <Route path="/tayyip" element={<Layout><Tayyip /></Layout>} />
-          <Route path="/furkan" element={<Layout><Furkan /></Layout>} />
-          <Route path="/sena" element={<Layout><Sena /></Layout>} />
-          <Route path="/hakan" element={<Layout><Hakan /></Layout>} />
-          <Route path="/guney" element={<Layout><Guney /></Layout>} />
-          <Route path="/tuluyhan" element={<Layout><Tuluyhan /></Layout>} />
-          <Route path="/signin" element={<Layout><Signin /></Layout>} />
-          <Route path="/signup" element={<Layout><Signup /></Layout>} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthContext.Provider value={{ authState, setAuthState }}>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<Layout><LandingPage /></Layout>} />
+            <Route path="/elif" element={<Layout><Elif /></Layout>} />
+            <Route path="/yunus" element={<Layout><Yunus /></Layout>} />
+            <Route path="/safak" element={<Layout><Safak /></Layout>} />
+            <Route path="/melih" element={<Layout><Melih /></Layout>} />
+            <Route path="/tayyip" element={<Layout><Tayyip /></Layout>} />
+            <Route path="/furkan" element={<Layout><Furkan /></Layout>} />
+            <Route path="/sena" element={<Layout><Sena /></Layout>} />
+            <Route path="/hakan" element={<Layout><Hakan /></Layout>} />
+            <Route path="/guney" element={<Layout><Guney /></Layout>} />
+            <Route path="/tuluyhan" element={<Layout><Tuluyhan /></Layout>} />
+            <Route path="/signin" element={<Layout><Signin /></Layout>} />
+            <Route path="/signup" element={<Layout><Signup /></Layout>} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthContext.Provider>
   );
 }
 
