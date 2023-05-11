@@ -7,8 +7,9 @@ const LocationController = {
     history: async function (req, res) {
         try {
             const email = req.query.email
+            //console.log(email)
             if(!email){
-                return res.status(404).json({ message: "email is not provided"})
+                return res.status(400).json({ message: "email is not provided"})
             }
             const locationHistory = await LocationModel.getLocationHistory(email);
             res.status(200).json({
@@ -50,7 +51,7 @@ const LocationController = {
 
         } catch (error) {
 
-            console.log(error);
+           // console.log(error);
             res.status(400).json({ message: "location not found" })
             
         }
@@ -59,6 +60,10 @@ const LocationController = {
 
     findLocation: async function(req, res) {
         try {
+
+//            const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+      //      console.log("clientIP", clientIP);
             if(!req.query.ip_address){
                 return res.status(400).json({ message: "ip address is not provided"})
             }
@@ -70,10 +75,11 @@ const LocationController = {
                 postal_code: response.postal_code, 
                 country: response.country, 
                 country_flag: response.flag['emoji'], 
-                time: response.timezone['current_time']
+                time: response.timezone['current_time'],
+                ip: req.query.ip_address
             })
         } catch (error) {
-            console.log(error)
+            //console.log(error)
             return res.status(500).json({message: error.message})  
         }
         

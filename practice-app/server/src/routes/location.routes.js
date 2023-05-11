@@ -1,5 +1,6 @@
 import express from "express";
 import LocationController from '../controllers/location.controller.js';
+import verifyToken from "../utils/auth.js";
 
 
 const locationRouter = express.Router();
@@ -53,6 +54,7 @@ const locationRouter = express.Router();
  */
 locationRouter.get(
     "/history",
+    verifyToken,
     LocationController.history
 );
 
@@ -100,6 +102,7 @@ locationRouter.get(
  */
 locationRouter.post(
     "/addLocation",
+    verifyToken,
     LocationController.addLocation
 );
 

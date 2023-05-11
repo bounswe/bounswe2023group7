@@ -1,8 +1,26 @@
 import supertest from "supertest";
 import app from "../app.js"
-import axios from "axios";
+import { User } from "../models/user.model.js";
+import { Axios } from "axios";
+
+let accessToken = "";
 
 describe('location', () =>{
+
+    beforeAll(async () => {
+        try {
+          await supertest(app).post("/api/users/signup").send({username: "test", email: "test@email.com", password: "testpassword"});
+          const response  = await supertest(app).post("/api/users/login").send({identifier: "test",password: "testpassword"});
+          accessToken = response.body.accessToken;
+        } catch (error) {
+        }
+      });
+      afterAll(async () => {
+        try {
+          await User.deleteOne({username: "test"});
+        } catch (error) {  
+        }
+      });
 
     //in this block, im testing 
     describe('find location route', () => {
@@ -11,10 +29,11 @@ describe('location', () =>{
         describe('given the location does not exist', () => {
 
             //my expectation
-            it('it shoud return a 500 code', async () => {
+            test('it shoud return a 500 code', async () => {
                 
-                await supertest(app).get('/api/location/findLocation?ip_address=0.0.0.0.12').
+               await supertest(app).get('/api/location/findLocation?ip_address=0.0.0.0.12').
                 expect(500)
+                .then()
             })
 
         })
@@ -22,10 +41,11 @@ describe('location', () =>{
         describe('if ip_address is not provided', () => {
 
             //my expectation
-            it('it shoud return a 400 code', async () => {
+            test('it shoud return a 400 code', async () => {
                 
-                await supertest(app).get('/api/location/findLocation').
-                expect(400)
+                await supertest(app).get('/api/location/findLocation')
+                .expect(400)
+                .then()
             })
 
         })
@@ -37,20 +57,25 @@ describe('location', () =>{
 
         describe ("if no email is provided", () => {
             //my expectation
-            it('it shoud return a 400 code', async () => {
+            test('it shoud return a 400 code', async () => {
             
-                await supertest(app).post('/api/location/addLocation').
-                expect(400)
-            })
-        })
+                await supertest(app)
+                .post("/api/location/addLocation?ip_address=193.140.194.36")
+                .set('Authorization', accessToken)
+                .expect(400)
+                .then()
+            });
+        });
 
         describe ("if no ip_address  is provided", () => {
             //my expectation
-            it('it shoud return a 400 code', async () => {
-            
-                await supertest(app).post('/api/location/addLocation').
-                expect(400)
-            })
+            test('it shoud return a 400 code', async () => {
+                await supertest(app)
+                .post("/api/location/addLocation?email=e@kizilkaya.com")
+                .set('Authorization', accessToken)
+                .expect(400)
+                .then()
+            });
         })
     })
 
@@ -59,10 +84,13 @@ describe('location', () =>{
 
         describe ("if no email is provided", () => {
             //my expectation
-            it('it shoud return a 404 code', async () => {
+            test('it shoud return a 400 code',async() => {
             
-                await supertest(app).post('/api/location/history').
-                expect(404)
+                 await supertest(app)
+                .get('/api/location/history')
+                .set('Authorization', accessToken)
+                .expect(400)
+                .then()
             })
         })
     })
