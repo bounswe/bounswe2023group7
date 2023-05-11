@@ -1,65 +1,113 @@
-import React from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import TextField  from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 
+const SubmitPlatform = () => {
+  const [keyword, setKeyword] = useState('');
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
 
-
-const AddPlatform = () => {
-  
-    return (
-  
-      <>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '85vh',
-            padding: '2rem',
-            color: 'dark grey',
-          }}
-        >
-          <Box
-            sx={{
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              padding: '1rem',
-              borderRadius: '10px',
-              marginBottom: '1rem',
-            }}
-          >
-            <Typography variant="h4" component="p" gutterBottom sx={{ textAlign: 'center', color: "white", fontFamily: "Trebuchet MS" }}>
-              SUBMIT THE PLATFORM
-            </Typography>
-          
-            <Box
-    sx={{
-      display: 'flex',
-      gap: '1rem',
-      justifyContent: 'center',
-      marginBottom: '1rem',
-    }}
-  >
-    <TextField sx={{ label: { color: 'white',fontFamily: "Trebuchet MS"} }} id="outlined-basic" label="Give Your Keyword" variant="outlined" />
-    <Button
-      variant="contained"
-      component={Link}
-      to="/list_games"
-      sx={{ backgroundColor: '#424242', color: '#FFFFFF', minWidth: '200px', fontFamily: "Trebuchet MS"}}
-    >
-      Add
-    </Button>
-  </Box>
-  
-  
-  
-          </Box>
-        </Box>
-      </>
-    );
+  const handleSubmit = async () => {
+    try {
+      const data = { username: "amanalirizabeyagzimizintadikacmasin" };
+      const response = await axios.post('http://localhost:8080/api/game-platform/platform?title=' + keyword, data, {
+      headers: {
+        Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFtYW5hZ3ppbWl6aW50YWRpa2FjbWFzaW4iLCJpYXQiOjE2ODM2Njc5NTF9.UlqA36kVDfQnisY4kOShD-D0lQFC75huQehOgHMMYvw`,
+      },
+    });
+      if (response.status==200) {
+        setMessage('Submission successful');
+        setOpen(true);
+      } else {
+        setMessage('Submission failed');
+        setOpen(true);
+      }
+    } catch (error) {
+      setMessage('An error occurred');
+      setOpen(true);
+    }
   };
 
-export default AddPlatform;
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '85vh',
+          padding: '2rem',
+          color: 'dark grey',
+        }}
+      >
+        <Box
+          sx={{
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            padding: '1rem',
+            borderRadius: '10px',
+            marginBottom: '1rem',
+          }}
+        >
+          <Typography
+            variant="h4"
+            component="p"
+            gutterBottom
+            sx={{
+              textAlign: 'center',
+              color: 'white',
+              fontFamily: 'Trebuchet MS',
+            }}
+          >
+            SUBMIT THE PLATFORM
+          </Typography>
+
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              alignItems: 'center',
+            }}
+          >
+            <TextField
+              sx={{
+                label: { color: 'white', fontFamily: 'Trebuchet MS' },
+              }}
+              id="outlined-basic"
+              label="Give Your Keyword"
+              variant="outlined"
+              value={keyword}
+              onChange={(event) => setKeyword(event.target.value)}
+            />
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: '#424242',
+                color: '#FFFFFF',
+                minWidth: '200px',
+                fontFamily: 'Trebuchet MS',
+              }}
+              onClick={handleSubmit}
+            >
+              Add
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} message={message} />
+    </>
+  );
+};
+
+export default SubmitPlatform;

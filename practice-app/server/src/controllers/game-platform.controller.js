@@ -2,7 +2,7 @@ import axios from "axios";
 import PlatformModel from "../models/game-platform.model.js";
 const gamePlatformController = {
     searchGame: async function (req, res) {
-        const baseUrl = "https://api.mobygames.com/v1/games?format=normal&title=";
+        const baseUrl = "https://api.mobygames.com/v1/games?limit=10&format=normal&title=";
         try {
             const title=req.query.title;
             if (!title) {
@@ -78,12 +78,13 @@ const gamePlatformController = {
 
             for (let i = 0; i < platforms.length; i++) {
                 if (title==platforms[i].platform_name.toLowerCase()) {
+                    
                     await PlatformModel.addMyPlatform(
                         platforms[i].platform_id.toString(),
                         platforms[i].platform_name,
                         req.username
                         );
-                    return res.send("Your submission is successful.");
+                    return res.status(200).send("Your submission is successful.");
                 }
             }
             return res.status(404).json({error: "Platform not found", message: "You should use right keywords."});

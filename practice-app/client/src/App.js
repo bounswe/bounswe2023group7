@@ -7,6 +7,7 @@ import GamePlatform from './pages/yunus/game_platform.js';
 import SearchGameForPlatform from './pages/yunus/search_screen.js';
 import ListGames from './pages/yunus/list_games.js';
 import AddPlatform from './pages/yunus/add_platform.js';
+import PlatformInfo from './pages/yunus/platform_info.js';
 import Safak from './pages/safak/safak.js';
 import Melih from './pages/melih/melih.js';
 import Tayyip from './pages/tayyip/tayyip.js';
@@ -40,6 +41,7 @@ function App() {
           <Route path="/game-platform/search" element={<Layout><SearchGameForPlatform /></Layout>} />
           <Route path="/game-platform/add_platforms" element={<Layout><AddPlatform /></Layout>} />
           <Route path="/game-platform/list_searched" element={<Layout><ListGames /></Layout>} />
+          <Route path="/game-platform/platform_info" element={<Layout><PlatformInfo /></Layout>} />
         </Routes>
       </div>
     </Router>

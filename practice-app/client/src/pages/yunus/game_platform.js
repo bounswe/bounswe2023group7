@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 
 
 const PlatformMainPage = () => {
-  console.log("asasa")
   return (
 
     <>

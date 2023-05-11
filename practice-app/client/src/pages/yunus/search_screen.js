@@ -17,13 +17,13 @@ function SearchForm() {
 
   const handleSubmit = async () => {
     const link = "http://localhost:8080/api/game-platform/search?title="+inputValue;
-    console.log(link);
     const response = await axios.get(link, {
       headers: {
-        Authorization: "(SORRY YOU SHOULD GET YOUR TOKEN :), DO NOT FORGET)",
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFtYW5hZ3ppbWl6aW50YWRpa2FjbWFzaW4iLCJpYXQiOjE2ODM2Njc5NTF9.UlqA36kVDfQnisY4kOShD-D0lQFC75huQehOgHMMYvw",
       },
     });
-    navigate("/game-platform/list_searched", response.data);
+    const sendObject={state: response.data};
+    navigate("/game-platform/list_searched", sendObject);
   };
 
   return (
