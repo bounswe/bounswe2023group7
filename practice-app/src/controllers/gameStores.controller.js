@@ -42,7 +42,7 @@ class GameStoresController {
         const [resp] = (await axios.get(priceURL)).data;
 
         if(!resp){
-            return res.status(400).json({ message: "Game not found."});
+            return res.status(404).json({ message: "Game not found."});
         }
 
         const dealID = resp.cheapestDealID;
