@@ -38,6 +38,17 @@ import verifyToken from "../utils/auth.js";
  *                                  name: "Counter-Strike: Global Offensive"
  *                                  icon: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/730/69f7ebe2735c366c65c0b33dae00e12dc40edbe4.jpg"
  *                                  logo: "https://cdn.cloudflare.steamstatic.com/steam/apps/730/capsule_184x69.jpg"
+ *          400:
+ *              description: Bad Request
+ *              content:
+ *                  application/json:
+ *                      schema: 
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                          example:
+ *                              message: "Provide a search value!"
  *          404:
  *              description: Search result is empty
  *              content:
@@ -45,10 +56,10 @@ import verifyToken from "../utils/auth.js";
  *                      schema: 
  *                          type: object
  *                          properties:
- *                              error:
- *                              type: string
+ *                              message:
+ *                                  type: string
  *                          example:
- *                              error: "No game found!"
+ *                              message: "No game found!"
  *          500:
  *              description: Internal Server Error
  */
