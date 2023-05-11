@@ -20,7 +20,7 @@ const genreModel = new Schema ( {
     { versionKey: false }
 );
 
-const Genres = mongoose.model("favoritegames", genreModel);
+const Genres = mongoose.model("genres", genreModel);
 
 
 export default Genres;
