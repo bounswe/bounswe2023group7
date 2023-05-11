@@ -1,5 +1,6 @@
 import express from "express";
 import gameStoresController from "../controllers/gameStores.controller.js";
+import verifyToken from "../utils/auth.js";
 
 const gameStoresRouter = express.Router();
 
@@ -179,6 +180,6 @@ gameStoresRouter.get("/stores", gameStoresController.getGameStores);
  *                          example:
  *                              error: "Please provide required fields."
  */
-gameStoresRouter.post("/add-cart", gameStoresController.addGametoCart);
+gameStoresRouter.post("/add-cart",verifyToken, gameStoresController.addGametoCart);
 
 export default gameStoresRouter;

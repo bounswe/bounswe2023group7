@@ -77,7 +77,7 @@ class GameStoresController {
     async addGametoCart(req, res) {
 
         try {
-            const email = req.body.email;
+            const email = req.email;
 
             if(!email){
                 return res.status(400).json({ message: "Plesae provide the required fields."});
