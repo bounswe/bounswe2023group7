@@ -3,7 +3,10 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LandingPage from './pages/landingPage.js';
 import Elif from './pages/elif/elif.js';
-import Yunus from './pages/yunus/yunus.js';
+import GamePlatform from './pages/yunus/game_platform.js';
+import SearchGameForPlatform from './pages/yunus/search_screen.js';
+import ListGames from './pages/yunus/list_games.js';
+import AddPlatform from './pages/yunus/add_platform.js';
 import Safak from './pages/safak/safak.js';
 import Melih from './pages/melih/melih.js';
 import Tayyip from './pages/tayyip/tayyip.js';
@@ -23,7 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout><LandingPage /></Layout>} />
           <Route path="/elif" element={<Layout><Elif /></Layout>} />
-          <Route path="/yunus" element={<Layout><Yunus /></Layout>} />
+          <Route path="/game-platform" element={<Layout><GamePlatform /></Layout>} />
           <Route path="/safak" element={<Layout><Safak /></Layout>} />
           <Route path="/melih" element={<Layout><Melih /></Layout>} />
           <Route path="/tayyip" element={<Layout><Tayyip /></Layout>} />
@@ -34,6 +37,9 @@ function App() {
           <Route path="/tuluyhan" element={<Layout><Tuluyhan /></Layout>} />
           <Route path="/signin" element={<Layout><Signin /></Layout>} />
           <Route path="/signup" element={<Layout><Signup /></Layout>} />
+          <Route path="/game-platform/search" element={<Layout><SearchGameForPlatform /></Layout>} />
+          <Route path="/game-platform/add_platforms" element={<Layout><AddPlatform /></Layout>} />
+          <Route path="/game-platform/list_searched" element={<Layout><ListGames /></Layout>} />
         </Routes>
       </div>
     </Router>
