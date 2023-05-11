@@ -1,6 +1,5 @@
 import express from "express";
 import gameStoresController from "../controllers/gameStores.controller.js";
-import bodyParser from 'body-parser';
 
 const gameStoresRouter = express.Router();
 /**
@@ -8,17 +7,17 @@ const gameStoresRouter = express.Router();
  * '/api/gameprices/':
  *  get:
  *      tags:
- *      - Favorite Games
- *      summary: Gets Favorite Games by email.
+ *      - Games Cart
+ *      summary: Gets Games from Cart by email.
  *      parameters:
  *          - in: query
  *            name: email
- *            description: Email of the user whose favorite games to be fetched.    
+ *            description: Email of the user whose games to be fetched.    
  *            required: true
  *            type: string
  *      responses:
  *          200:
- *              description: Success indicating that the favorite games of the user is returned
+ *              description: Success indicating that the games of the user is returned
  *              content:
  *                  application/json:
  *                      schema:
@@ -26,7 +25,7 @@ const gameStoresRouter = express.Router();
  *                          items:
  *                              type: object      
  *                              properties:
- *                                  favoriteGames:
+ *                                  gamesCart:
  *                                      type: any[]
  *                              example:
  *                                  email: "melihexample@gmail.com"
@@ -49,7 +48,7 @@ const gameStoresRouter = express.Router();
  *          500:
  *              description: Internal Server Error
  */
-gameStoresRouter.get("/", gameStoresController.getFavoriteGames);
+gameStoresRouter.get("/", gameStoresController.getGamesCart);
 
 
 /**
@@ -76,13 +75,14 @@ gameStoresRouter.get("/", gameStoresController.getFavoriteGames);
  *                              type: object      
  *                              properties:
  *                                  gameInfo:
- *                                      type: any[]
+ *                                      type: object
  *                              example:
  *                                  game_name: "LEGO Batman"
  *                                  game_rating: "80"
  *                                  sale_price: "4.19"
  *                                  retail_price: "19.99"
  *                                  img_url: "https://cdn.fanatical.com/production/product/400x225/105f34ca-7757-47ad-953e-7df7f016741e.jpeg"
+ * 
  *          404:
  *              description: Name of the game is not provided
  *              content:
@@ -126,8 +126,8 @@ gameStoresRouter.get("/game", gameStoresController.getGameInfo);
  *                                  "storeName": "GOG"
  *                                  "isActive": 1
  *                                  "images": {
- *                                      "banner": "/img/stores/banners/6.png"
- *                                      "logo": "/img/stores/logos/6.png"
+ *                                      "banner": "/img/stores/banners/6.png",
+ *                                      "logo": "/img/stores/logos/6.png",
  *                                      "icon": "/img/stores/icons/6.png"
  *                                   }
  *          404:
@@ -149,11 +149,11 @@ gameStoresRouter.get("/stores", gameStoresController.getGameStores);
 
 /**
  * @openapi
- * '/api/gameprices/add-favorite':
+ * '/api/gameprices/add-cart':
  *  post:
  *      tags:
- *      - Add Favorite Game
- *      summary: Adds the favorite game of the user to the favorite games.
+ *      - Add Game to Cart
+ *      summary: Adds the game of the user to the games cart.
  *      parameters:
  *          - in: query
  *            name: email
@@ -166,7 +166,7 @@ gameStoresRouter.get("/stores", gameStoresController.getGameStores);
  *            type: string
  *      responses:
  *          200:
- *              description: Success indicating that the game is added to the favorite games.
+ *              description: Success indicating that the game is added to the games cart.
  *              content:
  *                  application/json:
  *                      schema:
@@ -175,7 +175,7 @@ gameStoresRouter.get("/stores", gameStoresController.getGameStores);
  *                              message:
  *                              type: string
  *                          example:
- *                              message: "Game is added to favorite games."
+ *                              message: "Game is added to games cart."
  *          400:
  *              description: Email of the game name is not provided.
  *              content:
@@ -188,6 +188,6 @@ gameStoresRouter.get("/stores", gameStoresController.getGameStores);
  *                          example:
  *                              error: "Please provide required fields."
  */
-gameStoresRouter.post("/add-favorite", bodyParser.json(), gameStoresController.addFavoriteGame);
+gameStoresRouter.post("/add-cart", gameStoresController.addGametoCart);
 
 export default gameStoresRouter;

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const favoriteGamesModel = new Schema ( {
+const gamesCartModel = new Schema ( {
     email: { //user has several location data, so it is not unique
         type: String,
         required: true,
@@ -31,7 +31,7 @@ const favoriteGamesModel = new Schema ( {
     { versionKey: false }
 );
 
-const FavoriteGames = mongoose.model("favoritegames", favoriteGamesModel);
+const GamesCart = mongoose.model("gamescart", gamesCartModel);
 
 
-export default FavoriteGames;
+export default GamesCart;

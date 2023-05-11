@@ -8,8 +8,8 @@ config();
 const app = express();
 
 app.use(morgan('dev'));
-app.use("/api", router );
 app.use(express.json());
+app.use("/api", router );
 const port = process.env.PORT || 8080;
 const apiUrl = process.env.API_URL;
 

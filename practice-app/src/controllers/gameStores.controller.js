@@ -1,5 +1,5 @@
 import axios from "axios";
-import FavoriteGames from "../models/favoriteGames.model.js";
+import GamesCart from "../models/gamesCart.model.js";
 
 const baseURL = "https://www.cheapshark.com/api/1.0/";
 class GameStoresController {
@@ -14,7 +14,7 @@ class GameStoresController {
 
 
 
-    async getFavoriteGames(req, res) {
+    async getGamesCart(req, res) {
 
         const email = req.query.email;
 
@@ -22,9 +22,9 @@ class GameStoresController {
             return res.status(400).json({ message: "Please provide an email."});
         }
 
-        const favoriteGames = await FavoriteGames.find({ email: email });
+        const gamesCart = await GamesCart.find({ email: email });
 
-        res.status(200).json(favoriteGames);
+        res.status(200).json(gamesCart);
 
     }
 
@@ -61,7 +61,7 @@ class GameStoresController {
         res.status(200).send(shortResponse);
     }
 
-    async addFavoriteGame(req, res) {
+    async addGametoCart(req, res) {
 
         const email = req.body.email;
 
@@ -98,8 +98,8 @@ class GameStoresController {
             "img_url": response.gameInfo.thumb
         }
 
-        const favoriteGame = new FavoriteGames(shortResponse);
-        favoriteGame.save();
+        const game = new GamesCart(shortResponse);
+        game.save();
 
         res.status(201).send(shortResponse);
 
