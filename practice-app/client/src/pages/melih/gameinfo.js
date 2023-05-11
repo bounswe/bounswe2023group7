@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const SearchPage = () => {
+const SearchGame = () => {
+
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResult, setSearchResult] = useState(null);
 
   const handleSearch = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");  
-      const response = await axios.get(`https://example.com/api/search?query=${searchTerm}`, {headers: {"Authorization": accessToken}});
+      const response = await axios.get(`http://localhost:8080/api/gameprices/game?name=${searchTerm}`, {headers: {"Authorization": accessToken}});
       setSearchResult(response.data);
     } catch (error) {
       console.error(error);
@@ -30,4 +31,4 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage;
+export default SearchGame;
