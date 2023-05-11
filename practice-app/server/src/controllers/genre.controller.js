@@ -1,6 +1,5 @@
 import axios from "axios";
-
-//import Game from '../models/genre';
+import Genre from '../models/genre.model';
 
 async function GenreList(req,res) {
     try {
@@ -31,20 +30,14 @@ async function addGenre(req, res) {
         return res.status(400).json({ message: "Plesae provide the required fields."});
     }
 
-    const genre = req.body.Genre;
-
-    if(!(genre)){
-        return res.status(400).json({ message: "Plesae provide the required fields."});
-    }
-
 
     const response = (await axios.get(baseUrl)).data;
     
 
     const shortResponse = {
         "email" : email,
-        "genre": response.gameInfo.name,
-        "game_count": response.gameInfo.count,
+        "genre": response.results.genre-name,
+        "game_count": response.results.count,
     }
 
     const Genre = new Genre(shortResponse);

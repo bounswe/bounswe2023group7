@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const genreModel = new Schema ( {
+const Genre = new Schema ( {
     email: { 
         type: String,
         required: true,
@@ -20,7 +20,7 @@ const genreModel = new Schema ( {
     { versionKey: false }
 );
 
-const Genres = mongoose.model("genres", genreModel);
+const Genres = mongoose.model("genres", Genre);
 
 
 export default Genres;
