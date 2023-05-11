@@ -1,6 +1,9 @@
 import express from "express";
 const router = express.Router();
 import genre from './genre.routes.js';
+
+router.use('/', genre);
+
 /**
  * @openapi
  * '/api':
@@ -17,6 +20,5 @@ router.get('/', (_, res) => {
     return res.status(200).send("Welcome to the practice app!");
 });
 
-router.use('/genre', genre);
 
 export default router;

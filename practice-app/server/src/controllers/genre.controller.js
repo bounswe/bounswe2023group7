@@ -1,5 +1,5 @@
 import axios from "axios";
-import Genre from '../models/genre.model';
+import Genres from '../models/genre.model.js';
 
 async function GenreList(req,res) {
     try {
@@ -23,6 +23,7 @@ async function GenreList(req,res) {
     }
 } 
 async function addGenre(req, res) {
+    const baseUrl = "https://api.rawg.io/api/genres?key=c1826894471749129f3278eea6d8787f";
 
     const email = req.body.email;
 
@@ -31,24 +32,37 @@ async function addGenre(req, res) {
     }
 
 
-    const response = (await axios.get(baseUrl)).data;
-    
+    const response = (await axios.get(baseUrl)).data.results;
+    const genres = response.map((genre) => {
+        const{
+            name,
+            games_count,
+        } = genre;
+        return {
+            "email":email,
+            "genre": name,
+            "game_count":games_count
+          }
+    })
 
-    const shortResponse = {
-        "email" : email,
-        "genre": response.results.genre-name,
-        "game_count": response.results.count,
-    }
-
-    const Genre = new Genre(shortResponse);
-    Genre.save();
-
-    res.status(201).send(shortResponse);
+    await Genres.insertMany(genres);
+    res.status(201).send(genres);
 
 }
+async function GenreListfromDb(req,res) {
+    try {
+        const email = req.query.email;
+        var results = await Genres.find({email:email});
+        return res.send(results)
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+} 
 const Genre = {
     GenreList,
-    addGenre
+    addGenre,
+    GenreListfromDb
 }
 
 export default Genre;
