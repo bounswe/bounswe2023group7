@@ -14,6 +14,7 @@ import Guney from './pages/guney/guney.js';
 import Tuluyhan from './pages/tuluyhan/tuluyhan.js';
 import Signin from './pages/signin.js';
 import Signup from './pages/signup.js';
+import RandomGameHistory from "./pages/tayyip/randomGameHistory.jsx"
 import Layout from './layout.js';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/tuluyhan" element={<Layout><Tuluyhan /></Layout>} />
           <Route path="/signin" element={<Layout><Signin /></Layout>} />
           <Route path="/signup" element={<Layout><Signup /></Layout>} />
+          <Route path="/random-game-history" element={<Layout><RandomGameHistory /></Layout>} />
         </Routes>
       </div>
     </Router>

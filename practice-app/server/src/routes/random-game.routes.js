@@ -25,8 +25,6 @@ import randomGameController from "../controllers/random-game.controller.js";
  *                       type: string
  *                     headerImage:
  *                       type: string
- *                     price:
- *                       type: number
  *     500:
  *         description: Internal Server Error   
  */
@@ -62,8 +60,6 @@ router.post(
  *                                type: String
  *                            headerImage:
  *                                type: String
- *                            price: 
- *                                type: String
  *                            email: 
  *                                type: String
  *                        example: 
@@ -72,7 +68,6 @@ router.post(
  *                            name: "Koncolos"
  *                            shortDescription: "&quot;Do you know a monster that dwells around here?&quot; she asked. An ordinary barkeepers' journey, intertwined with the only survivor from a shrouded monster hunter company, started with this question."
  *                            headerImage: "https://cdn.akamai.steamstatic.com/steam/apps/1912490/header.jpg?t=1659947904"
- *                            price: "54,00 TL"
  *                            email "mtk@gmail.com"
  *          401:
  *              description: Unauthorized
@@ -88,7 +83,7 @@ router.post(
  * 
  */
 router.get(
-    "/",
+    "/history",
     randomGameController.getHistoryByEmailHandler
 )
 

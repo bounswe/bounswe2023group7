@@ -41,14 +41,12 @@ async function randomGameHandler (req, res) {
             name: gameDatas.name,
             shortDescription: gameDatas.short_description,
             headerImage: gameDatas.header_image,
-            price: gameDatas.price_overview.final_formatted,
             email: req.email
             });
         return res.status(200).json({ 
             name: gameDatas.name, 
             short_description: gameDatas.short_description, 
-            image: gameDatas.header_image, 
-            price: gameDatas.price_overview.final_formatted || null  
+            image: gameDatas.header_image
         } );
     } catch (error) {
         console.error(error);
