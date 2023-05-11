@@ -6,7 +6,7 @@ const LocationController = {
 
     history: async function (req, res) {
         try {
-            const email = req.query.email
+            const email = req.email
             //console.log(email)
             if(!email){
                 return res.status(400).json({ message: "email is not provided"})
@@ -24,7 +24,7 @@ const LocationController = {
 
     addLocation: async function (req, res) {
         try {
-            const email = req.query.email
+            const email = req.email
             if(!email){
                 return res.status(400).json({ message: "email is not provided"})
             }
