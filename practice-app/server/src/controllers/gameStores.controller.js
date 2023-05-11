@@ -14,7 +14,6 @@ class GameStoresController {
         catch(e) {
             res.status(500).send(e)
         }
-
     }
 
 
@@ -22,7 +21,7 @@ class GameStoresController {
     async getGamesCart(req, res) {
 
         try {
-            const email = req.query.email;
+            const email = req.email;
 
             if(!email){
                 return res.status(400).json({ message: "Please provide an email."});

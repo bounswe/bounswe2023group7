@@ -46,7 +46,7 @@ const gameStoresRouter = express.Router();
  *          500:
  *              description: Internal Server Error
  */
-gameStoresRouter.get("/", gameStoresController.getGamesCart);
+gameStoresRouter.get("/", verifyToken, gameStoresController.getGamesCart);
 
 
 /**
