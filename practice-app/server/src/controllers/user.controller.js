@@ -44,7 +44,7 @@ const UserController = {
       } 
       const user = await getUserByUsernameOrEmail(body.identifier);
       if (!(user&& await bcrypt.compare(body.password, user.password))) {
-        return res.status(403).send({message: 'Bad Credentials'});
+        return res.status(403).send({message: 'Wrong identifier or password!'});
       }
       const accesToken = jwt.sign({username: user.username}, process.env.SECRET_KEY);
       return res.send({message: "Login is successful", accessToken: accesToken});
