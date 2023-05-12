@@ -24,7 +24,7 @@ export function useFindLocation() {
   const findLocationQuery = useQuery(['findLocation'], async () => {
     const userIP = await fetchUserIP();
     if (userIP) {
-      const response = await fetch(`http://localhost:8080/api/location/findLocation?ip_address=${userIP}`);
+      const response = await fetch(`http://${process.env.REACT_APP_API_URL}/api/location/findLocation?ip_address=${userIP}`);
       return response.json();
     }
     return null;
@@ -42,7 +42,7 @@ export function useGetLocationHistory() {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const getLocationHistoryQuery = useQuery(['locationHistory'], async () => {
 
-    const response =await fetch('http://localhost:8080/api/location/history', {
+    const response =await fetch(`http://${process.env.REACT_APP_API_URL}/api/location/history`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -82,7 +82,7 @@ export function useAddLocation() {
   const addLocationMutation = useMutation(['addLocation'], async () => {
     const userIP = await fetchUserIP();
     if (userIP) {
-      const response = await fetch(`http://localhost:8080/api/location/addLocation?ip_address=${userIP}`, {
+      const response = await fetch(`http://${process.env.REACT_APP_API_URL}/api/location/addLocation?ip_address=${userIP}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

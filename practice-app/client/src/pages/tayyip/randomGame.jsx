@@ -18,16 +18,16 @@ function App() {
 
   let navigate = useNavigate();
   useEffect(() => {
-    if (!authState.status) {
-      navigate('/signin')
-    } 
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/signin");
+    }
   });
 
 
   async function handleSubmit() {
     setIsLoading(true);
     try {
-      const result = await axios.post('http://localhost:8080/api/random-game',
+      const result = await axios.post(`http://${process.env.REACT_APP_API_URL}/api/random-game`,
         {},
         {
           headers: {
@@ -44,7 +44,7 @@ function App() {
 
   async function handleGetHistory() {
     try {
-      const result = await axios.get("http://localhost:8080/api/random-game/history", {
+      const result = await axios.get(`http://${process.env.REACT_APP_API_URL}/api/random-game/history`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }

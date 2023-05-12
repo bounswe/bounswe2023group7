@@ -14,7 +14,7 @@ const ListGames = () => {
   const [data, setData] = React.useState(null);
 
   const handleClick = (id) => {
-    const link="http://localhost:8080/api/game-platform/game?id="+id;
+    const link=`http://${process.env.REACT_APP_API_URL}/api/game-platform/game?id=`+id;
     axios
       .get(link, {
         headers: {

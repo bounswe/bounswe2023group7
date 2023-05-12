@@ -5,7 +5,7 @@ function Genre( ) {
   const [result, setResult] = useState([]);
   
   const handleClick = () => {
-    axios.get('http://localhost:8080/api/genreDb?email=fatmasenaalci@gmail.com')
+    axios.get(`http://${process.env.REACT_APP_API_URL}/api/genreDb?email=fatmasenaalci@gmail.com`)
       .then((response) => {
         const json_string = JSON.stringify(response.data);
         var obj = JSON.parse(json_string);

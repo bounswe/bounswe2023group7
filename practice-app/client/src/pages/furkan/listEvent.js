@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 function EventList() {
   const [events, setEvents] = useState([]);
   const [displayCount, setDisplayCount] = useState(10);
-  const link = "http://localhost:8080/api/events/list"
+  const link = `http://${process.env.REACT_APP_API_URL}/api/events/list`
   useEffect(() => {
     axios.get(link)
       .then(response => setEvents(response.data))
