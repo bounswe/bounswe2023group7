@@ -13,7 +13,7 @@ const FavoriteGamesController = {
             const response = await axios.get(url);
             if (response.status == 200) {
                 if (response.data.length == 0) {
-                    return res.status(404).json({error: "No game found!"});
+                    return res.status(404).json({message: "No game found!"});
                 } 
                 return res.send(response.data);
             }

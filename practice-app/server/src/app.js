@@ -3,8 +3,10 @@ import morgan from "morgan";
 import router from "./routes/index.js";
 import connectToDb from "./utils/db.js";
 import swaggerDocs from "./utils/swagger.js";
-import { config } from "dotenv";
 import cors from "cors";
+
+import { config } from "dotenv";
+
 config();
 const app = express();
 app.use(cors());
