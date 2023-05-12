@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im10ayIsImlhdCI6MTY4MzczMzE3N30.CijpcqEFWUs-5DrKe01WefwSOulYnWfn3qP22UU2XXw";
+const token = localStorage.getItem("accessToken");
 
 const GameHistory = () => {
     const [games, setGames] = useState([]);
