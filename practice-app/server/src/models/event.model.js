@@ -6,10 +6,6 @@ const EventSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-    eventDate:
-    {
-        year: Number, month: Number, day: Number
-    },
     eventTime: 
     {
         type : String,

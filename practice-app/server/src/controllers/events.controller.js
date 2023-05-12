@@ -6,7 +6,7 @@ const EventController = {
     
     ListEvent : async function(req, res){
         try{
-            const response = await EventModel.find({}).select('-_id -__v');
+            const response = await EventModel.find({}).select('-_id -__v -eventDate');
             if (response.length == 0){
                 res.status(200).send("There is no event to show.");
             }
@@ -22,25 +22,34 @@ const EventController = {
     CreateEvent : async function(req, res){
         try{
             const address = req.body.eventLocation;
-
             if(address.length == 0){
+                console.log("address is not provided")
                 return res.status(400).json({ message : "address is not provided" })
             }
             if(req.body.eventName.length == 0){
+                console.log("event name is not provided")
                 return res.status(400).json({ message : "event name is not provided"})
             }
             if(req.body.length == 0){
+                console.log("body is not provided")
                 return res.status(400).json({ message : "body is not provided" })
             }
+            /*
+            var day = req.body.eventDateDay;
+            var month = req.body.eventDateMonth;
+            var year = req.body.eventDateYear;
 
-            var d = `${req.body.eventDate.year}-${req.body.eventDate.month}-${req.body.eventDate.day}`;
+            var d = `${day}-${month}-${year}`;
             var date = new Date(d);
             if( isNaN(date.getTime())){
+                console.log("date is not provided in correct format :")
+
                 return res.status(400).json( { message : "date is not provided in correct format"})
             }
-
+*/
             const timeRegex = /^([01]\d|2[0-3])[:.]([0-5]\d)$/;
             if(!timeRegex.test(req.body.eventTime)){
+                console.log("time is not provided in a correct format")
                 return res.status(400).json( { message : "time is not provided in a correct format" } )
             }
 
@@ -53,14 +62,13 @@ const EventController = {
 
                 const event = new EventModel({ 
                     eventName: req.body.eventName, 
-                    eventDate:{ year: req.body.eventDate.year,
-                                month: req.body.eventDate.month,
-                                day: req.body.eventDate.day},
                     eventTime: req.body.eventTime,
                     eventLocationLatitude: response.data.results[0].geometry.location.lat,
                     eventLocationLongitude: response.data.results[0].geometry.location.lng});
                 
                 event.save().then(() => console.log(event));
+
+
             
             })
                 .catch(function(error){
