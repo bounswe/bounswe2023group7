@@ -10,7 +10,7 @@ After that, you can follow instructions provided in `README.md` files in `client
 
 ## Running the project
 1. You need a MongoDB instance. Please copy the MongoDB URI.
-2. Create a `.env` file in the `server`. It should contain the following fields:
+2. Create a `.env` file in the `server` and `client` folders. It should contain the following fields:
 
     ```json
     PORT =
@@ -24,9 +24,8 @@ After that, you can follow instructions provided in `README.md` files in `client
     MOBY_API_KEY =  
     ```
     
-3. After adding the .env file, you can run `docker-compose up --build -d` in `server` folder.
-4. Run `sudo docker run -d -p 8080:8080 omersafakbebek/practice-app-backend` for backend and `sudo docker run -d -p 3000:3000 omersafakbebek/practice-app-frontend` for frontend.
-5. That is all.
-
-    
-
+3. Install [docker](https://docs.docker.com/engine/install/).
+4. After adding the .env file, you can run `docker-compose up --build -d` in `server` folder.
+5. To build the backend image run `sudo docker build -t practice-app-backend`, and to build the frontend image run `sudo docker build -t practice-app-frontend`,
+6. Run `sudo docker run -d -p 8080:8080 practice-app-backend` for backend and `sudo docker run -d -p 3000:3000 practice-app-frontend` for frontend.
+7. That is all.
