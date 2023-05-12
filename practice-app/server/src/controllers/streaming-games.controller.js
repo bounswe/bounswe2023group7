@@ -17,7 +17,7 @@ const streamingGamesController = {
           }
         });
         
-        const { name, id } = response.data.data[6];
+        const { name, id } = response.data.data[1];
         res.status(200).json({ name, id });
 
     } catch (error) {
@@ -36,7 +36,7 @@ const streamingGamesController = {
           }
         });
   
-        const { name, id } = response.data.data[6];
+        const { name, id } = response.data.data[1];
         const date = new Date();
         date.setHours(date.getHours() + 3); 
         console.log(date);
