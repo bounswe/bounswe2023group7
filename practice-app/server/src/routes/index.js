@@ -1,4 +1,5 @@
 import express from "express";
+import genre from './genre.routes.js';
 import gameStoresRouter from "./gameStores.routes.js";
 import favoriteGamesRoutes from "./favorite-games.routes.js";
 import userRoutes from "./user.routes.js";
@@ -10,6 +11,8 @@ router.use("/users", userRoutes);
 router.use("/favorite-games", favoriteGamesRoutes);
 router.use("/gameprices",gameStoresRouter);
 router.use("/location", locationRouter);
+router.use('/', genre);
+
 /**
  * @openapi
  * '/api':
@@ -22,9 +25,6 @@ router.use("/location", locationRouter);
  *              description: Success
  */
 
-router.get('/', (_, res) => {
-    return res.status(200).send("Welcome to the practice app!");
-});
 
 
 
@@ -32,5 +32,6 @@ router.get('/', verifyToken,(req, res) => {
     console.log(req.user, req.username, req.email);
     return res.status(200).send("Welcome to the practice app!");
 });
+
 
 export default router;
