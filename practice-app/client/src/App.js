@@ -10,7 +10,9 @@ import AddPlatform from './pages/yunus/add_platform.js';
 import PlatformInfo from './pages/yunus/platform_info.js';
 import Melih from './pages/melih/melih.js';
 import Tayyip from './pages/tayyip/tayyip.js';
-import Furkan from './pages/furkan/furkan.js';
+import Event from './pages/furkan/event.js';
+import CreateEvent from './pages/furkan/createEvent.js';
+import ListEvent from './pages/furkan/listEvent.js';
 import Sena from './pages/sena/sena.js';
 import Hakan from './pages/hakan/hakan.js';
 import Guney from './pages/guney/guney.js';
@@ -36,8 +38,10 @@ function App() {
             <Route path="/favorite-games" element={<Layout><FavoriteGames /></Layout>} />
             <Route path="/melih" element={<Layout><Melih /></Layout>} />
             <Route path="/tayyip" element={<Layout><Tayyip /></Layout>} />
-            <Route path="/furkan" element={<Layout><Furkan /></Layout>} />
             <Route path="/sena" element={<Layout><Sena /></Layout>} />
+            <Route path="/event" element={<Layout><Event /></Layout>} />
+            <Route path="/event/createEvent" element={<Layout><CreateEvent /></Layout>} />
+            <Route path="/event/listEvent" element={<Layout><ListEvent /></Layout>} />
             <Route path="/hakan" element={<Layout><Hakan /></Layout>} />
             <Route path="/guney" element={<Layout><Guney /></Layout>} />
             <Route path="/tuluyhan" element={<Layout><Tuluyhan /></Layout>} />
