@@ -80,9 +80,11 @@ function App() {
             </div>
           </div>
         ) : (
-          <Typography variant="h6">
-            Click the "Get Random Game" button to generate a random game.
-          </Typography>
+          <div className="informative">
+            <Typography variant="h6">
+              Click the "Get Random Game" button to generate a random game.
+            </Typography>
+          </div>
         )}
       </Box>
       {games.map((game) => (

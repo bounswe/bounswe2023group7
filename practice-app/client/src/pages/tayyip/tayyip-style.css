@@ -44,7 +44,17 @@
     opacity: 0.8;
   }
   
+  .informative {
+    max-width: 60%;
+    border: 1px solid white;
+    padding: 20px;
+    background-color: white;
+    border-radius: 20px;
+    opacity: 0.8;
+  }
+
   img {
     max-width: 80%;
   }
+
   
