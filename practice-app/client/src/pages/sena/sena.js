@@ -1,5 +1,38 @@
-import React, { useState } from 'react';
+/*import { useState, useEffect } from 'react';
+import axios from 'axios';
+const url = 'http://localhost:8080/api/genreDb?email=fatmasenaalci@gmail.com';
+function Page1() {
+  const [result, setResult] = useState([]);
+  const variables = []
+  useEffect(() => {
+        axios.get(url).then((response) => {
+        const json_string = JSON.stringify(response.data);
+        var obj = JSON.parse(json_string);
+
+        for (var x in obj){
+          const variable = (obj[x].genre) +": "+ (obj[x].game_count)
+          variables.push(variable)
+        }
+        return variables;
+        /*window.alert(setResult(obj.map(getResult)));
+        function getResult(item) {
+          return  [item.genre,item.game_count].join(": ") + ", ";
+        
+        }
+
+      })
+      .catch((e) => {
+        window.alert(e);
+        return e
+      });
+    })
+};
+
+export default Page1;
+
 import { Container, Typography, Grid, Paper, Select, MenuItem } from '@mui/material';
+import React, { useState } from 'react';
+import Genre from './get_genre.js';
 
 const exampleData = {
   a: 154,
@@ -71,5 +104,62 @@ const Page1 = () => {
     </Container>
   );
 };
+
+export default Page1;
+*/
+import { Container, Typography, Grid, Paper, Select, MenuItem } from '@mui/material';
+import React, { useState } from 'react';
+import Genre from './get_genre.js';
+
+const GameList = ({ gameCounts, selectedGenre }) => {
+  let filteredGameCounts = gameCounts;
+  if (selectedGenre) {
+    filteredGameCounts = { [selectedGenre]: gameCounts[selectedGenre] };
+  }
+  return (
+    <Grid container spacing={5}>
+      {Object.entries(filteredGameCounts).map(([genre, count]) => (
+        <Grid item xs={12} sm={6} md={4} key={genre}>
+          <Paper style={{ margin: '4px', background: "linear-gradient(30deg, rgb(157,223,251) 0%, rgb(231,247,254), rgb(157,223,251) 100%)", padding: '16px' }}>
+            <Typography variant="h6">{genre}</Typography>
+            <Typography variant="body1">{count} games</Typography>
+          </Paper>
+        </Grid>
+      ))}
+    </Grid>
+  );
+};
+
+
+const Page1 = () => {
+  const [gameCounts, setGameCounts] = useState({});
+  const [genres, setGenres] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState('');
+
+  const selectGenre = (genre) => {
+    setSelectedGenre(genre);
+  };
+
+  return (
+    <Container>
+      <Typography variant="h4" align="center" style={{ margin: '32px', fontWeight: 'bold' }}>
+        GAME LIST
+      </Typography>
+      <Genre onResult={(data) => {
+        const gameCounts = {};
+        data.forEach((item) => {
+          const [genre, count] = item.split(": ");
+          gameCounts[genre] = parseInt(count, 10);
+        });
+        setGameCounts(gameCounts);
+        setGenres(Object.keys(gameCounts));
+      }} />
+      <Typography variant="h6" style={{ margin: '16px', align: "center" }}>
+      </Typography>
+      <GameList gameCounts={gameCounts} selectedGenre={selectedGenre} />
+    </Container>
+  );
+};
+
 
 export default Page1;
