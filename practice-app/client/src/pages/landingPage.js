@@ -57,10 +57,10 @@ const LandingPage = () => {
   <Button
     variant="contained"
     component={Link}
-    to="/yunus"
+    to="/game-platform"
     sx={{ backgroundColor: '#616161', color: '#FFFFFF', minWidth: '260px'}}
   >
-    Yunus Emre Altuğ
+    Game Platform by Altug
   </Button>
   <Button
     variant="contained"
@@ -98,7 +98,7 @@ const LandingPage = () => {
   <Button
     variant="contained"
     component={Link}
-    to="/furkan"
+    to="/event"
     sx={{ backgroundColor: '#424242', color: '#FFFFFF' , minWidth: '260px' }}
   >
     Furkan Ülke
