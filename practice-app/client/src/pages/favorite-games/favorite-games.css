@@ -1,0 +1,149 @@
+.favorite-games-page {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.favorite-games {
+  width: 40%;
+}
+
+.favorite-games h2 {
+  margin-bottom: 10px;
+}
+
+.favorite-games ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.favorite-games li {
+  cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: calc(33.33% - 10px);
+}
+
+.favorite-games li img {
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.favorite-games li p {
+  margin: 0;
+  padding: 5px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.favorite-games li .game-name-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  border-radius: 3px;
+  background-color: #030303;
+}
+
+.favorite-games li .game-name {
+  margin: 0;
+  padding: 5px;
+  font-size: 14px;
+  text-align: center;
+  color: white;
+}
+
+.search {
+  width: 55%;
+}
+
+.search h2 {
+  margin-bottom: 10px;
+}
+
+.search input[type="text"] {
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 70%;
+  margin-right: 10px;
+}
+
+.search button {  
+  padding: 5px;
+  font-size: 16px;
+  border: none;
+  border-radius: 3px;
+  background-color: #070707;
+  color: #fff;
+  cursor: pointer;
+}
+
+.search ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.search li {
+  cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: calc(33.33% - 10px);
+}
+
+.search li img {
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.search li .game-name-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  border-radius: 3px;
+  background-color: #eee;
+}
+
+.search li .game-name {
+  margin: 0;
+  padding: 5px;
+  font-size: 14px;
+  text-align: center;
+}
+
+
+.message {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px;
+  background-color: #020202;
+  color: #fff;
+  border-radius: 5px;
+  z-index: 9999;
+  animation: fadeInOut 3s ease-in-out;
+}
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { AuthContext } from "../helpers/AuthContext";
 import { useNavigate } from 'react-router-dom';
@@ -7,19 +7,23 @@ import axios from "axios";
 const SignIn = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const { setAuthState } = useContext(AuthContext);
+  const { authState, setAuthState } = useContext(AuthContext);
   const [error, setError] = useState("");
   const errorDiv = error 
-  ? <div className="error">
+  ? <div>
       {error}
     </div> 
   : '';
   let navigate = useNavigate();
+  useEffect(()=> {
+    if (authState.status) {
+      navigate("/");
+    }
+  });
 
   const signIn = async () => {
     setError("");
     const data = {identifier: identifier, password: password};
-    console.log(data);
     try {
       const loginResponse = await axios.post("http://localhost:8080/api/users/login", data);
       localStorage.setItem("accessToken", loginResponse.data.accessToken);
@@ -72,6 +76,7 @@ return (
       </Box>
       </Box>
     </div>
-  );};
+  );
+};
 
 export default SignIn;
