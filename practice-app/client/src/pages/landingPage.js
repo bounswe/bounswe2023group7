@@ -57,18 +57,18 @@ const LandingPage = () => {
   <Button
     variant="contained"
     component={Link}
-    to="/yunus"
+    to="/game-platform"
     sx={{ backgroundColor: '#616161', color: '#FFFFFF', minWidth: '260px'}}
   >
-    Yunus Emre Altuğ
+    Game Platform by Altug
   </Button>
   <Button
     variant="contained"
     component={Link}
-    to="/safak"
+    to="/favorite-games"
     sx={{ backgroundColor: '#757575', color: '#FFFFFF' , minWidth: '260px'}}
   >
-    Ömer Şafak Bebek
+    Favorite Games
   </Button>
 </Box>
 <Box
