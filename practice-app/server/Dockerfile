@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:11.15
+FROM node:18
 WORKDIR /app
 COPY package.json /app
 COPY package-lock.json /app
