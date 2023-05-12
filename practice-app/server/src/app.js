@@ -13,8 +13,6 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Define the allowed origins
-const allowedOrigins = ["http://127.0.0.1:3000", "http://localhost:3000"];
 
 app.use(cors());
 
