@@ -39,7 +39,6 @@ function App() {
             <Route path="/favorite-games" element={<Layout><FavoriteGames /></Layout>} />
             <Route path="/melih" element={<Layout><Melih /></Layout>} />
             <Route path="/random-games" element={<Layout><RandomGames /></Layout>} />
-            <Route path="/furkan" element={<Layout><Furkan /></Layout>} />
             <Route path="/sena" element={<Layout><Sena /></Layout>} />
             <Route path="/event" element={<Layout><Event /></Layout>} />
             <Route path="/event/createEvent" element={<Layout><CreateEvent /></Layout>} />
