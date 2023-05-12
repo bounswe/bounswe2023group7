@@ -1,12 +1,12 @@
 import axios from "axios";
-import PlatformModel from "../models/game-platform.model.js";
+import {Platform, getUsersPlatforms, addMyPlatform} from "../models/game-platform.model.js";
 const gamePlatformController = {
     searchGame: async function (req, res) {
-        const baseUrl = "https://api.mobygames.com/v1/games?limit=10&format=normal&title=";
+        const baseUrl = "https://api.mobygames.com/v1/games?limit=10&format=brief&title=";
         try {
             const title=req.query.title;
             if (!title) {
-                return res.status(400).send("Do not you think to search?");
+                return res.status(400).json({message: "You should not give an empty input."});
             }
             const lastTitle = title.replace(/ /g, "%20");
             const url = `${baseUrl}${lastTitle}&api_key=${process.env.MOBY_API_KEY}`;
@@ -22,9 +22,9 @@ const gamePlatformController = {
             // Handle error
             const status=err.response.status
             if (status==422) {
-                return res.status(422).json({error: "Title too long", message: "Title filter must be <= 128 characters."})
+                return res.status(422).json({error: "Title is too long", message: "Title filter must be <= 128 characters."})
             }
-            else if (status==429) {
+            if (status==429) {
                 return res.status(429).json({error: "Too many requests", message: "You should be patient"})
             }
             else if (status==500) {
@@ -39,7 +39,7 @@ const gamePlatformController = {
         try {
             const id=req.query.id;
             if (!id) {
-                return res.status(404).send("No game found");
+                return res.status(404).json({error: "Game not found", message: "You should use right keywords."});
             }
             const url = `${baseUrl}${id}&api_key=${process.env.MOBY_API_KEY}`;
             const response = await axios.get(url);
@@ -47,7 +47,19 @@ const gamePlatformController = {
                 if (response.data.games.length == 0) {
                     return res.status(404).json({error: "Game not found", message: "You should use right keywords."});
                 } 
-                return res.send(response.data.games[0].platforms);
+                const list=await getUsersPlatforms(req.username);
+                const platformList=[];
+                for (let i=0; i<list.length; i++) {
+                    platformList.push(list[i].platformName);
+                }
+                for (let i = 0; i < response.data.games[0].platforms.length; i++) {
+                    if (platformList.includes(response.data.games[0].platforms[i].platform_name)) {
+                        return res.send({platforms: response.data.games[0].platforms, message: "To play this game you can use these platform: "+response.data.games[0].platforms[i].platform_name+"."});
+                    }
+                }
+                return res.send({platforms: response.data.games[0].platforms, message: "You do not have these platforms."});
+               
+                
             }
         }
         catch (err) {
@@ -70,7 +82,7 @@ const gamePlatformController = {
         try {
             const title=req.query.title;
             if (!title) {
-                return res.status(400).send("Do not you think to search?");
+                return res.status(400).json({message: "You should not give an empty input."});
             }
             const url = `${baseUrl}?api_key=${process.env.MOBY_API_KEY}`;
             const response = await axios.get(url);
@@ -78,13 +90,21 @@ const gamePlatformController = {
 
             for (let i = 0; i < platforms.length; i++) {
                 if (title==platforms[i].platform_name.toLowerCase()) {
+                    const list=await getUsersPlatforms(req.username);
+                    const platformList=[];
+                    for (let j=0; j<list.length; j++) {
+                        platformList.push(list[j].platformName);
+                    }
+                    if (platformList.includes(platforms[i].platform_name)) {
+                        return res.status(409).send({message: "You have already added this platform"});
+                    }
                     
-                    await PlatformModel.addMyPlatform(
+                    await addMyPlatform(
                         platforms[i].platform_id.toString(),
                         platforms[i].platform_name,
                         req.username
                         );
-                    return res.status(200).send("Your submission is successful.");
+                    return res.status(200).send({message: "Your submission is successful."});
                 }
             }
             return res.status(404).json({error: "Platform not found", message: "You should use right keywords."});

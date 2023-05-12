@@ -15,13 +15,13 @@ const platformSchema = new mongoose.Schema({
     }
 });
 
-const Platform = mongoose.model('Platform', platformSchema);
+export const Platform = mongoose.model('Platform', platformSchema);
 
-const getUsersPlatforms = async (username) => {
-    return await Platform.find( { username: username });
-}
+export async function getUsersPlatforms(username) {
+    return await Platform.find( {username: username });
+  }
 
-const addMyPlatform = async (
+export const addMyPlatform = async (
     id,
     platformName,
     username
@@ -35,8 +35,4 @@ const addMyPlatform = async (
     platform.save()
 }
 
-export default {
-    Platform,
-    getUsersPlatforms,
-    addMyPlatform
-}
+

@@ -6,8 +6,8 @@ function PlatformInfo({ data }) {
   return (
     
     <div>
-      <h2>The Platforms Where You Can Play This Game:</h2>
-      {data.map((platform, index) => (
+      <h2>{data.message} The Platforms Where You Can Play This Game:</h2>
+      {data.platforms.map((platform, index) => (
         <div key={index}>
           <Box
           sx={{

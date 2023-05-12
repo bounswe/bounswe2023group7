@@ -19,7 +19,7 @@ function SearchForm() {
     const link = "http://localhost:8080/api/game-platform/search?title="+inputValue;
     const response = await axios.get(link, {
       headers: {
-        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFtYW5hZ3ppbWl6aW50YWRpa2FjbWFzaW4iLCJpYXQiOjE2ODM2Njc5NTF9.UlqA36kVDfQnisY4kOShD-D0lQFC75huQehOgHMMYvw",
+        Authorization: localStorage.getItem("accessToken"),
       },
     });
     const sendObject={state: response.data};

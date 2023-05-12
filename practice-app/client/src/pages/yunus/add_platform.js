@@ -11,21 +11,22 @@ const SubmitPlatform = () => {
   const [keyword, setKeyword] = useState('');
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
-
   const handleSubmit = async () => {
     try {
-      const data = { username: "amanalirizabeyagzimizintadikacmasin" };
-      const response = await axios.post('http://localhost:8080/api/game-platform/platform?title=' + keyword, data, {
-      headers: {
-        Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFtYW5hZ3ppbWl6aW50YWRpa2FjbWFzaW4iLCJpYXQiOjE2ODM2Njc5NTF9.UlqA36kVDfQnisY4kOShD-D0lQFC75huQehOgHMMYvw`,
-      },
-    });
-      if (response.status==200) {
-        setMessage('Submission successful');
-        setOpen(true);
-      } else {
-        setMessage('Submission failed');
-        setOpen(true);
+      if (localStorage.getItem("accessToken")) {
+
+        const response = await axios.post('http://localhost:8080/api/game-platform/platform?title=' + keyword,{} ,{
+          headers: {
+           "Authorization": localStorage.getItem("accessToken"),
+          },
+        });
+        if (response.status==200) {
+          setMessage('Submission successful');
+          setOpen(true);
+        } else {
+          setMessage('Submission failed');
+          setOpen(true);
+        }
       }
     } catch (error) {
       setMessage('An error occurred');
