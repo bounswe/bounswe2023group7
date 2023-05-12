@@ -90,10 +90,10 @@ const LandingPage = () => {
   <Button
     variant="contained"
     component={Link}
-    to="/tayyip"
+    to="/random-games"
     sx={{ backgroundColor: '#ADADAD', color: '#FFFFFF' , minWidth: '260px' }}
   >
-    Muhammet Tayyip Kamiloğlu
+    Random Games
   </Button>
   <Button
     variant="contained"

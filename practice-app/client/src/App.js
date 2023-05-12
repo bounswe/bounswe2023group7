@@ -32,7 +32,7 @@ function App() {
             <Route path="/yunus" element={<Layout><Yunus /></Layout>} />
             <Route path="/favorite-games" element={<Layout><FavoriteGames /></Layout>} />
             <Route path="/melih" element={<Layout><Melih /></Layout>} />
-            <Route path="/tayyip" element={<Layout><Tayyip /></Layout>} />
+            <Route path="/random-games" element={<Layout><RandomGames /></Layout>} />
             <Route path="/furkan" element={<Layout><Furkan /></Layout>} />
             <Route path="/sena" element={<Layout><Sena /></Layout>} />
             <Route path="/hakan" element={<Layout><Hakan /></Layout>} />

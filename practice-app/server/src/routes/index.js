@@ -9,8 +9,8 @@ const router = express.Router();
 router.use("/users", userRoutes);
 router.use("/favorite-games", favoriteGamesRoutes);
 router.use('/random-game', verifyToken, randomGameRoutes);
-
 router.use("/location", locationRouter);
+
 /**
  * @openapi
  * '/api':
