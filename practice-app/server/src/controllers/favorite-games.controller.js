@@ -23,6 +23,7 @@ const FavoriteGamesController = {
     },
     addToFavoritesHandler: async function (req, res) {
         try {
+            console.log("h");
             const email = req.email;
             const appId = req.query.appId;
             if (!email) {

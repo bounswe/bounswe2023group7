@@ -9,7 +9,7 @@ import ListGames from './pages/yunus/list_games.js';
 import AddPlatform from './pages/yunus/add_platform.js';
 import PlatformInfo from './pages/yunus/platform_info.js';
 import Melih from './pages/melih/melih.js';
-import Tayyip from './pages/tayyip/tayyip.js';
+import RandomGames from './pages/tayyip/randomGame.jsx';
 import Event from './pages/furkan/event.js';
 import CreateEvent from './pages/furkan/createEvent.js';
 import ListEvent from './pages/furkan/listEvent.js';
@@ -19,6 +19,7 @@ import Guney from './pages/guney/guney.js';
 import Tuluyhan from './pages/tuluyhan/tuluyhan.js';
 import Signin from './pages/signin.js';
 import Signup from './pages/signup.js';
+import RandomGameHistory from "./pages/tayyip/randomGameHistory.jsx"
 import Layout from './layout.js';
 import { AuthContext } from './helpers/AuthContext';
 import FavoriteGames from './pages/favorite-games/favorite-games.js';
@@ -37,7 +38,7 @@ function App() {
             <Route path="/game-platform" element={<Layout><GamePlatform /></Layout>} />
             <Route path="/favorite-games" element={<Layout><FavoriteGames /></Layout>} />
             <Route path="/melih" element={<Layout><Melih /></Layout>} />
-            <Route path="/tayyip" element={<Layout><Tayyip /></Layout>} />
+            <Route path="/random-games" element={<Layout><RandomGames /></Layout>} />
             <Route path="/sena" element={<Layout><Sena /></Layout>} />
             <Route path="/event" element={<Layout><Event /></Layout>} />
             <Route path="/event/createEvent" element={<Layout><CreateEvent /></Layout>} />
@@ -47,11 +48,12 @@ function App() {
             <Route path="/tuluyhan" element={<Layout><Tuluyhan /></Layout>} />
             <Route path="/signin" element={<Layout><Signin /></Layout>} />
             <Route path="/signup" element={<Layout><Signup /></Layout>} />
+            <Route path="/random-game-history" element={<Layout><RandomGameHistory /></Layout>} />
             <Route path="/game-platform/search" element={<Layout><SearchGameForPlatform /></Layout>} />
             <Route path="/game-platform/add_platforms" element={<Layout><AddPlatform /></Layout>} />
             <Route path="/game-platform/list_searched" element={<Layout><ListGames /></Layout>} />
             <Route path="/game-platform/platform_info" element={<Layout><PlatformInfo /></Layout>} />
-          </Routes>
+        </Routes>
         </div>
       </Router>
     </AuthContext.Provider>

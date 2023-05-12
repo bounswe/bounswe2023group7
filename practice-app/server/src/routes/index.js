@@ -3,6 +3,7 @@ import genre from './genre.routes.js';
 import gameStoresRouter from "./gameStores.routes.js";
 import favoriteGamesRoutes from "./favorite-games.routes.js";
 import userRoutes from "./user.routes.js";
+import randomGameRoutes from "./random-game.routes.js"
 import verifyToken from "../utils/auth.js";
 import eventRouter from "./events.routes.js";
 import gameplatformRoutes from "./game-platform.routes.js";
@@ -15,6 +16,7 @@ router.use("/favorite-games", favoriteGamesRoutes);
 router.use("/events", eventRouter);
 router.use("/gameprices",gameStoresRouter);
 router.use("/location", locationRouter);
+router.use('/random-game', verifyToken, randomGameRoutes);
 router.use('/', genre);
 
 /**
