@@ -98,7 +98,7 @@ const LandingPage = () => {
   <Button
     variant="contained"
     component={Link}
-    to="/furkan"
+    to="/event"
     sx={{ backgroundColor: '#424242', color: '#FFFFFF' , minWidth: '260px' }}
   >
     Furkan Ülke
