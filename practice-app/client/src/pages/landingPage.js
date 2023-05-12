@@ -123,14 +123,6 @@ const LandingPage = () => {
             <Button
               variant="contained"
               component={Link}
-              to="/hakan"
-              sx={{ backgroundColor: '#636363', color: '#FFFFFF', minWidth: '260px' }}
-            >
-              Hakan Karakuş
-            </Button>
-            <Button
-              variant="contained"
-              component={Link}
               to="/tuluyhan"
               sx={{ backgroundColor: '#808080', color: '#FFFFFF', minWidth: '260px' }}
             >
