@@ -44,7 +44,7 @@ describe('location', () =>{
 
     describe ('add location route', () => {
 
-        describe ("POST /api/location/addLocation with no login (aka. email)", () => {
+        describe ("POST /api/location/addLocation with no login", () => {
             test('should return 401 code', async () => {
                 await supertest(app)
                 .post("/api/location/addLocation?ip_address=193.140.194.36")
