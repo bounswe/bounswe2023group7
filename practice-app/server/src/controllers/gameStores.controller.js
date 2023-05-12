@@ -79,13 +79,13 @@ class GameStoresController {
             const email = req.email;
 
             if(!email){
-                return res.status(400).json({ message: "Plesae provide the required fields."});
+                return res.status(400).json({ message: "Please provide the required fields."});
             }
 
             const gameName = req.body.name;
 
             if(!(gameName)){
-                return res.status(400).json({ message: "Plesae provide the required fields."});
+                return res.status(400).json({ message: "Pleasee provide the required fields."});
             }
 
             const priceURL = baseURL + `games?title=${gameName}&limit=1`;
