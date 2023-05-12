@@ -5,18 +5,27 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import {AuthContext} from 
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im10ayIsImlhdCI6MTY4MzczMzE3N30.CijpcqEFWUs-5DrKe01WefwSOulYnWfn3qP22UU2XXw";
 
 function App() {
   const [game, setGame] = useState({});
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const {authState, setAuthState} = useContext(AuthContext);
+
+  //const token = localStorage.getItem(accessToken);
+  const token = "";
 
   async function handleSubmit() {
+    
     setIsLoading(true);
     try {
+
+      if(!authState.status){
+        navigate('/signin');
+      }
       const result = await axios.post('http://localhost:8080/api/random-game',
         {},
         {
