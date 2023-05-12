@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { config } from "dotenv";
 config();
-const dbURI = process.env.DB_URI || 'mongodb+srv://senaalciii:<password>@practice-app.a6lf0ms.mongodb.net/';
+const dbURI = process.env.DB_URI || 'mongodb://127.0.0.1:27017/practice-app'
 
 async function connectToDb() {
     try {
