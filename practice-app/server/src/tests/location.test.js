@@ -76,5 +76,15 @@ describe('location', () =>{
                 .then()
             })
         })
+
+        describe ("GET /api/location/history", () => {
+            test('Should return 401 code',async() => {
+            
+                 await supertest(app)
+                .get('/api/location/history')
+                .expect(401)
+                .then()
+            })
+        })
     })
 })
