@@ -48,7 +48,7 @@ const streamingGamesController = {
 
     } catch (error) {
         console.error(error);
-        return res.status(500).send({ error: 'Could not retrieve most viewed game' });
+        return res.status(404).send({ error: 'Could not retrieve most viewed game' });
     }
   },
 
@@ -60,7 +60,7 @@ const streamingGamesController = {
 
     } catch (error) {
         console.error(error);
-        return res.status(500).send(error);
+        return res.status(404).send(error);
       }
   }
 };
