@@ -1,4 +1,5 @@
 import express from "express";
+import gameStoresRouter from "./gameStores.routes.js";
 import favoriteGamesRoutes from "./favorite-games.routes.js";
 import userRoutes from "./user.routes.js";
 import verifyToken from "../utils/auth.js";
@@ -7,6 +8,7 @@ import locationRouter from './location.routes.js'
 const router = express.Router();
 router.use("/users", userRoutes);
 router.use("/favorite-games", favoriteGamesRoutes);
+router.use("/gameprices",gameStoresRouter);
 router.use("/location", locationRouter);
 /**
  * @openapi
@@ -18,29 +20,13 @@ router.use("/location", locationRouter);
  *      responses:
  *          200:
  *              description: Success
- *          401:
- *              description: Unauthorized
- *              content:
- *                application/json:
- *                  schema:
- *                    type: object
- *                    properties:
- *                      message:
- *                        type: string
- *                    example:
- *                      message: "Invalid token!"
- *          404:
- *              description: Not Found
- *              content:
- *                application/json:
- *                  schema:
- *                    type: object
- *                    properties:
- *                      message:
- *                        type: string
- *                    example:
- *                      message:  "User not found!"
  */
+
+router.get('/', (_, res) => {
+    return res.status(200).send("Welcome to the practice app!");
+});
+
+
 
 router.get('/', verifyToken,(req, res) => {
     console.log(req.user, req.username, req.email);
