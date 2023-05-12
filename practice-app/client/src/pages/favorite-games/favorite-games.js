@@ -7,7 +7,7 @@ function FavoriteGames() {
   const [favoriteGames, setFavoriteGames] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const {authState, setAuthState} = useContext(AuthContext);
   let navigate = useNavigate();
   useEffect(() => {
@@ -23,7 +23,7 @@ function FavoriteGames() {
         if (e.response.status === 401) {
           setAuthState({status: false});
         }
-        setError(e.response.data.message);
+        setMessage(e.response.data.message);
       });;
     }
   }, [navigate, authState, setAuthState]);
@@ -31,6 +31,7 @@ function FavoriteGames() {
   const handleGameRemove = (game) => {
     axios.delete(`http://localhost:8080/api/favorite-games?appId=${game.appId}`,{headers:{"Authorization":localStorage.getItem("accessToken")}})
       .then((response) => {
+        setMessage(response.data.message);
         axios.get("http://localhost:8080/api/favorite-games",{headers:{"Authorization":localStorage.getItem("accessToken")}})
           .then((response) => {
             setFavoriteGames(response.data);
@@ -39,13 +40,13 @@ function FavoriteGames() {
           if (e.response.status === 401) {
             setAuthState({status: false});
           }
-          setError(e.response.data.message);
+          setMessage(e.response.data.message);
         });
       }).catch((e) => {
         if (e.response.status === 401) {
           setAuthState({status: false});
         }
-        setError(e.response.data.message);
+        setMessage(e.response.data.message);
       });
   };
 
@@ -55,13 +56,14 @@ function FavoriteGames() {
         setSearchResults(response.data);
       })
       .catch((e) => {
-        setError(e.response.data.message);
+        setMessage(e.response.data.message);
       });
   };
 
   const handleGameAdd = (game) => {
     axios.post(`http://localhost:8080/api/favorite-games?appId=${game.appid}`,{}, {headers:{"Authorization":localStorage.getItem("accessToken")}})
       .then((response) => {
+        setMessage(response.data.message);
         axios.get("http://localhost:8080/api/favorite-games",{headers:{"Authorization":localStorage.getItem("accessToken")}})
           .then((response) => {
             setFavoriteGames(response.data);
@@ -70,26 +72,25 @@ function FavoriteGames() {
           if (e.response.status === 401) {
             setAuthState({status: false});
           }
-          setError(e.response.data.message);
+          setMessage(e.response.data.message);
         });
       }).catch((e) => {
         if (e.response.status === 401) {
           setAuthState({status: false});
         }
-        setError(e.response.data.message);
+        setMessage(e.response.data.message);
       });
   };
   useEffect(() => {
     const timer = setTimeout(() => {
-      setError('');
+      setMessage('');
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [error]);
+  }, [message]);
   return (
     <div className="favorite-games-page">
-      {error && <div className="error-message">{error}</div>}
-
+      {message && <div className="message">{message}</div>}
       <div className="search">
         <h2>Search Games</h2>
         <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
