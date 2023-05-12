@@ -6,7 +6,7 @@ import randomGameController from "../controllers/random-game.controller.js";
 /**
  * @openapi
  * '/api/random-game':
- * post:
+ *  post:
  *     tags:
  *       - Random Game
  *     summary: Returns a random game from Steam 
@@ -25,8 +25,8 @@ import randomGameController from "../controllers/random-game.controller.js";
  *                       type: string
  *                     headerImage:
  *                       type: string
- *     500:
- *         description: Internal Server Error   
+ *         500:
+ *             description: Internal Server Error   
  */
 router.post(
     "/",
@@ -36,9 +36,10 @@ router.post(
 
 /**
  * @openapi
- * '/api/random-game'
- * get:
- *    tags: Random Game
+ * '/api/random-game/history':
+ *  get:
+ *    tags: 
+ *      - Random Game
  *    summary: Returns random game history by user's email
  *    responses:
  *        200:
@@ -68,8 +69,8 @@ router.post(
  *                            name: "Koncolos"
  *                            shortDescription: "&quot;Do you know a monster that dwells around here?&quot; she asked. An ordinary barkeepers' journey, intertwined with the only survivor from a shrouded monster hunter company, started with this question."
  *                            headerImage: "https://cdn.akamai.steamstatic.com/steam/apps/1912490/header.jpg?t=1659947904"
- *                            email "mtk@gmail.com"
- *          401:
+ *                            email: "mtk@gmail.com"
+ *        401:
  *              description: Unauthorized
  *              content:
  *                  application/json:

@@ -19,37 +19,37 @@ describe("Random Game Test", () => {
     });
 
     describe("Should return 200", () => {
-        test("GET /api/random-game/history", (done) => {
+        test("GET /api/random-game/history", () => 
             request(app)
                 .get("/api/random-game/history")
                 .set('Authorization', accessToken)
                 .expect(200)
                 .then()
-        }, 30000);
+        );
     });
     describe("Should return 401", () => {
-        test("GET /api/random-game/history", (done) => {
+        test("GET /api/random-game/history", () => 
             request(app)
             .get("/api/random-game/history")
             .expect(401)
             .then()
-        });
+        );
     });
     describe("Should return 200", () => {
-        test("POST /api/random-game", (done) => {
+        test("POST /api/random-game", () => 
             request(app)
-            .get("/api/random-game")
+            .post("/api/random-game")
             .set('Authorization', accessToken)
             .expect(200)
             .then()
-        }, 30000);
+        , 30000);
     });describe("Should return 401", () => {
-        test("POST /api/random-game", (done) => {
+        test("POST /api/random-game", () => 
             request(app)
-            .get("/api/random-game/")
+            .post("/api/random-game/")
             .expect(401)
             .then()
-        }, 30000);
+        );
     });
 
 });
