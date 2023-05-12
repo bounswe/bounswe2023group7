@@ -5,7 +5,6 @@ import { Platform } from "../models/game-platform.model.js";
 
 
 beforeEach(async () => {
-    // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
     await new Promise(resolve => setTimeout(resolve, 1000));
   });
 
@@ -13,7 +12,6 @@ let accessToken = "";
 describe("Game Platform routes", () => {
     beforeAll(async () => {
         try {
-            Platform.deleteMany({username: "test"});
         await request(app).post("/api/users/signup").send({username: "test", email: "test@email.com", password: "testpassword"});
         const response  = await request(app).post("/api/users/login").send({identifier: "test",password: "testpassword"});
         accessToken = response.body.accessToken;
@@ -22,7 +20,9 @@ describe("Game Platform routes", () => {
     });
     afterAll(async () => {
         try {
-        await Platform.deleteMany({username: "test"});
+        await Platform.deleteMany({username: "test"});    
+        await User.deleteone({username: "test"});
+        
         } catch (error) {  
         }
     });
@@ -38,7 +38,6 @@ describe("Game Platform routes", () => {
                 }));
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
           });
           describe("Empty input which means bad request", () => {
@@ -50,7 +49,6 @@ describe("Game Platform routes", () => {
                 );
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
           });
         describe("Should return a list of games", () => {
@@ -64,7 +62,6 @@ describe("Game Platform routes", () => {
                 }));
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
           });
         describe("Should return 404", () => {
@@ -77,7 +74,6 @@ describe("Game Platform routes", () => {
             );
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
           });
         describe("Should return 422", () => {
@@ -90,7 +86,6 @@ describe("Game Platform routes", () => {
             );
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
           });
           describe("Should not access to server.", () => {
@@ -101,7 +96,6 @@ describe("Game Platform routes", () => {
         });
     });
     beforeEach(async () => {
-        // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
         await new Promise(resolve => setTimeout(resolve, 1000));
       });
     describe("Get Platform", () => {
@@ -116,7 +110,6 @@ describe("Game Platform routes", () => {
                 }));
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
           });
           describe("Should not find any result", () => {
@@ -128,7 +121,6 @@ describe("Game Platform routes", () => {
                 );
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
           });
           describe("Should not access to server", () => {
@@ -138,7 +130,6 @@ describe("Game Platform routes", () => {
                 .expect(401));
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
           });
           describe("Should not find any result", () => {
@@ -160,7 +151,6 @@ describe("Game Platform routes", () => {
                 );
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
         });
         describe("Should return a success message, user should be able to submit another platform", () => {
@@ -172,7 +162,6 @@ describe("Game Platform routes", () => {
                 );
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
         });
         describe("Should not submit anything due to there is nothing like xbox two", () => {
@@ -184,7 +173,6 @@ describe("Game Platform routes", () => {
                 );
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
         });
         describe("Should not submit anything due to bad request", () => {
@@ -196,7 +184,6 @@ describe("Game Platform routes", () => {
                 );
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
         });
         describe("Should not access to server", () => {
@@ -206,7 +193,6 @@ describe("Game Platform routes", () => {
                 .expect(401));
         });
         beforeEach(async () => {
-            // Her test çalıştırılmadan önce 1 saniye gecikme ekleyin
             await new Promise(resolve => setTimeout(resolve, 1000));
         });;
         describe("Should not submit anything due to dupliation", () => {
