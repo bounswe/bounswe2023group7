@@ -10,7 +10,7 @@ const locationRouter = express.Router();
  * '/api/location/history':
  *  get:
  *      tags:
- *      - Location History
+ *      - Location
  *      summary: Get Location History
  *      parameters:
  *          - in: query
@@ -38,7 +38,7 @@ const locationRouter = express.Router();
  *                                  country: "Turkey"
  *                                  CountryFlag: "🇹🇷"
  *                                  time: "02:47:28"
- *          404:
+ *          400:
  *              description: Email of the user is not provided
  *              content:
  *                  application/json:
@@ -49,6 +49,17 @@ const locationRouter = express.Router();
  *                              type: string
  *                          example:
  *                              error: "email is not provided"
+ *          401:
+ *              description: Unauthorized
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                          example: 
+ *                              message: "Provide an access token" 
  *          500:
  *              description: Internal Server Error
  */
@@ -57,14 +68,12 @@ locationRouter.get(
     verifyToken,
     LocationController.history
 );
-
-
 /**
  * @openapi
  * '/api/location/addLocation':
  *  post:
  *      tags:
- *      - Add Location
+ *      - Location
  *      summary: Adds the location of the user to the location history
  *      parameters:
  *          - in: query
@@ -99,19 +108,29 @@ locationRouter.get(
  *                              type: string
  *                          example:
  *                              error: "email is not provided"
+ *          401:
+ *              description: Unauthorized
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                          example: 
+ *                              message: "Provide an access token" 
  */
 locationRouter.post(
     "/addLocation",
     verifyToken,
     LocationController.addLocation
 );
-
 /**
  * @openapi
  * '/api/location/findLocation':
  *  get:
  *      tags:
- *      - Find Location
+ *      - Location
  *      summary: Gets the current location of the user
  *      parameters:
  *          - in: query

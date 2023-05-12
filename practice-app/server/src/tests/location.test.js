@@ -22,56 +22,41 @@ describe('location', () =>{
         }
       });
 
-    //in this block, im testing 
+    
     describe('find location route', () => {
-
-        //under what condition I'm testing , (no ip address is provided | location does not exist)
-        describe('given the location does not exist', () => {
-
-            //my expectation
-            test('it shoud return a 500 code', async () => {
-                
+        describe('/api/location/findLocation?ip_address=0.0.0.0.12 with no location found', () => {
+            test('Should return a 500 code', async () => {
                await supertest(app).get('/api/location/findLocation?ip_address=0.0.0.0.12').
                 expect(500)
                 .then()
             })
-
         })
    
-        describe('if ip_address is not provided', () => {
-
-            //my expectation
-            test('it shoud return a 400 code', async () => {
+        describe('GET /api/location/findLocation with no ip_address', () => {
+            test('Shoud return a 400 code', async () => {
                 
                 await supertest(app).get('/api/location/findLocation')
                 .expect(400)
                 .then()
             })
-
         })
-
     })
-
 
     describe ('add location route', () => {
 
-        describe ("if no email is provided", () => {
-            //my expectation
-            test('it shoud return a 400 code', async () => {
-            
+        describe ("POST /api/location/addLocation with no login (aka. email)", () => {
+            test('should return 401 code', async () => {
                 await supertest(app)
                 .post("/api/location/addLocation?ip_address=193.140.194.36")
-                .set('Authorization', accessToken)
-                .expect(400)
+                .expect(401)
                 .then()
             });
         });
 
-        describe ("if no ip_address  is provided", () => {
-            //my expectation
-            test('it shoud return a 400 code', async () => {
+        describe ("POST /api/location/addLocation with no ip_address", () => {
+            test('Shoud return a 400 code', async () => {
                 await supertest(app)
-                .post("/api/location/addLocation?email=e@kizilkaya.com")
+                .post("/api/location/addLocation")
                 .set('Authorization', accessToken)
                 .expect(400)
                 .then()
@@ -81,19 +66,15 @@ describe('location', () =>{
 
 
     describe ('history route', () => {
-
-        describe ("if no email is provided", () => {
-            //my expectation
-            test('it shoud return a 400 code',async() => {
+        describe ("GET /api/location/history", () => {
+            test('Should return 200 code',async() => {
             
                  await supertest(app)
                 .get('/api/location/history')
+                .expect(200)
                 .set('Authorization', accessToken)
-                .expect(400)
                 .then()
             })
         })
     })
-
-
 })

@@ -7,7 +7,6 @@ const LocationController = {
     history: async function (req, res) {
         try {
             const email = req.email
-            //console.log(email)
             if(!email){
                 return res.status(400).json({ message: "email is not provided"})
             }
@@ -17,7 +16,7 @@ const LocationController = {
             })
 
         } catch (error) {
-            return res.status(500).json({message: error.message}) // email is not specified or no such history
+            return res.status(500).json({message: error.message})
         }
     },
 
@@ -34,7 +33,6 @@ const LocationController = {
             
             const url = `https://ipgeolocation.abstractapi.com/v1/?api_key=${process.env.LOCATION_TOKEN}&ip_address=${req.query.ip_address}`
             const response = (await axios.get(url)).data;
-            //console.log(response);
             await LocationModel.addLocation( 
                 email, 
                 response.city, 
@@ -50,8 +48,6 @@ const LocationController = {
             });
 
         } catch (error) {
-
-           // console.log(error);
             res.status(400).json({ message: "location not found" })
             
         }
@@ -60,10 +56,6 @@ const LocationController = {
 
     findLocation: async function(req, res) {
         try {
-
-//            const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-      //      console.log("clientIP", clientIP);
             if(!req.query.ip_address){
                 return res.status(400).json({ message: "ip address is not provided"})
             }
@@ -79,15 +71,10 @@ const LocationController = {
                 ip: req.query.ip_address
             })
         } catch (error) {
-            //console.log(error)
             return res.status(500).json({message: error.message})  
         }
         
     }
-
-
-
-
 
 };
 

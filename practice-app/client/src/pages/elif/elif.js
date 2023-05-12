@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import {useGetLocationHistory} from "../../queries/elif.queries.js"
+import {useGetLocationHistory} from "./elif.queries.js"
 import Box from '@mui/material/Box';
-import {useFindLocation} from "../../queries/elif.queries.js"
-import {useAddLocation} from "../../queries/elif.queries.js"
+import {useFindLocation} from "./elif.queries.js"
+import {useAddLocation} from "./elif.queries.js"
 
 export default function Page1() {
 
