@@ -65,10 +65,10 @@ const LandingPage = () => {
   <Button
     variant="contained"
     component={Link}
-    to="/safak"
+    to="/favorite-games"
     sx={{ backgroundColor: '#757575', color: '#FFFFFF' , minWidth: '260px'}}
   >
-    Ömer Şafak Bebek
+    Favorite Games
   </Button>
 </Box>
 <Box

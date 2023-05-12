@@ -8,7 +8,6 @@ import SearchGameForPlatform from './pages/yunus/search_screen.js';
 import ListGames from './pages/yunus/list_games.js';
 import AddPlatform from './pages/yunus/add_platform.js';
 import PlatformInfo from './pages/yunus/platform_info.js';
-import Safak from './pages/safak/safak.js';
 import Melih from './pages/melih/melih.js';
 import Tayyip from './pages/tayyip/tayyip.js';
 import Furkan from './pages/furkan/furkan.js';
@@ -20,6 +19,7 @@ import Signin from './pages/signin.js';
 import Signup from './pages/signup.js';
 import Layout from './layout.js';
 import { AuthContext } from './helpers/AuthContext';
+import FavoriteGames from './pages/favorite-games/favorite-games.js';
 function App() {
   const [authState, setAuthState] = useState({
     status: false
@@ -33,7 +33,7 @@ function App() {
             <Route path="/" element={<Layout><LandingPage /></Layout>} />
             <Route path="/elif" element={<Layout><Elif /></Layout>} />
             <Route path="/game-platform" element={<Layout><GamePlatform /></Layout>} />
-            <Route path="/safak" element={<Layout><Safak /></Layout>} />
+            <Route path="/favorite-games" element={<Layout><FavoriteGames /></Layout>} />
             <Route path="/melih" element={<Layout><Melih /></Layout>} />
             <Route path="/tayyip" element={<Layout><Tayyip /></Layout>} />
             <Route path="/furkan" element={<Layout><Furkan /></Layout>} />
