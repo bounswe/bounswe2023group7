@@ -13,9 +13,8 @@ app.use(cors());
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
-
-
-app.use("/api", router);
+app.use(express.json());
+app.use("/api", router );
 
 const apiUrl = process.env.API_URL;
 
