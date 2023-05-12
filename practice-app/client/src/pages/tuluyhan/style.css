@@ -13,7 +13,7 @@
     background-color: #4CAF50;
     border: none;
     color: white;
-    padding: 20px 40px;
+    padding: 40px 40px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -41,7 +41,7 @@
   
   .game-info {
     margin-bottom: 20px;
-    border: 2px solid #4CAF50;
+    border: 2px solid #af4c4c;
     padding: 20px;
   }
   
@@ -58,6 +58,6 @@
   .saved-game-item {
     margin: 10px;
     padding: 10px;
-    border: 2px solid #4CAF50;
+    border: 2px solid #af4c4c;
   }
   
