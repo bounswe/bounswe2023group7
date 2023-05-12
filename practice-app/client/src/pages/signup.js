@@ -25,8 +25,8 @@ const SignUp = () => {
     setError("");
     const data = {username: username, email: email, password: password};
     try {
-      await axios.post("http://localhost:8080/api/users/signup", data);
-      const loginResponse = await axios.post("http://localhost:8080/api/users/login",{identifier: data.email, password: data.password});
+      await axios.post(`http://${process.env.REACT_APP_API_URL}/api/users/signup`, data);
+      const loginResponse = await axios.post(`http://${process.env.REACT_APP_API_URL}/api/users/login`,{identifier: data.email, password: data.password});
       localStorage.setItem("accessToken", loginResponse.data.accessToken);
       setAuthState({
         status: true

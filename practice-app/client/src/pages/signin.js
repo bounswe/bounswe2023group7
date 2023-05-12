@@ -25,7 +25,7 @@ const SignIn = () => {
     setError("");
     const data = {identifier: identifier, password: password};
     try {
-      const loginResponse = await axios.post("http://localhost:8080/api/users/login", data);
+      const loginResponse = await axios.post(`http://${process.env.REACT_APP_API_URL}/api/users/login`, data);
       localStorage.setItem("accessToken", loginResponse.data.accessToken);
       setAuthState({
         status: true

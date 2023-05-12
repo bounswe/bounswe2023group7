@@ -13,7 +13,7 @@ const Page1 = () => {
   console.log('handleGameStoresClick called');
   try {
     console.log("Button clicked");
-    const response = await axios.get('http://localhost:8080/api/gameprices/stores');
+    const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/api/gameprices/stores`);
     setGameStores(response);
     const newWindow = window.open();
     newWindow.document.title = "Game Stores";
@@ -40,7 +40,7 @@ const handleMyCartClick = async () => {
   try {
     console.log("Button clicked");
     const accessToken = localStorage.getItem("accessToken");
-    const response = (await axios.get('http://localhost:8080/api/gameprices', {headers: {Authorization: accessToken}})).data;
+    const response = (await axios.get(`http://${process.env.REACT_APP_API_URL}/api/gameprices`, {headers: {Authorization: accessToken}})).data;
     const cartData = response.map(item => {
       return {
         game_name: item.game_name,
@@ -130,7 +130,7 @@ const handleMyCartClick = async () => {
   const addToCartClick = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-        const response = (await axios.post('http://localhost:8080/api/gameprices/add-cart', {name : searchResult.game_name} ,{headers: {Authorization: accessToken}}));
+        const response = (await axios.post(`http://${process.env.REACT_APP_API_URL}/api/gameprices/add-cart`, {name : searchResult.game_name} ,{headers: {Authorization: accessToken}}));
         window.alert("Game is in your cart now!");
     } catch (error) {
       console.error(error);
@@ -140,7 +140,7 @@ const handleMyCartClick = async () => {
   const handleSearch = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");  
-      const response = await axios.get(`http://localhost:8080/api/gameprices/game?name=${searchTerm}`, {headers: {"Authorization": accessToken}});
+      const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/api/gameprices/game?name=${searchTerm}`, {headers: {"Authorization": accessToken}});
       console.log(response.data);
       setSearchResult(response.data);
       console.log(searchResult);

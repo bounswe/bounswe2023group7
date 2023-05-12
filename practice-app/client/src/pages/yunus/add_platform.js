@@ -15,7 +15,7 @@ const SubmitPlatform = () => {
     try {
       if (localStorage.getItem("accessToken")) {
 
-        const response = await axios.post('http://localhost:8080/api/game-platform/platform?title=' + keyword,{} ,{
+        const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/api/game-platform/platform?title=` + keyword,{} ,{
           headers: {
            "Authorization": localStorage.getItem("accessToken"),
           },

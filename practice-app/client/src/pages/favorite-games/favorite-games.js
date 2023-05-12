@@ -11,11 +11,11 @@ function FavoriteGames() {
   const {authState, setAuthState} = useContext(AuthContext);
   let navigate = useNavigate();
   useEffect(() => {
-    if (!authState.status) {
+    if (!localStorage.getItem("accessToken")) {
       navigate("/signin");
     }
     else {
-      axios.get("http://localhost:8080/api/favorite-games",{headers:{"Authorization":localStorage.getItem("accessToken")}})
+      axios.get(`http://${process.env.REACT_APP_API_URL}/api/favorite-games`,{headers:{"Authorization":localStorage.getItem("accessToken")}})
       .then((response) => {
         setFavoriteGames(response.data);
       })
@@ -29,10 +29,10 @@ function FavoriteGames() {
   }, [navigate, authState, setAuthState]);
 
   const handleGameRemove = (game) => {
-    axios.delete(`http://localhost:8080/api/favorite-games?appId=${game.appId}`,{headers:{"Authorization":localStorage.getItem("accessToken")}})
+    axios.delete(`http://${process.env.REACT_APP_API_URL}/api/favorite-games?appId=${game.appId}`,{headers:{"Authorization":localStorage.getItem("accessToken")}})
       .then((response) => {
         setMessage(response.data.message);
-        axios.get("http://localhost:8080/api/favorite-games",{headers:{"Authorization":localStorage.getItem("accessToken")}})
+        axios.get(`http://${process.env.REACT_APP_API_URL}/api/favorite-games`,{headers:{"Authorization":localStorage.getItem("accessToken")}})
           .then((response) => {
             setFavoriteGames(response.data);
         })
@@ -51,7 +51,7 @@ function FavoriteGames() {
   };
 
   const handleSearch = () => {
-    axios.get(`http://localhost:8080/api/favorite-games/search?searchValue=${searchQuery}`)
+    axios.get(`http://${process.env.REACT_APP_API_URL}/api/favorite-games/search?searchValue=${searchQuery}`)
       .then((response) => {
         setSearchResults(response.data);
       })
@@ -61,10 +61,10 @@ function FavoriteGames() {
   };
 
   const handleGameAdd = (game) => {
-    axios.post(`http://localhost:8080/api/favorite-games?appId=${game.appid}`,{}, {headers:{"Authorization":localStorage.getItem("accessToken")}})
+    axios.post(`http://${process.env.REACT_APP_API_URL}/api/favorite-games?appId=${game.appid}`,{}, {headers:{"Authorization":localStorage.getItem("accessToken")}})
       .then((response) => {
         setMessage(response.data.message);
-        axios.get("http://localhost:8080/api/favorite-games",{headers:{"Authorization":localStorage.getItem("accessToken")}})
+        axios.get(`http://${process.env.REACT_APP_API_URL}/api/favorite-games`,{headers:{"Authorization":localStorage.getItem("accessToken")}})
           .then((response) => {
             setFavoriteGames(response.data);
         })

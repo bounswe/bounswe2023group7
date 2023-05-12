@@ -13,7 +13,7 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const response = await axios.get("http://localhost:8080/api/streaming-games/most-viewed");
+      const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/api/streaming-games/most-viewed`);
 
       setMostViewedGame(response.data);
       setResponseMessage("");
@@ -29,7 +29,7 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      await axios.post("http://localhost:8080/api/streaming-games/most-viewed", mostViewedGame);
+      await axios.post(`http://${process.env.REACT_APP_API_URL}/api/streaming-games/most-viewed`, mostViewedGame);
 
       setResponseMessage("Most viewed game saved successfully!");
     } catch (error) {
@@ -43,7 +43,7 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const response = await axios.get("http://localhost:8080/api/streaming-games/history-most-viewed");
+      const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/api/streaming-games/history-most-viewed`);
 
       setSavedGames(response.data);
       setResponseMessage("");

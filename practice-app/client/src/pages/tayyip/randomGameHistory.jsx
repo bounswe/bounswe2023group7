@@ -10,7 +10,7 @@ const GameHistory = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const result = await axios.get("http://localhost:8080/api/random-game/history", {
+                const result = await axios.get(`http://${process.env.REACT_APP_API_URL}/api/random-game/history`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }

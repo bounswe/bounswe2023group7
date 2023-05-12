@@ -16,7 +16,7 @@ function SearchForm() {
       };
 
   const handleSubmit = async () => {
-    const link = "http://localhost:8080/api/game-platform/search?title="+inputValue;
+    const link = `http://${process.env.REACT_APP_API_URL}/api/game-platform/search?title=`+inputValue;
     const response = await axios.get(link, {
       headers: {
         Authorization: localStorage.getItem("accessToken"),

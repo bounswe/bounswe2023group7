@@ -8,7 +8,7 @@ function CreateEventForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const Link = "http://localhost:8080/api/events/createEvent"
+  const Link = `http://${process.env.REACT_APP_API_URL}/api/events/createEvent`
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
