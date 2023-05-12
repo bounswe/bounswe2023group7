@@ -5,7 +5,7 @@ import LandingPage from './pages/landingPage.js';
 import Elif from './pages/elif/elif.js';
 import Yunus from './pages/yunus/yunus.js';
 import Melih from './pages/melih/melih.js';
-import Tayyip from './pages/tayyip/tayyip.jsx';
+import RandomGames from './pages/tayyip/randomGame.jsx';
 import Furkan from './pages/furkan/furkan.js';
 import Sena from './pages/sena/sena.js';
 import Hakan from './pages/hakan/hakan.js';
