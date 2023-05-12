@@ -1,0 +1,18 @@
+.event-grid {
+    border-collapse: collapse;
+    border: 1px solid black;
+    margin-top: 10px;
+  }
+  
+  .event-grid th, .event-grid td {
+    padding: 10px;
+  }
+  
+  .event-grid th {
+    font-weight: bold;
+  }
+  
+  .vertical-line {
+    border-right: 1px solid black;
+  }
+  
