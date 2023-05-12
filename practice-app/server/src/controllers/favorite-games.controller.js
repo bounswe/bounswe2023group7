@@ -11,7 +11,6 @@ const FavoriteGamesController = {
             }
             const url = `${searchApiUrl}${searchValue}`;
             const response = await axios.get(url);
-            console.log(response.data);
             if (response.status == 200) {
                 if (response.data.length == 0) {
                     return res.status(404).json({message: "No game found!"});
