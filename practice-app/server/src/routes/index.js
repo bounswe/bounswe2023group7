@@ -1,7 +1,16 @@
 import express from "express";
-const router = express.Router();
 import genre from './genre.routes.js';
+import gameStoresRouter from "./gameStores.routes.js";
+import favoriteGamesRoutes from "./favorite-games.routes.js";
+import userRoutes from "./user.routes.js";
+import verifyToken from "../utils/auth.js";
+import locationRouter from './location.routes.js'
 
+const router = express.Router();
+router.use("/users", userRoutes);
+router.use("/favorite-games", favoriteGamesRoutes);
+router.use("/gameprices",gameStoresRouter);
+router.use("/location", locationRouter);
 router.use('/', genre);
 
 /**
@@ -16,7 +25,11 @@ router.use('/', genre);
  *              description: Success
  */
 
-router.get('/', (_, res) => {
+
+
+
+router.get('/', verifyToken,(req, res) => {
+    console.log(req.user, req.username, req.email);
     return res.status(200).send("Welcome to the practice app!");
 });
 
