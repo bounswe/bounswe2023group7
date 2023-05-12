@@ -25,9 +25,8 @@ After that, you can follow instructions provided in `README.md` files in `client
     ```
     
 3. After adding the .env file, you can run `docker-compose up --build -d` in `server` folder.
-4. Run `docker-compose up --build -d` in `client` folder.
-5. Some steps about AWS EC2
-6. That is all.
+4. Run `sudo docker run -d -p 8080:8080 omersafakbebek/practice-app-backend` for backend and `sudo docker run -d -p 3000:3000 omersafakbebek/practice-app-frontend` for frontend.
+5. That is all.
 
     
 
