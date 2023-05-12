@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import "./tayyip-style.css"
 import Button from '@mui/material/Button';
@@ -6,26 +6,27 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Link, useNavigate } from 'react-router-dom';
-import {AuthContext} from 
+import { AuthContext } from '../../helpers/AuthContext'
 
 
 function App() {
   const [game, setGame] = useState({});
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const {authState, setAuthState} = useContext(AuthContext);
+  const { authState, setAuthState } = useContext(AuthContext);
+  const token = localStorage.getItem("accessToken");
 
-  //const token = localStorage.getItem(accessToken);
-  const token = "";
+  let navigate = useNavigate();
+  useEffect(() => {
+    if (!authState.status) {
+      navigate('/signin')
+    } 
+  });
+
 
   async function handleSubmit() {
-    
     setIsLoading(true);
     try {
-
-      if(!authState.status){
-        navigate('/signin');
-      }
       const result = await axios.post('http://localhost:8080/api/random-game',
         {},
         {
@@ -59,7 +60,6 @@ function App() {
       <div className="button-container">
         <Button onClick={() => handleSubmit()}
           variant="contained"
-          component={Link}
           sx={{ backgroundColor: '#424242', color: '#FFFFFF', minWidth: '200px', fontFamily: "Trebuchet MS", alignItems: "center" }}>Get Random Game</Button>
         <Button onClick={() => handleGetHistory()}
           variant="contained"
