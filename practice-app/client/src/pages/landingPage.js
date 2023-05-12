@@ -60,7 +60,7 @@ const LandingPage = () => {
     to="/game-platform"
     sx={{ backgroundColor: '#616161', color: '#FFFFFF', minWidth: '260px'}}
   >
-    Game Platform
+    Game Platform by Altug
   </Button>
   <Button
     variant="contained"

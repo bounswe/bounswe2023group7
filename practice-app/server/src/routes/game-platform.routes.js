@@ -144,6 +144,9 @@ router.get(
  *                                          game_id: 78
  *                                          moby_url: "https://www.mobygames.com/game/78/prince-of-persia-2-the-shadow-the-flame/"
  *                                          title: "Prince of Persia 2: The Shadow & The Flame"
+ *                                  message:
+ *                                      type: string
+ *                                      example: "You do not have these platforms."
  *          401:
  *              description: Unauthorized
  *              content:
