@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
@@ -8,15 +8,19 @@ const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const { setAuthState } = useContext(AuthContext);
+  const { authState, setAuthState } = useContext(AuthContext);
   const [error, setError] = useState("");
   const errorDiv = error 
-  ? <div className="error">
+  ? <div>
       {error}
     </div> 
   : '';
   let navigate = useNavigate();
-
+  useEffect(()=> {
+    if (authState.status) {
+      navigate("/");
+    }
+  });
   const signUp = async () => {
     setError("");
     const data = {username: username, email: email, password: password};
@@ -27,7 +31,6 @@ const SignUp = () => {
       setAuthState({
         status: true
       });
-      console.log("loginResponse.data.accessToken");
       navigate("/");
     } catch (e) {
       setError(e.response.data.message);
