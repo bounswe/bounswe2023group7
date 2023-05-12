@@ -7,15 +7,10 @@ const EventController = {
     ListEvent : async function(req, res){
         try{
             const response = await EventModel.find({}).select('-_id -__v -eventDate');
-            if (response.length == 0){
-                res.status(200).send("There is no event to show.");
-            }
-            else{
-                res.status(200).json(response);
-            }
+                return res.status(200).json(response);
         }
         catch(error){
-            res.status(500).json({ message : error.message })
+            return res.status(500).json({ message : error.message })
         }
     },
 
@@ -52,33 +47,31 @@ const EventController = {
                 console.log("time is not provided in a correct format")
                 return res.status(400).json( { message : "time is not provided in a correct format" } )
             }
-
+            var isError;
             await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
                 params:{
                     address: address,
                     key: process.env.GEOCODING_TOKEN
                 }
             }).then(function(response){
-
+                // console.log(response.data.results[0]);
                 const event = new EventModel({ 
                     eventName: req.body.eventName, 
                     eventTime: req.body.eventTime,
                     eventLocationLatitude: response.data.results[0].geometry.location.lat,
                     eventLocationLongitude: response.data.results[0].geometry.location.lng});
-                
                 event.save().then(() => console.log(event));
-
-
-            
             })
                 .catch(function(error){
-                    console.log(error)
+                    isError = true;
                 });
-                
-            res.status(200).send("Event is successfully created.");
+            if (isError) {
+                return res.status(400).send("Bad location");
+            }
+           return res.status(200).send("Event is successfully created.");
         }
         catch(error){
-            res.status(500).send({ error : error.message })
+            return res.status(500).send({ error : error.message })
         }
     }
 };

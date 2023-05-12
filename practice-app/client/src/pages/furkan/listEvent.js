@@ -6,7 +6,6 @@ function EventList() {
   const [events, setEvents] = useState([]);
   const [displayCount, setDisplayCount] = useState(10);
   const link = "http://localhost:8080/api/events/list"
-
   useEffect(() => {
     axios.get(link)
       .then(response => setEvents(response.data))
@@ -36,13 +35,13 @@ function EventList() {
               </tr>
             </thead>
             <tbody>
-              {events.slice(0, displayCount).map(event => (
+              {events.length>0 && (events.slice(0, displayCount).map(event => (
                 <tr key={event._id}>
                   <td style={{ border: '1px solid black', padding: '5px' }}>{event.eventName}</td>
                   <td style={{ border: '1px solid black', padding: '5px' }}>{event.eventTime}</td>
                   <td style={{ border: '1px solid black', padding: '5px' }}>{`${event.eventLocationLatitude}, ${event.eventLocationLongitude}`}</td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
           <div style={{ marginTop: '10px' }}>
