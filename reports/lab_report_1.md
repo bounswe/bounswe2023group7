@@ -27,19 +27,19 @@
 | Description | Issue | Assignee | Due | Estimated Duration |
 | --- | --- | --- | --- | --- |
 | Reorganize the wiki home page and wiki sidebar. | [#233](https://github.com/bounswe/bounswe2023group7/issues/233) | Ömer Şafak Bebek | 10.10.2023 | 30mins |
-| Finding team name/website name |  | Team | 10.10.2023 | 1 hour |
+| Finding team name/website name | [#243](https://github.com/bounswe/bounswe2023group7/issues/243) | Team | 10.10.2023 | 1 hour |
 | Opening form for collecting data about experiences from group members | [#232](https://github.com/bounswe/bounswe2023group7/issues/232) | Yunus Emre Altuğ | 09.10.2023 | 15mins |
 | Reorganizing README.md for new semester. | [#236](https://github.com/bounswe/bounswe2023group7/issues/236) | Muhammet Tayyip Kamiloğlu | 10.10.2023 | 30mins |
 | Opening new profile pages for Wiki | [#234](https://github.com/bounswe/bounswe2023group7/issues/234) [#235](https://github.com/bounswe/bounswe2023group7/issues/235) | Hatice Erk, Kardelen Erdal, Burak Eren, Ozan Kaymak | 10.10.2023 | 1hr |
 | Checking/learning previous semester deliverables |  | Hatice Erk, Kardelen Erdal, Burak Eren, Ozan Kaymak | 10.10.2023 | 2hr |
-| Revising requirements from previous semester |  | Team | 10.10.2023 | 3hr |
-| Revising class diagram from previous semester |  | Team | 10.10.2023 | 2hr |
+| Revising requirements from previous semester | [#242](https://github.com/bounswe/bounswe2023group7/issues/242) | Team | 10.10.2023 | 3hr |
+| Revising class diagram from previous semester | [#241](https://github.com/bounswe/bounswe2023group7/issues/241) | Team | 10.10.2023 | 2hr |
 | Revising/checking previous semester deliverables according to feedback |  | Team | 10.10.2023 | 1hr |
 | Dividing teams for mobile, front-end, and back-end. |  | Team | 10.10.2023 | 1hr |
-| Deciding technologies to be used in the implementation for back-end |  | Back-end team | 10.10.2023 | 1hr |
-| Deciding technologies to be used in the implementation for front-end |  | Front-end team | 10.10.2023 | 1hr |
-| Deciding technologies to be used in the implementation for mobile |  | Mobile team | 10.10.2023 | 1hr  |
-| Putting template for lab reports into templates section |  | Elif Kızılkaya | 10.10.2023 | 5mins |
+| Deciding technologies to be used in the implementation for back-end | [#238](https://github.com/bounswe/bounswe2023group7/issues/239) | Back-end team | 10.10.2023 | 1hr |
+| Deciding technologies to be used in the implementation for front-end | [#239](https://github.com/bounswe/bounswe2023group7/issues/239) | Front-end team | 10.10.2023 | 1hr |
+| Deciding technologies to be used in the implementation for mobile | [#240](https://github.com/bounswe/bounswe2023group7/issues/240) | Mobile team | 10.10.2023 | 1hr  |
+| Putting template for lab reports into templates section | [#237](https://github.com/bounswe/bounswe2023group7/issues/237) | Elif Kızılkaya | 10.10.2023 | 5mins |
 
 
 ## Risks
