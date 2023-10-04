@@ -5,7 +5,7 @@
 
 ## Progress Summary
 **This week** we focused on getting to know the new members of our group, revising the description of our project and what is asked of us.
-**Our objective for the following week** is to revise our requirements and class diagrams from the previous semester, collect data from our group members about their experiences regarding back-end, front-end, and mobile technologies, and reorganize the wiki page according to the new semester, decide technologies to be used in our project.
+**Our objective for the following week** is to revise our requirements and class diagrams from the previous semester, meet for discussion about our design, collect data from our group members about their experiences regarding back-end, front-end, and mobile technologies, and reorganize the wiki page according to the new semester, decide technologies to be used in our project.
 
 ## What was planned for the week? How did it go?
 
