@@ -30,7 +30,7 @@
 | Finding team name/website name |  | Team | 10.10.2023 | 1 hour |
 | Opening form for collecting data about experiences from group members |  | Yunus Emre Altuğ | 09.10.2023 | 15mins |
 | Reorganizing READ.me for new semester. |  | Muhammet Tayyip Kamiloğlu | 10.10.2023 | 30mins |
-| Opening new profile pages for Wiki |  | Hatice Erk, Kardelen Erdal, Burak Eren, Ozan Kaymak | 10.10.2023 | 1hr |
+| Opening new profile pages for Wiki | [#234](https://github.com/bounswe/bounswe2023group7/issues/234) | Hatice Erk, Kardelen Erdal, Burak Eren, Ozan Kaymak | 10.10.2023 | 1hr |
 | Checking/learning previous semester deliverables |  | Hatice Erk, Kardelen Erdal, Burak Eren, Ozan Kaymak | 10.10.2023 | 2hr |
 | Revising requirements from previous semester |  | Team | 10.10.2023 | 3hr |
 | Revising class diagram from previous semester |  | Team | 10.10.2023 | 2hr |
