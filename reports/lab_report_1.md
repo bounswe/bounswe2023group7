@@ -26,7 +26,7 @@
 ## Your plans for the next week
 | Description | Issue | Assignee | Due | Estimated Duration |
 | --- | --- | --- | --- | --- |
-| Reorganize the wiki home page and wiki sidebar. |  | Ömer Şafak Bebek | 10.10.2023 | 30mins |
+| Reorganize the wiki home page and wiki sidebar. | [#233](https://github.com/bounswe/bounswe2023group7/issues/233) | Ömer Şafak Bebek | 10.10.2023 | 30mins |
 | Finding team name/website name |  | Team | 10.10.2023 | 1 hour |
 | Opening form for collecting data about experiences from group members |  | Yunus Emre Altuğ | 09.10.2023 | 15mins |
 | Reorganizing READ.me for new semester. |  | Muhammet Tayyip Kamiloğlu | 10.10.2023 | 30mins |
