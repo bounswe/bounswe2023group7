@@ -18,13 +18,16 @@ This project is basically a gaming community platform where different users, inc
 - [*Elif Kızılkaya*](https://github.com/elifkizilky)
 - [*Fatma Sena Alçı*](https://github.com/senaal)
 - [*Furkan Ülke*](https://github.com/frknlke)
-- [*Güney Yüksel*](https://github.com/SouthAscend)
 - [*Hakan Karakuş*](https://github.com/Hakkush-07)
-- [*Marcel Namyslo*](https://github.com/Mercyrion)
-- [*Mehmet Tuluyhan Sözen*](https://github.com/tuluyhansozen)
 - [*Melih Gezer*](https://github.com/melihgezerr)
 - [*Muhammet Tayyip Kamiloğlu*](https://github.com/mtkamiloglu)
 - [*Ömer Şafak Bebek*](https://github.com/omersafakbebek)
 - [*Yunus Emre Altuğ*](https://github.com/yunusemrealtug)
+- [Hatice Erk](https://github.com/haticerk)
+- [Tacettin Burak Eren](https://github.com/tacettinburakeren)
+- Kardelen Erdal
+- [*~Güney Yüksel~*](https://github.com/SouthAscend)
+- [*~Marcel Namyslo~*](https://github.com/Mercyrion)
+- [*~Mehmet Tuluyhan Sözen~*](https://github.com/tuluyhansozen)
 
 </details>
