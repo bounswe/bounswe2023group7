@@ -25,7 +25,7 @@ This project is basically a gaming community platform where different users, inc
 - [*Yunus Emre Altuğ*](https://github.com/yunusemrealtug)
 - [Hatice Erk](https://github.com/haticerk)
 - [Tacettin Burak Eren](https://github.com/tacettinburakeren)
-- Kardelen Erdal
+- [Kardelen Erdal](https://github.com/kardelenerdal)
 - [*~Güney Yüksel~*](https://github.com/SouthAscend)
 - [*~Marcel Namyslo~*](https://github.com/Mercyrion)
 - [*~Mehmet Tuluyhan Sözen~*](https://github.com/tuluyhansozen)
