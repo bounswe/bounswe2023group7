@@ -34,12 +34,12 @@ We had difficult time while planning for the available time for our team meeting
 ## Your plans for the next week
 | Description | Issue | Assignee | Due | Estimated Duration |
 | --- | --- | --- | --- | --- |
-| Project planning for the whole semester | --- | Team | 12.10.2023 | 5hr |
+| Project planning for the whole semester | [#250](https://github.com/bounswe/bounswe2023group7/issues/250) | Team | 12.10.2023 | 5hr |
 | Updating communication plan  | [#246](https://github.com/bounswe/bounswe2023group7/issues/246) | Hatice Erk | 17.10.2023 | 30mins |
-| Revising event and group requirements | --- | Team | 17.10.2023 | 3hr |
-| Organizing previous deliverables according to event and group changes | --- | Team | 17.10.2023 | 2hr |
+| Revising event and group requirements | [#248](https://github.com/bounswe/bounswe2023group7/issues/248) | Team | 17.10.2023 | 3hr |
+| Organizing previous deliverables according to event and group changes | [#249](https://github.com/bounswe/bounswe2023group7/issues/249) | Team | 17.10.2023 | 2hr |
 | Starting to learning choosen technologies | --- | Team | 17.10.2023 | 2hr |
-| Frontend organization for communication and management | --- | Elif Kızılkaya | 17.10.2023 | 30mins |
+| Frontend organization for communication and management | [#247](https://github.com/bounswe/bounswe2023group7/issues/247) | Elif Kızılkaya | 17.10.2023 | 30mins |
 | Backend organization for communication and management | --- | Hakan Karakuş | 17.10.2023 | 30mins |
 | Mobile organization for communication and management | --- | Kardelen Erdal | 17.10.2023 | 30mins |
 
