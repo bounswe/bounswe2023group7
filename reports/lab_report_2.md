@@ -36,8 +36,8 @@ We had difficult time while planning for the available time for our team meeting
 | --- | --- | --- | --- | --- |
 | Project planning for the whole semester | --- | Team | 12.10.2023 | 5hr |
 | Updating communication plan  | --- | Hatice Erk | 17.10.2023 | 30mins |
-| Organizing requirements and UML diagrams | --- | Team | 17.10.2023 | 30mins |
 | Revising event and group requirements | --- | Team | 17.10.2023 | 3hr |
+| Organizing previous deliverables according to event and group changes | --- | Team | 17.10.2023 | 2hr |
 | Starting to learning choosen technologies | --- | Team | 17.10.2023 | 2hr |
 | Frontend organization for communication and management | --- | Elif Kızılkaya | 17.10.2023 | 30mins |
 | Backend organization for communication and management | --- | Hakan Karakuş | 17.10.2023 | 30mins |
