@@ -40,7 +40,7 @@ We had difficult time while planning for the available time for our team meeting
 | Organizing previous deliverables according to event and group changes | [#249](https://github.com/bounswe/bounswe2023group7/issues/249) | Team | 17.10.2023 | 2hr |
 | Starting to learning choosen technologies | --- | Team | 17.10.2023 | 2hr |
 | Frontend organization for communication and management | [#247](https://github.com/bounswe/bounswe2023group7/issues/247) | Elif Kızılkaya | 17.10.2023 | 30mins |
-| Backend organization for communication and management | --- | Hakan Karakuş | 17.10.2023 | 30mins |
+| Backend organization for communication and management | [#251](https://github.com/bounswe/bounswe2023group7/issues/251) | Hakan Karakuş | 17.10.2023 | 30mins |
 | Mobile organization for communication and management | --- | Kardelen Erdal | 17.10.2023 | 30mins |
 
 
@@ -61,7 +61,7 @@ Team members that attended this session.
 - [x] Muhammet Tayyip Kamiloğlu
 - [x] Ömer Şafak Bebek
 - [x] Yunus Emre Altuğ
- 
+
 
 ## Additional Notes
 --
