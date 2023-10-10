@@ -13,7 +13,7 @@ For the upcoming week, we are planning to revise the other project deliverables 
 | Reorganized the wiki home page and wiki sidebar. | [#233](https://github.com/bounswe/bounswe2023group7/issues/233) | Ömer Şafak Bebek | 10.10.2023 | --- | 30mins | 30mins |
 | Found team name/website name | [#243](https://github.com/bounswe/bounswe2023group7/issues/243) | Team | 10.10.2023 | --- | 1 hour | 30mins |
 | Opened form for collecting data about experiences from group members | [#232](https://github.com/bounswe/bounswe2023group7/issues/232) | Yunus Emre Altuğ | 09.10.2023 | --- | 15mins | 15mins |
-| Reorganized README.md for a new semester. | [#236](https://github.com/bounswe/bounswe2023group7/issues/236) | Muhammet Tayyip Kamiloğlu | 10.10.2023 | --- | 30mins | --- |
+| Reorganized README.md for a new semester. | [#236](https://github.com/bounswe/bounswe2023group7/issues/236) | Muhammet Tayyip Kamiloğlu | 10.10.2023 | --- | 30mins | 40mins |
 | Opened new profile pages for Wiki | [#234](https://github.com/bounswe/bounswe2023group7/issues/234) [#235](https://github.com/bounswe/bounswe2023group7/issues/235) | Hatice Erk, Kardelen Erdal, Burak Eren, Ozan Kaymak | 10.10.2023 | --- | 1hr | 1hr |
 | Checked/learned previous semester deliverables |  | Hatice Erk, Kardelen Erdal, Burak Eren, Ozan Kaymak | 10.10.2023 | --- | 2hr | 1.5hr |
 | Revised requirements from previous semester | [#242](https://github.com/bounswe/bounswe2023group7/issues/242) | Team | 10.10.2023 | --- | 3hr | 4hr |
