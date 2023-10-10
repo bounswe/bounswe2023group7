@@ -16,13 +16,13 @@ For the upcoming week, we are planning to revise the other project deliverables 
 | Reorganized README.md for a new semester. | [#236](https://github.com/bounswe/bounswe2023group7/issues/236) | Muhammet Tayyip Kamiloğlu | 10.10.2023 | --- | 30mins | --- |
 | Opened new profile pages for Wiki | [#234](https://github.com/bounswe/bounswe2023group7/issues/234) [#235](https://github.com/bounswe/bounswe2023group7/issues/235) | Hatice Erk, Kardelen Erdal, Burak Eren, Ozan Kaymak | 10.10.2023 | --- | 1hr | 1hr |
 | Checked/learned previous semester deliverables |  | Hatice Erk, Kardelen Erdal, Burak Eren, Ozan Kaymak | 10.10.2023 | --- | 2hr | 1.5hr |
-| Revised requirements from previous semester | [#242](https://github.com/bounswe/bounswe2023group7/issues/242) | Team | 10.10.2023 | --- | 3hr | --- |
-| Revised class diagram from previous semester | [#241](https://github.com/bounswe/bounswe2023group7/issues/241) | Team | 10.10.2023 | --- | 2hr | --- |
-| Revised/checked previous semester deliverables according to feedback |  | Team | 10.10.2023 | --- | 1hr | --- |
-| Divided teams for mobile, front-end, and back-end. |  | Team | 10.10.2023 | --- | 1hr | --- |
-| Decided technologies to be used in the implementation for back-end | [#238](https://github.com/bounswe/bounswe2023group7/issues/239) | Back-end team | 10.10.2023 | --- | 1hr | --- |
-| Decided technologies to be used in the implementation for front-end | [#239](https://github.com/bounswe/bounswe2023group7/issues/239) | Front-end team | 10.10.2023 | --- | 1hr | --- |
-| Decided technologies to be used in the implementation for mobile | [#240](https://github.com/bounswe/bounswe2023group7/issues/240) | Mobile team | 10.10.2023 | --- | 1hr | --- |
+| Revised requirements from previous semester | [#242](https://github.com/bounswe/bounswe2023group7/issues/242) | Team | 10.10.2023 | --- | 3hr | 4hr |
+| Revised class diagram from previous semester | [#241](https://github.com/bounswe/bounswe2023group7/issues/241) | Team | 10.10.2023 | --- | 2hr | 3hr |
+| Revised/checked previous semester deliverables according to feedback |  | Team | 10.10.2023 | --- | 1hr | 1hr  |
+| Divided teams for mobile, front-end, and back-end. |  | Team | 10.10.2023 | --- | 1hr | 1hr  |
+| Decided technologies to be used in the implementation for back-end | [#238](https://github.com/bounswe/bounswe2023group7/issues/239) | Back-end team | 10.10.2023 | --- | 1hr | 1hr  |
+| Decided technologies to be used in the implementation for front-end | [#239](https://github.com/bounswe/bounswe2023group7/issues/239) | Front-end team | 10.10.2023 | --- | 1hr | 1hr  |
+| Decided technologies to be used in the implementation for mobile | [#240](https://github.com/bounswe/bounswe2023group7/issues/240) | Mobile team | 10.10.2023 | --- | 1hr | 1hr |
 
 
 ## Completed tasks that were not planned for the week
