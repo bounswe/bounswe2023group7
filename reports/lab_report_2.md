@@ -35,7 +35,7 @@ We had difficult time while planning for the available time for our team meeting
 | Description | Issue | Assignee | Due | Estimated Duration |
 | --- | --- | --- | --- | --- |
 | Project planning for the whole semester | --- | Team | 12.10.2023 | 5hr |
-| Updating communication plan  | --- | Hatice Erk | 17.10.2023 | 30mins |
+| Updating communication plan  | [#246](https://github.com/bounswe/bounswe2023group7/issues/246) | Hatice Erk | 17.10.2023 | 30mins |
 | Revising event and group requirements | --- | Team | 17.10.2023 | 3hr |
 | Organizing previous deliverables according to event and group changes | --- | Team | 17.10.2023 | 2hr |
 | Starting to learning choosen technologies | --- | Team | 17.10.2023 | 2hr |
