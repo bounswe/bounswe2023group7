@@ -26,31 +26,41 @@ For the upcoming week, we are planning to revise the other project deliverables 
 
 
 ## Completed tasks that were not planned for the week
--
+--
 
 ## Planned vs. Actual
 We had difficult time while planning for the available time for our team meeting since everyone had different agendas. To solve this kind of issues in the later weeks, we plan to arrange a regular slot for our meeting in every week.
 
 ## Your plans for the next week
-List the specific tasks or actions you plan to take in the upcoming week. These should be based on the project plan and the issues discussed earlier. All action items should be linked to the relevant issues.
+| Description | Issue | Assignee | Due | Estimated Duration |
+| --- | --- | --- | --- | --- |
+| Project planning for the whole semester |  | Team | 12.10.2023 | 5hr |
+| Updating communication plan  |  | Hatice Erk | 17.10.2023 | 30mins |
+| Revising event and group requirements | --- | Team | 17.10.2023 | 3hr |
+| Starting to learning choosen technologies | --- | Team | 17.10.2023 | 2hr |
+| Frontend organization for communication and management | --- | Elif Kızılkaya | 17.10.2023 | 30mins |
+| Backend organization for communication and management | --- | Hakan Karakuş | 17.10.2023 | 30mins |
+| Mobile organization for communication and management | --- | Kardelen Erdal | 17.10.2023 | 30mins |
+
+
 
 ## Risks
-Identify any risks that you anticipate in the upcoming week(s), and explain how you plan to mitigate them.
+Identifying subtasks for project plan for each week could be difficult and require much time.
 
 ## Participants
 Team members that attended this session.
 - [ ] Burak Eren
-- [ ] Elif Kızılkaya
-- [ ] Fatma Sena Alçı
-- [ ] Furkan Ülke
-- [ ] Hakan Karakuş
-- [ ] Hatice Erk
-- [ ] Kardelen Erdal
-- [ ] Melih Gezer
-- [ ] Muhammet Tayyip Kamiloğlu
-- [ ] Ömer Şafak Bebek
-- [ ] Yunus Emre Altuğ
+- [x] Elif Kızılkaya (Writer)
+- [x] Fatma Sena Alçı
+- [x] Furkan Ülke
+- [x] Hakan Karakuş
+- [x] Hatice Erk (Reviewer)
+- [x] Kardelen Erdal
+- [x] Melih Gezer
+- [x] Muhammet Tayyip Kamiloğlu
+- [x] Ömer Şafak Bebek
+- [x] Yunus Emre Altuğ
  
 
 ## Additional Notes
-Include any other relevant information or comments regarding the week's progress or any additional insights you want to share. This section is optional.
+--
