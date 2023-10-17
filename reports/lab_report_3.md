@@ -43,7 +43,7 @@ We have planned to exclude event from our project for previous week but we could
 | Use Case Diagram revision | --- | Hatice Erk, Elif Kızılkaya | 24.10.2023 | 2hr |
 | Adding Annotation to Sequence Diagram | --- | Kardelen Erdal | 24.10.2023 | 1hr |
 | Adding Recommendation to Sequence Diagram | --- | Furkan Ülke | 24.10.2023 | 1hr |
-| Adding Game to Sequence Diagram | --- | Fatma Sena Alçı | 24.10.2023 | 1hr |
+| Adding Game to Sequence Diagram | [#264](https://github.com/bounswe/bounswe2023group7/issues/264) | Fatma Sena Alçı | 24.10.2023 | 1hr |
 | Updating Mockup for Game and Entity | --- | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | 3hr |
 | User scenario for Game and Entity | --- | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | 1.5hr |
 | Frontend Page Structure Design | --- | Frontend Team | 24.10.2023 | 3hr |
@@ -54,7 +54,7 @@ We have planned to exclude event from our project for previous week but we could
 | Deciding on PR, branch and deployment convention | --- | Melih Gezer | 24.10.2023 | 30mins |
 | Designing home page for frontend | --- | Frontend Team | 24.10.2023 | 1.5hr |
 | Designing home page for mobile | --- | Mobile Team | 24.10.2023 | 1.5hr |
-| Creating Responsibility Assignment Matrix | --- | Fatma Sena Alçı | 24.10.2023 | 1hr |
+| Creating Responsibility Assignment Matrix | [#263](https://github.com/bounswe/bounswe2023group7/issues/263) | Fatma Sena Alçı | 24.10.2023 | 1hr |
 
 
 ## Risks
@@ -88,6 +88,7 @@ Team members that attended this session.
     **Example**: _feature/BE-523-login-endpoint_
 
 - Issues, Meeting Notes and Lab Reports are create using the appropriate template.
+- There must be one reviewer for each issue and 2 reviewers for each PR. 
 
 ## Additional Notes
 --
