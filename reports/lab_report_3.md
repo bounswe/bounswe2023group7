@@ -24,7 +24,8 @@ Our main goal for the next week is the design of pages, successfully deploying t
 | Description | Issue | Assignee | Estimated Duration | Actual Duration | 
 | --- | --- | --- | --- | --- | 
 | Meeting Notes of 11.10 | [#253](https://github.com/bounswe/bounswe2023group7/issues/253) | Hatice Erk | 30mins | 30mins |
-
+| Adding New Labels for New Teams | [#254](https://github.com/bounswe/bounswe2023group7/issues/254) | Muhammet Tayyip Kamiloğlu | 15mins | 15mins |
+| Wiki Project Plan & RAM Update | [#255](https://github.com/bounswe/bounswe2023group7/issues/255) | Elif Kızılkaya | 30mins | 30mins |
 
 ## Planned vs. Actual
 We have planned to exclude event from our project for previous week but we couldn't do it. We checked if it effects the other parts of the project and made analysis. This week we will be removing "event".
@@ -43,7 +44,7 @@ We have planned to exclude event from our project for previous week but we could
 | Creating database in Docker container | --- | Backend Team | 24.10.2023 | 1hr |
 | Implementing login and signup endpoints in backend | --- | Backend Team | 24.10.2023 | 4hr |
 | Creating user table in database | --- | Backend Team | 24.10.2023 | 1hr |
-| Use Case Diagram revision | --- | Hatice Erk, Elif Kızılkaya | 24.10.2023 | 2hr |
+| Use Case Diagram revision | [#260](https://github.com/bounswe/bounswe2023group7/issues/260) | Hatice Erk, Elif Kızılkaya | 24.10.2023 | 2hr |
 | Adding Annotation to Sequence Diagram | --- | Kardelen Erdal | 24.10.2023 | 1hr |
 | Adding Recommendation to Sequence Diagram | --- | Furkan Ülke | 24.10.2023 | 1hr |
 | Adding Game to Sequence Diagram | [#264](https://github.com/bounswe/bounswe2023group7/issues/264) | Fatma Sena Alçı | 24.10.2023 | 1hr |
