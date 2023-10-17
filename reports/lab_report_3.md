@@ -34,25 +34,25 @@ We have planned to exclude event from our project for previous week but we could
 ## Your plans for the next week
 | Description | Issue | Assignee | Due | Estimated Duration |
 | --- | --- | --- | --- | --- |
-| Dockerization for backend environment | --- | Backend Team | 24.10.2023 | 1hr |
+| Dockerization for backend environment | [#262](https://github.com/bounswe/bounswe2023group7/issues/262) | Backend Team | 24.10.2023 | 1hr |
 | Dockerization for frontend environment | --- | Frontend Team | 24.10.2023 | 1hr |
 | Dockerization for mobile environment | --- | Mobile Team | 24.10.2023 | 1hr |
-| Creating deployment environment in AWS for backend | --- | Backend Team | 24.10.2023 | 2hr |
+| Creating deployment environment in AWS for backend | [#266](https://github.com/bounswe/bounswe2023group7/issues/266) | Backend Team | 24.10.2023 | 2hr |
 | Creating deployment environment in AWS for frontend | --- | Frontend Team | 24.10.2023 | 2hr |
-| Creating github actions pipeline for automatization of the deployment backend | --- | Backend Team | 24.10.2023 | 2hr |
+| Creating github actions pipeline for automatization of the deployment backend | [#270](https://github.com/bounswe/bounswe2023group7/issues/270) | Backend Team | 24.10.2023 | 2hr |
 | Creating github actions pipeline for automatization of the deployment frontend | --- | Frontend Team | 24.10.2023 | 2hr |
-| Creating database in Docker container | --- | Backend Team | 24.10.2023 | 1hr |
-| Implementing login and signup endpoints in backend | --- | Backend Team | 24.10.2023 | 4hr |
-| Creating user table in database | --- | Backend Team | 24.10.2023 | 1hr |
+| Creating database in Docker container | [#280](https://github.com/bounswe/bounswe2023group7/issues/280) | Backend Team | 24.10.2023 | 1hr |
+| Implementing login and signup endpoints in backend | [#283](https://github.com/bounswe/bounswe2023group7/issues/283) | Backend Team | 24.10.2023 | 4hr |
+| Creating user table in database | [#284](https://github.com/bounswe/bounswe2023group7/issues/284) | Backend Team | 24.10.2023 | 1hr |
 | Use Case Diagram revision | [#260](https://github.com/bounswe/bounswe2023group7/issues/260) | Hatice Erk, Elif Kızılkaya | 24.10.2023 | 2hr |
 | Adding Annotation to Sequence Diagram | [#276](https://github.com/bounswe/bounswe2023group7/issues/276) | Kardelen Erdal | 24.10.2023 | 1hr |
 | Adding Recommendation to Sequence Diagram | --- | Furkan Ülke | 24.10.2023 | 1hr |
 | Adding Game to Sequence Diagram | [#264](https://github.com/bounswe/bounswe2023group7/issues/264) | Fatma Sena Alçı | 24.10.2023 | 1hr |
 | Updating Mockup for Game and Entity | --- | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | 3hr |
-| User scenario for Game and Entity | --- | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | 1.5hr |
+| User scenario for Game and Entity | [#275](https://github.com/bounswe/bounswe2023group7/issues/275) | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | 1.5hr |
 | Frontend Page Structure Design | --- | Frontend Team | 24.10.2023 | 3hr |
 | Mobile Page Structure Design | --- | Mobile Team | 24.10.2023 | 3hr |
-| Folder Structure Design for backend | --- | Backend Team | 24.10.2023 | 1hr |
+| Folder Structure Design for backend | [#285](https://github.com/bounswe/bounswe2023group7/issues/285) | Backend Team | 24.10.2023 | 1hr |
 | Folder Structure Design for frontend | --- | Frontend Team | 24.10.2023 | 1hr |
 | Folder Structure Design for mobile | --- | Mobile Team | 24.10.2023 | 1hr |
 | Deciding on PR, branch and deployment convention | --- | Melih Gezer | 24.10.2023 | 30mins |
