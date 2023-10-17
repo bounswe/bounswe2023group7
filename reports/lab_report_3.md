@@ -45,7 +45,7 @@ We have planned to exclude event from our project for previous week but we could
 | Implementing login and signup endpoints in backend | --- | Backend Team | 24.10.2023 | 4hr |
 | Creating user table in database | --- | Backend Team | 24.10.2023 | 1hr |
 | Use Case Diagram revision | [#260](https://github.com/bounswe/bounswe2023group7/issues/260) | Hatice Erk, Elif Kızılkaya | 24.10.2023 | 2hr |
-| Adding Annotation to Sequence Diagram | --- | Kardelen Erdal | 24.10.2023 | 1hr |
+| Adding Annotation to Sequence Diagram | [#276](https://github.com/bounswe/bounswe2023group7/issues/276) | Kardelen Erdal | 24.10.2023 | 1hr |
 | Adding Recommendation to Sequence Diagram | --- | Furkan Ülke | 24.10.2023 | 1hr |
 | Adding Game to Sequence Diagram | [#264](https://github.com/bounswe/bounswe2023group7/issues/264) | Fatma Sena Alçı | 24.10.2023 | 1hr |
 | Updating Mockup for Game and Entity | --- | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | 3hr |
