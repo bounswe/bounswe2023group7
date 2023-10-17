@@ -55,7 +55,7 @@ We have planned to exclude event from our project for previous week but we could
 | Folder Structure Design for backend | [#285](https://github.com/bounswe/bounswe2023group7/issues/285) | Backend Team | 24.10.2023 | 1hr |
 | Folder Structure Design for frontend | --- | Frontend Team | 24.10.2023 | 1hr |
 | Folder Structure Design for mobile | --- | Mobile Team | 24.10.2023 | 1hr |
-| Deciding on PR, branch and deployment convention | --- | Melih Gezer | 24.10.2023 | 30mins |
+| Deciding on PR, branch and deployment convention | [#286](https://github.com/bounswe/bounswe2023group7/issues/286) | Melih Gezer | 24.10.2023 | 30mins |
 | Designing home page for frontend | --- | Frontend Team | 24.10.2023 | 1.5hr |
 | Designing home page for mobile | --- | Mobile Team | 24.10.2023 | 1.5hr |
 | Creating Responsibility Assignment Matrix | [#263](https://github.com/bounswe/bounswe2023group7/issues/263) | Fatma Sena Alçı | 24.10.2023 | 1hr |
