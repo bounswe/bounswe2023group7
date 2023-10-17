@@ -74,6 +74,17 @@ Team members that attended this session.
 - [x] Ömer Şafak Bebek
 - [x] Yunus Emre Altuğ
 
+## Decided Conventions
+We decided to use technologies
+
+- Mobile technology: Flutter, Dart
+- Frontend technology: JavaScript, ReactJS, Material UI, CSS
+- Backend technology: NestJS, TypeScript, PostgreSQL
+  
+Branch Name Convention:
+
+| Branch Type (feature, bugfix, ...) | Team Code (BE, FE, MB) | Issue Number | Explanation |
+
 
 ## Additional Notes
 --
