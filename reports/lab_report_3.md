@@ -30,29 +30,31 @@ We have planned to exclude event from our project for previous week but we could
 ## Your plans for the next week
 | Description | Issue | Assignee | Due | Estimated Duration |
 | --- | --- | --- | --- | --- |
-| Dockerization for backend environment | --- | Backend Team | 24.10.2023 | 5hr |
-| Dockerization for frontend environment | --- | Frontend Team | 24.10.2023 | 3hr |
-| Dockerization for mobile environment | --- | Mobile Team | 24.10.2023 | 3hr |
-| Creating deployment environment in AWS for backend | --- | Backend Team | 24.10.2023 | 3hr |
-| Creating deployment environment in AWS for frontend | --- | Frontend Team | 24.10.2023 | 3hr |
-| Creating github actions pipeline for automatization of the deployment backend | --- | Backend Team | 24.10.2023 | 3hr |
-| Creating github actions pipeline for automatization of the deployment frontend | --- | Frontend Team | 24.10.2023 | 3hr |
-| Creating database in Docker container | --- | Backend Team | 24.10.2023 | 3hr |
-| Use Case Diagram revision | --- | Hatice Erk, Elif Kızılkaya | 24.10.2023 | 3hr |
-| Adding Annotation to Sequence Diagram | --- | Kardelen Erdal | 24.10.2023 | 3hr |
-| Adding Recommendation to Sequence Diagram | --- | Furkan Ülke | 24.10.2023 | 3hr |
-| Adding Game to Sequence Diagram | --- | Sena Alçı | 24.10.2023 | 3hr |
-| Mockup revision for Game and Entity | --- | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | 3hr |
-| User scenario for Game and Entity | --- | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | 3hr |
+| Dockerization for backend environment | --- | Backend Team | 24.10.2023 | 1hr |
+| Dockerization for frontend environment | --- | Frontend Team | 24.10.2023 | 1hr |
+| Dockerization for mobile environment | --- | Mobile Team | 24.10.2023 | 1hr |
+| Creating deployment environment in AWS for backend | --- | Backend Team | 24.10.2023 | 2hr |
+| Creating deployment environment in AWS for frontend | --- | Frontend Team | 24.10.2023 | 2hr |
+| Creating github actions pipeline for automatization of the deployment backend | --- | Backend Team | 24.10.2023 | 2hr |
+| Creating github actions pipeline for automatization of the deployment frontend | --- | Frontend Team | 24.10.2023 | 2hr |
+| Creating database in Docker container | --- | Backend Team | 24.10.2023 | 1hr |
+| Implementing login and signup endpoints in backend | --- | Backend Team | 24.10.2023 | 4hr |
+| Creating user table in database | --- | Backend Team | 24.10.2023 | 1hr |
+| Use Case Diagram revision | --- | Hatice Erk, Elif Kızılkaya | 24.10.2023 | 2hr |
+| Adding Annotation to Sequence Diagram | --- | Kardelen Erdal | 24.10.2023 | 1hr |
+| Adding Recommendation to Sequence Diagram | --- | Furkan Ülke | 24.10.2023 | 1hr |
+| Adding Game to Sequence Diagram | --- | Fatma Sena Alçı | 24.10.2023 | 1hr |
+| Updating Mockup for Game and Entity | --- | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | 3hr |
+| User scenario for Game and Entity | --- | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | 1.5hr |
 | Frontend Page Structure Design | --- | Frontend Team | 24.10.2023 | 3hr |
 | Mobile Page Structure Design | --- | Mobile Team | 24.10.2023 | 3hr |
-| Folder Structure Design for backend | --- | Backend Team | 24.10.2023 | 3hr |
-| Folder Structure Design for frontend | --- | Frontend Team | 24.10.2023 | 3hr |
-| Folder Structure Design for mobile | --- | Mobile Team | 24.10.2023 | 3hr |
-| Deciding on PR, branch and deployment convention | --- | Melih Gezer | 24.10.2023 | 3hr |
-| Designing home page for frontend | --- | Frontend Team | 24.10.2023 | 3hr |
-| Designing home page for mobile | --- | Mobile Team | 24.10.2023 | 3hr |
-| Creating Responsibility Assignment Matrix | --- | Sena Alçı | 24.10.2023 | 3hr |
+| Folder Structure Design for backend | --- | Backend Team | 24.10.2023 | 1hr |
+| Folder Structure Design for frontend | --- | Frontend Team | 24.10.2023 | 1hr |
+| Folder Structure Design for mobile | --- | Mobile Team | 24.10.2023 | 1hr |
+| Deciding on PR, branch and deployment convention | --- | Melih Gezer | 24.10.2023 | 30mins |
+| Designing home page for frontend | --- | Frontend Team | 24.10.2023 | 1.5hr |
+| Designing home page for mobile | --- | Mobile Team | 24.10.2023 | 1.5hr |
+| Creating Responsibility Assignment Matrix | --- | Fatma Sena Alçı | 24.10.2023 | 1hr |
 
 
 ## Risks
