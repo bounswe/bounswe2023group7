@@ -54,7 +54,7 @@ We have planned to exclude event from our project for previous week but we could
 | Mobile Page Structure Design | [#271](https://github.com/bounswe/bounswe2023group7/issues/271) | Mobile Team | 24.10.2023 | 3hr |
 | Folder Structure Design for backend | [#285](https://github.com/bounswe/bounswe2023group7/issues/285) | Backend Team | 24.10.2023 | 1hr |
 | Folder Structure Design for frontend | [#267](https://github.com/bounswe/bounswe2023group7/issues/267) | Frontend Team | 24.10.2023 | 1hr |
-| Folder Structure Design for mobile | --- | Mobile Team | 24.10.2023 | 1hr |
+| Folder Structure Design for mobile | [#287](https://github.com/bounswe/bounswe2023group7/issues/287) | Mobile Team | 24.10.2023 | 1hr |
 | Deciding on PR, branch and deployment convention | [#286](https://github.com/bounswe/bounswe2023group7/issues/286) | Melih Gezer | 24.10.2023 | 30mins |
 | Designing home page for frontend | [#279](https://github.com/bounswe/bounswe2023group7/issues/279) | Frontend Team | 24.10.2023 | 1.5hr |
 | Designing home page for mobile | [#274](https://github.com/bounswe/bounswe2023group7/issues/274) | Mobile Team | 24.10.2023 | 1.5hr |
