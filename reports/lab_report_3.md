@@ -35,29 +35,29 @@ We have planned to exclude event from our project for previous week but we could
 | Description | Issue | Assignee | Due | Estimated Duration |
 | --- | --- | --- | --- | --- |
 | Dockerization for backend environment | [#262](https://github.com/bounswe/bounswe2023group7/issues/262) | Backend Team | 24.10.2023 | 1hr |
-| Dockerization for frontend environment | --- | Frontend Team | 24.10.2023 | 1hr |
-| Dockerization for mobile environment | --- | Mobile Team | 24.10.2023 | 1hr |
+| Dockerization for frontend environment | [#268](https://github.com/bounswe/bounswe2023group7/issues/268) | Frontend Team | 24.10.2023 | 1hr |
+| Dockerization for mobile environment | [#269](https://github.com/bounswe/bounswe2023group7/issues/269) | Mobile Team | 24.10.2023 | 1hr |
 | Creating deployment environment in AWS for backend | [#266](https://github.com/bounswe/bounswe2023group7/issues/266) | Backend Team | 24.10.2023 | 2hr |
-| Creating deployment environment in AWS for frontend | --- | Frontend Team | 24.10.2023 | 2hr |
+| Creating deployment environment in AWS for frontend | [#272](https://github.com/bounswe/bounswe2023group7/issues/272) | Frontend Team | 24.10.2023 | 2hr |
 | Creating github actions pipeline for automatization of the deployment backend | [#270](https://github.com/bounswe/bounswe2023group7/issues/270) | Backend Team | 24.10.2023 | 2hr |
-| Creating github actions pipeline for automatization of the deployment frontend | --- | Frontend Team | 24.10.2023 | 2hr |
+| Creating github actions pipeline for automatization of the deployment frontend | [#273](https://github.com/bounswe/bounswe2023group7/issues/273) | Frontend Team | 24.10.2023 | 2hr |
 | Creating database in Docker container | [#280](https://github.com/bounswe/bounswe2023group7/issues/280) | Backend Team | 24.10.2023 | 1hr |
 | Implementing login and signup endpoints in backend | [#283](https://github.com/bounswe/bounswe2023group7/issues/283) | Backend Team | 24.10.2023 | 4hr |
 | Creating user table in database | [#284](https://github.com/bounswe/bounswe2023group7/issues/284) | Backend Team | 24.10.2023 | 1hr |
 | Use Case Diagram revision | [#260](https://github.com/bounswe/bounswe2023group7/issues/260) | Hatice Erk, Elif Kızılkaya | 24.10.2023 | 2hr |
 | Adding Annotation to Sequence Diagram | [#276](https://github.com/bounswe/bounswe2023group7/issues/276) | Kardelen Erdal | 24.10.2023 | 1hr |
-| Adding Recommendation to Sequence Diagram | --- | Furkan Ülke | 24.10.2023 | 1hr |
+| Adding Recommendation to Sequence Diagram | [#261](https://github.com/bounswe/bounswe2023group7/issues/261) | Furkan Ülke | 24.10.2023 | 1hr |
 | Adding Game to Sequence Diagram | [#264](https://github.com/bounswe/bounswe2023group7/issues/264) | Fatma Sena Alçı | 24.10.2023 | 1hr |
-| Updating Mockup for Game and Entity | --- | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | 3hr |
+| Updating Mockup for Game and Entity | [#265](https://github.com/bounswe/bounswe2023group7/issues/265) | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | 3hr |
 | User scenario for Game and Entity | [#275](https://github.com/bounswe/bounswe2023group7/issues/275) | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | 1.5hr |
-| Frontend Page Structure Design | --- | Frontend Team | 24.10.2023 | 3hr |
-| Mobile Page Structure Design | --- | Mobile Team | 24.10.2023 | 3hr |
+| Frontend Page Structure Design | [#277](https://github.com/bounswe/bounswe2023group7/issues/277) | Frontend Team | 24.10.2023 | 3hr |
+| Mobile Page Structure Design | [#271](https://github.com/bounswe/bounswe2023group7/issues/271) | Mobile Team | 24.10.2023 | 3hr |
 | Folder Structure Design for backend | [#285](https://github.com/bounswe/bounswe2023group7/issues/285) | Backend Team | 24.10.2023 | 1hr |
-| Folder Structure Design for frontend | --- | Frontend Team | 24.10.2023 | 1hr |
+| Folder Structure Design for frontend | [#267](https://github.com/bounswe/bounswe2023group7/issues/267) | Frontend Team | 24.10.2023 | 1hr |
 | Folder Structure Design for mobile | --- | Mobile Team | 24.10.2023 | 1hr |
 | Deciding on PR, branch and deployment convention | [#286](https://github.com/bounswe/bounswe2023group7/issues/286) | Melih Gezer | 24.10.2023 | 30mins |
-| Designing home page for frontend | --- | Frontend Team | 24.10.2023 | 1.5hr |
-| Designing home page for mobile | --- | Mobile Team | 24.10.2023 | 1.5hr |
+| Designing home page for frontend | [#279](https://github.com/bounswe/bounswe2023group7/issues/279) | Frontend Team | 24.10.2023 | 1.5hr |
+| Designing home page for mobile | [#274](https://github.com/bounswe/bounswe2023group7/issues/274) | Mobile Team | 24.10.2023 | 1.5hr |
 | Creating Responsibility Assignment Matrix | [#263](https://github.com/bounswe/bounswe2023group7/issues/263) | Fatma Sena Alçı | 24.10.2023 | 1hr |
 
 
