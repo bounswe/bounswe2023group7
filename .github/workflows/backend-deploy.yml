@@ -1,0 +1,33 @@
+name: Deploy-Backend-to-EC2
+
+on:
+  push:
+    branches:
+      - main
+      - development
+    paths:
+      - 'ludos/backend/**'
+      - '.github/workflows/backend-deploy.yml'
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
+
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.BACKEND_EC2_SSH_KEY }}
+          REMOTE_HOST: 3.125.225.39
+          REMOTE_USER: ubuntu
+          SOURCE: ./ludos/backend
+          TARGET: ~/backend
+          ARGS: --delete
+          EXCLUDE: .env
+          SCRIPT_AFTER: |
+            cd ~/backend
+            docker compose -f docker-compose.test.yml up -d --build
+            docker image prune -af && docker builder prune -f && docker builder prune -af --filter until=10m && docker volume prune -af
