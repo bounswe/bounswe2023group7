@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  frontend:
+    image: ludos-frontend
+    build: .
+    command: "npm start"
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 3000:3000
+  
