@@ -49,7 +49,7 @@ class Home extends StatelessWidget {
                           style: TextButton.styleFrom(foregroundColor: Colors.black),
                           onPressed: () {},
                           child: const Text(
-                            'Take-Two Boss Supportive of Microsoft-Activision Deal: Whats Good for Them Is Good for the Industry',
+                            'Assassins Creed Mirage launch brings 18% player rise across AC series',
                             softWrap: true,
                           ),
                         ),
@@ -58,8 +58,9 @@ class Home extends StatelessWidget {
                       SizedBox(width: 5.0),
                       Container(
                         child: TextButton(
+                          style: TextButton.styleFrom(foregroundColor: Colors.black),
                           onPressed: () {},
-                          child: Text('@Kat Baıley'),
+                          child: Text('@senaal'),
                         ),
                       ),
                     ],
@@ -68,7 +69,7 @@ class Home extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(15.0),
                   child: const Text(
-                    'As Microsoft continues in its efforts to acquire Activision Blizzard and multiple regulators make their decisions on the deal,',
+                    'The average total player increase across the series is 18.66% since the release of Assassins Creed Mirage. This sudden increased interest across so many old games in the series is very rare for any series.',
                     softWrap: true,
                   ),
                 ),
@@ -114,9 +115,10 @@ class Home extends StatelessWidget {
                       Container(
                         width: 250.0,
                         child: TextButton(
+                          style: TextButton.styleFrom(foregroundColor: Colors.black),
                           onPressed: () {},
-                          child: Text(
-                            'Take-Two Boss Supportive of Microsoft-Activision Deal: Whats Good for Them Is Good for the Industry',
+                          child: const Text(
+                            ' FAR CRY’S MULTIPLAYER GAME IS AN EXTRACTION-BASED SHOOTER',
                             softWrap: true,
                           ),
                         ),
@@ -125,8 +127,9 @@ class Home extends StatelessWidget {
                       SizedBox(width: 5.0),
                       Container(
                         child: TextButton(
+                          style: TextButton.styleFrom(foregroundColor: Colors.black),
                           onPressed: () {},
-                          child: Text('@Kat Baıley'),
+                          child: Text('@furkanulke'),
                         ),
                       ),
                     ],
@@ -135,7 +138,7 @@ class Home extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(15.0),
                   child: const Text(
-                    'As Microsoft continues in its efforts to acquire Activision Blizzard and multiple regulators make their decisions on the deal,',
+                    'As expected with an extraction-based shooter, the game loop is focused on gathering gear, leveling up, and purchasing perks. Although sources were unable to dive deep into what perks entail, it was said that they are directly tied to the leveling system. ',
                     softWrap: true,
                   ),
                 ),
@@ -155,7 +158,7 @@ class Home extends StatelessWidget {
                           color: Colors.white,
                           onPressed: () {},
                           icon: const Icon(Icons.comment)),
-                      Text('10 minutes ago'),
+                      Text('40 minutes ago'),
                     ],
                   ),
                 ),
@@ -181,9 +184,10 @@ class Home extends StatelessWidget {
                       Container(
                         width: 250.0,
                         child: TextButton(
+                          style: TextButton.styleFrom(foregroundColor: Colors.black),
                           onPressed: () {},
-                          child: Text(
-                            'Take-Two Boss Supportive of Microsoft-Activision Deal: Whats Good for Them Is Good for the Industry',
+                          child: const Text(
+                            'Watch Dogs: Legion vs Watch Dogs 2',
                             softWrap: true,
                           ),
                         ),
@@ -192,8 +196,9 @@ class Home extends StatelessWidget {
                       SizedBox(width: 5.0),
                       Container(
                         child: TextButton(
+                          style: TextButton.styleFrom(foregroundColor: Colors.black),
                           onPressed: () {},
-                          child: Text('@Kat Baıley'),
+                          child: Text('@haticeerk'),
                         ),
                       ),
                     ],
@@ -202,7 +207,7 @@ class Home extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(15.0),
                   child: const Text(
-                    'As Microsoft continues in its efforts to acquire Activision Blizzard and multiple regulators make their decisions on the deal,',
+                    'Anyone else really disappointed with Watch Dogs: Legion after REALLY loving Watch Dogs 2?',
                     softWrap: true,
                   ),
                 ),
@@ -222,7 +227,7 @@ class Home extends StatelessWidget {
                           color: Colors.white,
                           onPressed: () {},
                           icon: const Icon(Icons.comment)),
-                      Text('10 minutes ago'),
+                      Text('10 hours ago'),
                     ],
                   ),
                 ),
@@ -234,8 +239,76 @@ class Home extends StatelessWidget {
                   color: Color(0xFF5f1a37),
                 ),
               ],
-
             ),
+            Column(
+
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 250.0,
+                        child: TextButton(
+                          style: TextButton.styleFrom(foregroundColor: Colors.black),
+                          onPressed: () {},
+                          child: const Text(
+                            'Disco Elysium x Death note fan-fiction recommendations?',
+                            softWrap: true,
+                          ),
+                        ),
+
+                      ),
+                      SizedBox(width: 5.0),
+                      Container(
+                        child: TextButton(
+                          style: TextButton.styleFrom(foregroundColor: Colors.black),
+                          onPressed: () {},
+                          child: Text('@kardelen'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(15.0),
+                  child: const Text(
+                    'Does anyone have any recommendations for Disco Elysium x Death note fan-fiction. I have seen the concept thrown around here a lot but I would absoluely love to read a story about it. Comment if you know any. Thanks!',
+                    softWrap: true,
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                          color: Colors.white,
+                          onPressed: () {},
+                          icon: const Icon(Icons.thumb_up_sharp)),
+                      IconButton(
+                          color: Colors.white,
+                          onPressed: () {},
+                          icon: const Icon(Icons.thumb_down_sharp)),
+                      IconButton(
+                          color: Colors.white,
+                          onPressed: () {},
+                          icon: const Icon(Icons.comment)),
+                      Text('10 days ago'),
+                    ],
+                  ),
+                ),
+
+                //SizedBox(height: 5.0),
+                const Divider(
+                  height: 3.0,
+                  thickness: 3.0,
+                  color: Color(0xFF5f1a37),
+                ),
+              ],
+            ),
+
           ],
         ),
         bottomNavigationBar: Container(
