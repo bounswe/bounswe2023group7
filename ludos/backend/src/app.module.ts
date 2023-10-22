@@ -4,17 +4,18 @@ import { AppService } from './services/app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './services/config/typeorm-config.service';
+import { User } from './entities/user.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService],
     }),
-    TypeOrmModule.forFeature([]),
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
   providers: [AppService],
