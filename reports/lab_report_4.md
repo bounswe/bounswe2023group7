@@ -85,16 +85,16 @@ Since we have lots of things to do, we may struggle on completing the planned is
 ## Participants
 Team members that attended this session.
 - [x] Burak Eren
-- [x] Elif Kızılkaya (Reviewer)
+- [x] Elif Kızılkaya 
 - [x] Fatma Sena Alçı
-- [x] Furkan Ülke (Reviewer)
+- [x] Furkan Ülke 
 - [x] Hakan Karakuş
 - [x] Hatice Erk 
-- [x] Kardelen Erdal (Writer)
+- [x] Kardelen Erdal 
 - [x] Melih Gezer
 - [x] Muhammet Tayyip Kamiloğlu
 - [x] Ömer Şafak Bebek
-- [x] Yunus Emre Altuğ
+- [x] Yunus Emre Altuğ (Writer)
 
 ## Decided Conventions
 - We decided to use technologies
