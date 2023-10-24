@@ -23,7 +23,7 @@ Our main goal is being ready for the representation at next week. We will deal w
 | Creating user table in database | [#284](https://github.com/bounswe/bounswe2023group7/issues/284) | Backend Team | 24.10.2023 | [#291](https://github.com/bounswe/bounswe2023group7/pull/291) | 1hr | 1hr |
 | Use Case Diagram revision | [#260](https://github.com/bounswe/bounswe2023group7/issues/260) | Hatice Erk, Elif Kızılkaya | 24.10.2023 | --- | 2hr | 2.5hr |
 | Adding Annotation to Sequence Diagram | [#276](https://github.com/bounswe/bounswe2023group7/issues/276) | Kardelen Erdal | 24.10.2023 | --- | 1hr | 2hr |
-| Adding Recommendation to Sequence Diagram | [#261](https://github.com/bounswe/bounswe2023group7/issues/261) | Furkan Ülke | 24.10.2023 | --- | 1hr | --- |
+| Adding Recommendation to Sequence Diagram | [#261](https://github.com/bounswe/bounswe2023group7/issues/261) | Furkan Ülke | 24.10.2023 | --- | 1hr | 1hr |
 | Adding Game to Sequence Diagram | [#264](https://github.com/bounswe/bounswe2023group7/issues/264) | Fatma Sena Alçı | 24.10.2023 | --- | 1hr | 1hr |
 | Updating Mockup for Game and Entity | [#265](https://github.com/bounswe/bounswe2023group7/issues/265) | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | --- | 3hr | 3hr |
 | User scenario for Game and Entity | [#275](https://github.com/bounswe/bounswe2023group7/issues/275) | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | --- | 1.5hr | 1hr |
@@ -44,7 +44,7 @@ Our main goal is being ready for the representation at next week. We will deal w
 | Creating Empty Placeholders Pages for Mobile | [#292](https://github.com/bounswe/bounswe2023group7/issues/292) | Furkan Ülke | 30mins | 30mins |
 
 ## Planned vs. Actual
-We actually thought that we would exclude events and update groups but there was no assigne about that mistakenly. We will have an assignment for someone this week. 
+We actually thought that we would exclude events and update groups but there was no assigne about that mistakenly. We will have an assignment for someone this week. Additionally, dockerizations and aws deployments were assigned the whole team, we did together and tested the functionality. Therefore for this week pull requests were less. From now we started to assign personally and this means pull requests will be actively used. 
 
 
 ## Your plans for the next week
