@@ -63,7 +63,7 @@ We actually thought that we would exclude events and update groups but there was
 |  Revision of Implementation of Mobil Sign-up Page |  | Fatma Sena Alçı | 30.10.2023 | 2hr |
 |  Revision of Implementation of Mobil Home Page | [#301](https://github.com/bounswe/bounswe2023group7/issues/301) | Hatice Erk | 30.10.2023 | 1hr |
 |  Creating Custom Widgets for Forum Post | [#306](https://github.com/bounswe/bounswe2023group7/issues/306) | Hatice Erk | 30.10.2023 | 2hr |
-|  Implementation of Mobil Forgot Password Page |  | Furkan Ülke | 30.10.2023 | 2hr |
+|  Implementation of Mobil Forgot Password Page | [#312](https://github.com/bounswe/bounswe2023group7/issues/312) | Furkan Ülke | 30.10.2023 | 2hr |
 |  Implementation of Mobil Loading Spinner |  | Kardelen Erdal | 30.10.2023 | 30mn |
 |  Revision of .gitignore in Mobil Folder | [#303](https://github.com/bounswe/bounswe2023group7/issues/303) | Hatice Erk | 30.10.2023 | 30mn |
 |  Creating Custom Widgets for Game Page |  | Furkan Ülke | 30.10.2023 | 5hr |
