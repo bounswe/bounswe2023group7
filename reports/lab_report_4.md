@@ -11,15 +11,15 @@ Our main goal is being ready for the representation at next week. We will deal w
 ## What was planned for the week? How did it go?
 | Description | Issue | Assignee | Due | PR | Estimated Duration | Actual Duration | 
 | --- | --- | --- | --- | --- | --- | --- |
-| Dockerization for backend environment | [#262](https://github.com/bounswe/bounswe2023group7/issues/262) | Backend Team | 24.10.2023 | --- | 1hr | --- |
+| Dockerization for backend environment | [#262](https://github.com/bounswe/bounswe2023group7/issues/262) | Backend Team | 24.10.2023 | --- | 1hr | 1hr |
 | Dockerization for frontend environment | [#268](https://github.com/bounswe/bounswe2023group7/issues/268) | Frontend Team | 24.10.2023 | --- | 1hr | 1hr |
 | Dockerization for mobile environment | [#269](https://github.com/bounswe/bounswe2023group7/issues/269) | Mobile Team | 24.10.2023 | --- |1hr | 30mins |
-| Creating deployment environment in AWS for backend | [#266](https://github.com/bounswe/bounswe2023group7/issues/266) | Backend Team | 24.10.2023 | --- |2hr | --- |
+| Creating deployment environment in AWS for backend | [#266](https://github.com/bounswe/bounswe2023group7/issues/266) | Backend Team | 24.10.2023 | --- |2hr | 2hr |
 | Creating deployment environment in AWS for frontend | [#272](https://github.com/bounswe/bounswe2023group7/issues/272) | Frontend Team | 24.10.2023 | --- | 2hr | 2hr |
-| Creating github actions pipeline for automatization of the deployment backend | [#270](https://github.com/bounswe/bounswe2023group7/issues/270) | Backend Team | 24.10.2023 | --- | 2hr | --- |
+| Creating github actions pipeline for automatization of the deployment backend | [#270](https://github.com/bounswe/bounswe2023group7/issues/270) | Backend Team | 24.10.2023 | --- | 2hr | 2hr |
 | Creating github actions pipeline for automatization of the deployment frontend | [#273](https://github.com/bounswe/bounswe2023group7/issues/273) | Frontend Team | 24.10.2023 | [#293](https://github.com/bounswe/bounswe2023group7/pull/293) | 2hr | 1hr |
-| Creating database in Docker container | [#280](https://github.com/bounswe/bounswe2023group7/issues/280) | Backend Team | 24.10.2023 | --- | 1hr | --- |
-| Implementing login and signup endpoints in backend | [#283](https://github.com/bounswe/bounswe2023group7/issues/283) | Backend Team | 24.10.2023 | --- | 4hr | --- |
+| Creating database in Docker container | [#280](https://github.com/bounswe/bounswe2023group7/issues/280) | Backend Team | 24.10.2023 | --- | 1hr | 1hr |
+| Implementing login and signup endpoints in backend | [#283](https://github.com/bounswe/bounswe2023group7/issues/283) | Backend Team | 24.10.2023 | [#294](https://github.com/bounswe/bounswe2023group7/pull/294) | 4hr | 4hr |
 | Creating user table in database | [#284](https://github.com/bounswe/bounswe2023group7/issues/284) | Backend Team | 24.10.2023 | --- | 1hr | --- |
 | Use Case Diagram revision | [#260](https://github.com/bounswe/bounswe2023group7/issues/260) | Hatice Erk, Elif Kızılkaya | 24.10.2023 | --- | 2hr | 2.5hr |
 | Adding Annotation to Sequence Diagram | [#276](https://github.com/bounswe/bounswe2023group7/issues/276) | Kardelen Erdal | 24.10.2023 | --- | 1hr | 2hr |
@@ -70,9 +70,9 @@ We actually thought that we would exclude events and update groups but there was
 |  Creating createGame Endpoint | [#309](https://github.com/bounswe/bounswe2023group7/issues/309) |  Melih Gezer | 30.10.2023 | 2hr |
 |  Creating getGame Endpoint | [#310](https://github.com/bounswe/bounswe2023group7/issues/310) |  Melih Gezer | 30.10.2023 | 2hr |
 |  Creating Game Table on Database | [#311](https://github.com/bounswe/bounswe2023group7/issues/311) |  Melih Gezer | 30.10.2023 | 2hr |
-|  Creating followGame Endpoint |  |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
-|  Creating unFollowGame Endpoint |  |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
-|  Creating Authorization Guard for Backend |  |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
+|  Creating followGame Endpoint | [#321](https://github.com/bounswe/bounswe2023group7/issues/321) |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
+|  Creating unFollowGame Endpoint | [#322](https://github.com/bounswe/bounswe2023group7/issues/322) |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
+|  Creating Authorization Guard for Backend | [#323](https://github.com/bounswe/bounswe2023group7/issues/323)  |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
 |  Creating Forgot Password Endpoints | [#319](https://github.com/bounswe/bounswe2023group7/issues/319) |  Hakan Karakuş | 30.10.2023 | 5hr |
 |  Creating changePassword Endpoint |  |  Burak Eren | 30.10.2023 | 2hr |
 |  Event-Group Requirement Revision | [#304](https://github.com/bounswe/bounswe2023group7/issues/304) |  Hatice Erk-Elif Kızılkaya | 30.10.2023 | 2hr |
