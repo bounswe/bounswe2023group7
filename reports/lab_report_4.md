@@ -3,9 +3,9 @@
 **Date:** 24.10.2023  
 
 ## Progress Summary
-This week we did dockerization of backend, database and frontend, deployed our project to AWS, created GitHub Actions Pipeline, implemented our login and signup endpoints, created user table on the database, revised our use-case diagrams, completed missing sequence diagrams and scenerios, created our backend, frontend and mobile folders, designed home page and page structure, and created RAM for the project.
+This week we did dockerization of backend, database and frontend, deployed backend and frontend to AWS, created GitHub Actions Pipeline for both frontend and backend, implemented our login and signup endpoints, created user table on the database, revised our use-case diagrams, completed missing sequence diagrams and scenerios, created our backend, frontend and mobile folders, designed home page and page structure, and created RAM for the project.
 
-Our main goal for the next week is the implementation of pages, which we plan to present for Tuesday for both frontend and mobile. These pages are home page, game page, forum page (for only web), login, signup and forgot password pages. Additionally, we will be developing some of missing key endpoints which are createGame, getGame, followGame, unfollowGame, changePassword and endpoints related "forgot password". Also we will be developing authorization guard for our project. Also previous deliverables substantially ready to first milestone.
+Our main goal is being ready for the representation at next week. We will deal with the implementation of pages, which we plan to present for Tuesday for both frontend and mobile. These pages are home page, game page, forum page (for only web), login, signup and forgot password pages. Additionally, we will be developing some of missing key endpoints which are createGame, getGame, followGame, unfollowGame, changePassword and endpoints related "forgot password". Also we will be developing authorization guard for our project. Besides we are planning to prepare deliverables substantially be ready to first milestone for this week.
 
 
 ## What was planned for the week? How did it go?
