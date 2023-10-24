@@ -13,7 +13,7 @@ Our main goal is being ready for the representation at next week. We will deal w
 | --- | --- | --- | --- | --- | --- | --- |
 | Dockerization for backend environment | [#262](https://github.com/bounswe/bounswe2023group7/issues/262) | Backend Team | 24.10.2023 | --- | 1hr | --- |
 | Dockerization for frontend environment | [#268](https://github.com/bounswe/bounswe2023group7/issues/268) | Frontend Team | 24.10.2023 | --- | 1hr | 1hr |
-| Dockerization for mobile environment | [#269](https://github.com/bounswe/bounswe2023group7/issues/269) | Mobile Team | 24.10.2023 | --- |1hr | --- |
+| Dockerization for mobile environment | [#269](https://github.com/bounswe/bounswe2023group7/issues/269) | Mobile Team | 24.10.2023 | --- |1hr | 30mins |
 | Creating deployment environment in AWS for backend | [#266](https://github.com/bounswe/bounswe2023group7/issues/266) | Backend Team | 24.10.2023 | --- |2hr | --- |
 | Creating deployment environment in AWS for frontend | [#272](https://github.com/bounswe/bounswe2023group7/issues/272) | Frontend Team | 24.10.2023 | --- | 2hr | 2hr |
 | Creating github actions pipeline for automatization of the deployment backend | [#270](https://github.com/bounswe/bounswe2023group7/issues/270) | Backend Team | 24.10.2023 | --- | 2hr | --- |
@@ -25,16 +25,16 @@ Our main goal is being ready for the representation at next week. We will deal w
 | Adding Annotation to Sequence Diagram | [#276](https://github.com/bounswe/bounswe2023group7/issues/276) | Kardelen Erdal | 24.10.2023 | --- | 1hr | --- |
 | Adding Recommendation to Sequence Diagram | [#261](https://github.com/bounswe/bounswe2023group7/issues/261) | Furkan Ülke | 24.10.2023 | --- | 1hr | --- |
 | Adding Game to Sequence Diagram | [#264](https://github.com/bounswe/bounswe2023group7/issues/264) | Fatma Sena Alçı | 24.10.2023 | --- | 1hr | --- |
-| Updating Mockup for Game and Entity | [#265](https://github.com/bounswe/bounswe2023group7/issues/265) | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | --- | 3hr | --- |
+| Updating Mockup for Game and Entity | [#265](https://github.com/bounswe/bounswe2023group7/issues/265) | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | --- | 3hr | 3hr |
 | User scenario for Game and Entity | [#275](https://github.com/bounswe/bounswe2023group7/issues/275) | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | --- | 1.5hr | --- |
 | Frontend Page Structure Design | [#277](https://github.com/bounswe/bounswe2023group7/issues/277) | Frontend Team | 24.10.2023 | --- | 3hr | 3hr |
-| Mobile Page Structure Design | [#271](https://github.com/bounswe/bounswe2023group7/issues/271) | Mobile Team | 24.10.2023 | --- | 3hr | --- |
+| Mobile Page Structure Design | [#271](https://github.com/bounswe/bounswe2023group7/issues/271) | Mobile Team | 24.10.2023 | [#295](https://github.com/bounswe/bounswe2023group7/pull/295) | 3hr | 4hr |
 | Folder Structure Design for backend | [#285](https://github.com/bounswe/bounswe2023group7/issues/285) | Backend Team | 24.10.2023 | --- | 1hr | --- |
 | Folder Structure Design for frontend | [#267](https://github.com/bounswe/bounswe2023group7/issues/267) | Frontend Team | 24.10.2023 | --- | 1hr | 30mins |
-| Folder Structure Design for mobile | [#287](https://github.com/bounswe/bounswe2023group7/issues/287) | Mobile Team | 24.10.2023 | --- | 1hr | --- |
+| Folder Structure Design for mobile | [#287](https://github.com/bounswe/bounswe2023group7/issues/287) | Mobile Team | 24.10.2023 | --- | 1hr | 30mins |
 | Deciding on PR, branch and deployment convention | [#286](https://github.com/bounswe/bounswe2023group7/issues/286) | Melih Gezer | 24.10.2023 | --- | 30mins | --- |
 | Designing home page for frontend | [#279](https://github.com/bounswe/bounswe2023group7/issues/279) | Frontend Team | 24.10.2023 | --- | 1.5hr | 1.5hr |
-| Designing home page for mobile | [#274](https://github.com/bounswe/bounswe2023group7/issues/274) | Mobile Team | 24.10.2023 | --- | 1.5hr | --- |
+| Designing home page for mobile | [#274](https://github.com/bounswe/bounswe2023group7/issues/274) | Mobile Team | 24.10.2023 | [#295](https://github.com/bounswe/bounswe2023group7/pull/295) | 1.5hr | 2hr |
 | Creating Responsibility Assignment Matrix | [#263](https://github.com/bounswe/bounswe2023group7/issues/263) | Fatma Sena Alçı | 24.10.2023 | --- | 1hr | --- |
 
 
@@ -61,11 +61,11 @@ We actually thought that we would exclude events and update groups but there was
 |  Implementation of Web Forum Page | [#300](https://github.com/bounswe/bounswe2023group7/issues/298) | Elif Kızılkaya | 30.10.2023 | 4hr |
 |  Revision of Implementation of Mobil Login Page |  | Kardelen Erdal | 30.10.2023 | 2hr |
 |  Revision of Implementation of Mobil Sign-up Page |  | Fatma Sena Alçı | 30.10.2023 | 2hr |
-|  Revision of Implementation of Mobil Home Page |  | Hatice Erk | 30.10.2023 | 1hr |
-| Creating Custom Widgets for Forum Post |  | Hatice Erk | 30.10.2023 | 2hr |
+|  Revision of Implementation of Mobil Home Page | [#301](https://github.com/bounswe/bounswe2023group7/issues/301) | Hatice Erk | 30.10.2023 | 1hr |
+|  Creating Custom Widgets for Forum Post | [#306](https://github.com/bounswe/bounswe2023group7/issues/306) | Hatice Erk | 30.10.2023 | 2hr |
 |  Implementation of Mobil Forgot Password Page |  | Furkan Ülke | 30.10.2023 | 2hr |
 |  Implementation of Mobil Loading Spinner |  | Kardelen Erdal | 30.10.2023 | 30mn |
-|  Revision of .gitignore in Mobil Folder |  | Hatice Erk | 30.10.2023 | 30mn |
+|  Revision of .gitignore in Mobil Folder | [#303](https://github.com/bounswe/bounswe2023group7/issues/303) | Hatice Erk | 30.10.2023 | 30mn |
 |  Creating Custom Widgets for Game Page |  | Furkan Ülke | 30.10.2023 | 5hr |
 |  Creating createGame Endpoint |  |  Melih Gezer | 30.10.2023 | 2hr |
 |  Creating getGame Endpoint |  |  Melih Gezer | 30.10.2023 | 2hr |
