@@ -67,9 +67,9 @@ We actually thought that we would exclude events and update groups but there was
 |  Implementation of Mobil Loading Spinner |  | Kardelen Erdal | 30.10.2023 | 30mn |
 |  Revision of .gitignore in Mobil Folder | [#303](https://github.com/bounswe/bounswe2023group7/issues/303) | Hatice Erk | 30.10.2023 | 30mn |
 |  Creating Custom Widgets for Game Page |  | Furkan Ülke | 30.10.2023 | 5hr |
-|  Creating createGame Endpoint |  |  Melih Gezer | 30.10.2023 | 2hr |
-|  Creating getGame Endpoint |  |  Melih Gezer | 30.10.2023 | 2hr |
-|  Creating Game Table on Database |  |  Melih Gezer | 30.10.2023 | 2hr |
+|  Creating createGame Endpoint | [#309](https://github.com/bounswe/bounswe2023group7/issues/309) |  Melih Gezer | 30.10.2023 | 2hr |
+|  Creating getGame Endpoint | [#310](https://github.com/bounswe/bounswe2023group7/issues/310) |  Melih Gezer | 30.10.2023 | 2hr |
+|  Creating Game Table on Database | [#311](https://github.com/bounswe/bounswe2023group7/issues/311) |  Melih Gezer | 30.10.2023 | 2hr |
 |  Creating followGame Endpoint |  |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
 |  Creating unFollowGame Endpoint |  |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
 |  Creating Authorization Guard for Backend |  |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
