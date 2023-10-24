@@ -73,7 +73,7 @@ We actually thought that we would exclude events and update groups but there was
 |  Creating followGame Endpoint |  |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
 |  Creating unFollowGame Endpoint |  |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
 |  Creating Authorization Guard for Backend |  |  Ömer Şafak Bebek | 30.10.2023 | 1hr |
-|  Creating Forgot Password Endpoints |  |  Hakan Karakuş | 30.10.2023 | 5hr |
+|  Creating Forgot Password Endpoints | [#319](https://github.com/bounswe/bounswe2023group7/issues/319) |  Hakan Karakuş | 30.10.2023 | 5hr |
 |  Creating changePassword Endpoint |  |  Burak Eren | 30.10.2023 | 2hr |
 |  Event-Group Requirement Revision | [#304](https://github.com/bounswe/bounswe2023group7/issues/304) |  Hatice Erk-Elif Kızılkaya | 30.10.2023 | 2hr |
 |  Preparation of Presentation Scenerio | [#305](https://github.com/bounswe/bounswe2023group7/issues/305) |  Hatice Erk<br>Elif Kızılkaya<br>Kardelen Erdal<br>Muhammet Tayyip Kamiloğlu | 30.10.2023 | 3hr |
