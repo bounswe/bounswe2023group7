@@ -1,0 +1,33 @@
+name: Deploy-Frontend-to-EC2
+
+on:
+  push:
+    branches:
+      - main
+      - development
+    paths:
+      - 'ludos/frontend/**'
+      - '.github/workflows/frontend-deploy.yml'
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
+
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.FRONTEND_EC2_SSH_KEY }}
+          REMOTE_HOST: 51.20.170.143
+          REMOTE_USER: ubuntu
+          SOURCE: ludos/frontend/
+          TARGET: ~/frontend
+          ARGS: --delete
+          EXCLUDE: .env
+          SCRIPT_AFTER: |
+            cd ~/frontend
+            docker compose up -d --build
+            docker image prune -af && docker builder prune -f && docker builder prune -af --filter until=10m && docker volume prune -af
