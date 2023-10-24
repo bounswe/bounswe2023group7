@@ -20,7 +20,7 @@ Our main goal is being ready for the representation at next week. We will deal w
 | Creating github actions pipeline for automatization of the deployment frontend | [#273](https://github.com/bounswe/bounswe2023group7/issues/273) | Frontend Team | 24.10.2023 | [#293](https://github.com/bounswe/bounswe2023group7/pull/293) | 2hr | 1hr |
 | Creating database in Docker container | [#280](https://github.com/bounswe/bounswe2023group7/issues/280) | Backend Team | 24.10.2023 | --- | 1hr | 1hr |
 | Implementing login and signup endpoints in backend | [#283](https://github.com/bounswe/bounswe2023group7/issues/283) | Backend Team | 24.10.2023 | [#294](https://github.com/bounswe/bounswe2023group7/pull/294) | 4hr | 4hr |
-| Creating user table in database | [#284](https://github.com/bounswe/bounswe2023group7/issues/284) | Backend Team | 24.10.2023 | --- | 1hr | --- |
+| Creating user table in database | [#284](https://github.com/bounswe/bounswe2023group7/issues/284) | Backend Team | 24.10.2023 | [#291](https://github.com/bounswe/bounswe2023group7/pull/291) | 1hr | 1hr |
 | Use Case Diagram revision | [#260](https://github.com/bounswe/bounswe2023group7/issues/260) | Hatice Erk, Elif Kızılkaya | 24.10.2023 | --- | 2hr | 2.5hr |
 | Adding Annotation to Sequence Diagram | [#276](https://github.com/bounswe/bounswe2023group7/issues/276) | Kardelen Erdal | 24.10.2023 | --- | 1hr | 2hr |
 | Adding Recommendation to Sequence Diagram | [#261](https://github.com/bounswe/bounswe2023group7/issues/261) | Furkan Ülke | 24.10.2023 | --- | 1hr | --- |
