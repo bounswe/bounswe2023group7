@@ -77,8 +77,8 @@ We actually thought that we would exclude events and update groups but there was
 |  Creating changePassword Endpoint |  |  Burak Eren | 30.10.2023 | 2hr |
 |  Event-Group Requirement Revision | [#304](https://github.com/bounswe/bounswe2023group7/issues/304) |  Hatice Erk-Elif Kızılkaya | 30.10.2023 | 2hr |
 |  Preparation of Presentation Scenerio | [#305](https://github.com/bounswe/bounswe2023group7/issues/305) |  Hatice Erk<br>Elif Kızılkaya<br>Kardelen Erdal<br>Muhammet Tayyip Kamiloğlu | 30.10.2023 | 3hr |
-|  Personal Milestone Report |  |  Everyone | 03.11.2023 | 3hr |
-|  Preparation Milestone Report |  |  Everyone | 03.11.2023 | 5hr |
+|  Personal Milestone Report | [#307](https://github.com/bounswe/bounswe2023group7/issues/307) |  Everyone | 03.11.2023 | 3hr |
+|  Preparation Milestone Report | [#308](https://github.com/bounswe/bounswe2023group7/issues/308) |  Everyone | 03.11.2023 | 5hr |
 
 ## Risks
 Since we have lots of things to do, we may struggle on completing the planned issues.
