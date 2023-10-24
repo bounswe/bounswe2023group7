@@ -23,7 +23,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.FRONTEND_EC2_SSH_KEY }}
           REMOTE_HOST: 51.20.170.143
           REMOTE_USER: ubuntu
-          SOURCE: ./ludos/frontend
+          SOURCE: ludos/frontend/
           TARGET: ~/frontend
           ARGS: --delete
           EXCLUDE: .env
