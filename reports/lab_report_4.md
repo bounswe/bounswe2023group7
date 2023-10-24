@@ -26,7 +26,7 @@ Our main goal is being ready for the representation at next week. We will deal w
 | Adding Recommendation to Sequence Diagram | [#261](https://github.com/bounswe/bounswe2023group7/issues/261) | Furkan Ülke | 24.10.2023 | --- | 1hr | --- |
 | Adding Game to Sequence Diagram | [#264](https://github.com/bounswe/bounswe2023group7/issues/264) | Fatma Sena Alçı | 24.10.2023 | --- | 1hr | --- |
 | Updating Mockup for Game and Entity | [#265](https://github.com/bounswe/bounswe2023group7/issues/265) | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | --- | 3hr | 3hr |
-| User scenario for Game and Entity | [#275](https://github.com/bounswe/bounswe2023group7/issues/275) | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | --- | 1.5hr | --- |
+| User scenario for Game and Entity | [#275](https://github.com/bounswe/bounswe2023group7/issues/275) | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | --- | 1.5hr | 1hr |
 | Frontend Page Structure Design | [#277](https://github.com/bounswe/bounswe2023group7/issues/277) | Frontend Team | 24.10.2023 | --- | 3hr | 3hr |
 | Mobile Page Structure Design | [#271](https://github.com/bounswe/bounswe2023group7/issues/271) | Mobile Team | 24.10.2023 | [#295](https://github.com/bounswe/bounswe2023group7/pull/295) | 3hr | 4hr |
 | Folder Structure Design for backend | [#285](https://github.com/bounswe/bounswe2023group7/issues/285) | Backend Team | 24.10.2023 | --- | 1hr | --- |
