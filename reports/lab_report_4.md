@@ -29,7 +29,7 @@ Our main goal is being ready for the representation at next week. We will deal w
 | User scenario for Game and Entity | [#275](https://github.com/bounswe/bounswe2023group7/issues/275) | Ömer Şafak Bebek, Yunus Emre Altuğ | 24.10.2023 | --- | 1.5hr | 1hr |
 | Frontend Page Structure Design | [#277](https://github.com/bounswe/bounswe2023group7/issues/277) | Frontend Team | 24.10.2023 | --- | 3hr | 3hr |
 | Mobile Page Structure Design | [#271](https://github.com/bounswe/bounswe2023group7/issues/271) | Mobile Team | 24.10.2023 | [#295](https://github.com/bounswe/bounswe2023group7/pull/295) | 3hr | 4hr |
-| Folder Structure Design for backend | [#285](https://github.com/bounswe/bounswe2023group7/issues/285) | Backend Team | 24.10.2023 | --- | 1hr | --- |
+| Folder Structure Design for backend | [#285](https://github.com/bounswe/bounswe2023group7/issues/285) | Backend Team | 24.10.2023 | --- | 1hr | 1hr |
 | Folder Structure Design for frontend | [#267](https://github.com/bounswe/bounswe2023group7/issues/267) | Frontend Team | 24.10.2023 | --- | 1hr | 30mins |
 | Folder Structure Design for mobile | [#287](https://github.com/bounswe/bounswe2023group7/issues/287) | Mobile Team | 24.10.2023 | --- | 1hr | 30mins |
 | Deciding on PR, branch and deployment convention | [#286](https://github.com/bounswe/bounswe2023group7/issues/286) | Melih Gezer | 24.10.2023 | --- | 30mins | --- |
