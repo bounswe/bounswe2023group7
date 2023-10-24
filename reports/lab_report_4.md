@@ -44,7 +44,7 @@ Our main goal is being ready for the representation at next week. We will deal w
 | Creating Empty Placeholders Pages for Mobile | [#292](https://github.com/bounswe/bounswe2023group7/issues/292) | Furkan Ülke | 30mins | 30mins |
 
 ## Planned vs. Actual
-We actually thought that we would exclude events and update groups but there was no assigne about that mistakenly. We will have assignment for someone this week. 
+We actually thought that we would exclude events and update groups but there was no assigne about that mistakenly. We will have an assignment for someone this week. 
 
 
 ## Your plans for the next week
