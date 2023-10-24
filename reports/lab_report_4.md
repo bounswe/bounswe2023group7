@@ -32,7 +32,7 @@ Our main goal is being ready for the representation at next week. We will deal w
 | Folder Structure Design for backend | [#285](https://github.com/bounswe/bounswe2023group7/issues/285) | Backend Team | 24.10.2023 | --- | 1hr | 1hr |
 | Folder Structure Design for frontend | [#267](https://github.com/bounswe/bounswe2023group7/issues/267) | Frontend Team | 24.10.2023 | --- | 1hr | 30mins |
 | Folder Structure Design for mobile | [#287](https://github.com/bounswe/bounswe2023group7/issues/287) | Mobile Team | 24.10.2023 | --- | 1hr | 30mins |
-| Deciding on PR, branch and deployment convention | [#286](https://github.com/bounswe/bounswe2023group7/issues/286) | Melih Gezer | 24.10.2023 | --- | 30mins | --- |
+| Deciding on PR, branch and deployment convention | [#286](https://github.com/bounswe/bounswe2023group7/issues/286) | Melih Gezer | 24.10.2023 | --- | 30mins | 20mins |
 | Designing home page for frontend | [#279](https://github.com/bounswe/bounswe2023group7/issues/279) | Frontend Team | 24.10.2023 | --- | 1.5hr | 1.5hr |
 | Designing home page for mobile | [#274](https://github.com/bounswe/bounswe2023group7/issues/274) | Mobile Team | 24.10.2023 | [#295](https://github.com/bounswe/bounswe2023group7/pull/295) | 1.5hr | 2hr |
 | Creating Responsibility Assignment Matrix | [#263](https://github.com/bounswe/bounswe2023group7/issues/263) | Fatma Sena Alçı | 24.10.2023 | --- | 1hr | 1.5hr |
