@@ -5,11 +5,20 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './services/config/typeorm-config.service';
 import { User } from './entities/user.entity';
+import { UserRepository } from './repositories/user.repository';
+import { UserController } from './controllers/user.controller';
+import { UserService } from './services/user.service';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtConfigService } from './services/config/jwt-config.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    JwtModule.registerAsync({
+      useClass: JwtConfigService,
+      inject: [JwtConfigService],
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
@@ -17,7 +26,7 @@ import { User } from './entities/user.entity';
     }),
     TypeOrmModule.forFeature([User]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, UserController],
+  providers: [AppService, UserRepository, UserService],
 })
 export class AppModule {}
