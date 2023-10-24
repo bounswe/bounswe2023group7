@@ -22,7 +22,7 @@ Our main goal is being ready for the representation at next week. We will deal w
 | Implementing login and signup endpoints in backend | [#283](https://github.com/bounswe/bounswe2023group7/issues/283) | Backend Team | 24.10.2023 | --- | 4hr | --- |
 | Creating user table in database | [#284](https://github.com/bounswe/bounswe2023group7/issues/284) | Backend Team | 24.10.2023 | --- | 1hr | --- |
 | Use Case Diagram revision | [#260](https://github.com/bounswe/bounswe2023group7/issues/260) | Hatice Erk, Elif Kızılkaya | 24.10.2023 | --- | 2hr | 2.5hr |
-| Adding Annotation to Sequence Diagram | [#276](https://github.com/bounswe/bounswe2023group7/issues/276) | Kardelen Erdal | 24.10.2023 | --- | 1hr | --- |
+| Adding Annotation to Sequence Diagram | [#276](https://github.com/bounswe/bounswe2023group7/issues/276) | Kardelen Erdal | 24.10.2023 | --- | 1hr | 2hr |
 | Adding Recommendation to Sequence Diagram | [#261](https://github.com/bounswe/bounswe2023group7/issues/261) | Furkan Ülke | 24.10.2023 | --- | 1hr | --- |
 | Adding Game to Sequence Diagram | [#264](https://github.com/bounswe/bounswe2023group7/issues/264) | Fatma Sena Alçı | 24.10.2023 | --- | 1hr | --- |
 | Updating Mockup for Game and Entity | [#265](https://github.com/bounswe/bounswe2023group7/issues/265) | Muhammet Tayyip Kamiloğlu, Hatice Erk | 24.10.2023 | --- | 3hr | 3hr |
@@ -59,12 +59,12 @@ We actually thought that we would exclude events and update groups but there was
 |  Implementation of Web Sidebar | [#298](https://github.com/bounswe/bounswe2023group7/issues/298) | Elif Kızılkaya | 30.10.2023 | 2hr |
 |  Implementation of Web Header | [#299](https://github.com/bounswe/bounswe2023group7/issues/298) | Elif Kızılkaya | 30.10.2023 | 2hr |
 |  Implementation of Web Forum Page | [#300](https://github.com/bounswe/bounswe2023group7/issues/298) | Elif Kızılkaya | 30.10.2023 | 4hr |
-|  Revision of Implementation of Mobil Login Page |  | Kardelen Erdal | 30.10.2023 | 2hr |
+|  Revision of Implementation of Mobil Login Page | [#314](https://github.com/bounswe/bounswe2023group7/issues/314) | Kardelen Erdal | 30.10.2023 | 2hr |
 |  Revision of Implementation of Mobil Sign-up Page |  | Fatma Sena Alçı | 30.10.2023 | 2hr |
 |  Revision of Implementation of Mobil Home Page | [#301](https://github.com/bounswe/bounswe2023group7/issues/301) | Hatice Erk | 30.10.2023 | 1hr |
 |  Creating Custom Widgets for Forum Post | [#306](https://github.com/bounswe/bounswe2023group7/issues/306) | Hatice Erk | 30.10.2023 | 2hr |
 |  Implementation of Mobil Forgot Password Page | [#312](https://github.com/bounswe/bounswe2023group7/issues/312) | Furkan Ülke | 30.10.2023 | 2hr |
-|  Implementation of Mobil Loading Spinner |  | Kardelen Erdal | 30.10.2023 | 30mn |
+|  Implementation of Mobil Loading Spinner | [#315](https://github.com/bounswe/bounswe2023group7/issues/315) | Kardelen Erdal | 30.10.2023 | 30mn |
 |  Revision of .gitignore in Mobil Folder | [#303](https://github.com/bounswe/bounswe2023group7/issues/303) | Hatice Erk | 30.10.2023 | 30mn |
 |  Creating Custom Widgets for Game Page | [#313](https://github.com/bounswe/bounswe2023group7/issues/313) | Furkan Ülke | 30.10.2023 | 5hr |
 |  Creating createGame Endpoint | [#309](https://github.com/bounswe/bounswe2023group7/issues/309) |  Melih Gezer | 30.10.2023 | 2hr |
