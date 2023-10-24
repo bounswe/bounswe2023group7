@@ -53,9 +53,9 @@ We actually thought that we would exclude events and update groups but there was
 |  Implementation of Web Login Page |  | Muhammet Tayyip Kamiloğlu | 30.10.2023 | 2hr |
 |  Implementation of Web Sign-up Page |  | Muhammet Tayyip Kamiloğlu | 30.10.2023 | 2hr |
 |  Implementation of Web Forget Password Page |  | Muhammet Tayyip Kamiloğlu | 30.10.2023 | 2hr |
-|  Implementation of Web Home Page |  | Yunus Emre Altuğ | 30.10.2023 | 2hr |
-|  Implementation of Web Game Page |  | Yunus Emre Altuğ | 30.10.2023 | 5hr |
-|  Implementation of Web Creating Game Page |  | Yunus Emre Altuğ | 30.10.2023 | 3hr |
+|  Implementation of Web Home Page | [#316](https://github.com/bounswe/bounswe2023group7/issues/316) | Yunus Emre Altuğ | 30.10.2023 | 2hr |
+|  Implementation of Web Game Page | [#317](https://github.com/bounswe/bounswe2023group7/issues/317) | Yunus Emre Altuğ | 30.10.2023 | 5hr |
+|  Implementation of Web Creating Game Page | [#318](https://github.com/bounswe/bounswe2023group7/issues/318) | Yunus Emre Altuğ | 30.10.2023 | 3hr |
 |  Implementation of Web Sidebar | [#298](https://github.com/bounswe/bounswe2023group7/issues/298) | Elif Kızılkaya | 30.10.2023 | 2hr |
 |  Implementation of Web Header | [#299](https://github.com/bounswe/bounswe2023group7/issues/298) | Elif Kızılkaya | 30.10.2023 | 2hr |
 |  Implementation of Web Forum Page | [#300](https://github.com/bounswe/bounswe2023group7/issues/298) | Elif Kızılkaya | 30.10.2023 | 4hr |
@@ -86,7 +86,7 @@ Since we have lots of things to do, we may struggle on completing the planned is
 ## Participants
 Team members that attended this session.
 - [x] Burak Eren
-- [x] Elif Kızılkaya 
+- [x] Elif Kızılkaya (Reviewer)
 - [x] Fatma Sena Alçı
 - [x] Furkan Ülke 
 - [x] Hakan Karakuş
