@@ -50,9 +50,9 @@ We actually thought that we would exclude events and update groups but there was
 ## Your plans for the next week
 | Description | Issue | Assignee | Due | Estimated Duration |
 | --- | --- | --- | --- | --- |
-|  Implementation of Web Login Page |  | Muhammet Tayyip Kamiloğlu | 30.10.2023 | 2hr |
-|  Implementation of Web Sign-up Page |  | Muhammet Tayyip Kamiloğlu | 30.10.2023 | 2hr |
-|  Implementation of Web Forget Password Page |  | Muhammet Tayyip Kamiloğlu | 30.10.2023 | 2hr |
+|  Implementation of Web Login Page | [#296](https://github.com/bounswe/bounswe2023group7/issues/296) | Muhammet Tayyip Kamiloğlu | 30.10.2023 | 2hr |
+|  Implementation of Web Sign-up Page | [#297](https://github.com/bounswe/bounswe2023group7/issues/297) | Muhammet Tayyip Kamiloğlu | 30.10.2023 | 2hr |
+|  Implementation of Web Forget Password Page | [#320](https://github.com/bounswe/bounswe2023group7/issues/320) | Muhammet Tayyip Kamiloğlu | 30.10.2023 | 2hr |
 |  Implementation of Web Home Page | [#316](https://github.com/bounswe/bounswe2023group7/issues/316) | Yunus Emre Altuğ | 30.10.2023 | 2hr |
 |  Implementation of Web Game Page | [#317](https://github.com/bounswe/bounswe2023group7/issues/317) | Yunus Emre Altuğ | 30.10.2023 | 5hr |
 |  Implementation of Web Creating Game Page | [#318](https://github.com/bounswe/bounswe2023group7/issues/318) | Yunus Emre Altuğ | 30.10.2023 | 3hr |
