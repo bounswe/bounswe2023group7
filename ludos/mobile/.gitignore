@@ -43,7 +43,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-/linux
-/macos
-/web
-/windows
+# Only Android and iOS folder shoul remain
+linux/
+macos/
+web/
+windows/
