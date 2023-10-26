@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Paper, Grid, Container } from '@mui/material';
+import { Box, Typography, Button, Grid, Container } from '@mui/material';
 
 function App() {
     const boxesData = [
@@ -60,19 +60,24 @@ function App() {
   const headerStyle ={color: 'white',
   fontFamily: 'Trebuchet MS, sans-serif',
   marginBottom: '10px'}
-  const forumStyle ={color: 'white'}
+  const forumStyle ={color: 'rgb(30, 220, 30)'}
+  const followButton= {backgroundColor: 'rgb(255, 165, 0)', color: 'rgb(0, 0, 0)', height:'20px', textTransform: 'none' }
   const descriptionStyle ={color: 'white'}
 
   return (
-    <Container >
+    <Container style={{ backgroundColor: '#f0f0f0' }}>
       <Grid container spacing={1} >
         {boxesData.map((data, index) => (
           <Grid item xs={12} sm={12} md={12} lg={12} key={index} >
-            <Paper elevation={12} >
               <Box p={5} style={boxStyle}>
-                <Typography variant="caption" component="div" textAlign='left' style={forumStyle} >
-                  {data.forum}
-                </Typography>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="caption" component="div" style={forumStyle}>
+                    {data.forum}
+                 </Typography>
+                  <Button variant="contained" style={followButton}>
+                    Follow
+                  </Button>
+                </div>
                 <Typography variant="h4" component="div" textAlign='left' style={headerStyle} >
                   {data.header}
                 </Typography>
@@ -80,7 +85,6 @@ function App() {
                   {data.description}
                 </Typography>
               </Box>
-            </Paper>
           </Grid>
         ))}
       </Grid>
