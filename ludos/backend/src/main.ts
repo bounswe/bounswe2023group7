@@ -12,6 +12,9 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .build();
+  app.enableCors({
+    origin: "*"
+  });
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   app.useGlobalPipes(new ValidationPipe());
