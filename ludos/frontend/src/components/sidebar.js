@@ -15,7 +15,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Link } from 'react-router-dom';
 
-const drawerWidth = 100; // Adjust the width as needed
+const drawerWidth = 105; // Adjust the width as needed
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -159,9 +159,7 @@ function Sidebar() {
 
         </Menu>
       </Drawer>
-      <main className={classes.content}>
-        {/* Your main content goes here */}
-      </main>
+     
     </div>
   );
 }

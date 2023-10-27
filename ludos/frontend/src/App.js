@@ -1,15 +1,17 @@
 import React from 'react';
-import Layout from './layout'; // Import your Layout component here
+import Layout from './layout'; // Make sure to import your Layout component
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './pages/landingPage'; // Import your LandingPage component
 
 function App() {
   return (
-    <Layout>
-      <div className="App">
-        <header className="App-header">
-          <p>Welcome home page</p>
-        </header>
-      </div>
-    </Layout>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 
