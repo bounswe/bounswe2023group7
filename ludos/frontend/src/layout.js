@@ -1,29 +1,23 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Sidebar from './components/sidebar';
-import { BrowserRouter as Router } from 'react-router-dom';
+import Sidebar from './components/sidebar'; // Import your Sidebar component
+import Box from '@mui/material/Box';
 
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    backgroundColor: '#0C1929',
-  },
-}));
-
-function Layout() {
-  const classes = useStyles();
-
+const Layout = ({ children }) => {
   return (
-    <Router>
-      <div className={classes.root}>
-        <CssBaseline />
-        <Sidebar />
-      </div>
-    </Router>
+    <Box
+      sx={{
+        backgroundColor: '#0C1929', // Set the background color
+        minHeight: '100vh',
+        color: 'dark grey',
+        display: 'flex', // Make it a flex container
+      }}
+    >
+      <Sidebar /> {/* Add the Sidebar component */}
+      <Box sx={{ flex: 1 }}>
+        <div className="content">{children}</div>
+      </Box>
+    </Box>
   );
-}
+};
 
 export default Layout;
