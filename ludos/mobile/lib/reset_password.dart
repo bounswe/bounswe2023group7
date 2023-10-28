@@ -12,7 +12,7 @@ class ResetPassword extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPassword> {
 
   int countdown = 3;
-  late Timer timer;
+  Timer? timer;
   bool obscureText1 = true;
   bool obscureText2 = true;
   String newPassword = '';
@@ -47,9 +47,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
 
   void _navigateToLoginPage(BuildContext context) {
-      if (timer != null) {
-        timer!.cancel(); // Cancel the timer if it's running
-      }
+      timer?.cancel(); // Cancel the timer if it's still active.
       // Navigate to the Sign-Up page after a 2-second delay.
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
   }

@@ -19,78 +19,80 @@ class _EnterActivationState extends State<EnterActivation> {
         backgroundColor: const Color(0xFF5f1a37),
         title: const Text('Forgot Password'),
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              //crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const Text(
-                  'Please enter the activation code sent to your email address.',
-                  style: TextStyle(
-                    color: Colors.white60,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      activationCode = value;
-                      //print(activationCode);
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Activation Code',
-                    labelStyle: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontSize: 15,
-                        color: Color.fromARGB(255, 219, 184, 199),
-                        fontWeight: FontWeight.bold),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF5f1a37), width: 2.0),
-                    ),
-                  ),
-                  cursorColor: const Color(0xFF5f1a37),
-                ),
-                const SizedBox(height: 25),
-                Text(
-                 responseForActivationCode,
-                    style: const TextStyle(
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                //crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  const Text(
+                    'Please enter the activation code sent to your email address.',
+                    style: TextStyle(
                       color: Colors.white60,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF5f1a37)),
-                  onPressed: () {
-                    // logic to compare activation code with the one sent to the email address
-                    // also responseForActivationCode should be updated accordingly
-                    // if activation code is valid, then navigate to reset password page
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        activationCode = value;
+                        //print(activationCode);
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Activation Code',
+                      labelStyle: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 219, 184, 199),
+                          fontWeight: FontWeight.bold),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xFF5f1a37), width: 2.0),
+                      ),
+                    ),
+                    cursorColor: const Color(0xFF5f1a37),
+                  ),
+                  const SizedBox(height: 25),
+                  Text(
+                   responseForActivationCode,
+                      style: const TextStyle(
+                        color: Colors.white60,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF5f1a37)),
+                    onPressed: () {
+                      // logic to compare activation code with the one sent to the email address
+                      // also responseForActivationCode should be updated accordingly
+                      // if activation code is valid, then navigate to reset password page
 
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (const ResetPassword())));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => (const ResetPassword())));
 
-                  },
-                  child: const Text('Reset Password'),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF5f1a37)),
-                  onPressed: () {
-                    // logic to resend activation code to email address
-                  },
-                  child: const Text('Resend Verification Code'),
-                ),
-              ],
-            ),
-        ),
+                    },
+                    child: const Text('Reset Password'),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF5f1a37)),
+                    onPressed: () {
+                      // logic to resend activation code to email address
+                    },
+                    child: const Text('Resend Verification Code'),
+                  ),
+                ],
+              ),
+          ),
+      ),
       );
   }
 }
