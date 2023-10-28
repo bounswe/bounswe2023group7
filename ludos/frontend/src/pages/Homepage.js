@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Typography, Button, Grid, Container } from '@mui/material';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 
@@ -64,7 +64,6 @@ function HomePage() {
       description: 'A specific quest is not working correctly, preventing players from completing it. This description outlines the affected quest, its objectives, and potential workarounds or fixes.',
       tags: ['MMORPG', 'Quest Bug', 'Objective Completion']
     },
-    // You can continue to add more entries with varying numbers of tags
   ];
 
 
@@ -92,27 +91,32 @@ function HomePage() {
   const upVoteButton = { backgroundColor: 'rgb(124, 252, 0)', marginRight: '5px'};
   const downVoteButton = { backgroundColor: 'rgb(222, 49, 99)' };
 
+  useEffect(() => { 
+
+
+  }, []);
+
   return (
-    <Container style={{ backgroundColor: '#f0f0f0' }}>
+    <Container style={{ backgroundColor: 'rgb(0, 150, 255)', maxWidth: '900px'}}>
       <Grid container spacing={1} >
         {boxesData.map((data, index) => (
           <Grid item xs={12} sm={12} md={12} lg={12} key={index} >
             <Box p={5} style={boxStyle}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Grid item xs={12} sm={12} md={12} lg={12} style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant="caption" component="div" style={forumStyle}>
                   {data.forum}
                 </Typography>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  {data.tags.map((data1) => (
-                    <Typography variant="caption" component="div" style={tagBox}>
+                <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  {data.tags.map((data1, index1) => (
+                    <Typography variant="caption" component="div" style={tagBox} key={index1}>
                       {data1}
                     </Typography>
                   ))}
                   <Button variant="contained" style={followButton}>
                     Follow
                   </Button>
-                </div>
-              </div>
+                </Grid>
+              </Grid>
 
               <Typography variant="h4" component="div" textAlign='left' style={headerStyle} >
                 {data.header}
