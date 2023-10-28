@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   frontend:
@@ -9,4 +9,3 @@ services:
       - ./src:/app/src
     ports:
       - 3000:3000
-  
