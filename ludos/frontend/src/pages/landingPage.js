@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
 function WelcomePage() {
   const style = {
-    color: '#569CB1',
-    fontWeight: 'bold',
+    color: "#569CB1",
+    fontWeight: "bold",
   };
 
   return (

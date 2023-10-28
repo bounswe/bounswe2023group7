@@ -1,15 +1,15 @@
-import React from 'react';
-import Sidebar from './components/sidebar'; // Import your Sidebar component
-import Box from '@mui/material/Box';
+import React from "react";
+import Box from "@mui/material/Box";
+import Sidebar from "./components/sidebar"; // Import your Sidebar component
 
 const Layout = ({ children }) => {
   return (
     <Box
       sx={{
-        backgroundColor: '#0C1929', // Set the background color
-        minHeight: '100vh',
-        color: 'dark grey',
-        display: 'flex', // Make it a flex container
+        backgroundColor: "#0C1929", // Set the background color
+        minHeight: "100vh",
+        color: "dark grey",
+        display: "flex", // Make it a flex container
       }}
     >
       <Sidebar /> {/* Add the Sidebar component */}
