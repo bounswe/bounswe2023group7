@@ -1,7 +1,5 @@
-import { RegisterDto } from '../dtos/user/request/register.dto';
 import { UserRepository } from '../repositories/user.repository';
 import { PasswordResetRepository } from '../repositories/reset-password.repository';
-import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
 import {
   ConflictException,
   Injectable,
@@ -9,14 +7,27 @@ import {
   UnauthorizedException,
   NotFoundException,
 } from '@nestjs/common';
-import { LoginDto } from '../dtos/user/request/login.dto';
-import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetDto } from 'dtos/reset-password/request/reset.dto';
 import { ResetResponseDto } from 'dtos/reset-password/response/reset-response.dto';
 import { VerifyCodeResponseDto } from 'dtos/reset-password/response/verify-code-response.dto';
 import { VerifyCodeDto } from 'dtos/reset-password/request/verify-code.dto';
+import * as nodemailer from 'nodemailer';
+
+const mail_config = {
+  "mail":{
+    "host": "<smtp-host>",
+    "port": "<port>",
+    "secure": false,
+    "user": "<username>",
+    "pass": "<password>"
+  },
+  "host": {
+    "url": "<server-url>",
+    "port": "3000"
+  },
+}
 
 @Injectable()
 export class ResetPasswordService {
@@ -27,7 +38,36 @@ export class ResetPasswordService {
   ) {}
 
   public async sendCodeViaEmailForPasswordReset(email: string, code: string): Promise<Date> {
-    // send the code via email and return sending time
+    let transporter = nodemailer.createTransport({
+      host: mail_config.mail.host,
+      port: mail_config.mail.port,
+      secure: mail_config.mail.secure, // true for 465, false for other ports
+      auth: {
+        user: mail_config.mail.user,
+        pass: mail_config.mail.pass
+      }
+    });
+
+    let mailOptions = {
+      from: '"Company" <' + mail_config.mail.user + '>', 
+      to: email, // list of receivers (separated by ,)
+      subject: 'Verify Email', 
+      text: 'Verify Email', 
+      html: 'Hi! <br><br> Thanks for your registration<br><br>'+
+      '<a href='+ mail_config.host.url + ':' + mail_config.host.port +'/auth/email/verify/'+ code + '>Click here to activate your account</a>'  // html body
+    };
+
+    let sent = await new Promise<boolean>(async function(resolve, reject) {
+      return await transporter.sendMail(mailOptions, async (error: any, info: any) => {
+        if (error) {      
+          console.log('Message sent: %s', error);
+          return reject(false);
+        }
+        console.log('Message sent: %s', info.messageId);
+        resolve(true);
+      });      
+    })
+
     return new Date();
   }
 
@@ -48,7 +88,7 @@ export class ResetPasswordService {
   public async verifyCode(input: VerifyCodeDto): Promise<VerifyCodeResponseDto> {
     // check timestamp
     // verify code
-    await this.resetPasswordRepository.deletePasswordReset();
+    // await this.resetPasswordRepository.deletePasswordReset();
     return {
       correctCode: true,
     };
