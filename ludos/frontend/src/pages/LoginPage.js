@@ -34,7 +34,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     const axiosInstance = axios.create({
-        baseURL: 'http://3.125.225.39:8080'
+        baseURL: 'http://3.125.225.39:8080',
     })
 
     const handleLogin = (event) => {
@@ -50,8 +50,8 @@ export default function Login() {
 
         event.preventDefault();
         axiosInstance.post('/user/login', { username, password })
-            .then((response) => {
-                const token = response.data.token;
+            .then(() => {
+                // const token = response.data.token;
                 
                 navigate("/home");
                 setDialogMessage('You have succesfully logged in.')
@@ -100,12 +100,12 @@ export default function Login() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        my: 25
+                        my: 25,
                     }}>
-                        <img src={backgroundImage} color="white" style={{ width: 'auto', height: '500px', display: 'flex', margin: 'auto', display: 'flex' }} />
+                        <img src={backgroundImage} color="white" style={{ width: 'auto', height: '500px', display: 'flex', margin: 'auto'}} />
                     </Box>
                 </Grid>
-                <Grid item xs={12} sm={6} md={5} component={Paper} elevation={6} square sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#2F5B7A' }}>
+                <Grid item xs={12} sm={6} md={5} component={Paper} elevation={6} square sx={{ display: 'flex', height:'100%', width:'100%', objectFit:'contain', justifyContent: 'center', alignItems: 'center', backgroundColor: '#2F5B7A' }}>
                     <Box
                         sx={{
                             display: 'flex',
@@ -113,8 +113,7 @@ export default function Login() {
                             alignItems: 'center',
                             backgroundColor: 'white',
                             borderRadius: '25px',
-                            margin: 5
-
+                            margin: 5,
                         }}
                     >
                         <Box
