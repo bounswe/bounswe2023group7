@@ -50,8 +50,8 @@ export default function Login() {
 
         event.preventDefault();
         axiosInstance.post('/user/login', { username, password })
-            .then(() => {
-                // const token = response.data.token;
+            .then((response) => {
+                localStorage.setItem("accessToken", response.data.accessToken);
                 
                 navigate("/home");
                 setDialogMessage('You have succesfully logged in.')
