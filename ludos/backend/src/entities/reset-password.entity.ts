@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 @Entity('password-resets')
-export class PasswordReset {
+export class ResetPassword {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

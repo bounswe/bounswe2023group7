@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { PasswordReset } from '../entities/reset-password.entity';
+import { ResetPassword } from '../entities/reset-password.entity';
 import { Repository, DataSource } from 'typeorm';
 
 @Injectable()
-export class PasswordResetRepository extends Repository<PasswordReset> {
+export class ResetPasswordRepository extends Repository<ResetPassword> {
   constructor(dataSource: DataSource) {
-    super(PasswordReset, dataSource.createEntityManager());
+    super(ResetPassword, dataSource.createEntityManager());
   }
 
-  public async createPasswordReset(input: Partial<PasswordReset>): Promise<PasswordReset> {
-    const passwordReset = this.create(input);
-    await this.insert(passwordReset);
-    return passwordReset;
+  public async createPasswordReset(input: Partial<ResetPassword>): Promise<ResetPassword> {
+    const resetPassword = this.create(input);
+    await this.insert(resetPassword);
+    return resetPassword;
   }
 
-  public async deletePasswordReset(input: Partial<PasswordReset>) {
-    const passwordReset = this.create(input);
-    await this.delete(passwordReset);
+  public async deletePasswordReset(input: Partial<ResetPassword>) {
+    const resetPassword = this.create(input);
+    await this.delete(resetPassword);
   }
 }

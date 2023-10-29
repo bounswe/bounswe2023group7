@@ -25,10 +25,4 @@ export class VerifyCodeDto {
   @IsString()
   @MinLength(8)
   newPassword: string;
-  
-  @ApiProperty({
-    example: new Date("2023-10-26 21:56")
-  })
-  @IsDate()
-  timestamp: Date;
 }

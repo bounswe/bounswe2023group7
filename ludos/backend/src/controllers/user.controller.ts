@@ -12,6 +12,8 @@ import { LoginDto } from '../dtos/user/request/login.dto';
 import { RegisterDto } from '../dtos/user/request/register.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
+import { ResetDto } from '../dtos/user/request/reset.dto'
+import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto'
 import { UserService } from '../services/user.service';
 
 @ApiTags('user')
@@ -34,6 +36,7 @@ export class UserController {
   public async register(@Body() input: RegisterDto) {
     return await this.userService.register(input);
   }
+
   @ApiOkResponse({
     description: 'Successful Login',
     type: LoginResponseDto,
@@ -49,5 +52,34 @@ export class UserController {
   @Post('/login')
   public async login(@Body() input: LoginDto) {
     return await this.userService.login(input);
+  }
+
+  @ApiOkResponse({
+    description: 'Successful Request for Resetting Password',
+  })
+  @ApiNotFoundResponse({
+    description: 'No user found with this email',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @HttpCode(200)
+  @ApiOperation({summary: "Password Reset Request Endpoint"})
+  @Post('/reset-password')
+  public async resetPassword(@Body() input: ResetDto) {
+    await this.userService.resetPassword(input);
+  }
+  
+  @ApiOkResponse({
+    description: 'Set new password upon receiving the correct code'
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @HttpCode(200)
+  @ApiOperation({summary: "Password Reset Code Verification Endpoint"})
+  @Post('/verify-code')
+  public async verifyCode(@Body() input: VerifyCodeDto) {
+    await this.userService.verifyCode(input);
   }
 }

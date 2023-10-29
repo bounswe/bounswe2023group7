@@ -5,16 +5,14 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './services/config/typeorm-config.service';
 import { User } from './entities/user.entity';
-import { PasswordReset } from './entities/reset-password.entity';
+import { ResetPassword } from './entities/reset-password.entity';
 import { UserRepository } from './repositories/user.repository';
 import { UserController } from './controllers/user.controller';
 import { UserService } from './services/user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigService } from './services/config/jwt-config.service';
 
-import { ResetPasswordService } from './services/reset-password.service';
-import { ResetPasswordController } from './controllers/reset-password.controller';
-import { PasswordResetRepository } from './repositories/reset-password.repository';
+import { ResetPasswordRepository } from './repositories/reset-password.repository';
 
 @Module({
   imports: [
@@ -29,9 +27,9 @@ import { PasswordResetRepository } from './repositories/reset-password.repositor
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService],
     }),
-    TypeOrmModule.forFeature([User, PasswordReset]),
+    TypeOrmModule.forFeature([User, ResetPassword]),
   ],
-  controllers: [AppController, UserController, ResetPasswordController],
-  providers: [AppService, UserRepository, UserService, PasswordResetRepository, ResetPasswordService],
+  controllers: [AppController, UserController],
+  providers: [AppService, UserRepository, UserService, ResetPasswordRepository],
 })
 export class AppModule {}

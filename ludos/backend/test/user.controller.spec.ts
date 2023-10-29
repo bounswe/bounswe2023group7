@@ -10,6 +10,9 @@ import { RegisterResponseDto } from '../src/dtos/user/response/register-response
 import { User } from '../src/entities/user.entity';
 import { UserRepository } from '../src/repositories/user.repository';
 import { UserService } from '../src/services/user.service';
+//import { ResetPassword } from '../src/entities/reset-password.entity';
+//import { ResetDto } from '../src/dtos/user/request/reset.dto';
+
 describe('UserController', () => {
   let userController: UserController;
   let userRepository: UserRepository;
@@ -150,4 +153,5 @@ describe('UserController', () => {
       expect(createUserSpy).toHaveBeenCalledWith(registerDto);
     });
   });
+  
 });

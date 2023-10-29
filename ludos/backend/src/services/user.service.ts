@@ -1,14 +1,19 @@
-import { RegisterDto } from '../dtos/user/request/register.dto';
-import { UserRepository } from '../repositories/user.repository';
-import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
 import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
+import { UserRepository } from '../repositories/user.repository';
+import { ResetPasswordRepository } from '../repositories/reset-password.repository';
+import { RegisterDto } from '../dtos/user/request/register.dto';
+import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
 import { LoginDto } from '../dtos/user/request/login.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
+import { ResetDto } from '../dtos/user/request/reset.dto';
+import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../interfaces/user/payload.interface';
 
@@ -16,6 +21,7 @@ import { Payload } from '../interfaces/user/payload.interface';
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -49,5 +55,67 @@ export class UserService {
     return {
       accessToken,
     };
+  }
+
+  public async sendCodeViaEmailForPasswordReset(email: string, code: string): Promise<Date> {
+    // send email
+    return new Date();
+    /*
+    let transporter = nodemailer.createTransport({
+      host: mail_config.mail.host,
+      port: mail_config.mail.port,
+      secure: mail_config.mail.secure, // true for 465, false for other ports
+      auth: {
+        user: mail_config.mail.user,
+        pass: mail_config.mail.pass
+      }
+    });
+
+    let mailOptions = {
+      from: '"Company" <' + mail_config.mail.user + '>', 
+      to: email, // list of receivers (separated by ,)
+      subject: 'Verify Email', 
+      text: 'Verify Email', 
+      html: 'Hi! <br><br> Thanks for your registration<br><br>'+
+      '<a href='+ mail_config.host.url + ':' + mail_config.host.port +'/auth/email/verify/'+ code + '>Click here to activate your account</a>'  // html body
+    };
+
+    let sent = await new Promise<boolean>(async function(resolve, reject) {
+      return await transporter.sendMail(mailOptions, async (error: any, info: any) => {
+        if (error) {      
+          console.log('Message sent: %s', error);
+          return reject(false);
+        }
+        console.log('Message sent: %s', info.messageId);
+        resolve(true);
+      });      
+    })
+
+    return new Date();
+    */
+  }
+
+  public async resetPassword(input: ResetDto) {
+    let user = await this.userRepository.findUserByEmail(input.email);
+
+    if (!user) {
+      throw new HttpException("No user found with this email", HttpStatus.FORBIDDEN);
+    }
+
+    //generate code
+    let code = (Math.floor(Math.random() * 900000) + 100000).toString();
+
+    // send email
+    let timestamp = await this.sendCodeViaEmailForPasswordReset(user.email, code);
+
+    // save to database
+    await this.resetPasswordRepository.createPasswordReset(input);
+  }
+
+  public async verifyCode(input: VerifyCodeDto) {
+    // check timestamp
+    // verify code
+    // await this.resetPasswordRepository.deletePasswordReset();
+    
   }
 }
