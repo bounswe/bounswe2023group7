@@ -12,7 +12,12 @@ export class UserRepository extends Repository<User> {
     await this.insert(user);
     return user;
   }
+
   public findUserByUsername(username: string): Promise<User> {
     return this.findOneBy({ username });
+  }
+  
+  public findUserByEmail(email: string): Promise<User> {
+    return this.findOneBy({ email: email });
   }
 }
