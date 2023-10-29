@@ -102,11 +102,9 @@ export default function SignUpForm() {
                         backgroundPosition: 'center',
                     }}
                 />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square sx={{display:'flex', justifyContent:'center', alignItems: 'center'}}>
                     <Box
                         sx={{
-                            my: 25,
-                            mx: 4,
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
@@ -118,7 +116,7 @@ export default function SignUpForm() {
                         <Typography component="h1" variant="h5">
                             Sign Up
                         </Typography>
-                        <Box component="form" noValidate sx={{ mt: 1 }}>
+                        <Box component="form" noValidate sx={{ mt: 1, mx: 10 }}>
                             <TextField
                                 margin="normal"
                                 required

@@ -18,8 +18,8 @@ import LoginIcon from '@mui/icons-material/Login';
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-
 const defaultTheme = createTheme();
+const backgroundImage = require('../assets/logo.png');
 
 export default function Login() {
     const [username, setUsername] = useState('');
@@ -84,28 +84,28 @@ export default function Login() {
                 <Grid
                     item
                     xs={false}
-                    sm={4}
+                    sm={6}
                     md={7}
-                    sx={{
-                        backgroundImage: 'url(../assets/logo.png)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                    sx={{display:'flex', flexDirection:'column', alignItems:'center'}}
+                >
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        my: 20
+                    }}>
+                        <img src={backgroundImage}  color="white" style={{ width:'auto', height:'500px', display:'flex', margin: 'auto', display:'flex' }} />
+                    </Box>
+                </Grid>
+                <Grid item xs={12} sm={6} md={5} component={Paper} elevation={6} square sx={{display:'flex', justifyContent:'center', alignItems: 'center'}}>
                     <Box
                         sx={{
-                            my: 25,
-                            mx: 4,
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
                         }}
                     >
-                        <Avatar sx={{ m: 1, bgcolor: '#569CB1' }}>
+                        <Avatar sx={{ m: 2, bgcolor: '#569CB1' }}>
                             <LoginIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
