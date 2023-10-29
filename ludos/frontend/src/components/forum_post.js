@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { Box, Typography, Button, Grid } from "@mui/material";
+import { Box, Typography, Button, Grid, IconButton } from "@mui/material";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { Comment, MoreHoriz } from "@mui/icons-material";
 
 function Post(data, key) {
   const boxStyle = {
@@ -13,14 +14,14 @@ function Post(data, key) {
     fontFamily: "Trebuchet MS, sans-serif",
     marginBottom: "10px",
   };
+  const usernameStyle = { color: "rgb(255, 255, 0)" };
+  const timestampStyle = { color: "rgb(255, 255, 0)" };
   const forumStyle = { color: "rgb(0, 150, 255)" };
-  const followButton = {
-    backgroundColor: "rgb(255, 165, 0)",
-    color: "rgb(0, 0, 0)",
-    height: "20px",
-    textTransform: "none",
-  };
+
   const descriptionStyle = { color: "white" };
+  const iconStyle = {
+    color: "white", // Set the color to white
+  };
   const tagBox = {
     display: "flex",
     justifyContent: "center",
@@ -53,6 +54,12 @@ function Post(data, key) {
           <Typography variant="caption" component="div" style={forumStyle}>
             {data.post.forum}
           </Typography>
+          <Typography variant="caption" component="div" style={usernameStyle}>
+            {data.post.username}
+          </Typography>
+          <Typography variant="caption" component="div" style={timestampStyle}>
+            {data.post.timestamp}
+          </Typography>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
             {data.post &&
               data.post.tags.map((data1, index1) => (
@@ -65,9 +72,6 @@ function Post(data, key) {
                   {data1}
                 </Typography>
               ))}
-            <Button variant="contained" style={followButton}>
-              Follow
-            </Button>
           </Grid>
         </Grid>
 
@@ -101,6 +105,23 @@ function Post(data, key) {
           <Button variant="contained" style={downVoteButton}>
             <FaArrowDown />
           </Button>
+        </Grid>
+        <Grid
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            marginTop: "5px",
+            marginBottom: "-30px",
+          }}
+        >
+          <IconButton style={iconStyle}>
+            <Comment />
+          </IconButton>
+          <IconButton style={iconStyle}>
+            <MoreHoriz />
+          </IconButton>
         </Grid>
       </Box>
     </Grid>
