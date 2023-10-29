@@ -9,12 +9,10 @@ function App() {
     <Router>
       <Routes>
         <Route path="/signup" element={
-          <Layout>
-            <SignUpForm />
-          </Layout>
-        }/>
+          <SignUpForm />
+        } />
         <Route path="/login" element={<Login />} />
-      </Routes>ç
+      </Routes>
     </Router>
   );
 }
