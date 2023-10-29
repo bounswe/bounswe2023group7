@@ -12,10 +12,10 @@ import { LoginDto } from '../dtos/user/request/login.dto';
 import { RegisterDto } from '../dtos/user/request/register.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
-import { ResetDto } from '../dtos/user/request/reset.dto'
-import { ResetResponseDto } from '../dtos/user/response/reset-response.dto'
-import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto'
-import { VerifyCodeResponseDto } from '../dtos/user/response/verify-code-response.dto'
+import { ResetDto } from '../dtos/reset-password/request/reset.dto'
+import { ResetResponseDto } from '../dtos/reset-password/response/reset-response.dto'
+import { VerifyCodeDto } from '../dtos/reset-password/request/verify-code.dto'
+import { VerifyCodeResponseDto } from '../dtos/reset-password/response/verify-code-response.dto'
 import { UserService } from '../services/user.service';
 
 @ApiTags('user')
