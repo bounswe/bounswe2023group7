@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { Container, Grid, Box, Typography, Rating } from "@mui/material";
+import {
+  Container,
+  Grid,
+  Box,
+  Typography,
+  Rating,
+  Button,
+} from "@mui/material";
 
 function GamePage() {
   const tagBox = {
@@ -12,6 +19,13 @@ function GamePage() {
     borderRadius: "10px",
     padding: "5px",
     marginRight: "5px",
+  };
+
+  const followButton = {
+    backgroundColor: "rgb(255, 165, 0)",
+    color: "rgb(0, 0, 0)",
+    height: "20px",
+    textTransform: "none",
   };
 
   const game = {
@@ -77,7 +91,7 @@ function GamePage() {
   const ratingStyle = {
     backgroundColor: "gray",
     borderRadius: "100px",
-    width: "100%",
+    width: "auto",
     height: "auto",
     marginTop: "10px",
     justifyContent: "center",
@@ -85,16 +99,28 @@ function GamePage() {
     flexDirection: "column",
     display: "flex",
   };
+
+  const boxStyle = {
+    backgroundColor: "rgba(30, 30, 30, 0.9)",
+    borderRadius: "10px",
+    paddingTop: "15px",
+  };
   useEffect(() => {}, []);
 
   return (
-    <Container style={{ backgroundColor: "#f0f0f0" }}>
-      <Grid container spacing={1}>
+    <Container style={{ backgroundColor: "rgb(0, 150, 255)", maxWidth: "1200px" } }>
+      <Grid container spacing={1} style={boxStyle}>
         <Box p={0} style={{ width: "100%", marginTop: "3%" }}>
-          <Typography style={{ fontSize: "25px" }}>God of War</Typography>
+          <Typography style={{ fontSize: "25px" }}>{game.title}</Typography>
         </Box>
         <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Grid style={{ display: "flex", justifyContent: "right" }}>
+          <Grid
+            style={{
+              display: "flex",
+              justifyContent: "right",
+              marginRight: "3%",
+            }}
+          >
             {game.tags.map((data1, index1) => (
               <Typography
                 variant="caption"
@@ -105,14 +131,17 @@ function GamePage() {
                 {data1}
               </Typography>
             ))}
+            <Button variant="contained" style={followButton}>
+              Follow
+            </Button>
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={4} md={4} lg={4}>
+        <Grid item xs={12} sm={3} md={3} lg={3} style={{marginLeft:"2%"}}>
           <Box p={0} style={{ width: "100%" }}>
             <img src={game.coverLink} alt="God of War" />
           </Box>
         </Grid>
-        <Grid item xs={12} sm={2} md={2} lg={2}>
+        <Grid item xs={6} sm={2} md={2} lg={2} style={{marginLeft:"2%"}}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
             <Typography component="legend">Release Date:</Typography>
             <Typography component="legend">{game.releaseDate}</Typography>
@@ -131,15 +160,30 @@ function GamePage() {
             />
             <Typography component="legend">{game.averageRating}/5</Typography>
           </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
+            <Typography component="legend">Followers:</Typography>
+            <Typography component="legend">{game.followers}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
+            <Typography component="legend">Average Duration:</Typography>
+            <Typography component="legend">
+              {game.averageUserCompilationDuration}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={4} md={4} lg={4}>
+        <Grid item xs={12} sm={4} md={4} lg={4} style={{marginLeft:"1%"}}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
             <Typography component="legend">{game.gameBio}</Typography>
           </Grid>
+        </Grid>
+        <Grid item xs={6} sm={2} md={2} lg={2} style={{marginLeft:"1%"}}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
-            <Typography component="legend">
-              Platforms:{game.platforms}
-            </Typography>
+            <Typography component="legend">Platforms:</Typography>
+            {game.platforms.map((data1, index1) => (
+              <Typography variant="caption" component="div" key={index1}>
+                {data1}
+              </Typography>
+            ))}
           </Grid>
         </Grid>
       </Grid>
