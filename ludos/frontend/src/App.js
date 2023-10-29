@@ -1,21 +1,20 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import HomePage from './pages/Homepage.js'
+import GamePage from './pages/GamePage.js'
+import React from 'react'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './App.css';
+import Layout from './layout.js'
 
-import Layout from "./layout"; // Make sure to import your Layout component
-import LandingPage from "./pages/landingPage"; // Import your LandingPage component
+
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <LandingPage />
-            </Layout>
-          }
-        />
-      </Routes>
+      <div className="App">
+        <Routes>
+          <Route path="/home" element={<Layout><HomePage/></Layout>} />
+          <Route path="/game" element={<Layout><GamePage/></Layout>} />
+        </Routes>
+      </div>
     </Router>
   );
 }
