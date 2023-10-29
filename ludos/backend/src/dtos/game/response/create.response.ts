@@ -1,23 +1,21 @@
-import {ApiProperty} from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class GameCreateResponseDto {
-    @ApiProperty()
-    id: string; // You might want to use an appropriate data type for the game ID.
+  @ApiProperty()
+  id: string;
 
-    @ApiProperty()
-    title: string;
+  @ApiProperty()
+  title: string;
 
-    @ApiProperty()
-    coverLink: string;
+  @ApiProperty()
+  coverLink: string;
 
-    @ApiProperty()
-    averageRating: number;
+  @ApiProperty()
+  gameBio: string;
 
-    @ApiProperty()
-    userRating: number;
+  @ApiProperty()
+  releaseDate: Date;
 
-    @ApiProperty()
-    followers: number;
-
-    // You can include other properties from your game entity as needed.
+  @ApiProperty()
+  developer: string;
 }
