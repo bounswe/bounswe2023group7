@@ -15,4 +15,8 @@ export class UserRepository extends Repository<User> {
   public findUserByUsername(username: string): Promise<User> {
     return this.findOneBy({ username });
   }
+
+  public findUserById(id: string): Promise<User> {
+    return this.findOneBy({ id });
+  }
 }

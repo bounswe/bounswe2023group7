@@ -2,15 +2,20 @@ import { RegisterDto } from '../dtos/user/request/register.dto';
 import { UserRepository } from '../repositories/user.repository';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { LoginDto } from '../dtos/user/request/login.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../interfaces/user/payload.interface';
+import { ChangePasswordDto } from 'dtos/user/request/change-password.dto';
+import { User } from 'entities/user.entity';
+import { ChangePasswordResponseDto } from 'dtos/user/response/change-password-response.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -49,4 +54,27 @@ export class UserService {
       accessToken,
     };
   }
+
+  public async changePassword(changePasswordDto: ChangePasswordDto): Promise<ChangePasswordResponseDto> {
+    const user: User = await this.userRepository.findUserById(changePasswordDto.userId);
+
+    if (!user) {
+      throw new NotFoundException('Kullanıcı bulunamadı!');
+    }
+
+    const isPasswordValid: boolean = await user.compareEncryptedPassword(changePasswordDto.oldPassword);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Eski şifre hatalı');
+    }
+
+    if (changePasswordDto.oldPassword === changePasswordDto.newPassword) {
+      throw new BadRequestException('Eski şifre ve yeni şifre ayni olamaz!');
+    }
+
+    user.password = changePasswordDto.newPassword;
+    await this.userRepository.save(user);
+    return new ChangePasswordResponseDto(true) ;
+  }
+
 }
