@@ -13,4 +13,9 @@ export class GameRepository extends Repository<Game> {
     await this.insert(game);
     return game;
   }
+
+  public async findGameById(id: string): Promise<Game> {
+    return this.findOneBy({ id });
+  }
+
 }

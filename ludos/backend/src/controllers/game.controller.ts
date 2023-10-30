@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -32,4 +32,18 @@ export class GameController {
     const createdGame = await this.gameService.createGame(input);
     return createdGame;
   }
+
+  @ApiOperation({ summary: 'Get Game by ID Endpoint' })
+  @Get(':id')
+  public async getGame(@Param('id') id: string) {
+    console.log(id);
+    const game = await this.gameService.getGame(id);
+    if (game) {
+      return game;
+    } else {
+      throw new NotFoundException('Game not found');
+    }
+  }
 }
+
+
