@@ -10,6 +10,9 @@ import { UserController } from './controllers/user.controller';
 import { UserService } from './services/user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigService } from './services/config/jwt-config.service';
+import { GameController } from './controllers/game.controller';
+import { GameService } from './services/game.service';
+import { GameRepository } from './repositories/game.repository';
 
 @Module({
   imports: [
@@ -26,7 +29,13 @@ import { JwtConfigService } from './services/config/jwt-config.service';
     }),
     TypeOrmModule.forFeature([User]),
   ],
-  controllers: [AppController, UserController],
-  providers: [AppService, UserRepository, UserService],
+  controllers: [AppController, UserController, GameController],
+  providers: [
+    AppService,
+    UserRepository,
+    UserService,
+    GameRepository,
+    GameService,
+  ],
 })
 export class AppModule {}
