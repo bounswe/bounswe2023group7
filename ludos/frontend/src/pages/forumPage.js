@@ -5,7 +5,7 @@ import InputBase from "@mui/material/InputBase";
 import { Grid, Container } from "@mui/material";
 import Post from "../components/Post";
 
-const Forum = () => {
+const Forum = ({ userLoggedIn }) => {
   const boxesData = [
     {
       userName: "@Gamer123",
@@ -176,22 +176,23 @@ const Forum = () => {
             </Typography>
           </div>
 
-          {/* Join Button */}
-          <Button
-            variant="contained"
-            color="primary"
-            style={{
-              backgroundColor: "white",
-              borderRadius: "40px",
-              width: "10px",
-              height: "30px",
-              color: "black",
-              fontFamily: "OCR A Std, monospace", // Set the desired font family
-              fontWeight: "bold",
-            }}
-          >
-            Join
-          </Button>
+          {userLoggedIn && (
+            <Button
+              variant="contained"
+              color="primary"
+              style={{
+                backgroundColor: "white",
+                borderRadius: "40px",
+                width: "10px",
+                height: "30px",
+                color: "black",
+                fontFamily: "OCR A Std, monospace", // Set the desired font family
+                fontWeight: "bold",
+              }}
+            >
+              Join
+            </Button>
+          )}
         </div>
       </div>
       {/* Create a Post Bar */}

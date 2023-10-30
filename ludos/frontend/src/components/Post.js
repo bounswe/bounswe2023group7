@@ -79,9 +79,11 @@ function Post(data) {
                   {data1}
                 </Typography>
               ))}
-            <Button variant="contained" style={followButton}>
-              Follow
-            </Button>
+            {data.showButtons && (
+              <Button variant="contained" style={followButton}>
+                Follow
+              </Button>
+            )}
           </Grid>
         </Grid>
         <Grid
