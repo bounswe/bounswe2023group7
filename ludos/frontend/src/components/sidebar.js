@@ -70,6 +70,10 @@ function Sidebar({ userLoggedIn }) {
     setAnchorEl(null);
   };
 
+  function handleLogout() {
+    localStorage.removeItem("accessToken");
+  }
+
   return (
     <div style={rootSx}>
       <Drawer style={drawer} variant="permanent">
@@ -202,8 +206,8 @@ function Sidebar({ userLoggedIn }) {
               </MenuItem>
               <MenuItem
                 component={Link}
-                to="/log-out"
-                onClick={handleProfileClose}
+                to="/login"
+                onClick={handleLogout}
               >
                 Log Out
               </MenuItem>
