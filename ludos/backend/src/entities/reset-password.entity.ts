@@ -13,9 +13,6 @@ export class ResetPassword {
   id: string;
 
   @Column()
-  username: string;
-
-  @Column()
   email: string;
 
   @Column()

@@ -57,9 +57,8 @@ export class UserService {
     };
   }
 
-  public async sendCodeViaEmailForPasswordReset(email: string, code: string): Promise<Date> {
+  public async sendCodeViaEmailForPasswordReset(email: string, code: string) {
     // send email
-    return new Date();
     /*
     let transporter = nodemailer.createTransport({
       host: mail_config.mail.host,
@@ -102,20 +101,43 @@ export class UserService {
       throw new HttpException("No user found with this email", HttpStatus.FORBIDDEN);
     }
 
+    let resetPassword = await this.resetPasswordRepository.findResetPasswordByEmail(input.email);
+
+    if (resetPassword) {
+      throw new HttpException("A password request is already in progress, check your mailbox", HttpStatus.FORBIDDEN);
+    }
+
     //generate code
     let code = (Math.floor(Math.random() * 900000) + 100000).toString();
 
-    // send email
-    let timestamp = await this.sendCodeViaEmailForPasswordReset(user.email, code);
-
     // save to database
-    await this.resetPasswordRepository.createPasswordReset(input);
+    await this.resetPasswordRepository.createPasswordReset(input, code, new Date());
+
+    // send email
+    await this.sendCodeViaEmailForPasswordReset(user.email, code);
   }
 
   public async verifyCode(input: VerifyCodeDto) {
-    // check timestamp
-    // verify code
-    // await this.resetPasswordRepository.deletePasswordReset();
-    
+    let resetPassword = await this.resetPasswordRepository.findResetPasswordByEmail(input.email);
+
+    if (!resetPassword) {
+      throw new HttpException("No password reset request found for this email", HttpStatus.FORBIDDEN);
+    }
+
+    let now = new Date();
+
+    if ((now.getTime() - resetPassword.timestamp.getTime()) / 60000 < 15) {
+      throw new HttpException("Time out (15min), try again", HttpStatus.FORBIDDEN);
+    }
+
+    if (resetPassword.code !== input.code) {
+      throw new HttpException("Incorrect code", HttpStatus.FORBIDDEN);
+    }
+
+    // correct code, delete from database
+    await this.resetPasswordRepository.deletePasswordReset(resetPassword);
+
+    // set new password
+    await this.userRepository.updateUserPassword(await this.userRepository.findUserByEmail(input.email), input.newPassword);
   }
 }

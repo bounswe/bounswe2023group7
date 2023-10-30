@@ -20,4 +20,9 @@ export class UserRepository extends Repository<User> {
   public findUserByEmail(email: string): Promise<User> {
     return this.findOneBy({ email: email });
   }
+
+  public async updateUserPassword(input: Partial<User>, newPassword: string) {
+    let user = this.create(input);
+    user.password = newPassword;
+  }
 }
