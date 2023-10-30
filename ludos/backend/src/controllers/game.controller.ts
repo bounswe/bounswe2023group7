@@ -9,7 +9,6 @@ import {
 import { GameService } from '../services/game.service';
 import { GameCreateResponseDto } from '../dtos/game/response/create.response';
 import { GameCreateDto } from '../dtos/game/request/create.dto';
-import { AuthGuard } from 'services/guards/auth.guard';
 
 @ApiTags('game')
 @Controller('game')
