@@ -14,8 +14,8 @@ export class GameRepository extends Repository<Game> {
     return game;
   }
 
-  public findUserByUsername(uuid: string): Promise<Game> {
-    return this.findOneBy({ uuid });
+  public async findGameById(id: string): Promise<Game> {
+    return this.findOneBy({ id });
   }
 
 }

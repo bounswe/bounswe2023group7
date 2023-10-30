@@ -37,7 +37,7 @@ export class GameController {
 
   @ApiOperation({ summary: 'Get Game by ID Endpoint' })
   @Get(':id')
-  public async getGame(@Param('id') gameId: string) {
+  public async getGame(@Param('id') id: string) {
     const game = await this.gameService.getGame(id);
     if (game) {
       return game;
@@ -48,11 +48,3 @@ export class GameController {
 }
 
 
-
-
-
-
-
-
-
-}
