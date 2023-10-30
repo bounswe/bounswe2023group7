@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Game } from '../entities/game.entity';
 import { DataSource, Repository } from 'typeorm';
+import { Game } from '../entities/game.entity';
 
 @Injectable()
 export class GameRepository extends Repository<Game> {
@@ -18,4 +18,12 @@ export class GameRepository extends Repository<Game> {
     return this.findOneBy({ id });
   }
 
+  public findGameByIdWithFollowerList(id: string): Promise<Game> {
+    return this.findOne({ where: { id }, relations: ['followerList'] });
+  }
+
+  public async updateGame(input: Partial<Game>): Promise<void> {
+    const game = this.create(input);
+    await this.save(game);
+  }
 }
