@@ -195,7 +195,7 @@ export default function Login() {
                   helperText={passwordEmpty ? "Password cannot be empty." : ""}
                 />
                 <Button
-                  type="button"
+                  type="submit"
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2, backgroundColor: "#F49A32" }}
@@ -216,12 +216,12 @@ export default function Login() {
                     xs
                     sx={{ display: "flex", alignItems: "flex-start" }}
                   >
-                    <Link href="#" variant="body2" color={"#F49A32"}>
+                    <Link href="#" variant="body2" color="#F49A32">
                       Forgot password?
                     </Link>
                   </Grid>
                   <Grid item sx={{ display: "flex", alignItems: "flex-end" }}>
-                    <Link href="/signup" variant="body2" color={"#F49A32"}>
+                    <Link href="/signup" variant="body2" color="#F49A32">
                       {"Don't have an account? Sign Up"}
                     </Link>
                   </Grid>
