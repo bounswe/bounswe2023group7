@@ -13,7 +13,6 @@ import { AuthGuard } from 'services/guards/auth.guard';
 
 @ApiTags('game')
 @Controller('game')
-@UseGuards(AuthGuard)
 export class GameController {
   constructor(private readonly gameService: GameService) {}
 
@@ -38,6 +37,7 @@ export class GameController {
   @ApiOperation({ summary: 'Get Game by ID Endpoint' })
   @Get(':id')
   public async getGame(@Param('id') id: string) {
+    console.log(id);
     const game = await this.gameService.getGame(id);
     if (game) {
       return game;

@@ -47,15 +47,6 @@ export class GameService {
       throw new NotFoundException('Game not found');
     }
 
-    const gameResponse: GameGetResponseDto = {
-      id: game.id,
-      title: game.title,
-      coverLink: game.coverLink,
-      gameBio: game.gameBio,
-      releaseDate: game.releaseDate,
-      developer: game.developer,
-    };
-
-    return gameResponse;
+    return game;
   }
 }
