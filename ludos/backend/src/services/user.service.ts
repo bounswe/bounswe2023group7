@@ -14,8 +14,9 @@ import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
-import { User } from 'entities/user.entity';
+import { User } from '../entities/user.entity';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
   constructor(
@@ -55,26 +56,18 @@ export class UserService {
     };
   }
 
-  public async changePassword(changePasswordDto: ChangePasswordDto): Promise<ChangePasswordResponseDto> {
-    const user: User = await this.userRepository.findUserById(changePasswordDto.userId);
-
+  public async changePassword(user: User,changePasswordDto: ChangePasswordDto): Promise<ChangePasswordResponseDto> {
     if (!user) {
       throw new NotFoundException('Kullanıcı bulunamadı!');
     }
 
-    const isPasswordValid: boolean = await user.compareEncryptedPassword(changePasswordDto.oldPassword);
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Eski şifre hatalı');
-    }
-
-    if (changePasswordDto.oldPassword === changePasswordDto.newPassword) {
+    if (user.password === changePasswordDto.newPassword) {
       throw new BadRequestException('Eski şifre ve yeni şifre ayni olamaz!');
     }
 
-    user.password = changePasswordDto.newPassword;
+    user.password=await bcrypt.hash(changePasswordDto.newPassword,10);
     await this.userRepository.save(user);
-    return new ChangePasswordResponseDto(true) ;
+    return new ChangePasswordResponseDto(true);
   }
 
 }

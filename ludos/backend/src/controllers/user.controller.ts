@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -14,6 +14,8 @@ import { RegisterResponseDto } from '../dtos/user/response/register-response.dto
 import { UserService } from '../services/user.service';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
+import { AuthGuard } from '../services/guards/auth.guard';
+
 
 @ApiTags('user')
 @Controller('user')
@@ -64,8 +66,10 @@ export class UserController {
   })
   @HttpCode(200)
   @ApiOperation({ summary: 'Change Password Endpoint' })
+  @UseGuards(AuthGuard)
   @Post('/change-password')
-  public async changePassword(@Body() input: ChangePasswordDto ) {
-    return await this.userService.changePassword(input);
+  public async changePassword(@Req() req: any,@Body() input: ChangePasswordDto ) {
+  
+    return await this.userService.changePassword(req.user,input);
   }
 }
