@@ -19,7 +19,7 @@ class APIService {
     return response.statusCode;
   }
 
-  Future<int> signUp(String username, String email, String password) async {
+  Future<http.Response> signUp(String username, String email, String password) async {
     var uri = Uri.parse("$baseURL/user");
     final body = jsonEncode(<String, Object>{
       'username': username,
@@ -28,6 +28,6 @@ class APIService {
     });
     final response = await http.post(uri, body: body, headers: {'content-type': "application/json"});
 
-    return response.statusCode;
+    return response;
   }
 }
