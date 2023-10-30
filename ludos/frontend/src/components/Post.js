@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Box, Typography, Button, Grid } from "@mui/material";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa";
 
-function Post(data, key) {
+function Post(data) {
   const boxStyle = {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
     borderRadius: "10px",
@@ -14,6 +14,7 @@ function Post(data, key) {
     marginBottom: "10px",
   };
   const forumStyle = { color: "rgb(0, 150, 255)" };
+  const userStyle = { color: "rgb(0, 250, 255)", marginRight: "2%" };
   const followButton = {
     backgroundColor: "rgb(255, 165, 0)",
     color: "rgb(0, 0, 0)",
@@ -32,15 +33,28 @@ function Post(data, key) {
     padding: "5px",
     marginRight: "5px",
   };
-  const upVoteButton = {
-    backgroundColor: "rgb(124, 252, 0)",
+  const commentButton = {
+    justifyContent: "space-between",
     marginRight: "5px",
+    display: "flex",
+    height: "auto",
   };
-  const downVoteButton = { backgroundColor: "rgb(222, 49, 99)" };
+  const upVoteButton = {
+    backgroundColor: "rgba(30, 30, 30, 0.9)",
+    marginRight: "5px",
+    height: commentButton.height,
+  };
+  const downVoteButton = {
+    backgroundColor: "rgba(30, 30, 30, 0.9)",
+    marginRight: "5px",
+    display: "flex",
+    height: commentButton.height,
+  };
+
   useEffect(() => {}, []);
 
   return (
-    <Grid item xs={12} sm={12} md={12} lg={12} key={key}>
+    <Grid item xs={12} sm={12} md={12} lg={12}>
       <Box p={5} style={boxStyle}>
         <Grid
           item
@@ -54,22 +68,48 @@ function Post(data, key) {
             {data.post.forum}
           </Typography>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
-            {data.post && data.post.tags.map((data1, index1) => (
-              <Typography
-                variant="caption"
-                component="div"
-                style={tagBox}
-                key={index1}
-              >
-                {data1}
-              </Typography>
-            ))}
-            <Button variant="contained" style={followButton}>
-              Follow
-            </Button>
+            {data.post &&
+              data.post.tags.map((data1, index1) => (
+                <Typography
+                  variant="caption"
+                  component="div"
+                  style={tagBox}
+                  key={index1}
+                >
+                  {data1}
+                </Typography>
+              ))}
+            {data.showButtons && (
+              <Button variant="contained" style={followButton}>
+                Follow
+              </Button>
+            )}
           </Grid>
         </Grid>
-
+        <Grid
+          style={{
+            display: "flex",
+            justifyContent: "left",
+            marginBottom: "10px",
+          }}
+        >
+          <Typography
+            variant="caption"
+            component="div"
+            textAlign="left"
+            style={userStyle}
+          >
+            {data.post.userName}
+          </Typography>
+          <Typography
+            variant="caption"
+            component="div"
+            textAlign="left"
+            style={userStyle}
+          >
+            {data.post.timestamp}
+          </Typography>
+        </Grid>
         <Typography
           variant="h4"
           component="div"
@@ -94,12 +134,20 @@ function Post(data, key) {
             marginTop: "10px",
           }}
         >
-          <Button variant="contained" style={upVoteButton}>
-            <FaArrowUp style={{ color: "black" }} />
+          <Button variant="contained" style={commentButton}>
+            <FaComment />
+            {data.post.numberOfComments}
           </Button>
-          <Button variant="contained" style={downVoteButton}>
-            <FaArrowDown />
-          </Button>
+          {data.showButtons && (
+            <>
+              <Button variant="contained" style={upVoteButton}>
+                <FaThumbsUp style={{ color: "rgb(124, 252, 0)" }} />
+              </Button>
+              <Button variant="contained" style={downVoteButton}>
+                <FaThumbsDown style={{ color: "rgb(222, 49, 99)"}} />
+              </Button>
+            </>
+          )}
         </Grid>
       </Box>
     </Grid>
