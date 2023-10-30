@@ -87,4 +87,7 @@ export class Game {
 
   @Column('text')
   trivia: string;
+
+  @Column('text', { array: true })
+  reviews: string[];
 }
