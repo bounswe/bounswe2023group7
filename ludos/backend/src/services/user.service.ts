@@ -13,9 +13,9 @@ import { LoginDto } from '../dtos/user/request/login.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../interfaces/user/payload.interface';
-import { ChangePasswordDto } from 'dtos/user/request/change-password.dto';
+import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
 import { User } from 'entities/user.entity';
-import { ChangePasswordResponseDto } from 'dtos/user/response/change-password-response.dto';
+import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 @Injectable()
 export class UserService {
   constructor(

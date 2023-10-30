@@ -12,8 +12,8 @@ import { RegisterDto } from '../dtos/user/request/register.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
 import { UserService } from '../services/user.service';
-import { ChangePasswordResponseDto } from 'dtos/user/response/change-password-response.dto';
-import { ChangePasswordDto } from 'dtos/user/request/change-password.dto';
+import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
+import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -51,7 +51,7 @@ export class UserController {
   public async login(@Body() input: LoginDto) {
     return await this.userService.login(input);
   }
-  //Change password
+  
   @ApiOkResponse({
     description: 'Password change has been succesful!',
     type: ChangePasswordResponseDto,
