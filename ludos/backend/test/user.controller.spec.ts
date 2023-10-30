@@ -10,8 +10,9 @@ import { RegisterResponseDto } from '../src/dtos/user/response/register-response
 import { User } from '../src/entities/user.entity';
 import { UserRepository } from '../src/repositories/user.repository';
 import { UserService } from '../src/services/user.service';
-//import { ResetPassword } from '../src/entities/reset-password.entity';
-//import { ResetDto } from '../src/dtos/user/request/reset.dto';
+import { ResetPassword } from '../src/entities/reset-password.entity';
+import { ResetDto } from '../src/dtos/user/request/reset.dto';
+import { ResetPasswordRepository } from '../src/repositories/reset-password.repository';
 
 describe('UserController', () => {
   let userController: UserController;
@@ -34,6 +35,7 @@ describe('UserController', () => {
       providers: [
         UserService,
         UserRepository,
+        ResetPasswordRepository,
         {
           provide: DataSource,
           useValue: dataSource,
@@ -153,5 +155,27 @@ describe('UserController', () => {
       expect(createUserSpy).toHaveBeenCalledWith(registerDto);
     });
   });
-  
+  describe('reset-password', () => {
+    xit('should send an email', async () => {
+      const email = 'test@email.com';
+      const code = '984854'
+      const id = '1';
+      const resetPassword = new ResetPassword();
+      resetPassword.id = id;
+      resetPassword.email = email;
+      resetPassword.code = code;
+      const resetDto: ResetDto = {
+        email: email,
+      };
+      userController.resetPassword(resetDto);
+      /*
+      const createUserSpy = jest
+        .spyOn(userRepository, 'createUser')
+        .mockResolvedValue(user);
+      const createdUser = await userController.register(registerDto);
+      expect(createUserSpy).toHaveBeenCalledWith(registerDto);
+      expect(createdUser).toStrictEqual(registerResponseDto);
+      */
+    });
+  });
 });

@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import * as nodemailer from 'nodemailer';
 import { UserRepository } from '../repositories/user.repository';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { RegisterDto } from '../dtos/user/request/register.dto';
@@ -58,25 +59,21 @@ export class UserService {
   }
 
   public async sendCodeViaEmailForPasswordReset(email: string, code: string) {
-    // send email
-    /*
     let transporter = nodemailer.createTransport({
-      host: mail_config.mail.host,
-      port: mail_config.mail.port,
-      secure: mail_config.mail.secure, // true for 465, false for other ports
+      host: 'smtp.gmail.com',
+      secure: false,
       auth: {
-        user: mail_config.mail.user,
-        pass: mail_config.mail.pass
+        user: '',
+        pass: ''
       }
     });
 
     let mailOptions = {
-      from: '"Company" <' + mail_config.mail.user + '>', 
-      to: email, // list of receivers (separated by ,)
+      from: '', 
+      to: email,
       subject: 'Verify Email', 
       text: 'Verify Email', 
-      html: 'Hi! <br><br> Thanks for your registration<br><br>'+
-      '<a href='+ mail_config.host.url + ':' + mail_config.host.port +'/auth/email/verify/'+ code + '>Click here to activate your account</a>'  // html body
+      html: 'Hi! Here is your code to reset your password: ' + code
     };
 
     let sent = await new Promise<boolean>(async function(resolve, reject) {
@@ -88,10 +85,7 @@ export class UserService {
         console.log('Message sent: %s', info.messageId);
         resolve(true);
       });      
-    })
-
-    return new Date();
-    */
+    });
   }
 
   public async resetPassword(input: ResetDto) {
