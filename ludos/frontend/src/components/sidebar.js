@@ -18,7 +18,6 @@ import GroupIcon from "@mui/icons-material/Groups";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 90; // Adjust the width as needed
 //const theme = createTheme;
@@ -62,7 +61,6 @@ const circleIcon = {
 function Sidebar() {
   //const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate();
 
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -74,7 +72,6 @@ function Sidebar() {
 
   function handleLogout() {
     localStorage.removeItem("accessToken");
-    navigate("/login");
   }
 
   return (
@@ -208,8 +205,8 @@ function Sidebar() {
             </MenuItem>
             <MenuItem
               component={Link}
-              to="/log-out"
-              onClick={handleProfileClose}
+              to="/login"
+              onClick={handleLogout}
             >
               Log Out
             </MenuItem>
