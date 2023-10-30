@@ -42,6 +42,9 @@ export default function SignUpForm() {
 
     const handleSignup = (event) => {
 
+
+        event.preventDefault();
+
         if (password.length < 8) {
             setPasswordError(true);
             return;
@@ -53,7 +56,6 @@ export default function SignUpForm() {
         }
 
 
-        event.preventDefault();
         axiosInstance.post('/user', { email, username, password })
             .then((response) => {
                 const accessToken = response.data.token;
@@ -181,7 +183,7 @@ export default function SignUpForm() {
                                 helperText={passwordsMatch ? 'Passwords must match.' : ''}
                             />
                             <Button
-                                type="button"
+                                type="submit"
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2, backgroundColor: '#F49A32' }}
