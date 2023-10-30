@@ -14,12 +14,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import MuiAlert from '@mui/material/Alert';
 import Link from '@mui/material/Link';
+import { useNavigate } from "react-router-dom";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 const defaultTheme = createTheme();
+const backgroundImage = require('../assets/logo.png');
 
 export default function SignUpForm() {
     const [email, setEmail] = useState('');
@@ -32,27 +34,32 @@ export default function SignUpForm() {
     const [dialogMessage, setDialogMessage] = useState('');
     const [serverError, setServerError] = useState(false);
 
+    const navigate = useNavigate();
+
     const axiosInstance = axios.create({
-        baseURL: 'http://3.125.225.39:8080'
+        baseURL: 'http://3.125.225.39:8080',
     })
 
     const handleSignup = (event) => {
-
-        if (password !== passwordAgain) {
-            setPasswordsMatch(true);
-            return;
-        }
 
         if (password.length < 8) {
             setPasswordError(true);
             return;
         }
 
+        if (password !== passwordAgain) {
+            setPasswordsMatch(true);
+            return;
+        }
 
 
         event.preventDefault();
         axiosInstance.post('/user', { email, username, password })
             .then((response) => {
+                const accessToken = response.data.token;
+                localStorage.setItem("accessToken", accessToken);
+
+                navigate("/home")
                 setDialogMessage('You have succesfully signed up.')
                 setOpen(true)
             })
@@ -91,26 +98,31 @@ export default function SignUpForm() {
                 <Grid
                     item
                     xs={false}
-                    sm={4}
+                    sm={6}
                     md={7}
-                    sx={{
-                        backgroundImage: 'url(../assets/logo.png)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square sx={{display:'flex', justifyContent:'center', alignItems: 'center'}}>
+                    sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: '#0C1929', justifyContent:'center' }}
+                >
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent:'center',
+                    }}>
+                    <img src={backgroundImage} color="white" style={{ width: 'auto', height: '500px', display: 'flex'}} />
+                    </Box>
+                </Grid>
+                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square sx={{display:'flex', height:'%100', width:'%100', justifyContent:'center', alignItems: 'center', backgroundColor: '#2F5B7A'}}>
                     <Box
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
+                            backgroundColor: 'white',
+                            borderRadius: '25px',
+                            margin: 5,
                         }}
                     >
-                        <Avatar sx={{ m: 1, bgcolor: '#569CB1' }}>
+                        <Avatar sx={{ m: 5, bgcolor: '#F49A32' }}>
                             <PersonAddAlt1Icon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
@@ -172,14 +184,14 @@ export default function SignUpForm() {
                                 type="button"
                                 fullWidth
                                 variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
+                                sx={{ mt: 3, mb: 2, backgroundColor: '#F49A32' }}
                                 onClick={handleSignup}
                             >
                                 Sign Up
                             </Button>
-                            <Grid container>
+                            <Grid container sx={{ m: 5}}>
                                 <Grid item sx={{ mx: 10 }}>
-                                    <Link href="/login" variant="body2">
+                                    <Link href="/login" variant="body2" color={'#F49A32'}>
                                         {"Already have an account? Log in"}
                                     </Link>
                                 </Grid>

@@ -40,10 +40,13 @@ export default function Login() {
     const handleLogin = (event) => {
 
 
-
-        if (password.length === 0 || password === '' || username.length === 0 || username === '') {
-            setPasswordEmpty(true);
+        if (username.length === 0 || username === '') {
             setUsernameEmpty(true);
+            return;
+        }
+
+        if (password.length === 0 || password === '') {
+            setPasswordEmpty(true);
             return;
         }
 
@@ -67,7 +70,7 @@ export default function Login() {
                             errorMessage = 'Email must be an email.';
                             break;
                         case 401:
-                            errorMessage = 'Email or password is not correct.';
+                            errorMessage = 'Username or password is not correct.';
                             break;
                         // Add more cases for other status codes as needed
                         default:
