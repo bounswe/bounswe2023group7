@@ -92,6 +92,7 @@ const Header = ({ userLoggedIn, onSettingsClick }) => {
                 <MenuItem onClick={() => onSettingsClick()}>
                   Go to Settings
                 </MenuItem>
+                <MenuItem onClick={() => onSettingsClick()}>Log out</MenuItem>
               </Menu>
             </>
           ) : (
@@ -123,7 +124,6 @@ const Header = ({ userLoggedIn, onSettingsClick }) => {
                   color: "black",
                   fontFamily: "OCR A Std, monospace",
                   fontWeight: "bold",
-                  marginRight: "10px",
                 }}
                 onClick={handleRegisterClick}
               >

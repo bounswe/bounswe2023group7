@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, CardMedia, Typography } from "@mui/material";
 import ForumImage from "../assets/game_console.jpg";
 import InputBase from "@mui/material/InputBase";
 import { Grid, Container } from "@mui/material";
 import Post from "../components/Post";
 
-const Forum = ({ userLoggedIn }) => {
+const Forum = () => {
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      setUserLoggedIn(true);
+    }
+  }, []);
   const boxesData = [
     {
       userName: "@Gamer123",

@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
       }}
     >
       <Box sx={{ display: "flex", flex: 1 }}>
-        <Sidebar /> {/* Add the Sidebar component */}
+        <Sidebar userLoggedIn={auth} /> {/* Add the Sidebar component */}
         <Box sx={{ flex: 1 }}>
           <Header userLoggedIn={auth} />
           <div className="content">{children}</div>
