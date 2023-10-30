@@ -206,8 +206,8 @@ function Sidebar({ userLoggedIn }) {
               </MenuItem>
               <MenuItem
                 component={Link}
-                to="/log-out"
-                onClick={handleProfileClose}
+                to="/login"
+                onClick={handleLogout}
               >
                 Log Out
               </MenuItem>
