@@ -2,11 +2,13 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { GameRepository } from '../repositories/game.repository';
 import { GameCreateDto } from '../dtos/game/request/create.dto';
 import { JwtService } from '@nestjs/jwt';
 import { GameCreateResponseDto } from '../dtos/game/response/create.response';
+import { GameGetResponseDto } from 'dtos/game/response/get.response';
 
 @Injectable()
 export class GameService {
@@ -14,6 +16,8 @@ export class GameService {
     private readonly gameRepository: GameRepository,
     private readonly jwtService: JwtService,
   ) {}
+
+
   public async createGame(
     input: GameCreateDto,
   ): Promise<GameCreateResponseDto> {
@@ -33,5 +37,25 @@ export class GameService {
       }
       throw new InternalServerErrorException();
     }
+  }
+
+
+  public async getGame(id: string): Promise<GameGetResponseDto> {
+    const game = await this.gameRepository.findGameById(id);
+
+    if (!game) {
+      throw new NotFoundException('Game not found');
+    }
+
+    const gameResponse: GameGetResponseDto = {
+      id: game.id,
+      title: game.title,
+      coverLink: game.coverLink,
+      gameBio: game.gameBio,
+      releaseDate: game.releaseDate,
+      developer: game.developer,
+    };
+
+    return gameResponse;
   }
 }

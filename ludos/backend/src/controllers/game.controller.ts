@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -9,9 +9,11 @@ import {
 import { GameService } from '../services/game.service';
 import { GameCreateResponseDto } from '../dtos/game/response/create.response';
 import { GameCreateDto } from '../dtos/game/request/create.dto';
+import { AuthGuard } from 'services/guards/auth.guard';
 
 @ApiTags('game')
 @Controller('game')
+@UseGuards(AuthGuard)
 export class GameController {
   constructor(private readonly gameService: GameService) {}
 
@@ -32,4 +34,25 @@ export class GameController {
     const createdGame = await this.gameService.createGame(input);
     return createdGame;
   }
+
+  @ApiOperation({ summary: 'Get Game by ID Endpoint' })
+  @Get(':id')
+  public async getGame(@Param('id') gameId: string) {
+    const game = await this.gameService.getGame(id);
+    if (game) {
+      return game;
+    } else {
+      throw new NotFoundException('Game not found');
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
 }
