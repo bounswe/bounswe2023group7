@@ -1,101 +1,117 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'sign_up_page.dart';
 import 'forgot_password.dart';
+import 'main.dart';
+import 'helper/colors.dart';
+import 'helper/APIService.dart';
 
 class LoginPage extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF6b415e),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF5f1a37),
-        title: const Text('Login Page'),
-      ),
+      backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: TextStyle(
-                      color: Color.fromARGB(255, 219, 184, 199),
-                      fontWeight: FontWeight.bold),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                    BorderSide(color: const Color(0xFF5f1a37), width: 2.0),
-                  ),
-                ),
-                cursorColor: const Color(0xFF5f1a37),
+              const SizedBox(height: 100),
+              SizedBox(
+                width: 100.0,
+                height: 100.0,
+                child: Image.asset('assets/images/ludos_transparent.png'),
               ),
               const SizedBox(height: 20),
-              const TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
+              TextFormField(
+                style: const TextStyle(color: MyColors.white),
+                controller: emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Username',
                   labelStyle: TextStyle(
-                      color: Color.fromARGB(255, 219, 184, 199),
-                      fontWeight: FontWeight.bold),
+                      color: MyColors.lightBlue, fontWeight: FontWeight.bold),
+                  prefixIcon: Icon(Icons.person),
+                  prefixIconColor: MyColors.lightBlue,
+                  border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: MyColors.lightBlue, width: 2.0)),
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
-                    BorderSide(color: const Color(0xFF5f1a37), width: 2.0),
+                        BorderSide(color: MyColors.lightBlue, width: 2.0),
                   ),
                 ),
-                cursorColor: const Color(0xFF5f1a37),
+                cursorColor: MyColors.lightBlue,
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: passwordController,
+                style: const TextStyle(color: MyColors.white),
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: TextStyle(
+                      color: MyColors.lightBlue, fontWeight: FontWeight.bold),
+                  prefixIcon: Icon(Icons.lock),
+                  prefixIconColor: MyColors.lightBlue,
+                  border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: MyColors.lightBlue, width: 2.0)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: MyColors.lightBlue, width: 2.0),
+                  ),
+                ),
+                cursorColor: MyColors.lightBlue,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF5f1a37)),
-                onPressed: () {
-                  // Perform login logic here (not included in this example).
-                  // You can add your authentication logic to validate the email and password.
+                    backgroundColor: MyColors.orange,
+                    shape: const StadiumBorder()),
+                onPressed: () async {
+                  int token = await APIService()
+                      .login(emailController.text, passwordController.text);
+                  print(token);
+                  if (token == 200) {
+                    // If logged-in successfully, go to the Home page
+                    Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => (Home()),
+                  ));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text(
+                              'Could not log-in. Check your information.')),
+                    );
+                  }
                 },
-                child: const Text('Login'),
+                child: const Text(
+                  'Login',
+                  style: TextStyle(color: MyColors.darkBlue),
+                ),
               ),
               TextButton(
                 style: TextButton.styleFrom(
-                    backgroundColor: const Color(0xFF6b415e)),
+                    backgroundColor: MyColors.orange,
+                    shape: const StadiumBorder()),
                 onPressed: () {
-                  // Navigate to the sign-up page when the button is pressed.
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const ForgotPassword(),
                   ));
                 },
                 child: const Text(
-                  'Forgot password ?',
-                  style: TextStyle(color: Colors.black),
+                  'Forgot password?',
+                  style: TextStyle(color: MyColors.darkBlue),
                 ),
               ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                      iconSize: 50,
-                      color: Colors.white,
-                      onPressed: () {},
-                      icon: const Icon(FontAwesomeIcons.facebook, size: 40.0)),
-                  IconButton(
-                      iconSize: 50,
-                      color: Colors.white,
-                      onPressed: () {},
-                      icon: const Icon(FontAwesomeIcons.instagram, size: 40.0)),
-                  IconButton(
-                      iconSize: 50,
-                      color: Colors.white,
-                      onPressed: () {},
-                      icon: const Icon(FontAwesomeIcons.google, size: 40.0)),
-                ],
-              ),
-              const SizedBox(height: 20),
-              //const SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextButton(
                 style: TextButton.styleFrom(
-                    backgroundColor: const Color(0xFF5f1a37)),
+                    backgroundColor: MyColors.orange,
+                    shape: const StadiumBorder()),
                 onPressed: () {
                   // Navigate to the sign-up page when the button is pressed.
                   Navigator.of(context).push(MaterialPageRoute(
@@ -104,7 +120,7 @@ class LoginPage extends StatelessWidget {
                 },
                 child: const Text(
                   'Create an account',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: MyColors.darkBlue),
                 ),
               ),
             ],
