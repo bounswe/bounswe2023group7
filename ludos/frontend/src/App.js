@@ -318,6 +318,14 @@ function App() {
             }
           />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route
+            path="/forum"
+            element={
+              <Layout>
+                <ForumPage />
+              </Layout>
+            } />
         </Routes>
       </div>
     </Router>
