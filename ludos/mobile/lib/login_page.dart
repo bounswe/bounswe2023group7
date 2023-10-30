@@ -4,6 +4,8 @@ import 'forgot_password.dart';
 import 'main.dart';
 import 'helper/colors.dart';
 import 'helper/APIService.dart';
+import 'package:provider/provider.dart';
+import 'userProvider.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -76,10 +78,12 @@ class LoginPage extends StatelessWidget {
                       .login(emailController.text, passwordController.text);
                   print(token);
                   if (token == 200) {
-                    // If logged-in successfully, go to the Home page
+                    Provider.of<UserProvider>(context, listen: false)
+                        .setLoggedIn(true, emailController.text);
+
                     Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => (Home()),
-                  ));
+                      builder: (context) => Home(),
+                    ));
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

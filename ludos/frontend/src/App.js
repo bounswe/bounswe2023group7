@@ -1,10 +1,12 @@
-import HomePage from "./pages/Homepage.js";
-import GamePage from "./pages/GamePage.js";
-import LoginPage from "./pages/LoginPage.js";
+import ForumPage from "./pages/forumPage.js";
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./layout.js";
+import HomePage from "./pages/Homepage.js";
+import GamePage from "./pages/GamePage.js";
+import LoginPage from "./pages/LoginPage.js";
+import SignUpPage from "./pages/SignupPage.js";
 
 function App() {
   const game = {
