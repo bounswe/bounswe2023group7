@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Grid,
@@ -6,9 +6,33 @@ import {
   Typography,
   Rating,
   Button,
+  Tab,
+  TextField,
 } from "@mui/material";
 
-function GamePage() {
+import { TabContext, TabList, TabPanel } from "@mui/lab/";
+
+import ListObject from "../components/ListObject.js";
+import Requirements from "../components/Requirements.js";
+import Reviews from "../components/Reviews.js";
+
+
+function GamePage(data) {
+
+  const [auth, setAuth] = useState(false);
+
+
+  useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      setAuth(true);
+    }
+  }, []);
+  const [value, setValue] = useState("1");
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   const tagBox = {
     display: "flex",
     justifyContent: "center",
@@ -28,68 +52,12 @@ function GamePage() {
     textTransform: "none",
   };
 
-  const game = {
-    title: "God of War (2018)",
-    coverLink:
-      "https://upload.wikimedia.org/wikipedia/en/a/a7/God_of_War_4_cover.jpg",
-    averageRating: 4.8,
-    userRating: 4,
-    followers: 5000000,
-    systemRequirements: {
-      minimum: {
-        "Requires a 64-bit processor and operating system": true,
-        "Operating System": "Windows 10 64-bit",
-        Processor:
-          "Intel i5-2500k (4 cores, 3.3 GHz) or AMD Ryzen 3 1200 (4 cores, 3.1 GHz)",
-        Memory: "8 GB RAM",
-        "Graphics Card": "NVIDIA GTX 960 (4 GB) or AMD R9 290X (4 GB)",
-        DirectX: "Version 11",
-        Storage: "70 GB available space",
-        "Additional Notes": "DirectX feature level 11_1 required",
-      },
-      recommended: {
-        "Requires a 64-bit processor and operating system": true,
-        "Operating System": "Windows 10 64-bit",
-        Processor:
-          "Intel i5-6600k (4 cores, 3.5 GHz) or AMD Ryzen 5 2400 G (4 cores, 3.6 GHz)",
-        Memory: "8 GB RAM",
-        "Graphics Card": "NVIDIA GTX 1060 (6 GB) or AMD RX 570 (4 GB)",
-        DirectX: "Version 11",
-        Storage: "70 GB available space",
-        "Additional Notes": "DirectX feature level 11_1 required",
-      },
-    },
-    userCompilationDuration: 45, // Adjusted to integer
-    averageUserCompilationDuration: 45.5, // Adjusted to float
-    predecessors: ["God of War III", "God of War (2005)"],
-    successors: ["God of War Ragnarok"],
-    gameGuide:
-      "A comprehensive game guide featuring tips, strategies, and in-depth walkthroughs to assist players in navigating the game world and mastering its challenges.",
-    gameStory:
-      "An epic adventure set in Norse mythology, where Kratos and his son Atreus embark on a journey filled with action, exploration, and emotional depth.",
-    platforms: ["PlayStation 4", "PlayStation 5"],
-    ageRestriction: "Mature (17+)",
-    characters: ["Kratos", "Atreus", "Freya", "Baldur"],
-    areas: ["Midgard", "Alfheim", "Helheim"],
-    packages: [
-      "Standard Edition",
-      "Collector's Edition",
-      "Digital Deluxe Edition",
-    ],
-    items: ["Leviathan Axe", "Spartan Rage", "Talismans"],
-    gameBio:
-      "God of War is an action-adventure game that reimagines Kratos as he battles Norse gods and monsters.",
-    groups: ["Aesir", "Vanir"],
-    tags: ["Action", "Adventure", "Mythology", "Hack and Slash"],
-    releaseDate: "April 20, 2018",
-    developer: "Santa Monica Studio",
-    publisher: "Sony Interactive Entertainment",
-    trivia:
-      "Did you know? The game's director, Cory Barlog, drew inspiration from his own experiences as a father to create the emotional father-son dynamic between Kratos and Atreus.",
-  };
+  
+
+  
 
   const smallBoxStyle = {
-    backgroundColor: "gray",
+    backgroundColor: "rgb(0, 250, 255)",
     borderRadius: "100px",
     width: "auto",
     height: "auto",
@@ -101,7 +69,7 @@ function GamePage() {
   };
 
   const bioBoxStyle = {
-    backgroundColor: "gray",
+    backgroundColor: "rgb(0, 150, 255)",
     borderRadius: "100px",
     flexDirection: "column",
     display: "flex",
@@ -134,7 +102,7 @@ function GamePage() {
     >
       <Grid container spacing={1} style={boxStyle}>
         <Box p={0} style={{ width: "100%", marginTop: "3%" }}>
-          <Typography style={{ fontSize: "25px" }}>{game.title}</Typography>
+          <Typography style={{ fontSize: "25px", color: "white" }}>{data.game.title}</Typography>
         </Box>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <Grid
@@ -144,7 +112,7 @@ function GamePage() {
               marginRight: "3%",
             }}
           >
-            {game.tags.map((data1, index1) => (
+            {data.game.tags.map((data1, index1) => (
               <Typography
                 variant="caption"
                 component="div"
@@ -160,47 +128,53 @@ function GamePage() {
           </Grid>
         </Grid>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
-          <img src={game.coverLink} alt="God of War" />
+          <img src={data.game.coverLink} alt="God of War" />
         </Grid>
         <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "2%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Rate:</Typography>
-            <Rating name="game-rating" value={game.userRating} precision={1} />
+            <Rating name="game-rating" value={data.game.userRating} precision={1} />
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Rate:</Typography>
             <Rating
               name="user-rating"
-              value={game.averageRating}
+              value={data.game.averageRating}
               precision={0.1}
-              disabled="true"
+              disabled={true}
             />
-            <Typography component="caption">{game.averageRating}/5</Typography>
+            <Typography component="caption">{data.game.averageRating}/5</Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Followers:</Typography>
-            <Typography component="caption">{game.followers}</Typography>
+            <Typography component="caption">{data.game.followers}</Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Average Duration:</Typography>
             <Typography component="caption">
-              {game.averageUserCompilationDuration}
+              {data.game.averageUserCompilationDuration}
             </Typography>
           </Grid>
+          {auth && <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
+            <Typography component="legend">Share Your Duration</Typography>
+            <Typography component="caption">
+            <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+            </Typography>
+          </Grid>}
         </Grid>
         <Grid item xs={12} sm={4} md={4} lg={4} style={{ marginLeft: "1%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={bioBoxStyle}>
-            <Typography component="legend">{game.gameBio}</Typography>
+            <Typography component="legend">{data.game.gameBio}</Typography>
           </Grid>
         </Grid>
         <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "1%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Release Date:</Typography>
-            <Typography component="caption">{game.releaseDate}</Typography>
+            <Typography component="caption">{data.game.releaseDate}</Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Platforms:</Typography>
-            {game.platforms.map((data1, index1) => (
+            {data.game.platforms.map((data1, index1) => (
               <Typography variant="caption" component="div" key={index1}>
                 {data1}
               </Typography>
@@ -209,21 +183,159 @@ function GamePage() {
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Age Restriction:</Typography>
             <Typography variant="caption" component="div">
-              {game.ageRestriction}
+              {data.game.ageRestriction}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Publisher:</Typography>
             <Typography variant="caption" component="div">
-              {game.publisher}
+              {data.game.publisher}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Developer:</Typography>
             <Typography variant="caption" component="div">
-              {game.developer}
+              {data.game.developer}
             </Typography>
           </Grid>
+        </Grid>
+        <Grid>
+          <Box sx={{ width: "100%", typography: "body1" }}>
+            <TabContext value={value}>
+              <Box sx={{ borderBottom: 2, borderColor: "divider" }}>
+                <TabList
+                  onChange={handleChange}
+                  aria-label="lab API tabs example"
+                >
+                  <Tab
+                    style={{ color: "orange", width: "2%" }}
+                    label="Story"
+                    value="1"
+                  />
+                  <Tab
+                    style={{ color: "orange", width: "2%" }}
+                    label="Guide"
+                    value="2"
+                  />
+                  <Tab
+                    style={{ color: "orange", width: "5%" }}
+                    label="Trivia"
+                    value="3"
+                  />
+                  <Tab
+                    style={{ color: "orange", width: "15%" }}
+                    label="System Requirements"
+                    value="4"
+                  />
+                  <Tab
+                    style={{ color: "orange", width: "12%" }}
+                    label="Predecessors"
+                    value="5"
+                  />
+                  <Tab
+                    style={{ color: "orange", width: "12%" }}
+                    label="Successors"
+                    value="6"
+                  />
+                  <Tab
+                    style={{ color: "orange", width: "12%" }}
+                    label="Characters"
+                    value="7"
+                  />
+                  <Tab
+                    style={{ color: "orange", width: "5%" }}
+                    label="Areas"
+                    value="8"
+                  />
+                  <Tab
+                    style={{ color: "orange", width: "5%" }}
+                    label="Packages"
+                    value="9"
+                  />
+                  <Tab
+                    style={{ color: "orange", width: "5%" }}
+                    label="Items"
+                    value="10"
+                  />
+                </TabList>
+                <TabList
+                  onChange={handleChange}
+                  aria-label="lab API tabs example"
+                >
+                  <Tab
+                    style={{ color: "orange", width: "2%" }}
+                    label="Groups"
+                    value="11"
+                  />
+                  <Tab
+                    style={{ color: "orange", width: "2%" }}
+                    label="Reviews"
+                    value="12"
+                  />
+                </TabList>
+              </Box>
+              <TabPanel value="1">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  {data.game.gameStory}
+                </Typography>
+              </TabPanel>
+              <TabPanel value="2">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  {data.game.gameGuide}
+                </Typography>
+              </TabPanel>
+              <TabPanel value="3">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  {data.game.trivia}
+                </Typography>
+              </TabPanel>
+              <TabPanel value="4">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  <Requirements data={data.game.systemRequirements} />
+                </Typography>
+              </TabPanel>
+              <TabPanel value="5">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  <ListObject data={data.game.predecessors} />
+                </Typography>
+              </TabPanel>
+              <TabPanel value="6">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  <ListObject data={data.game.successors} />
+                </Typography>
+              </TabPanel>
+              <TabPanel value="7">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  <ListObject data={data.game.characters} />
+                </Typography>
+              </TabPanel>
+              <TabPanel value="8">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  <ListObject data={data.game.areas} />
+                </Typography>
+              </TabPanel>
+              <TabPanel value="9">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  <ListObject data={data.game.packages} />
+                </Typography>
+              </TabPanel>
+              <TabPanel value="10">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  <ListObject data={data.game.items} />
+                </Typography>
+              </TabPanel>
+              <TabPanel value="11">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  <ListObject data={data.game.groups} />
+                </Typography>
+              </TabPanel>
+              <TabPanel value="12">
+                <Typography style={{ fontSize: "15px", color: "white" }}>
+                  <Reviews data={data.game.reviews} showButtons={auth}/>
+                </Typography>
+              </TabPanel>
+            </TabContext>
+          </Box>
         </Grid>
       </Grid>
     </Container>
