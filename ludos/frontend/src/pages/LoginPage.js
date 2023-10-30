@@ -94,15 +94,15 @@ export default function Login() {
                     xs={false}
                     sm={6}
                     md={7}
-                    sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: '#0C1929' }}
+                    sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: '#0C1929', justifyContent: 'center' }}
                 >
                     <Box sx={{
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        my: 25,
+                        justifyContent: 'center',
                     }}>
-                        <img src={backgroundImage} color="white" style={{ width: 'auto', height: '500px', display: 'flex', margin: 'auto'}} />
+                        <img src={backgroundImage} color="white" style={{ width: 'auto', height: '500px', display: 'flex'}} />
                     </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} md={5} component={Paper} elevation={6} square sx={{ display: 'flex', height:'100%', width:'100%', objectFit:'contain', justifyContent: 'center', alignItems: 'center', backgroundColor: '#2F5B7A' }}>
