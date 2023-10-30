@@ -8,7 +8,7 @@ import { GameRepository } from '../repositories/game.repository';
 import { GameCreateDto } from '../dtos/game/request/create.dto';
 import { JwtService } from '@nestjs/jwt';
 import { GameCreateResponseDto } from '../dtos/game/response/create.response';
-import { GameGetResponseDto } from 'dtos/game/response/get.response';
+import { Game } from 'entities/game.entity';
 
 @Injectable()
 export class GameService {
@@ -40,7 +40,7 @@ export class GameService {
   }
 
 
-  public async getGame(id: string): Promise<GameGetResponseDto> {
+  public async getGame(id: string): Promise<Game> {
     const game = await this.gameRepository.findGameById(id);
 
     if (!game) {
