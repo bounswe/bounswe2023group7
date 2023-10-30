@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  VirtualColumn,
+} from 'typeorm';
+import { User } from './user.entity';
 
 @Entity('games')
 export class Game {
@@ -16,9 +24,6 @@ export class Game {
 
   @Column({ type: 'float', default: 0 })
   userRating: number;
-
-  @Column({ type: 'int', default: 0 })
-  followers: number;
 
   @Column('jsonb')
   systemRequirements: {
@@ -90,4 +95,16 @@ export class Game {
 
   @Column('text', { array: true, default: '{}' })
   reviews: string[];
+
+  @ManyToMany(() => User, (user) => user.followedGames)
+  @JoinTable({ name: 'game_user_follows' })
+  followerList: User[];
+
+  @VirtualColumn({
+    query: (alias) =>
+      `SELECT COUNT(*) as count FROM game_user_follows WHERE "gamesId" = ${alias}.id`,
+  })
+  followers: number;
+
+  isFollowed: boolean;
 }

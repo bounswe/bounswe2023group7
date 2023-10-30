@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -13,6 +13,8 @@ import { JwtConfigService } from './services/config/jwt-config.service';
 import { GameController } from './controllers/game.controller';
 import { GameService } from './services/game.service';
 import { GameRepository } from './repositories/game.repository';
+import { Game } from './entities/game.entity';
+import { TokenDecoderMiddleware } from './middlewares/tokenDecoder.middleware';
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ import { GameRepository } from './repositories/game.repository';
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService],
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Game]),
   ],
   controllers: [AppController, UserController, GameController],
   providers: [
@@ -38,4 +40,8 @@ import { GameRepository } from './repositories/game.repository';
     GameService,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TokenDecoderMiddleware).forRoutes('*');
+  }
+}

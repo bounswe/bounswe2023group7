@@ -11,7 +11,6 @@ import { LoginDto } from '../dtos/user/request/login.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../interfaces/user/payload.interface';
-
 @Injectable()
 export class UserService {
   constructor(
