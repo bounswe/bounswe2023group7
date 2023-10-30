@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Sidebar from "./components/sidebar"; // Import your Sidebar component
 import Header from "./components/header"; // Import your Header component
 
 const Layout = ({ children }) => {
+  const [auth, setAuth] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      setAuth(true);
+    }
+  }, []);
   return (
     <Box
       sx={{
@@ -15,9 +21,9 @@ const Layout = ({ children }) => {
       }}
     >
       <Box sx={{ display: "flex", flex: 1 }}>
-        <Sidebar /> {/* Add the Sidebar component */}
+        <Sidebar userLoggedIn={auth} /> {/* Add the Sidebar component */}
         <Box sx={{ flex: 1 }}>
-          <Header userLoggedIn={true} />
+          <Header userLoggedIn={auth} />
           <div className="content">{children}</div>
         </Box>
       </Box>

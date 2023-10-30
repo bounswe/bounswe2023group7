@@ -9,7 +9,7 @@ import {
   Menu,
   MenuItem,
   Stack,
-  Paper, // Import Stack from Material-UI
+  Paper,
 } from "@mui/material";
 
 import HomeIcon from "@mui/icons-material/Home";
@@ -19,15 +19,17 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
 
-const drawerWidth = 90; // Adjust the width as needed
-//const theme = createTheme;
+const drawerWidth = 90;
+
 const rootSx = {
   display: "flex",
 };
+
 const drawer = {
   width: drawerWidth,
   flexShrink: 0,
 };
+
 const drawerPaper = {
   width: drawerWidth,
   height: "100%",
@@ -37,12 +39,14 @@ const drawerPaper = {
   paddingTop: 0,
   backgroundColor: "#F49A32",
 };
+
 const listItem = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   padding: 1,
 };
+
 const circleIcon = {
   marginTop: "auto",
   marginBottom: "10px",
@@ -54,12 +58,8 @@ const circleIcon = {
   width: "3rem",
   height: "3rem",
 };
-//const smallText = {
-//fontSize: "6px", // Adjust the font size as needed
-//};
 
-function Sidebar() {
-  //const classes = useStyles();
+function Sidebar({ userLoggedIn }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleProfileClick = (event) => {
@@ -79,7 +79,7 @@ function Sidebar() {
       <Drawer style={drawer} variant="permanent">
         <Paper style={drawerPaper}>
           <List>
-            <ListItem button component={Link} to="/">
+            <ListItem button component={Link} to="/home">
               <div>
                 <ListItemIcon style={listItem}>
                   <div style={circleIcon}>
@@ -183,34 +183,57 @@ function Sidebar() {
             <AccountCircleIcon />
           </IconButton>
 
-          {/* Profile Menu */}
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleProfileClose}
-          >
-            <MenuItem
-              component={Link}
-              to="/profile-page"
-              onClick={handleProfileClose}
+          {/* Profile Menu (conditional rendering based on userLoggedIn) */}
+          {userLoggedIn ? (
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleProfileClose}
             >
-              Profile Page
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/change-password"
-              onClick={handleProfileClose}
+              <MenuItem
+                component={Link}
+                to="/profile-page"
+                onClick={handleProfileClose}
+              >
+                Profile Page
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to="/change-password"
+                onClick={handleProfileClose}
+              >
+                Change Password
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to="/log-out"
+                onClick={handleProfileClose}
+              >
+                Log Out
+              </MenuItem>
+            </Menu>
+          ) : (
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleProfileClose}
             >
-              Change Password
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/login"
-              onClick={handleLogout}
-            >
-              Log Out
-            </MenuItem>
-          </Menu>
+              <MenuItem
+                component={Link}
+                to="/login"
+                onClick={handleProfileClose}
+              >
+                Sign In
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to="/signup"
+                onClick={handleProfileClose}
+              >
+                Register
+              </MenuItem>
+            </Menu>
+          )}
         </Paper>
       </Drawer>
     </div>
