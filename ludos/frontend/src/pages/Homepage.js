@@ -3,7 +3,6 @@ import { Grid, Container } from "@mui/material";
 import Post from "../components/Post.js";
 
 function HomePage() {
-
   const [auth, setAuth] = useState(false);
 
   useEffect(() => {
@@ -112,9 +111,7 @@ function HomePage() {
       timestamp: "2023-10-30 11:30:00",
       numberOfComments: 9,
     },
-];
-
-
+  ];
 
   useEffect(() => {}, []);
 
@@ -124,7 +121,7 @@ function HomePage() {
     >
       <Grid container spacing={1}>
         {boxesData.map((data, index) => (
-          <Post post={data} key={index} showButtons={auth}/>
+          <Post post={data} key={index} showButtons={auth} />
         ))}
       </Grid>
     </Container>

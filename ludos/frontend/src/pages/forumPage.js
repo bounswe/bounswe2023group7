@@ -3,99 +3,118 @@ import { Button, CardMedia, Typography } from "@mui/material";
 import ForumImage from "../assets/game_console.jpg";
 import InputBase from "@mui/material/InputBase";
 import { Grid, Container } from "@mui/material";
-import Post from "../components/forum_post";
+import Post from "../components/Post";
 
 const Forum = () => {
   const boxesData = [
     {
-      username: "posted by @Gamer123",
-      timestamp: "2 hours ago",
+      userName: "@Gamer123",
       forum: "Video Game Forum",
       header: "Looking for Hidden Gems!",
       description:
         "Share your favorite underrated video games that deserve more recognition. Tell us about the hidden gems you've discovered on your gaming journey.",
       tags: ["Game Recommendations", "Hidden Gems", "Underrated Games"],
+      timestamp: "2023-10-30 09:15:00",
+      numberOfComments: 10,
     },
+
     {
-      username: "posted by @JoystickMaster",
-      timestamp: "4 hours ago",
+      userName: "@JoystickMaster",
       forum: "Video Game Forum",
       header: "My All-Time Favorite: Ellie from The Last of Us",
       description:
         "Let's talk about the video game characters that captured our hearts. I want to express my love for Ellie from The Last of Us and hear about your favorite characters too!",
       tags: ["Character Appreciation", "Ellie", "The Last of Us"],
+      timestamp: "2023-10-29 14:30:00",
+      numberOfComments: 11,
     },
+
     {
-      username: "posted by @GameFrustration",
-      timestamp: "7 hours ago",
+      userName: "@GameFrustration",
       forum: "Video Game Forum",
       header: "What Drives You Crazy in Games?",
       description:
         "Discuss the game mechanics that you find frustrating. Whether it's overly complicated crafting systems or confusing level design, share your gaming pet peeves.",
       tags: ["Game Mechanics", "Frustrating Gameplay", "Pet Peeves"],
+      timestamp: "2023-10-28 18:45:00",
+      numberOfComments: 45,
     },
+
     {
-      username: "posted by @EpicGamer1",
-      timestamp: "10 hours ago",
+      userName: "@EpicGamer1",
       forum: "Video Game Forum",
       header: "Epic Moments in Online Battles",
       description:
         "Share your most epic and memorable moments from online multiplayer games. From clutch victories to hilarious mishaps, let's relive those gaming adventures.",
       tags: ["Multiplayer Gaming", "Epic Moments", "Online Battles"],
+      timestamp: "2023-10-27 22:00:00",
+      numberOfComments: 56,
     },
+
     {
-      username: "posted by @ModdingPro",
-      timestamp: "16 hours ago",
+      userName: "@ModdingPro",
       forum: "Video Game Forum",
       header: "Modding Marvels: Transforming Games",
       description:
         "Dive into the world of game modding. Share your experiences with modding tools and the incredible changes you've made to your favorite games.",
       tags: ["Game Modding", "Modding Tools", "Customization"],
+      timestamp: "2023-10-26 09:45:00",
+      numberOfComments: 87,
     },
+
     {
-      username: "posted by @EasterEggHunter",
-      timestamp: "22 hours ago",
+      userName: "@EasterEggHunter",
       forum: "Video Game Forum",
       header: "Hunting for Easter Eggs!",
       description:
         "Discovering hidden Easter eggs in games is like finding treasures. Share your most interesting and bizarre Easter egg discoveries with the community.",
       tags: ["Easter Eggs", "Secrets", "Hidden Treasures"],
+      timestamp: "2023-10-25 13:15:00",
+      numberOfComments: 67,
     },
+
     {
-      username: "posted by @CoopGamerX",
-      timestamp: "2 days ago",
+      userName: "@CoopGamerX",
       forum: "Video Game Forum",
       header: "Co-op Chronicles: Unforgettable Moments",
       description:
         "Celebrate the joy of cooperative gaming. Share your unforgettable co-op experiences, whether you're working together or causing chaos!",
       tags: ["Co-op Gaming", "Memorable Moments", "Teamwork"],
+      timestamp: "2023-10-24 17:30:00",
+      numberOfComments: 34,
     },
+
     {
-      username: "posted by @AchievementHunter",
-      timestamp: "2 days ago",
+      userName: "@AchievementHunter",
       forum: "Video Game Forum",
       header: "Proud Moments: Gaming Achievements",
       description:
         "Achieving in-game milestones is a fantastic feeling. Brag about your gaming accomplishments and let's cheer each other on!",
       tags: ["Gaming Achievements", "Milestones", "Accomplishments"],
+      timestamp: "2023-10-23 21:45:00",
+      numberOfComments: 17,
     },
+
     {
-      username: "posted by @GameCollector22",
-      timestamp: "3 days ago",
+      userName: "@GameCollector22",
       forum: "Video Game Forum",
       header: "Collectors' Corner: Show Off Your Trophies",
       description:
         "Are you a game collector? Show us your gaming collections, from vintage cartridges to limited editions. Let's admire each other's treasures.",
       tags: ["Game Collecting", "Gaming Treasures", "Collector's Items"],
+      timestamp: "2023-10-22 08:00:00",
+      numberOfComments: 29,
     },
+
     {
-      username: "posted by @DesignEnthusiast",
-      timestamp: "4 days ago",
+      userName: "@DesignEnthusiast",
       forum: "Video Game Forum",
       header: "Game Design Breakdown: Artistry & Innovation",
       description:
         "Dive deep into the art and design of video games. Discuss the creative and innovative aspects of game design that leave you in awe.",
       tags: ["Game Design", "Artistry", "Innovation"],
+      timestamp: "2023-10-21 12:15:00",
+      numberOfComments: 44,
     },
   ];
 
