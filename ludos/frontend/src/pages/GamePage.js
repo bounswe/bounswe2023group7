@@ -122,9 +122,10 @@ function GamePage(data) {
                 {data1}
               </Typography>
             ))}
-            <Button variant="contained" style={followButton}>
+            {auth && <Button variant="contained" style={followButton}>
               Follow
-            </Button>
+            </Button>}
+            
           </Grid>
         </Grid>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
@@ -155,12 +156,17 @@ function GamePage(data) {
               {data.game.averageUserCompilationDuration}
             </Typography>
           </Grid>
-          {auth && <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Share Your Duration</Typography>
-            <Typography component="caption">
-            <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-            </Typography>
-          </Grid>}
+          {auth && <Grid style={{display:"flex"}}>  <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
+            <Typography component="caption" style={{fontSize:"10px"}}>Share Your Duration</Typography>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
+              <TextField id="outlined-basic" variant="outlined" />
+              </Grid>
+              <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
+              <Button>Submit</Button>
+              </Grid>
+              </Grid>
+          }
         </Grid>
         <Grid item xs={12} sm={4} md={4} lg={4} style={{ marginLeft: "1%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={bioBoxStyle}>
