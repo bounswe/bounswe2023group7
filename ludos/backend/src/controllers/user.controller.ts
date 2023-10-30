@@ -1,6 +1,14 @@
-import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiOkResponse,
   ApiOperation,
@@ -15,7 +23,7 @@ import { UserService } from '../services/user.service';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
 import { AuthGuard } from '../services/guards/auth.guard';
-
+import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
 
 @ApiTags('user')
 @Controller('user')
@@ -53,7 +61,7 @@ export class UserController {
   public async login(@Body() input: LoginDto) {
     return await this.userService.login(input);
   }
-  
+
   @ApiOkResponse({
     description: 'Password change has been succesful!',
     type: ChangePasswordResponseDto,
@@ -66,10 +74,13 @@ export class UserController {
   })
   @HttpCode(200)
   @ApiOperation({ summary: 'Change Password Endpoint' })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Post('/change-password')
-  public async changePassword(@Req() req: any,@Body() input: ChangePasswordDto ) {
-  
-    return await this.userService.changePassword(req.user,input);
+  public async changePassword(
+    @Req() req: AuthorizedRequest,
+    @Body() input: ChangePasswordDto,
+  ) {
+    return await this.userService.changePassword(req.user.id, input);
   }
 }

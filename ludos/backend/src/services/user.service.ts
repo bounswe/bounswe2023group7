@@ -1,6 +1,3 @@
-import { RegisterDto } from '../dtos/user/request/register.dto';
-import { UserRepository } from '../repositories/user.repository';
-import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
 import {
   BadRequestException,
   ConflictException,
@@ -9,14 +6,15 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { LoginDto } from '../dtos/user/request/login.dto';
-import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Payload } from '../interfaces/user/payload.interface';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
-import { User } from '../entities/user.entity';
+import { LoginDto } from '../dtos/user/request/login.dto';
+import { RegisterDto } from '../dtos/user/request/register.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
-import * as bcrypt from 'bcrypt';
+import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
+import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
+import { Payload } from '../interfaces/user/payload.interface';
+import { UserRepository } from '../repositories/user.repository';
 @Injectable()
 export class UserService {
   constructor(
@@ -56,18 +54,23 @@ export class UserService {
     };
   }
 
-  public async changePassword(user: User,changePasswordDto: ChangePasswordDto): Promise<ChangePasswordResponseDto> {
+  public async changePassword(
+    userId: string,
+    changePasswordDto: ChangePasswordDto,
+  ): Promise<ChangePasswordResponseDto> {
+    const user = await this.userRepository.findUserById(userId);
     if (!user) {
-      throw new NotFoundException('Kullanıcı bulunamadı!');
+      throw new NotFoundException('User not found!');
+    }
+    if (!(await user.compareEncryptedPassword(changePasswordDto.oldPassword))) {
+      throw new UnauthorizedException('Wrong Password!');
     }
 
-    if (user.password === changePasswordDto.newPassword) {
-      throw new BadRequestException('Eski şifre ve yeni şifre ayni olamaz!');
+    if (changePasswordDto.oldPassword == changePasswordDto.newPassword) {
+      throw new BadRequestException('Old and new passwords can not be same!');
     }
-
-    user.password=await bcrypt.hash(changePasswordDto.newPassword,10);
+    user.password = changePasswordDto.newPassword;
     await this.userRepository.save(user);
     return new ChangePasswordResponseDto(true);
   }
-
 }

@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ChangePasswordResponseDto {
-  @ApiProperty() 
+  @ApiProperty()
   isSuccess: boolean;
-  constructor(isSuccess:boolean){
-    this.isSuccess=isSuccess;
+  constructor(isSuccess: boolean) {
+    this.isSuccess = isSuccess;
   }
 }
