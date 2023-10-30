@@ -3,6 +3,7 @@ import {
   Controller,
   HttpCode,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -76,7 +77,7 @@ export class UserController {
   @ApiOperation({ summary: 'Change Password Endpoint' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  @Post('/change-password')
+  @Put('/change-password')
   public async changePassword(
     @Req() req: AuthorizedRequest,
     @Body() input: ChangePasswordDto,
