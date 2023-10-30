@@ -28,7 +28,7 @@ export class UserController {
     description: 'Bad Request',
   })
   @HttpCode(200)
-  @ApiOperation({summary: "Sign Up Endpoint"})
+  @ApiOperation({ summary: 'Sign Up Endpoint' })
   @Post()
   public async register(@Body() input: RegisterDto) {
     return await this.userService.register(input);
@@ -44,7 +44,7 @@ export class UserController {
     description: 'Bad Request',
   })
   @HttpCode(200)
-  @ApiOperation({summary: "Login Endpoint"})
+  @ApiOperation({ summary: 'Login Endpoint' })
   @Post('/login')
   public async login(@Body() input: LoginDto) {
     return await this.userService.login(input);

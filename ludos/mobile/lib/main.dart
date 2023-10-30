@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'login_page.dart';
 
 
@@ -12,9 +10,9 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFF6b415e),
+        backgroundColor: const Color(0xFF40749c),
         appBar: AppBar(
-          backgroundColor: const Color(0xFF5f1a37),
+          backgroundColor: const Color(0xFF101c2c),
           centerTitle: true,
           title: const Text('Ludos'),
           leading: IconButton(
@@ -53,6 +51,7 @@ class Home extends StatelessWidget {
                           child: const Text(
                             'Assassins Creed Mirage launch brings 18% player rise across AC series',
                             softWrap: true,
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
 
@@ -62,7 +61,9 @@ class Home extends StatelessWidget {
                         child: TextButton(
                           style: TextButton.styleFrom(foregroundColor: Colors.black),
                           onPressed: () {},
-                          child: Text('@senaal'),
+                          child: const Text('@senaal',
+                            style: TextStyle(color: Color(0xFFf89c34)),
+                          ),
                         ),
                       ),
                     ],
@@ -73,6 +74,7 @@ class Home extends StatelessWidget {
                   child: const Text(
                     'The average total player increase across the series is 18.66% since the release of Assassins Creed Mirage. This sudden increased interest across so many old games in the series is very rare for any series.',
                     softWrap: true,
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 Container(
@@ -91,7 +93,9 @@ class Home extends StatelessWidget {
                           color: Colors.white,
                           onPressed: () {},
                           icon: const Icon(Icons.comment)),
-                      Text('10 minutes ago'),
+                      const Text('10 minutes ago',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
@@ -100,7 +104,7 @@ class Home extends StatelessWidget {
                 const Divider(
                   height: 3.0,
                   thickness: 3.0,
-                  color: Color(0xFF5f1a37),
+                  color: Color(0xFF589cb4),
                 ),
               ],
 
@@ -122,6 +126,7 @@ class Home extends StatelessWidget {
                           child: const Text(
                             ' FAR CRY’S MULTIPLAYER GAME IS AN EXTRACTION-BASED SHOOTER',
                             softWrap: true,
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
 
@@ -131,7 +136,8 @@ class Home extends StatelessWidget {
                         child: TextButton(
                           style: TextButton.styleFrom(foregroundColor: Colors.black),
                           onPressed: () {},
-                          child: Text('@furkanulke'),
+                          child: Text('@furkanulke',
+                            style: TextStyle(color: Color(0xFFf89c34)),),
                         ),
                       ),
                     ],
@@ -142,6 +148,7 @@ class Home extends StatelessWidget {
                   child: const Text(
                     'As expected with an extraction-based shooter, the game loop is focused on gathering gear, leveling up, and purchasing perks. Although sources were unable to dive deep into what perks entail, it was said that they are directly tied to the leveling system. ',
                     softWrap: true,
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 Container(
@@ -160,7 +167,8 @@ class Home extends StatelessWidget {
                           color: Colors.white,
                           onPressed: () {},
                           icon: const Icon(Icons.comment)),
-                      Text('40 minutes ago'),
+                      const Text('40 minutes ago',
+                        style: TextStyle(color: Colors.white),),
                     ],
                   ),
                 ),
@@ -169,7 +177,7 @@ class Home extends StatelessWidget {
                 const Divider(
                   height: 3.0,
                   thickness: 3.0,
-                  color: Color(0xFF5f1a37),
+                  color: Color(0xFF589cb4),
                 ),
               ],
 
@@ -191,6 +199,7 @@ class Home extends StatelessWidget {
                           child: const Text(
                             'Watch Dogs: Legion vs Watch Dogs 2',
                             softWrap: true,
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
 
@@ -198,7 +207,7 @@ class Home extends StatelessWidget {
                       SizedBox(width: 5.0),
                       Container(
                         child: TextButton(
-                          style: TextButton.styleFrom(foregroundColor: Colors.black),
+                          style: TextButton.styleFrom(foregroundColor: Color(0xFFf89c34)),
                           onPressed: () {},
                           child: Text('@haticeerk'),
                         ),
@@ -211,6 +220,7 @@ class Home extends StatelessWidget {
                   child: const Text(
                     'Anyone else really disappointed with Watch Dogs: Legion after REALLY loving Watch Dogs 2?',
                     softWrap: true,
+                    style: TextStyle(color: Colors.white)
                   ),
                 ),
                 Container(
@@ -229,7 +239,9 @@ class Home extends StatelessWidget {
                           color: Colors.white,
                           onPressed: () {},
                           icon: const Icon(Icons.comment)),
-                      Text('10 hours ago'),
+                      const Text('10 hours ago',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
@@ -238,7 +250,7 @@ class Home extends StatelessWidget {
                 const Divider(
                   height: 3.0,
                   thickness: 3.0,
-                  color: Color(0xFF5f1a37),
+                  color: Color(0xFF589cb4),
                 ),
               ],
             ),
@@ -259,6 +271,7 @@ class Home extends StatelessWidget {
                           child: const Text(
                             'Disco Elysium x Death note fan-fiction recommendations?',
                             softWrap: true,
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
 
@@ -268,7 +281,9 @@ class Home extends StatelessWidget {
                         child: TextButton(
                           style: TextButton.styleFrom(foregroundColor: Colors.black),
                           onPressed: () {},
-                          child: Text('@kardelen'),
+                          child: const Text('@kardelen',
+                            style: TextStyle(color: Color(0xFFf89c34)),
+                          ),
                         ),
                       ),
                     ],
@@ -279,6 +294,7 @@ class Home extends StatelessWidget {
                   child: const Text(
                     'Does anyone have any recommendations for Disco Elysium x Death note fan-fiction. I have seen the concept thrown around here a lot but I would absoluely love to read a story about it. Comment if you know any. Thanks!',
                     softWrap: true,
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 Container(
@@ -297,7 +313,8 @@ class Home extends StatelessWidget {
                           color: Colors.white,
                           onPressed: () {},
                           icon: const Icon(Icons.comment)),
-                      Text('10 days ago'),
+                      const Text('10 days ago',
+                        style: TextStyle(color: Colors.white),),
                     ],
                   ),
                 ),
@@ -306,7 +323,7 @@ class Home extends StatelessWidget {
                 const Divider(
                   height: 3.0,
                   thickness: 3.0,
-                  color: Color(0xFF5f1a37),
+                  color: Color(0xFF589cb4),
                 ),
               ],
             ),
@@ -314,7 +331,7 @@ class Home extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: Container(
-              color: const Color(0xFF5f1a37),
+              color: const Color(0xFF101c2c),
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -330,7 +347,7 @@ class Home extends StatelessWidget {
                   IconButton(
                       color: Colors.white,
                       onPressed: () {},
-                      icon: const Icon(Icons.add_box)),
+                      icon: const Icon(Icons.games)),
                   IconButton(
                       color: Colors.white,
                       onPressed: () {},
