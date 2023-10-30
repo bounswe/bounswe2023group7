@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'helper/APIService.dart';
+import 'package:http/http.dart' as http;
+
 
 class SignUpPage extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
@@ -88,22 +90,32 @@ class SignUpPage extends StatelessWidget {
                       backgroundColor: const Color(0xFFf89c34),
                       shape: const StadiumBorder()),
                   onPressed: () async {
-                    int token = await APIService()
+                    http.Response token = await APIService()
                         .signUp(usernameController.text, emailController.text, passwordController.text);
-                    if (token == 200) {
+                    int status = token.statusCode;
+                    if (status == 200) {
                       // If logged-in successfully, go to the Home page
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => (Home()),
                       ));
                     }
-                    if (token == 409) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                    if (status == 409) {
+                      if(token.body.contains("email")){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text(
+                                'The email address has an account!')),
+                        );
+                      }
+                      else{
+                        ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text(
                                 'The username already taken!')),
-                      );
+                      );}
+
                     }
-                    if (token == 400) {
+                    if (status == 400) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text(
