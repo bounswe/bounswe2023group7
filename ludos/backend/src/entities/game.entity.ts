@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('games')
 export class Game {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -11,13 +11,13 @@ export class Game {
   @Column({ type: 'text' })
   coverLink: string;
 
-  @Column('float')
+  @Column({ type: 'float', default: 0 })
   averageRating: number;
 
-  @Column('float')
+  @Column({ type: 'float', default: 0 })
   userRating: number;
 
-  @Column('int')
+  @Column({ type: 'int', default: 0 })
   followers: number;
 
   @Column('jsonb')
@@ -31,10 +31,10 @@ export class Game {
     };
   };
 
-  @Column('float')
+  @Column({ type: 'float', default: 0 })
   userCompilationDuration: number;
 
-  @Column('float')
+  @Column({ type: 'float', default: 0 })
   averageUserCompilationDuration: number;
 
   @Column('text', { array: true })
@@ -55,22 +55,22 @@ export class Game {
   @Column({ type: 'varchar', length: 50 })
   ageRestriction: string;
 
-  @Column('text', { array: true })
+  @Column('text', { array: true, default: '{}' })
   characters: string[];
 
-  @Column('text', { array: true })
+  @Column('text', { array: true, default: '{}' })
   areas: string[];
 
-  @Column('text', { array: true })
+  @Column('text', { array: true, default: '{}' })
   packages: string[];
 
-  @Column('text', { array: true })
+  @Column('text', { array: true, default: '{}' })
   items: string[];
 
   @Column('text')
   gameBio: string;
 
-  @Column('text', { array: true })
+  @Column('text', { array: true, default: '{}' })
   groups: string[];
 
   @Column('text', { array: true })
@@ -88,6 +88,6 @@ export class Game {
   @Column('text')
   trivia: string;
 
-  @Column('text', { array: true })
+  @Column('text', { array: true, default: '{}' })
   reviews: string[];
 }
