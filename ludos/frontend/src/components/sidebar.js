@@ -75,7 +75,7 @@ function Sidebar({ userLoggedIn }) {
       <Drawer style={drawer} variant="permanent">
         <Paper style={drawerPaper}>
           <List>
-            <ListItem button component={Link} to="/">
+            <ListItem button component={Link} to="/home">
               <div>
                 <ListItemIcon style={listItem}>
                   <div style={circleIcon}>
