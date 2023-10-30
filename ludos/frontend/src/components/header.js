@@ -9,6 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SearchIcon from "@mui/icons-material/Search";
 import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ userLoggedIn, onSettingsClick }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -19,6 +20,15 @@ const Header = ({ userLoggedIn, onSettingsClick }) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const navigate = useNavigate();
+  const handleSignInClick = () => {
+    navigate("/login");
+  };
+
+  const handleRegisterClick = () => {
+    navigate("/signup");
   };
 
   return (
@@ -82,6 +92,7 @@ const Header = ({ userLoggedIn, onSettingsClick }) => {
                 <MenuItem onClick={() => onSettingsClick()}>
                   Go to Settings
                 </MenuItem>
+                <MenuItem onClick={() => onSettingsClick()}>Log out</MenuItem>
               </Menu>
             </>
           ) : (
@@ -101,6 +112,7 @@ const Header = ({ userLoggedIn, onSettingsClick }) => {
                   fontWeight: "bold",
                   marginRight: "10px", // Add margin to separate the buttons
                 }}
+                onClick={handleSignInClick}
               >
                 Sign In
               </Button>
@@ -112,8 +124,8 @@ const Header = ({ userLoggedIn, onSettingsClick }) => {
                   color: "black",
                   fontFamily: "OCR A Std, monospace",
                   fontWeight: "bold",
-                  marginRight: "10px",
                 }}
+                onClick={handleRegisterClick}
               >
                 Register
               </Button>
