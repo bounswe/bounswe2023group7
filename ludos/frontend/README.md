@@ -16,7 +16,6 @@ Elevate your gaming journey with Ludos – where community, collaboration, and f
 Before you begin, ensure you have the following installed:
 
 - [Docker](https://www.docker.com/get-started)
-- Node.js and npm: You can download them from the [official website](https://nodejs.org/).
 
 ### Steps to Deploy
 
@@ -28,21 +27,17 @@ Before you begin, ensure you have the following installed:
    ```bash
    cd ludos/frontend
    ```
-2. **Install Dependencies:**
-
-    ```bash
-    npm install
-    ```
-3. **Build the Docker Image:**
+3. **Ensure that you have docker installed and running.**
+4. **Build the Docker Image and Run:**
     ```bash
     docker compose up --build
     ```
     
-4. **Access Our Project**
+5. **Access Our Project**
  Now, it is available at *localhost:3000/*
 
 
-## How to use?
+## Deployed Version
 Go to our website link which is http://51.20.170.143:3000/. User can [register](http://51.20.170.143:3000/signup) to the platform and then [login](http://51.20.170.143:3000/login). In addition to that, for milestone 1, we provided mock pages for:
 * Forum page about *Video Games*: [/forum](http://51.20.170.143:3000/forum)
 *    Game Pages for:
@@ -50,4 +45,4 @@ Go to our website link which is http://51.20.170.143:3000/. User can [register](
       * *Red Dead Redemption 2* : [/game/Red-Dead-Redemption-2](http://51.20.170.143:3000/game/Red-Dead-Redemption-2)
       * *Witcher 3* : [/game/Witcher-3](http://51.20.170.143:3000/game/Witcher-3)
       * *God of War 2018*: [/game/God-of-War-2018](http://51.20.170.143:3000/game/God-of-War-2018)
-* For home page, the link is [/](http://51.20.170.143:3000/home)
+* For home page, the link is [/](http://51.20.170.143:3000/)
