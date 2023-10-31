@@ -23,7 +23,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.BACKEND_EC2_SSH_KEY }}
           REMOTE_HOST: 3.125.225.39
           REMOTE_USER: ubuntu
-          SOURCE: ./ludos/backend
+          SOURCE: ludos/backend/
           TARGET: ~/backend
           ARGS: --delete
           EXCLUDE: .env

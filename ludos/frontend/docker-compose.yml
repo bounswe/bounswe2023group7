@@ -1,12 +1,15 @@
-version: '3.9'
+version: "3.9"
 
 services:
   frontend:
     image: ludos-frontend
-    build: .
+    build: 
+      target: dev
+      context: .
+      args:
+        - REACT_APP_API_URL=localhost:8080
     command: "npm start"
     volumes:
       - ./src:/app/src
     ports:
       - 3000:3000
-  
