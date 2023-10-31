@@ -34,7 +34,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const axiosInstance = axios.create({
-    baseURL: "http://3.125.225.39:8080",
+    baseURL: `http://${process.env.REACT_APP_API_URL}`,
   });
 
   const handleLogin = (event) => {

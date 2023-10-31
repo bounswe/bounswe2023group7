@@ -37,12 +37,10 @@ export default function SignUpForm() {
     const navigate = useNavigate();
 
     const axiosInstance = axios.create({
-        baseURL: 'http://3.125.225.39:8080',
+        baseURL: `http://${process.env.REACT_APP_API_URL}`,
     })
 
     const handleSignup = (event) => {
-
-
         event.preventDefault();
 
         if (password.length < 8) {
@@ -57,11 +55,8 @@ export default function SignUpForm() {
 
 
         axiosInstance.post('/user', { email, username, password })
-            .then((response) => {
-                const accessToken = response.data.token;
-                localStorage.setItem("accessToken", accessToken);
-
-                navigate("/home")
+            .then(() => {
+                navigate("/login")
                 setDialogMessage('You have succesfully signed up.')
                 setOpen(true)
             })
@@ -191,8 +186,8 @@ export default function SignUpForm() {
                             >
                                 Sign Up
                             </Button>
-                            <Grid container sx={{ m: 5}}>
-                                <Grid item sx={{ mx: 10 }}>
+                            <Grid container sx={{ mb: 5, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                                <Grid item >
                                     <Link href="/login" variant="body2" color={'#F49A32'}>
                                         {"Already have an account? Log in"}
                                     </Link>
