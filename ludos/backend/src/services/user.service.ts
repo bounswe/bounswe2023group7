@@ -17,6 +17,7 @@ import { ResetDto } from '../dtos/user/request/reset.dto';
 import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../interfaces/user/payload.interface';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -24,6 +25,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   public async register(input: RegisterDto): Promise<RegisterResponseDto> {
@@ -60,16 +62,16 @@ export class UserService {
 
   public async sendCodeViaEmailForPasswordReset(email: string, code: string) {
     let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
+      host: this.configService.get<string>('MAIL_SMTP'),
       secure: false,
       auth: {
-        user: '',
-        pass: ''
+        user: this.configService.get<string>('MAIL_USER'),
+        pass: this.configService.get<string>('MAIL_PASS')
       }
     });
 
     let mailOptions = {
-      from: '', 
+      from: this.configService.get<string>('MAIL_USER'), 
       to: email,
       subject: 'Verify Email', 
       text: 'Verify Email', 
@@ -79,10 +81,10 @@ export class UserService {
     let sent = await new Promise<boolean>(async function(resolve, reject) {
       return await transporter.sendMail(mailOptions, async (error: any, info: any) => {
         if (error) {      
-          console.log('Message sent: %s', error);
+          //console.log('Message sent: %s', error);
           return reject(false);
         }
-        console.log('Message sent: %s', info.messageId);
+        //console.log('Message sent: %s', info.messageId);
         resolve(true);
       });      
     });
@@ -98,7 +100,8 @@ export class UserService {
     let resetPassword = await this.resetPasswordRepository.findResetPasswordByEmail(input.email);
 
     if (resetPassword) {
-      throw new HttpException("A password request is already in progress, check your mailbox", HttpStatus.FORBIDDEN);
+      await this.resetPasswordRepository.deletePasswordReset(resetPassword);
+      // throw new HttpException("A password request is already in progress, check your mailbox", HttpStatus.FORBIDDEN);
     }
 
     //generate code
@@ -120,7 +123,8 @@ export class UserService {
 
     let now = new Date();
 
-    if ((now.getTime() - resetPassword.timestamp.getTime()) / 60000 < 15) {
+    if ((now.getTime() - resetPassword.timestamp.getTime()) / 60000 > 15) {
+      await this.resetPasswordRepository.deletePasswordReset(resetPassword);
       throw new HttpException("Time out (15min), try again", HttpStatus.FORBIDDEN);
     }
 

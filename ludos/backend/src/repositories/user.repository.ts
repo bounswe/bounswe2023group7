@@ -22,7 +22,8 @@ export class UserRepository extends Repository<User> {
   }
 
   public async updateUserPassword(input: Partial<User>, newPassword: string) {
-    let user = this.create(input);
+    let user = await this.findUserByUsername(input.username);
     user.password = newPassword;
+    await this.save(user);
   }
 }
