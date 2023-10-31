@@ -5,8 +5,10 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Index,
+  ManyToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Game } from './game.entity';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -21,6 +23,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @ManyToMany(() => Game, (game) => game.followerList)
+  followedGames: Game[];
 
   @BeforeInsert()
   @BeforeUpdate()

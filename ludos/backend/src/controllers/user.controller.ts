@@ -1,6 +1,15 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiOkResponse,
   ApiOperation,
@@ -15,6 +24,10 @@ import { RegisterResponseDto } from '../dtos/user/response/register-response.dto
 import { ResetDto } from '../dtos/user/request/reset.dto'
 import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto'
 import { UserService } from '../services/user.service';
+import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
+import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
+import { AuthGuard } from '../services/guards/auth.guard';
+import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
 
 @ApiTags('user')
 @Controller('user')
@@ -31,7 +44,7 @@ export class UserController {
     description: 'Bad Request',
   })
   @HttpCode(200)
-  @ApiOperation({summary: "Sign Up Endpoint"})
+  @ApiOperation({ summary: 'Sign Up Endpoint' })
   @Post()
   public async register(@Body() input: RegisterDto) {
     return await this.userService.register(input);
@@ -48,7 +61,7 @@ export class UserController {
     description: 'Bad Request',
   })
   @HttpCode(200)
-  @ApiOperation({summary: "Login Endpoint"})
+  @ApiOperation({ summary: 'Login Endpoint' })
   @Post('/login')
   public async login(@Body() input: LoginDto) {
     return await this.userService.login(input);
@@ -81,5 +94,25 @@ export class UserController {
   @Post('/verify-code')
   public async verifyCode(@Body() input: VerifyCodeDto) {
     await this.userService.verifyCode(input);
+  }
+  @ApiOperation({ summary: 'Change Password Endpoint' })
+  @ApiOkResponse({
+    description: 'Password change has been succesful!',
+    type: ChangePasswordResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid Credentials',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Put('/change-password')
+  public async changePassword(
+    @Req() req: AuthorizedRequest,
+    @Body() input: ChangePasswordDto,
+  ) {
+    return await this.userService.changePassword(req.user.id, input);
   }
 }

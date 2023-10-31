@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -11,6 +11,11 @@ import { UserController } from './controllers/user.controller';
 import { UserService } from './services/user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigService } from './services/config/jwt-config.service';
+import { GameController } from './controllers/game.controller';
+import { GameService } from './services/game.service';
+import { GameRepository } from './repositories/game.repository';
+import { Game } from './entities/game.entity';
+import { TokenDecoderMiddleware } from './middlewares/tokenDecoder.middleware';
 
 import { ResetPasswordRepository } from './repositories/reset-password.repository';
 
@@ -27,9 +32,20 @@ import { ResetPasswordRepository } from './repositories/reset-password.repositor
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService],
     }),
-    TypeOrmModule.forFeature([User, ResetPassword]),
+    TypeOrmModule.forFeature([User, Game, ResetPassword]),
   ],
-  controllers: [AppController, UserController],
-  providers: [AppService, UserRepository, UserService, ResetPasswordRepository],
+  controllers: [AppController, UserController, GameController],
+  providers: [
+    AppService,
+    UserRepository,
+    UserService,
+    GameRepository,
+    GameService,
+    ResetPasswordRepository
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TokenDecoderMiddleware).forRoutes('*');
+  }
+}

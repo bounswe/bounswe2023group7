@@ -1,2 +1,3 @@
 # Ignore the Intellij related folders
 .idea
+node_modules
