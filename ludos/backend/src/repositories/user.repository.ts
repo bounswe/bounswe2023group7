@@ -17,13 +17,13 @@ export class UserRepository extends Repository<User> {
   public findUserByUsername(username: string): Promise<User> {
     return this.findOneBy({ username });
   }
-  
+
   public findUserByEmail(email: string): Promise<User> {
     return this.findOneBy({ email: email });
   }
 
   public async updateUserPassword(input: Partial<User>, newPassword: string) {
-    let user = await this.findUserByUsername(input.username);
+    const user = await this.findUserByUsername(input.username);
     user.password = newPassword;
     await this.save(user);
   }

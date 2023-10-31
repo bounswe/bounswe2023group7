@@ -21,8 +21,8 @@ import { LoginDto } from '../dtos/user/request/login.dto';
 import { RegisterDto } from '../dtos/user/request/register.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
-import { ResetDto } from '../dtos/user/request/reset.dto'
-import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto'
+import { ResetDto } from '../dtos/user/request/reset.dto';
+import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { UserService } from '../services/user.service';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
@@ -77,20 +77,20 @@ export class UserController {
     description: 'Bad Request',
   })
   @HttpCode(200)
-  @ApiOperation({summary: "Password Reset Request Endpoint"})
+  @ApiOperation({ summary: 'Password Reset Request Endpoint' })
   @Post('/reset-password')
   public async resetPassword(@Body() input: ResetDto) {
     await this.userService.resetPassword(input);
   }
-  
+
   @ApiOkResponse({
-    description: 'Set new password upon receiving the correct code'
+    description: 'Set new password upon receiving the correct code',
   })
   @ApiBadRequestResponse({
     description: 'Bad Request',
   })
   @HttpCode(200)
-  @ApiOperation({summary: "Password Reset Code Verification Endpoint"})
+  @ApiOperation({ summary: 'Password Reset Code Verification Endpoint' })
   @Post('/verify-code')
   public async verifyCode(@Body() input: VerifyCodeDto) {
     await this.userService.verifyCode(input);

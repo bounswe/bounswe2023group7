@@ -8,6 +8,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as nodemailer from 'nodemailer';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
@@ -21,7 +22,6 @@ import { RegisterResponseDto } from '../dtos/user/response/register-response.dto
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -65,43 +65,47 @@ export class UserService {
   }
 
   public async sendCodeViaEmailForPasswordReset(email: string, code: string) {
-    let transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: this.configService.get<string>('MAIL_SMTP'),
       secure: false,
       auth: {
         user: this.configService.get<string>('MAIL_USER'),
-        pass: this.configService.get<string>('MAIL_PASS')
-      }
+        pass: this.configService.get<string>('MAIL_PASS'),
+      },
     });
 
-    let mailOptions = {
-      from: this.configService.get<string>('MAIL_USER'), 
+    const mailOptions = {
+      from: this.configService.get<string>('MAIL_USER'),
       to: email,
-      subject: 'Verify Email', 
-      text: 'Verify Email', 
-      html: 'Hi! Here is your code to reset your password: ' + code
+      subject: 'Verify Email',
+      text: 'Verify Email',
+      html: 'Hi! Here is your code to reset your password: ' + code,
     };
 
-    let sent = await new Promise<boolean>(async function(resolve, reject) {
-      return await transporter.sendMail(mailOptions, async (error: any, info: any) => {
-        if (error) {      
+    await new Promise<boolean>(async function (resolve, reject) {
+      return await transporter.sendMail(mailOptions, async (error: any) => {
+        if (error) {
           //console.log('Message sent: %s', error);
           return reject(false);
         }
         //console.log('Message sent: %s', info.messageId);
         resolve(true);
-      });      
+      });
     });
   }
 
   public async resetPassword(input: ResetDto) {
-    let user = await this.userRepository.findUserByEmail(input.email);
+    const user = await this.userRepository.findUserByEmail(input.email);
 
     if (!user) {
-      throw new HttpException("No user found with this email", HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        'No user found with this email',
+        HttpStatus.FORBIDDEN,
+      );
     }
 
-    let resetPassword = await this.resetPasswordRepository.findResetPasswordByEmail(input.email);
+    const resetPassword =
+      await this.resetPasswordRepository.findResetPasswordByEmail(input.email);
 
     if (resetPassword) {
       await this.resetPasswordRepository.deletePasswordReset(resetPassword);
@@ -109,38 +113,52 @@ export class UserService {
     }
 
     //generate code
-    let code = (Math.floor(Math.random() * 900000) + 100000).toString();
+    const code = (Math.floor(Math.random() * 900000) + 100000).toString();
 
     // save to database
-    await this.resetPasswordRepository.createPasswordReset(input, code, new Date());
+    await this.resetPasswordRepository.createPasswordReset(
+      input,
+      code,
+      new Date(),
+    );
 
     // send email
     await this.sendCodeViaEmailForPasswordReset(user.email, code);
   }
 
   public async verifyCode(input: VerifyCodeDto) {
-    let resetPassword = await this.resetPasswordRepository.findResetPasswordByEmail(input.email);
+    const resetPassword =
+      await this.resetPasswordRepository.findResetPasswordByEmail(input.email);
 
     if (!resetPassword) {
-      throw new HttpException("No password reset request found for this email", HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        'No password reset request found for this email',
+        HttpStatus.FORBIDDEN,
+      );
     }
 
-    let now = new Date();
+    const now = new Date();
 
     if ((now.getTime() - resetPassword.timestamp.getTime()) / 60000 > 15) {
       await this.resetPasswordRepository.deletePasswordReset(resetPassword);
-      throw new HttpException("Time out (15min), try again", HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        'Time out (15min), try again',
+        HttpStatus.FORBIDDEN,
+      );
     }
 
     if (resetPassword.code !== input.code) {
-      throw new HttpException("Incorrect code", HttpStatus.FORBIDDEN);
+      throw new HttpException('Incorrect code', HttpStatus.FORBIDDEN);
     }
 
     // correct code, delete from database
     await this.resetPasswordRepository.deletePasswordReset(resetPassword);
 
     // set new password
-    await this.userRepository.updateUserPassword(await this.userRepository.findUserByEmail(input.email), input.newPassword);
+    await this.userRepository.updateUserPassword(
+      await this.userRepository.findUserByEmail(input.email),
+      input.newPassword,
+    );
   }
   public async changePassword(
     userId: string,

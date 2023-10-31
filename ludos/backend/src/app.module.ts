@@ -41,7 +41,7 @@ import { ResetPasswordRepository } from './repositories/reset-password.repositor
     UserService,
     GameRepository,
     GameService,
-    ResetPasswordRepository
+    ResetPasswordRepository,
   ],
 })
 export class AppModule implements NestModule {
