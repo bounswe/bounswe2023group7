@@ -42,3 +42,4 @@ jobs:
             cd ~/frontend
             sudo docker load -i frontend.tar.gz
             sudo docker run -p 3000:3000 --name frontend -d frontend 
+            docker image prune -af && docker builder prune -f && docker builder prune -af --filter until=10m && docker volume prune -af
