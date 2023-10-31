@@ -8,6 +8,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as nodemailer from 'nodemailer';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
@@ -21,7 +22,6 @@ import { RegisterResponseDto } from '../dtos/user/response/register-response.dto
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {

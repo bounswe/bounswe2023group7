@@ -1,10 +1,7 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
-  BeforeInsert,
-  BeforeUpdate,
-  Index,
+  Entity,
+  PrimaryGeneratedColumn
 } from 'typeorm';
 
 @Entity('password-resets')
