@@ -12,7 +12,7 @@ import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-const Header = ({ userLoggedIn, onSettingsClick }) => {
+const Header = ({ userLoggedIn }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
@@ -30,6 +30,10 @@ const Header = ({ userLoggedIn, onSettingsClick }) => {
 
   const handleRegisterClick = () => {
     navigate("/signup");
+  };
+
+  const handleSettingsClick = () => {
+    navigate("/settings");
   };
 
   function handleLogout() {
@@ -94,10 +98,12 @@ const Header = ({ userLoggedIn, onSettingsClick }) => {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={() => onSettingsClick()}>
+                <MenuItem onClick={() => handleSettingsClick()}>
                   Go to Settings
                 </MenuItem>
-                <MenuItem onClick={handleLogout} component={Link} to="/login">Log out</MenuItem>
+                <MenuItem onClick={handleLogout} component={Link} to="/login">
+                  Log out
+                </MenuItem>
               </Menu>
             </>
           ) : (
