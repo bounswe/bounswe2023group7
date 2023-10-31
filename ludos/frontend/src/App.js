@@ -67,36 +67,36 @@ function App() {
     publisher: "Sony Interactive Entertainment",
     reviews: [
       {
-        username: "KratosFan87",
-        timestamp: "2023-10-30T10:00:00",
-        reviewText:
-          "This game is a masterpiece, beautifully portraying the complex father-son dynamic between Kratos and Atreus. The graphics and storytelling are amazing, and their journey is truly heartwarming.",
+          username: "KratosFan87",
+          timestamp: "2023-10-30T10:00:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "This game is a masterpiece, beautifully portraying the complex father-son dynamic between Kratos and Atreus. The graphics and storytelling are amazing, and their journey is truly heartwarming.",
       },
       {
-        username: "GamerGod123",
-        timestamp: "2023-10-30T11:30:00",
-        reviewText:
-          "I've played God of War multiple times, and it never gets old. Highly recommended.",
+          username: "GamerGod123",
+          timestamp: "2023-10-30T11:30:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "I've played God of War multiple times, and it never gets old. Highly recommended.",
       },
       {
-        username: "MythologyMaster",
-        timestamp: "2023-10-30T13:45:00",
-        reviewText:
-          "The combat mechanics are outstanding. Kratos' character development is impressive.",
+          username: "MythologyMaster",
+          timestamp: "2023-10-30T13:45:00",
+          rating: 4,  // Integer rating between 1-5
+          reviewText: "The combat mechanics are outstanding. Kratos' character development is impressive.",
       },
       {
-        username: "RagnarokAwaits",
-        timestamp: "2023-10-30T14:20:00",
-        reviewText:
-          "I can't wait for the next game in the series. God of War Ragnarok, here I come!",
+          username: "RagnarokAwaits",
+          timestamp: "2023-10-30T14:20:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "I can't wait for the next game in the series. God of War Ragnarok, here I come!",
       },
       {
-        username: "AdventureSeeker",
-        timestamp: "2023-10-30T16:15:00",
-        reviewText:
-          "The world design and exploration are top-notch. A must-play for any gamer.",
+          username: "AdventureSeeker",
+          timestamp: "2023-10-30T16:15:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "The world design and exploration are top-notch. A must-play for any gamer.",
       },
-    ],
+  ],
     trivia:
       "Did you know? The game's director, Cory Barlog, drew inspiration from his own experiences as a father to create the emotional father-son dynamic between Kratos and Atreus.",
   };
@@ -158,36 +158,36 @@ function App() {
     publisher: "Rockstar Games",
     reviews: [
       {
-        username: "WildWestExplorer",
-        timestamp: "2023-10-30T10:00:00",
-        reviewText:
-          "A stunning open-world experience with unforgettable characters and a gripping story.",
+          username: "WildWestExplorer",
+          timestamp: "2023-10-30T10:00:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "A stunning open-world experience with unforgettable characters and a gripping story.",
       },
       {
-        username: "OutlawCowboy",
-        timestamp: "2023-10-30T11:30:00",
-        reviewText:
-          "Red Dead Redemption 2 is a masterpiece in storytelling and immersion.",
+          username: "OutlawCowboy",
+          timestamp: "2023-10-30T11:30:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "Red Dead Redemption 2 is a masterpiece in storytelling and immersion.",
       },
       {
-        username: "Gunslinger27",
-        timestamp: "2023-10-30T13:45:00",
-        reviewText:
-          "The attention to detail in this game is mind-blowing. A true work of art.",
+          username: "Gunslinger27",
+          timestamp: "2023-10-30T13:45:00",
+          rating: 4,  // Integer rating between 1-5
+          reviewText: "The attention to detail in this game is mind-blowing. A true work of art.",
       },
       {
-        username: "WanderingBandit",
-        timestamp: "2023-10-30T14:20:00",
-        reviewText:
-          "I can't wait to see what Red Dead Redemption 3 will bring. Rockstar never disappoints.",
+          username: "WanderingBandit",
+          timestamp: "2023-10-30T14:20:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "I can't wait to see what Red Dead Redemption 3 will bring. Rockstar never disappoints.",
       },
       {
-        username: "WildernessSurvivor",
-        timestamp: "2023-10-30T16:15:00",
-        reviewText:
-          "The vast open world of Red Dead Redemption 2 is a playground for exploration and adventure.",
+          username: "WildernessSurvivor",
+          timestamp: "2023-10-30T16:15:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "The vast open world of Red Dead Redemption 2 is a playground for exploration and adventure.",
       },
-    ],
+  ],
     trivia:
       "Did you know? The game's development involved extensive research into the Old West to ensure historical accuracy.",
   };
@@ -247,36 +247,36 @@ function App() {
     publisher: "CD Projekt",
     reviews: [
       {
-        username: "WitcherFanatic",
-        timestamp: "2023-10-30T10:00:00",
-        reviewText:
-          "The Witcher 3 is a masterpiece of storytelling, and the open world is incredibly detailed and immersive.",
+          username: "WitcherFanatic",
+          timestamp: "2023-10-30T10:00:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "The Witcher 3 is a masterpiece of storytelling, and the open world is incredibly detailed and immersive.",
       },
       {
-        username: "MonsterHunter42",
-        timestamp: "2023-10-30T11:30:00",
-        reviewText:
-          "The depth of the characters and the moral choices in the game make it a true gem in the RPG genre.",
+          username: "MonsterHunter42",
+          timestamp: "2023-10-30T11:30:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "The depth of the characters and the moral choices in the game make it a true gem in the RPG genre.",
       },
       {
-        username: "MagicEnthusiast",
-        timestamp: "2023-10-30T13:45:00",
-        reviewText:
-          "The magic and lore of The Witcher world are captivating, and the game's expansions add even more value.",
+          username: "MagicEnthusiast",
+          timestamp: "2023-10-30T13:45:00",
+          rating: 4,  // Integer rating between 1-5
+          reviewText: "The magic and lore of The Witcher world are captivating, and the game's expansions add even more value.",
       },
       {
-        username: "NextWitcherGame",
-        timestamp: "2023-10-30T14:20:00",
-        reviewText:
-          "I can't wait for The Witcher 4. CD Projekt Red knows how to create epic adventures.",
+          username: "NextWitcherGame",
+          timestamp: "2023-10-30T14:20:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "I can't wait for The Witcher 4. CD Projekt Red knows how to create epic adventures.",
       },
       {
-        username: "FantasyExplorer",
-        timestamp: "2023-10-30T16:15:00",
-        reviewText:
-          "The vast open world and the numerous side quests make The Witcher 3 an unforgettable experience.",
+          username: "FantasyExplorer",
+          timestamp: "2023-10-30T16:15:00",
+          rating: 5,  // Integer rating between 1-5
+          reviewText: "The vast open world and the numerous side quests make The Witcher 3 an unforgettable experience.",
       },
-    ],
+  ],
     trivia:
       "Did you know? The Witcher 3: Wild Hunt is based on a series of books by Polish author Andrzej Sapkowski.",
   };
