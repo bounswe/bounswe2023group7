@@ -55,7 +55,7 @@ export default function Login() {
       .then((response) => {
         localStorage.setItem("accessToken", response.data.accessToken);
 
-        navigate("/home");
+        navigate("/");
         setDialogMessage("You have succesfully logged in.");
         setOpen(true);
       })
