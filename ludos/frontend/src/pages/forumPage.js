@@ -228,7 +228,7 @@ const Forum = () => {
       <Container style={{ backgroundColor: "#3C7299", maxWidth: "900px" }}>
         <Grid container spacing={1}>
           {boxesData.map((data, index) => (
-            <Post post={data} key={index} />
+            <Post post={data} key={index} showButtons={userLoggedIn} />
           ))}
         </Grid>
       </Container>

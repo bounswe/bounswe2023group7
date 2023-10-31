@@ -17,17 +17,29 @@ jobs:
       - name: Checkout the files
         uses: actions/checkout@v2
 
+      - name: Build the Docker image
+        run: docker build ludos/frontend -t frontend --target=prod --build-arg REACT_APP_API_URL=3.125.225.39:8080
+
+      - name: Save Docker image
+        run: docker save frontend | gzip > frontend.tar.gz
+        
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.FRONTEND_EC2_SSH_KEY }}
           REMOTE_HOST: 51.20.170.143
           REMOTE_USER: ubuntu
-          SOURCE: ludos/frontend/
+          SOURCE: frontend.tar.gz
           TARGET: ~/frontend
           ARGS: --delete
           EXCLUDE: .env
+          SCRIPT_BEFORE: |
+            sudo rm -rf frontend || true
+            mkdir frontend
+            sudo docker container stop frontend || true
+            sudo docker container rm frontend || true
           SCRIPT_AFTER: |
             cd ~/frontend
-            docker compose up -d --build
+            sudo docker load -i frontend.tar.gz
+            sudo docker run -p 3000:3000 --name frontend -d frontend 
             docker image prune -af && docker builder prune -f && docker builder prune -af --filter until=10m && docker volume prune -af

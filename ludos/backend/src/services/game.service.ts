@@ -69,10 +69,10 @@ export class GameService {
   async unfollowGame(userId: string, gameId: string): Promise<void> {
     const game = await this.gameRepository.findGameByIdWithFollowerList(gameId);
     if (!game) {
-      throw new ConflictException('The game is not followed!');
+      throw new NotFoundException('Game Not Found!');
     }
     if (game.followerList.filter((user) => user.id === userId).length == 0) {
-      throw new NotFoundException('The Game is not followed!');
+      throw new ConflictException('The Game is not followed!');
     }
     game.followerList = game.followerList.filter((user) => user.id !== userId);
 

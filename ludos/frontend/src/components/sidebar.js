@@ -79,7 +79,7 @@ function Sidebar({ userLoggedIn }) {
       <Drawer style={drawer} variant="permanent">
         <Paper style={drawerPaper}>
           <List>
-            <ListItem button component={Link} to="/home">
+            <ListItem button component={Link} to="/">
               <div>
                 <ListItemIcon style={listItem}>
                   <div style={circleIcon}>
@@ -204,11 +204,7 @@ function Sidebar({ userLoggedIn }) {
               >
                 Change Password
               </MenuItem>
-              <MenuItem
-                component={Link}
-                to="/login"
-                onClick={handleLogout}
-              >
+              <MenuItem component={Link} to="/login" onClick={handleLogout}>
                 Log Out
               </MenuItem>
             </Menu>

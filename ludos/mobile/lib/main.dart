@@ -65,9 +65,9 @@ class Home extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: const Color(0xFF40749c),
+      backgroundColor: const Color(0xFF101c2c),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF101c2c),
+        backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
         title: const Text('Ludos'),
         actions: <Widget>[
@@ -147,7 +147,6 @@ class Home extends StatelessWidget {
                   ],
                 ),
               ),
-
               //SizedBox(height: 5.0),
               const Divider(
                 height: 3.0,
@@ -383,7 +382,7 @@ class Home extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: Container(
-          color: const Color(0xFF101c2c),
+          color: const Color(0xFF2f5b7a),
           padding: const EdgeInsets.all(10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -409,7 +408,8 @@ class Home extends StatelessWidget {
                   onPressed: () {},
                   icon: const Icon(Icons.search_outlined)),
             ],
-          )),
+          )
+      ),
     );
   }
 }
