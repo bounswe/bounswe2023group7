@@ -6,6 +6,8 @@ services:
     build: 
       target: dev
       context: .
+      args:
+        - REACT_APP_API_URL=localhost:8080
     command: "npm start"
     volumes:
       - ./src:/app/src
