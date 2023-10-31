@@ -38,6 +38,8 @@ export default function Login() {
   });
 
   const handleLogin = (event) => {
+    event.preventDefault();
+
     if (username.length === 0 || username === "") {
       setUsernameEmpty(true);
       return;
@@ -48,7 +50,6 @@ export default function Login() {
       return;
     }
 
-    event.preventDefault();
     axiosInstance
       .post("/user/login", { username, password })
       .then((response) => {

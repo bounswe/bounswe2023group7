@@ -191,8 +191,8 @@ export default function SignUpForm() {
                             >
                                 Sign Up
                             </Button>
-                            <Grid container sx={{ m: 5}}>
-                                <Grid item sx={{ mx: 10 }}>
+                            <Grid container sx={{ my: 5, display:'flex', alignItems:'center', justifyContent:'center'}}>
+                                <Grid item>
                                     <Link href="/login" variant="body2" color={'#F49A32'}>
                                         {"Already have an account? Log in"}
                                     </Link>
