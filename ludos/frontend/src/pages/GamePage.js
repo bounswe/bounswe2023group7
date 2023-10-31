@@ -88,7 +88,7 @@ function GamePage() {
       "Did you know? The game's director, Cory Barlog, drew inspiration from his own experiences as a father to create the emotional father-son dynamic between Kratos and Atreus.",
   };
 
-  const ratingStyle = {
+  const smallBoxStyle = {
     backgroundColor: "gray",
     borderRadius: "100px",
     width: "auto",
@@ -100,6 +100,27 @@ function GamePage() {
     display: "flex",
   };
 
+  const bioBoxStyle = {
+    backgroundColor: "gray",
+    borderRadius: "100px",
+    flexDirection: "column",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "90%",
+    marginTop: "10px",
+    padding: "10px",
+  };
+  const imageBoxStyle = {
+    height: "auto",
+    width: "auto",
+    justifyContent: "center",
+    alignItems: "center",
+    display: "flex",
+    marginLeft: "2%",
+    marginBottom: "2%",
+  };
+
   const boxStyle = {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
     borderRadius: "10px",
@@ -108,7 +129,9 @@ function GamePage() {
   useEffect(() => {}, []);
 
   return (
-    <Container style={{ backgroundColor: "rgb(0, 150, 255)", maxWidth: "1200px" } }>
+    <Container
+      style={{ backgroundColor: "rgb(0, 150, 255)", maxWidth: "1200px" }}
+    >
       <Grid container spacing={1} style={boxStyle}>
         <Box p={0} style={{ width: "100%", marginTop: "3%" }}>
           <Typography style={{ fontSize: "25px" }}>{game.title}</Typography>
@@ -136,21 +159,15 @@ function GamePage() {
             </Button>
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={3} md={3} lg={3} style={{marginLeft:"2%"}}>
-          <Box p={0} style={{ width: "100%" }}>
-            <img src={game.coverLink} alt="God of War" />
-          </Box>
+        <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
+          <img src={game.coverLink} alt="God of War" />
         </Grid>
-        <Grid item xs={6} sm={2} md={2} lg={2} style={{marginLeft:"2%"}}>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
-            <Typography component="legend">Release Date:</Typography>
-            <Typography component="legend">{game.releaseDate}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
+        <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "2%" }}>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Rate:</Typography>
             <Rating name="game-rating" value={game.userRating} precision={1} />
           </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Rate:</Typography>
             <Rating
               name="user-rating"
@@ -158,32 +175,54 @@ function GamePage() {
               precision={0.1}
               disabled="true"
             />
-            <Typography component="legend">{game.averageRating}/5</Typography>
+            <Typography component="caption">{game.averageRating}/5</Typography>
           </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Followers:</Typography>
-            <Typography component="legend">{game.followers}</Typography>
+            <Typography component="caption">{game.followers}</Typography>
           </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Average Duration:</Typography>
-            <Typography component="legend">
+            <Typography component="caption">
               {game.averageUserCompilationDuration}
             </Typography>
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={4} md={4} lg={4} style={{marginLeft:"1%"}}>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
+        <Grid item xs={12} sm={4} md={4} lg={4} style={{ marginLeft: "1%" }}>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={bioBoxStyle}>
             <Typography component="legend">{game.gameBio}</Typography>
           </Grid>
         </Grid>
-        <Grid item xs={6} sm={2} md={2} lg={2} style={{marginLeft:"1%"}}>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={ratingStyle}>
+        <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "1%" }}>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
+            <Typography component="legend">Release Date:</Typography>
+            <Typography component="caption">{game.releaseDate}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Platforms:</Typography>
             {game.platforms.map((data1, index1) => (
               <Typography variant="caption" component="div" key={index1}>
                 {data1}
               </Typography>
             ))}
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
+            <Typography component="legend">Age Restriction:</Typography>
+            <Typography variant="caption" component="div">
+              {game.ageRestriction}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
+            <Typography component="legend">Publisher:</Typography>
+            <Typography variant="caption" component="div">
+              {game.publisher}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
+            <Typography component="legend">Developer:</Typography>
+            <Typography variant="caption" component="div">
+              {game.developer}
+            </Typography>
           </Grid>
         </Grid>
       </Grid>

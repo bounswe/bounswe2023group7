@@ -1,29 +1,75 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart';
+import 'userProvider.dart';
+import 'package:provider/provider.dart';
+import 'helper/colors.dart';
 
-
-void main() => runApp(MaterialApp(
-  home: Home(),
-));
+void main() => runApp(ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: MaterialApp(
+        home: Home(),
+      ),
+    ));
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
+      drawer: Drawer(
+        child: Container(
+          color: MyColors.darkBlue, // Drawer background color
+          child: ListView(
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountName: Text(
+                  userProvider.username,
+                  style:
+                      const TextStyle(color: MyColors.darkBlue), // Text color
+                ),
+                accountEmail: null,
+                currentAccountPicture: const CircleAvatar(
+                  backgroundColor: MyColors.white,
+                  child: Icon(Icons.person),
+                ),
+                decoration: const BoxDecoration(
+                  color: MyColors.blue, // Header background color
+                ),
+              ),
+              if (userProvider.isLoggedIn)
+                ListTile(
+                  title: const Text(
+                    'Log Out',
+                    style: TextStyle(color: MyColors.white),
+                  ),
+                  onTap: () {
+                    userProvider.setLoggedIn(false, '');
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ));
+                  },
+                ),
+              if (!userProvider.isLoggedIn)
+                ListTile(
+                  title: const Text(
+                    'Log In',
+                    style: TextStyle(color: MyColors.white),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ));
+                  },
+                ),
+            ],
+          ),
+        ),
+      ),
       backgroundColor: const Color(0xFF101c2c),
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
         title: const Text('Ludos'),
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => LoginPage(),));
-            },
-            icon: const Icon(
-              Icons.person_2,
-            )
-        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.notifications),
@@ -35,7 +81,6 @@ class Home extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           Column(
-
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
@@ -46,7 +91,8 @@ class Home extends StatelessWidget {
                     Container(
                       width: 250.0,
                       child: TextButton(
-                        style: TextButton.styleFrom(foregroundColor: Colors.black),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.black),
                         onPressed: () {},
                         child: const Text(
                           'Assassins Creed Mirage launch brings 18% player rise across AC series',
@@ -54,14 +100,15 @@ class Home extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-
                     ),
                     SizedBox(width: 5.0),
                     Container(
                       child: TextButton(
-                        style: TextButton.styleFrom(foregroundColor: Colors.black),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.black),
                         onPressed: () {},
-                        child: const Text('@senaal',
+                        child: const Text(
+                          '@senaal',
                           style: TextStyle(color: Color(0xFFf89c34)),
                         ),
                       ),
@@ -93,13 +140,13 @@ class Home extends StatelessWidget {
                         color: Colors.white,
                         onPressed: () {},
                         icon: const Icon(Icons.comment)),
-                    const Text('10 minutes ago',
+                    const Text(
+                      '10 minutes ago',
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
               ),
-
               //SizedBox(height: 5.0),
               const Divider(
                 height: 3.0,
@@ -107,10 +154,8 @@ class Home extends StatelessWidget {
                 color: Color(0xFF589cb4),
               ),
             ],
-
           ),
           Column(
-
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
@@ -121,7 +166,8 @@ class Home extends StatelessWidget {
                     Container(
                       width: 250.0,
                       child: TextButton(
-                        style: TextButton.styleFrom(foregroundColor: Colors.black),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.black),
                         onPressed: () {},
                         child: const Text(
                           ' FAR CRY’S MULTIPLAYER GAME IS AN EXTRACTION-BASED SHOOTER',
@@ -129,15 +175,17 @@ class Home extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-
                     ),
                     SizedBox(width: 5.0),
                     Container(
                       child: TextButton(
-                        style: TextButton.styleFrom(foregroundColor: Colors.black),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.black),
                         onPressed: () {},
-                        child: Text('@furkanulke',
-                          style: TextStyle(color: Color(0xFFf89c34)),),
+                        child: Text(
+                          '@furkanulke',
+                          style: TextStyle(color: Color(0xFFf89c34)),
+                        ),
                       ),
                     ),
                   ],
@@ -167,8 +215,10 @@ class Home extends StatelessWidget {
                         color: Colors.white,
                         onPressed: () {},
                         icon: const Icon(Icons.comment)),
-                    const Text('40 minutes ago',
-                      style: TextStyle(color: Colors.white),),
+                    const Text(
+                      '40 minutes ago',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
@@ -180,10 +230,8 @@ class Home extends StatelessWidget {
                 color: Color(0xFF589cb4),
               ),
             ],
-
           ),
           Column(
-
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
@@ -194,7 +242,8 @@ class Home extends StatelessWidget {
                     Container(
                       width: 250.0,
                       child: TextButton(
-                        style: TextButton.styleFrom(foregroundColor: Colors.black),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.black),
                         onPressed: () {},
                         child: const Text(
                           'Watch Dogs: Legion vs Watch Dogs 2',
@@ -202,12 +251,12 @@ class Home extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-
                     ),
                     SizedBox(width: 5.0),
                     Container(
                       child: TextButton(
-                        style: TextButton.styleFrom(foregroundColor: Color(0xFFf89c34)),
+                        style: TextButton.styleFrom(
+                            foregroundColor: Color(0xFFf89c34)),
                         onPressed: () {},
                         child: Text('@haticeerk'),
                       ),
@@ -220,8 +269,7 @@ class Home extends StatelessWidget {
                 child: const Text(
                     'Anyone else really disappointed with Watch Dogs: Legion after REALLY loving Watch Dogs 2?',
                     softWrap: true,
-                    style: TextStyle(color: Colors.white)
-                ),
+                    style: TextStyle(color: Colors.white)),
               ),
               Container(
                 child: Row(
@@ -239,7 +287,8 @@ class Home extends StatelessWidget {
                         color: Colors.white,
                         onPressed: () {},
                         icon: const Icon(Icons.comment)),
-                    const Text('10 hours ago',
+                    const Text(
+                      '10 hours ago',
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
@@ -255,7 +304,6 @@ class Home extends StatelessWidget {
             ],
           ),
           Column(
-
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
@@ -266,7 +314,8 @@ class Home extends StatelessWidget {
                     Container(
                       width: 250.0,
                       child: TextButton(
-                        style: TextButton.styleFrom(foregroundColor: Colors.black),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.black),
                         onPressed: () {},
                         child: const Text(
                           'Disco Elysium x Death note fan-fiction recommendations?',
@@ -274,14 +323,15 @@ class Home extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-
                     ),
                     SizedBox(width: 5.0),
                     Container(
                       child: TextButton(
-                        style: TextButton.styleFrom(foregroundColor: Colors.black),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.black),
                         onPressed: () {},
-                        child: const Text('@kardelen',
+                        child: const Text(
+                          '@kardelen',
                           style: TextStyle(color: Color(0xFFf89c34)),
                         ),
                       ),
@@ -313,8 +363,10 @@ class Home extends StatelessWidget {
                         color: Colors.white,
                         onPressed: () {},
                         icon: const Icon(Icons.comment)),
-                    const Text('10 days ago',
-                      style: TextStyle(color: Colors.white),),
+                    const Text(
+                      '10 days ago',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
@@ -327,7 +379,6 @@ class Home extends StatelessWidget {
               ),
             ],
           ),
-
         ],
       ),
       bottomNavigationBar: Container(
@@ -362,4 +413,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-
