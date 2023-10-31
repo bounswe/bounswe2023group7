@@ -1,70 +1,53 @@
-# Getting Started with Create React App
+<p align="center">
+ <img width="200" src="https://github.com/bounswe/bounswe2023group7/assets/47900788/abacbafe-f971-4233-be77-fe5167156730" alt="Material Bread logo">
+</p>
+<h1 align="center">
+Welcome to Frontend of Ludos!
+</h1>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ludos stands as a dynamic gaming community platform, serving as the hub for developers, gamers, and e-sports enthusiasts to foster social connections and collaborate on game-related matters. Our versatile application seamlessly attends to both video games and board games, providing a comprehensive space for diverse gaming interests. Additionally, our platform features robust group functionality, enabling like-minded individuals to connect and engage in shared gaming experiences. 
 
-## Available Scripts
+Elevate your gaming journey with Ludos – where community, collaboration, and fellowship converge.
 
-In the project directory, you can run:
+## How to run?
 
-### `npm start`
+### Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Before you begin, ensure you have the following installed:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- [Docker](https://www.docker.com/get-started)
+- Node.js and npm: You can download them from the [official website](https://nodejs.org/).
 
-### `npm test`
+### Steps to Deploy
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clone the Repository:**
+    ```bash
+     git clone https://github.com/bounswe/bounswe2023group7.git
+     ```
+2. **Go to Directory:**
+   ```bash
+   cd ludos/frontend
+   ```
+2. **Install Dependencies:**
 
-### `npm run build`
+    ```bash
+    npm install
+    ```
+3. **Build the Docker Image:**
+    ```bash
+    docker compose up --build
+    ```
+    
+4. **Access Our Project**
+ Now, it is available at *localhost:3000/*
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## How to use?
+Go to our website link which is http://51.20.170.143:3000/. User can [register](http://51.20.170.143:3000/signup) to the platform and then [login](http://51.20.170.143:3000/login). In addition to that, for milestone 1, we provided mock pages for:
+* Forum page about *Video Games*: [/forum](http://51.20.170.143:3000/forum)
+*    Game Pages for:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+      * *Red Dead Redemption 2* : [/game/Red-Dead-Redemption-2](http://51.20.170.143:3000/game/Red-Dead-Redemption-2)
+      * *Witcher 3* : [/game/Witcher-3](http://51.20.170.143:3000/game/Witcher-3)
+      * *God of War 2018*: [/game/God-of-War-2018](http://51.20.170.143:3000/game/God-of-War-2018)
+* For home page, the link is [/](http://51.20.170.143:3000/home)
