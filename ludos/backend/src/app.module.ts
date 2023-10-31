@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './services/config/typeorm-config.service';
 import { User } from './entities/user.entity';
+import { ResetPassword } from './entities/reset-password.entity';
 import { UserRepository } from './repositories/user.repository';
 import { UserController } from './controllers/user.controller';
 import { UserService } from './services/user.service';
@@ -15,6 +16,8 @@ import { GameService } from './services/game.service';
 import { GameRepository } from './repositories/game.repository';
 import { Game } from './entities/game.entity';
 import { TokenDecoderMiddleware } from './middlewares/tokenDecoder.middleware';
+
+import { ResetPasswordRepository } from './repositories/reset-password.repository';
 
 @Module({
   imports: [
@@ -29,7 +32,7 @@ import { TokenDecoderMiddleware } from './middlewares/tokenDecoder.middleware';
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService],
     }),
-    TypeOrmModule.forFeature([User, Game]),
+    TypeOrmModule.forFeature([User, Game, ResetPassword]),
   ],
   controllers: [AppController, UserController, GameController],
   providers: [
@@ -38,6 +41,7 @@ import { TokenDecoderMiddleware } from './middlewares/tokenDecoder.middleware';
     UserService,
     GameRepository,
     GameService,
+    ResetPasswordRepository,
   ],
 })
 export class AppModule implements NestModule {
