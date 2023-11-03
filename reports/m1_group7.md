@@ -611,6 +611,19 @@ To sum up, the approach to issue management in GitHub appears to be well-organiz
 
 ### <ins>Hakan Karakuş</ins><a name="hakan-karakus" />
 
+-  **Member**: Hakan Karakuş - 2019400126 - Group 7 - Backend Team
+- **Responsibilities**: I was responsible in the backend team. My tasks included creating the folder structure, connecting the database, setting up Docker, managing deployment processes, creating the unit tests pipeline, and overseeing structural planning. I developed an endpoint for a feature in the backend.
+
+- **Code related significant issues**: 
+[319](https://github.com/bounswe/bounswe2023group7/issues/319), [285](https://github.com/bounswe/bounswe2023group7/issues/285), [284](https://github.com/bounswe/bounswe2023group7/issues/284), [283](https://github.com/bounswe/bounswe2023group7/issues/283), [280](https://github.com/bounswe/bounswe2023group7/issues/280), [270](https://github.com/bounswe/bounswe2023group7/issues/270), [266](https://github.com/bounswe/bounswe2023group7/issues/266), [262](https://github.com/bounswe/bounswe2023group7/issues/262)
+
+
+- **Management related significant issues**: 
+  [248](https://github.com/bounswe/bounswe2023group7/issues/248), [251](https://github.com/bounswe/bounswe2023group7/issues/251)
+
+- **Pull requests**: 
+  [364](https://github.com/bounswe/bounswe2023group7/pull/364)
+
 --------------------------  
 
 ### <ins>Elif Kızılkaya</ins><a name="elif-kizilkaya" />
