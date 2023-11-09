@@ -7,6 +7,7 @@ import HomePage from "./pages/Homepage.js";
 import GamePage from "./pages/GamePage.js";
 import LoginPage from "./pages/LoginPage.js";
 import SignUpPage from "./pages/SignupPage.js";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage.js";
 
 function App() {
   const game = {
@@ -339,6 +340,14 @@ function App() {
             element={
               <Layout>
                 <ForumPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <Layout>
+                <ForgotPasswordPage />
               </Layout>
             }
           />
