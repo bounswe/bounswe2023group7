@@ -346,9 +346,7 @@ function App() {
           <Route
             path="/forgot-password"
             element={
-              <Layout>
-                <ForgotPasswordPage />
-              </Layout>
+              <ForgotPasswordPage />
             }
           />
         </Routes>
