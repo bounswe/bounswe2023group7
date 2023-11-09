@@ -114,7 +114,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div style={{ backgroundColor: '#0C1929', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }} >
+    <div style={{ backgroundColor: '#2F5B7A', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }} >
       <Grid container spacing={2} sx={{ display: 'flex', direction: 'row', justifyContent: 'center', alignItems: 'center' }}>
         <Grid item xs={6} sx={{ backgroundColor: 'white', borderRadius: '25px' }}>
           <Box component="form" noValidate sx={{ m: 8 }}>
