@@ -3,7 +3,7 @@ import React from 'react';
 import axios from "axios";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import { Button, Dialog, Grid, Typography } from '@mui/material';
+import { Button, Dialog, Grid, Typography, Fade, CircularProgress } from '@mui/material';
 import Link from "@mui/material/Link";
 import { Snackbar, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +25,7 @@ export default function ForgotPasswordPage() {
   const [passwordsMatch, setPasswordsMatch] = useState(false);
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [query, setQuery] = useState("");
 
   const navigate = useNavigate();
 
@@ -51,8 +52,10 @@ export default function ForgotPasswordPage() {
         setCodeWindow(false);
         setErrorMessage("Your password has been changed.");
         setNavbarOpen(true);
+        setQuery("progress");
         setTimeout(() => {
           navigate("/login");
+          setQuery("");
         }, 1500);
 
 
@@ -165,9 +168,18 @@ export default function ForgotPasswordPage() {
         </Grid>
       </Grid>
 
-      {/* Code input dialog */}
       <Dialog open={codeWindow} onClose={() => setCodeWindow(false)}>
-        <Box component="form" noValidate sx={{ p: 10 }}>
+        {query === "progress" ? (
+          <Fade
+            in={query === 'progress'}
+            style={{
+              transitionDelay: query === 'progress' ? '800ms' : '0ms',
+            }}
+            unmountOnExit
+          >
+            <CircularProgress />
+          </Fade>
+        ) : (<Box component="form" noValidate sx={{ p: 5 }}>
           <Typography>
             Please check your email for the code and enter it below with your new password.
           </Typography>
@@ -224,7 +236,9 @@ export default function ForgotPasswordPage() {
           >
             Change Your Password
           </Button>
-        </Box>
+        </Box>)}
+
+
       </Dialog>
 
       <Snackbar open={navbarOpen} autoHideDuration={6000} onClose={handleClose}>
