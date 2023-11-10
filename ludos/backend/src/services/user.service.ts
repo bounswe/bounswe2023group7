@@ -19,9 +19,12 @@ import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
+import { GetProfilePhotoDto } from '../dtos/user/request/get-profile-photo.dto';
+import { GetProfilePhotoResponseDto } from '../dtos/user/response/get-profile-photo-response.dto';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
+import { S3Service } from './s3.service';
 
 @Injectable()
 export class UserService {
@@ -30,6 +33,7 @@ export class UserService {
     private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly s3Service: S3Service,
   ) {}
 
   public async register(input: RegisterDto): Promise<RegisterResponseDto> {
@@ -160,6 +164,7 @@ export class UserService {
       input.newPassword,
     );
   }
+
   public async changePassword(
     userId: string,
     changePasswordDto: ChangePasswordDto,
@@ -178,5 +183,17 @@ export class UserService {
     user.password = changePasswordDto.newPassword;
     await this.userRepository.save(user);
     return new ChangePasswordResponseDto(true);
+  }
+
+  public async setProfilePhoto(userId: string, photoFile: Express.Multer.File) {
+    console.log(photoFile);
+  }
+
+  public async deleteProfilePhoto(userId: string) {
+
+  }
+
+  public async getProfilePhoto(getProfilePhoto: GetProfilePhotoDto): Promise<GetProfilePhotoResponseDto> {
+    return 
   }
 }

@@ -29,7 +29,7 @@ export class S3Service {
     let uploadParams = {
       Bucket: this.configService.get<string>('AWS_BUCKET_NAME'),
       Body: fileStream,
-      Key: file.filename,
+      Key: file.name,
     }
     return s3.upload(uploadParams).promise();
   }

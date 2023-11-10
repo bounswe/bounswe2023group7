@@ -16,8 +16,8 @@ import { GameService } from './services/game.service';
 import { GameRepository } from './repositories/game.repository';
 import { Game } from './entities/game.entity';
 import { TokenDecoderMiddleware } from './middlewares/tokenDecoder.middleware';
-
 import { ResetPasswordRepository } from './repositories/reset-password.repository';
+import { S3Service } from './services/s3.service';
 
 @Module({
   imports: [
@@ -39,6 +39,7 @@ import { ResetPasswordRepository } from './repositories/reset-password.repositor
     AppService,
     UserRepository,
     UserService,
+    S3Service,
     GameRepository,
     GameService,
     ResetPasswordRepository,
