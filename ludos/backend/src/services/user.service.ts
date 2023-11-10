@@ -22,6 +22,8 @@ import { RegisterResponseDto } from '../dtos/user/response/register-response.dto
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
+import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
+import { GameRepository } from '../repositories/game.repository';
 
 @Injectable()
 export class UserService {
@@ -30,7 +32,8 @@ export class UserService {
     private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+    private readonly gameRepository: GameRepository
+  ) { }
 
   public async register(input: RegisterDto): Promise<RegisterResponseDto> {
     try {
@@ -178,5 +181,22 @@ export class UserService {
     user.password = changePasswordDto.newPassword;
     await this.userRepository.save(user);
     return new ChangePasswordResponseDto(true);
+  }
+
+  public async getUserInfo(userId: string): Promise<GetUserInfoResponseDto> {
+    const user = await this.userRepository.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    let games = await this.userRepository.getFollowedGamesByUserId(userId);
+
+    console.log('games ->', games)
+    let returnObject = new GetUserInfoResponseDto();
+    returnObject.username = user.username;
+    returnObject.email = user.email;
+    returnObject.followedGames = games ?? []
+
+    return returnObject;
   }
 }

@@ -15,7 +15,7 @@ export class GameService {
   constructor(
     private readonly gameRepository: GameRepository,
     private readonly userRepository: UserRepository,
-  ) {}
+  ) { }
 
   public async createGame(
     input: GameCreateDto,
@@ -31,6 +31,7 @@ export class GameService {
         developer: game.developer,
       };
     } catch (e) {
+      console.log(e)
       if (e.code == '23505') {
         throw new ConflictException(e.detail);
       }

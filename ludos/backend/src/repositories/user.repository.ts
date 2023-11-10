@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
+import { Game } from '../entities/game.entity';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -30,4 +31,14 @@ export class UserRepository extends Repository<User> {
   public findUserById(id: string): Promise<User> {
     return this.findOneBy({ id });
   }
+
+  public async getFollowedGamesByUserId(userId: string): Promise<Game[]> {
+    const user = await this.createQueryBuilder('users')
+      .leftJoinAndSelect('users.followedGames', 'followedGames')
+      .where('users.id = :userId', { userId })
+      .getOne();
+
+    return user ? user.followedGames : [];
+  }
+
 }

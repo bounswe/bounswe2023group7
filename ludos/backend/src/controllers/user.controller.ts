@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
+  Param,
   Post,
   Put,
   Req,
@@ -28,11 +30,12 @@ import { ChangePasswordResponseDto } from '../dtos/user/response/change-password
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
+import { GetUserInfoDto } from 'dtos/user/request/get-user-info.dto';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
   @ApiOkResponse({
     description: 'Successful Register',
     type: RegisterResponseDto,
@@ -76,6 +79,7 @@ export class UserController {
   @ApiBadRequestResponse({
     description: 'Bad Request',
   })
+
   @HttpCode(200)
   @ApiOperation({ summary: 'Password Reset Request Endpoint' })
   @Post('/reset-password')
@@ -114,5 +118,21 @@ export class UserController {
     @Body() input: ChangePasswordDto,
   ) {
     return await this.userService.changePassword(req.user.id, input);
+  }
+
+
+  @HttpCode(200)
+  @ApiUnauthorizedResponse({
+    description: 'Invalid User',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get User Info Request Endpoint' })
+  @Get('/info')
+  public async getUserInfoById(@Req() req: AuthorizedRequest) {
+    return await this.userService.getUserInfo(req.user.id);
   }
 }
