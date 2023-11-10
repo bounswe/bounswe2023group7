@@ -30,7 +30,6 @@ import { ChangePasswordResponseDto } from '../dtos/user/response/change-password
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
-import { GetUserInfoDto } from 'dtos/user/request/get-user-info.dto';
 
 @ApiTags('user')
 @Controller('user')

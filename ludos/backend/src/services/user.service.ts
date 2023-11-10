@@ -23,7 +23,6 @@ import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
-import { GameRepository } from '../repositories/game.repository';
 
 @Injectable()
 export class UserService {
@@ -32,8 +31,7 @@ export class UserService {
     private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly gameRepository: GameRepository
-  ) { }
+    ) {}
 
   public async register(input: RegisterDto): Promise<RegisterResponseDto> {
     try {

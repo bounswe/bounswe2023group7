@@ -15,7 +15,7 @@ export class GameService {
   constructor(
     private readonly gameRepository: GameRepository,
     private readonly userRepository: UserRepository,
-  ) { }
+  ) {}
 
   public async createGame(
     input: GameCreateDto,
