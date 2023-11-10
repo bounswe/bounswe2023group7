@@ -30,4 +30,33 @@ class APIService {
 
     return response;
   }
+
+  
+  Future<http.Response> createGame(String title, String coverLink, 
+  String systemRequirements, List<String> predecessors, List<String> successors, 
+  String gameGuide, String gameStory, List<String> platforms, String ageRestriction, 
+  String gameBio, List<String> tags, String releaseDate, String developer, 
+  String publisher, String trivia) async {
+    var uri = Uri.parse("$baseURL/game");
+    final body = jsonEncode(<String, Object>{
+      'title': title,
+      'coverLink': coverLink,
+      'systemRequirements':systemRequirements,
+      'predecessors': predecessors,
+      'successors': successors,
+      'gameGuide': gameGuide,
+      'gameStory': gameStory,
+      'platforms': platforms,
+      'ageRestriction': ageRestriction,
+      'gameBio': gameBio,
+      'tags': tags,
+      'releaseDate': releaseDate,
+      'developer': developer,
+      'publisher': publisher,
+      'trivia': trivia,
+    });
+    final response = await http.post(uri, body: body, headers: {'content-type': "application/json"});
+
+    return response;
+  }
 }
