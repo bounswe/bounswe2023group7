@@ -74,12 +74,12 @@ class LoginPage extends StatelessWidget {
                     backgroundColor: MyColors.orange,
                     shape: const StadiumBorder()),
                 onPressed: () async {
-                  int token = await APIService()
+                  (String?, int) token = await APIService()
                       .login(emailController.text, passwordController.text);
                   print(token);
-                  if (token == 200) {
+                  if (token.$2 == 200) {
                     Provider.of<UserProvider>(context, listen: false)
-                        .setLoggedIn(true, emailController.text);
+                        .setLoggedIn(true, emailController.text, token.$1);
 
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => Home(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/change_password.dart';
 import 'login_page.dart';
 import 'userProvider.dart';
 import 'package:provider/provider.dart';
@@ -39,16 +40,28 @@ class Home extends StatelessWidget {
               if (userProvider.isLoggedIn)
                 ListTile(
                   title: const Text(
-                    'Log Out',
+                    'Change Password',
                     style: TextStyle(color: MyColors.white),
                   ),
                   onTap: () {
-                    userProvider.setLoggedIn(false, '');
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LoginPage(),
+                      builder: (context) => const ChangePassword(),
                     ));
                   },
                 ),
+              ListTile(
+                title: const Text(
+                  'Log Out',
+                  style: TextStyle(color: MyColors.white),
+                ),
+                onTap: () {
+                  userProvider.setLoggedIn(false, '', '');
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ));
+                },
+              ),
+
               if (!userProvider.isLoggedIn)
                 ListTile(
                   title: const Text(
