@@ -6,7 +6,6 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  StreamableFile,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
