@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   HttpCode,
-  Param,
   Post,
   Put,
   Req,
