@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Param,
+  StreamableFile,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -180,6 +181,7 @@ export class UserController {
 
   @ApiOkResponse({
     description: 'Profile photo',
+    type: StreamableFile,
   })
   @ApiBadRequestResponse({
     description: 'Bad Request',

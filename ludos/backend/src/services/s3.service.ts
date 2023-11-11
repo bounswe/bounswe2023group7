@@ -1,5 +1,5 @@
 import {
-  Injectable,
+  Injectable, StreamableFile,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -33,12 +33,13 @@ export class S3Service {
     return s3.upload(uploadParams).promise();
   }
 
-  public async downloadPhoto(fileKey: string) {
+  public async downloadPhoto(fileKey: string): Promise<StreamableFile> {
     let s3 = this.initializeS3();
     let downloadParams = {
       Bucket: this.configService.get<string>('AWS_BUCKET_NAME'),
       Key: fileKey,
     }
-    return s3.getObject(downloadParams).createReadStream();
+    let a = s3.getObject(downloadParams).createReadStream();
+    return new StreamableFile(a);
   }
 }

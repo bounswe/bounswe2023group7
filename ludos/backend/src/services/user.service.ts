@@ -6,6 +6,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  StreamableFile,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -211,7 +212,7 @@ export class UserService {
     this.userRepository.updateProfilePhotoKey(userId, null);
   }
 
-  public async getProfilePhoto(userId: string) {
+  public async getProfilePhoto(userId: string): Promise<StreamableFile> {
     let user = await this.userRepository.findUserById(userId);
 
     if (!user) {
@@ -221,6 +222,6 @@ export class UserService {
       );
     }
 
-    await this.s3Service.downloadPhoto(user.profilePhotoKey);
+    return await this.s3Service.downloadPhoto(user.profilePhotoKey);
   }
 }
