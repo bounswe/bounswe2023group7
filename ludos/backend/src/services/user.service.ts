@@ -23,7 +23,7 @@ import { RegisterResponseDto } from '../dtos/user/response/register-response.dto
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
-import { S3Service } from './s3.service';
+import { S3Service } from '../services/s3.service';
 
 @Injectable()
 export class UserService {
