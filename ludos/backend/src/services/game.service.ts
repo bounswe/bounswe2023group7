@@ -9,6 +9,7 @@ import { GameCreateDto } from '../dtos/game/request/create.dto';
 import { GameCreateResponseDto } from '../dtos/game/response/create.response';
 import { GameRepository } from '../repositories/game.repository';
 import { UserRepository } from '../repositories/user.repository';
+import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class GameService {
@@ -77,5 +78,30 @@ export class GameService {
     game.followerList = game.followerList.filter((user) => user.id !== userId);
 
     await this.gameRepository.updateGame(game);
+  }
+  async listGames(
+    page: number,
+    limit: number,
+    searchKey?: string,
+    tags?: string,
+    platforms?: string,
+    publisher?: string,
+    developer?: string,
+    orderByKey?: keyof Game,
+    order?: 'ASC' | 'DESC',
+  ): Promise<Pagination<Game, IPaginationMeta>> {
+    const tagList = tags ? tags.split(',') : undefined;
+    const platformList = platforms ? platforms.split(',') : undefined;
+    return await this.gameRepository.findGames(
+      page,
+      limit,
+      searchKey,
+      tagList,
+      platformList,
+      publisher,
+      developer,
+      orderByKey,
+      order,
+    );
   }
 }
