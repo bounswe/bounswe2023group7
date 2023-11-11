@@ -48,12 +48,21 @@ function GamePage(data) {
     height: "20px",
     textTransform: "none",
   };
+  const imageBoxStyle = {
+    height: "auto",
+    width: "auto",
+    justifyContent: "center",
+    alignItems: "center",
+    display: "flex",
+    marginLeft: "2%",
+    marginBottom: "2%",
+  };
 
   const smallBoxStyle = {
     backgroundColor: "rgb(0, 250, 255)",
     borderRadius: "100px",
     width: "auto",
-    height: "auto",
+    height: "20%",
     marginTop: "10px",
     justifyContent: "center",
     alignItems: "center",
@@ -68,19 +77,10 @@ function GamePage(data) {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "90%",
+    height: "60%",
     marginTop: "10px",
     padding: "10px",
     color: "white",
-  };
-  const imageBoxStyle = {
-    height: "auto",
-    width: "auto",
-    justifyContent: "center",
-    alignItems: "center",
-    display: "flex",
-    marginLeft: "2%",
-    marginBottom: "2%",
   };
 
   const boxStyle = {
@@ -100,11 +100,9 @@ function GamePage(data) {
     alignItems: "center",
     flexDirection: "column",
     display: "flex",
-  }
+  };
 
-  
   useEffect(() => {}, []);
-  
 
   return (
     <Container
@@ -144,7 +142,7 @@ function GamePage(data) {
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
           <img src={data.game.coverLink} alt="God of War" />
         </Grid>
-        <Grid item xs={12} sm={3} md={3} lg={3} style={{ marginLeft: "2%" }}>
+        <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "2%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Rate:</Typography>
             <Rating
@@ -175,28 +173,13 @@ function GamePage(data) {
               {data.game.averageUserCompilationDuration}
             </Typography>
           </Grid>
-          {auth && (
-            <Grid style={{ display: "flex" }}>
-              {" "}
-              <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
-                <Typography component="caption" style={{ fontSize: "10px" }}>
-                  Share Your Duration
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4} style={inputStyle}>
-                <TextField id="outlined-basic" />
-              </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
-                <Button>Submit</Button>
-              </Grid>
-            </Grid>
-          )}
         </Grid>
-        <Grid item xs={12} sm={2} md={2} lg={2} style={{ marginLeft: "1%" }}>
+        <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "1%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Release Date:</Typography>
             <Typography component="caption">{data.game.releaseDate}</Typography>
           </Grid>
+          {/*}
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Platforms:</Typography>
             {data.game.platforms.map((data1, index1) => (
@@ -205,6 +188,7 @@ function GamePage(data) {
               </Typography>
             ))}
           </Grid>
+            */}
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography component="legend">Age Restriction:</Typography>
             <Typography variant="caption" component="div">
@@ -224,10 +208,26 @@ function GamePage(data) {
             </Typography>
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={3} md={3} lg={3} style={{ marginLeft: "1%" }}>
+        <Grid item xs={12} sm={4} md={4} lg={4} style={{ marginLeft: "1%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={bioBoxStyle}>
             <Typography component="legend">{data.game.gameBio}</Typography>
           </Grid>
+          {auth && (
+            <Grid style={{ display: "flex" }}>
+              {" "}
+              <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
+                <Typography component="caption" style={{ fontSize: "10px" }}>
+                  Share Your Duration
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={4} md={4} lg={4} style={inputStyle}>
+                <TextField id="outlined-basic" />
+              </Grid>
+              <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
+                <Button>Submit</Button>
+              </Grid>
+            </Grid>
+          )}
         </Grid>
         <Grid>
           <Box sx={{ width: "100%", typography: "body1" }}>
