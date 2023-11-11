@@ -59,8 +59,9 @@ function GamePage(data) {
   };
 
   const smallBoxStyle = {
-    backgroundColor: "rgb(0, 250, 255)",
-    borderRadius: "100px",
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    color: "rgb(0, 150, 255)",
+    borderRadius: "15px",
     width: "auto",
     height: "20%",
     marginTop: "10px",
@@ -68,19 +69,46 @@ function GamePage(data) {
     alignItems: "center",
     flexDirection: "column",
     display: "flex",
+    padding: "10px", // Add padding to give some space between the content and the border
   };
 
   const bioBoxStyle = {
-    backgroundColor: "rgb(0, 150, 255, 0)",
-    borderRadius: "100px",
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    color: "rgb(0, 150, 255)",
+    borderRadius: "15px",
     flexDirection: "column",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "60%",
+    height: "66%",
     marginTop: "10px",
     padding: "10px",
-    color: "white",
+  };
+  const inputBoxStyle = {
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    color: "rgb(0, 150, 255)",
+    borderRadius: "15px",
+    flexDirection: "row",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    marginTop: "10px",
+    marginRight: "5px",
+    padding: "10px",
+  };
+
+  const submitStyle = {
+    backgroundColor: "rgb(255, 165, 0)",
+    borderRadius: "10px",
+    flexDirection: "column",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "90%",
+    marginTop: "14px",
+    padding: "10px",
+    color: "black",
   };
 
   const boxStyle = {
@@ -89,13 +117,10 @@ function GamePage(data) {
     paddingTop: "15px",
   };
   const inputStyle = {
-    backgroundColor: "rgba(255, 250, 255, 0.9)",
-    borderRadius: "20px",
-    width: "auto",
+    backgroundColor: "rgba(255, 250, 255, 0.6)",
+    borderRadius: "5px",
+    width: "50%",
     height: "auto",
-    marginTop: "10px",
-    marginLeft: "1px",
-    marginRight: "1px",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
@@ -110,7 +135,13 @@ function GamePage(data) {
     >
       <Grid container spacing={1} style={boxStyle}>
         <Box p={0} style={{ width: "100%", marginTop: "3%" }}>
-          <Typography style={{ fontSize: "25px", color: "white" }}>
+          <Typography
+            style={{
+              fontSize: "25px",
+              color: "white",
+              fontFamily: "Trebuchet MS, sans-serif",
+            }}
+          >
             {data.game.title}
           </Typography>
         </Box>
@@ -140,44 +171,86 @@ function GamePage(data) {
           </Grid>
         </Grid>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
-          <img src={data.game.coverLink} alt="God of War" />
+          <img src={data.game.coverLink} alt={data.game.title} />
         </Grid>
         <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "2%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Rate:</Typography>
-            <Rating
-              name="game-rating"
-              value={data.game.userRating}
-              precision={1}
-            />
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Rate:
+            </Typography>
+            <Rating name="game-rating" value={0} precision={1} />
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Rate:</Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Ludos Rate:
+            </Typography>
             <Rating
               name="user-rating"
               value={data.game.averageRating}
               precision={0.1}
               disabled={true}
             />
-            <Typography component="caption">
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
               {data.game.averageRating}/5
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Followers:</Typography>
-            <Typography component="caption">{data.game.followers}</Typography>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Followers:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {data.game.followers}
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Average Duration:</Typography>
-            <Typography component="caption">
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Average Duration:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
               {data.game.averageUserCompilationDuration}
             </Typography>
           </Grid>
         </Grid>
         <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "1%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Release Date:</Typography>
-            <Typography component="caption">{data.game.releaseDate}</Typography>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Release Date:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {data.game.releaseDate}
+            </Typography>
           </Grid>
           {/*}
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
@@ -190,40 +263,75 @@ function GamePage(data) {
           </Grid>
             */}
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Age Restriction:</Typography>
-            <Typography variant="caption" component="div">
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Age Restriction:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
               {data.game.ageRestriction}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Publisher:</Typography>
-            <Typography variant="caption" component="div">
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Publisher:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
               {data.game.publisher}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Developer:</Typography>
-            <Typography variant="caption" component="div">
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Developer:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
               {data.game.developer}
             </Typography>
           </Grid>
         </Grid>
         <Grid item xs={12} sm={4} md={4} lg={4} style={{ marginLeft: "1%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={bioBoxStyle}>
-            <Typography component="legend">{data.game.gameBio}</Typography>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {data.game.gameBio}
+            </Typography>
           </Grid>
           {auth && (
-            <Grid style={{ display: "flex" }}>
-              {" "}
-              <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
-                <Typography component="caption" style={{ fontSize: "10px" }}>
+            <Grid style={{ display: "flex", height: "20%" }}>
+              <Grid item xs={12} sm={8} md={8} lg={8} style={inputBoxStyle}>
+                <Typography
+                  component="caption"
+                  style={{
+                    fontSize: "15px",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                  }}
+                >
                   Share Your Duration
                 </Typography>
+                <TextField id="outlined-basic" style={inputStyle} />
               </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4} style={inputStyle}>
-                <TextField id="outlined-basic" />
-              </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
+              <Grid item xs={12} sm={4} md={4} lg={4} style={submitStyle}>
                 <Button>Submit</Button>
               </Grid>
             </Grid>
