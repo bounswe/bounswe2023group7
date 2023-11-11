@@ -9,6 +9,7 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  Param,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -19,6 +20,8 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
   ApiNotFoundResponse,
+  ApiBody,
+  ApiConsumes,
 } from '@nestjs/swagger';
 import { LoginDto } from '../dtos/user/request/login.dto';
 import { RegisterDto } from '../dtos/user/request/register.dto';
@@ -28,12 +31,11 @@ import { ResetDto } from '../dtos/user/request/reset.dto';
 import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
-import { GetProfilePhotoDto } from '../dtos/user/request/get-profile-photo.dto';
-import { GetProfilePhotoResponseDto } from '../dtos/user/response/get-profile-photo-response.dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors';
+import { diskStorage } from 'multer';
 
 @ApiTags('user')
 @Controller('user')
@@ -132,12 +134,29 @@ export class UserController {
   @HttpCode(200)
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiOperation({ summary: 'Endpoint for uploading/updating user profile photo' })
+  @ApiOperation({ summary: 'Endpoint for updating user profile photo' })
   @Post('/set-profile-photo')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+      }),
+    })
+  )
   public async setProfilePhoto(
     @Req() req: AuthorizedRequest,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile('file') file: Express.Multer.File,
   ) {
     await this.userService.setProfilePhoto(req.user.id, file);
   }
@@ -161,15 +180,14 @@ export class UserController {
 
   @ApiOkResponse({
     description: 'Profile photo',
-    type: GetProfilePhotoResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Bad Request',
   })
   @HttpCode(200)
   @ApiOperation({ summary: 'Endpoint for getting user profile photo' })
-  @Get('/profile-photo')
-  public async getProfilePhoto(@Body() input: GetProfilePhotoDto) {
-    return await this.userService.getProfilePhoto(input);
+  @Get('/profile-photo/:id')
+  public async getProfilePhoto(@Param('id') id: string) {
+    return await this.userService.getProfilePhoto(id);
   }
 }

@@ -1,11 +1,10 @@
 import {
-  ConflictException,
   Injectable,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { S3 } from 'aws-sdk';
+import { createReadStream } from 'fs';
 
 @Injectable()
 export class S3Service {
@@ -23,21 +22,23 @@ export class S3Service {
     return s3;
   }
 
-  public async uploadPhoto(file: File): Promise<S3.ManagedUpload.SendData> {
+  public async uploadPhoto(file: Express.Multer.File): Promise<S3.ManagedUpload.SendData> {
     let s3 = this.initializeS3();
-    let fileStream = file;
+    let stream = createReadStream(file.path);
     let uploadParams = {
       Bucket: this.configService.get<string>('AWS_BUCKET_NAME'),
-      Body: fileStream,
-      Key: file.name,
+      Body: stream,
+      Key: file.filename,
     }
     return s3.upload(uploadParams).promise();
   }
 
   public async downloadPhoto(fileKey: string) {
+    let s3 = this.initializeS3();
     let downloadParams = {
       Bucket: this.configService.get<string>('AWS_BUCKET_NAME'),
       Key: fileKey,
     }
+    return s3.getObject(downloadParams).createReadStream();
   }
 }

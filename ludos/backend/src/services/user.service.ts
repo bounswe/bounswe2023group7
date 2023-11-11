@@ -19,8 +19,6 @@ import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
-import { GetProfilePhotoDto } from '../dtos/user/request/get-profile-photo.dto';
-import { GetProfilePhotoResponseDto } from '../dtos/user/response/get-profile-photo-response.dto';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
@@ -186,14 +184,43 @@ export class UserService {
   }
 
   public async setProfilePhoto(userId: string, photoFile: Express.Multer.File) {
-    console.log(photoFile);
+    let user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new HttpException(
+        'User not found',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    let result = await this.s3Service.uploadPhoto(photoFile);
+
+    await this.userRepository.updateProfilePhotoKey(userId, result.Key);
   }
 
   public async deleteProfilePhoto(userId: string) {
+    let user = await this.userRepository.findUserById(userId);
 
+    if (!user) {
+      throw new HttpException(
+        'User not found',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    this.userRepository.updateProfilePhotoKey(userId, null);
   }
 
-  public async getProfilePhoto(getProfilePhoto: GetProfilePhotoDto): Promise<GetProfilePhotoResponseDto> {
-    return 
+  public async getProfilePhoto(userId: string) {
+    let user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new HttpException(
+        'User not found',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    await this.s3Service.downloadPhoto(user.profilePhotoKey);
   }
 }
