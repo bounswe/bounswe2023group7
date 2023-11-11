@@ -13,7 +13,7 @@ import {
 import { TabContext, TabList, TabPanel } from "@mui/lab/";
 
 import ListObject from "../components/ListObject.js";
-import Requirements from "../components/Requirements.js";
+import PlatformRequirements from "../components/PlatformRequirements.js";
 import Reviews from "../components/Reviews.js";
 import DescriptionTab from "../components/DescriptionTab.js";
 
@@ -253,16 +253,6 @@ function GamePage(data) {
               {data.game.releaseDate}
             </Typography>
           </Grid>
-          {/*}
-          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Platforms:</Typography>
-            {data.game.platforms.map((data1, index1) => (
-              <Typography variant="caption" component="div" key={index1}>
-                {data1}
-              </Typography>
-            ))}
-          </Grid>
-            */}
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography
               component="legend"
@@ -352,7 +342,7 @@ function GamePage(data) {
                     value="1"
                   />
                   <Tab
-                    style={{ color: "orange", width: "15%" }}
+                    style={{ color: "orange", width: "12%" }}
                     label="System Requirements"
                     value="2"
                   />
@@ -409,7 +399,10 @@ function GamePage(data) {
               </TabPanel>
               <TabPanel value="2">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <Requirements data={data.game.systemRequirements} />
+                  <PlatformRequirements
+                    requirements={data.game.systemRequirements}
+                    platforms={data.game.platforms}
+                  />
                 </Typography>
               </TabPanel>
               <TabPanel value="3">
