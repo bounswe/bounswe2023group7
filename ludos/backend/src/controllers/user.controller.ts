@@ -32,6 +32,7 @@ import { ResetDto } from '../dtos/user/request/reset.dto';
 import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
+import { SetProfilePhotoResponseDto } from '../dtos/user/response/set-profile-photo-response.dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
@@ -128,6 +129,7 @@ export class UserController {
 
   @ApiOkResponse({
     description: 'Profile photo updated',
+    type: SetProfilePhotoResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Bad Request',
@@ -159,7 +161,7 @@ export class UserController {
     @Req() req: AuthorizedRequest,
     @UploadedFile('file') file: Express.Multer.File,
   ) {
-    await this.userService.setProfilePhoto(req.user.id, file);
+    return await this.userService.setProfilePhoto(req.user.id, file);
   }
 
   @ApiOkResponse({
@@ -177,19 +179,5 @@ export class UserController {
     @Req() req: AuthorizedRequest,
   ) {
     await this.userService.deleteProfilePhoto(req.user.id);
-  }
-
-  @ApiOkResponse({
-    description: 'Profile photo',
-    type: StreamableFile,
-  })
-  @ApiBadRequestResponse({
-    description: 'Bad Request',
-  })
-  @HttpCode(200)
-  @ApiOperation({ summary: 'Endpoint for getting user profile photo' })
-  @Get('/profile-photo/:id')
-  public async getProfilePhoto(@Param('id') id: string) {
-    return await this.userService.getProfilePhoto(id);
   }
 }

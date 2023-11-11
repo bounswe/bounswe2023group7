@@ -32,9 +32,9 @@ export class UserRepository extends Repository<User> {
     await this.save(user);
   }
   
-  public async updateProfilePhotoKey(userId: string, newPhotoKey: string) {
+  public async updateProfilePhotoKey(userId: string, newPhotoURL: string) {
     let user = await this.findUserById(userId);
-    user.profilePhotoKey = newPhotoKey;
+    user.profilePhotoURL = newPhotoURL;
     await this.save(user);
   }
 }

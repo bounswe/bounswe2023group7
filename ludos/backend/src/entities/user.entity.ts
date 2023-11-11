@@ -25,7 +25,7 @@ export class User {
   password: string;
 
   @Column({ nullable: true })
-  profilePhotoKey: string;
+  profilePhotoURL: string;
 
   @ManyToMany(() => Game, (game) => game.followerList)
   followedGames: Game[];
