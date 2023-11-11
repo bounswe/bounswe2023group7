@@ -15,6 +15,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab/";
 import ListObject from "../components/ListObject.js";
 import Requirements from "../components/Requirements.js";
 import Reviews from "../components/Reviews.js";
+import DescriptionTab from "../components/DescriptionTab.js";
 
 function GamePage(data) {
   const [auth, setAuth] = useState(false);
@@ -346,128 +347,107 @@ function GamePage(data) {
                   aria-label="lab API tabs example"
                 >
                   <Tab
-                    style={{ color: "orange", width: "2%" }}
-                    label="Story"
+                    style={{ color: "orange", width: "10%" }}
+                    label="Description"
                     value="1"
-                  />
-                  <Tab
-                    style={{ color: "orange", width: "2%" }}
-                    label="Guide"
-                    value="2"
-                  />
-                  <Tab
-                    style={{ color: "orange", width: "5%" }}
-                    label="Trivia"
-                    value="3"
                   />
                   <Tab
                     style={{ color: "orange", width: "15%" }}
                     label="System Requirements"
-                    value="4"
+                    value="2"
                   />
                   <Tab
                     style={{ color: "orange", width: "12%" }}
                     label="Predecessors"
-                    value="5"
+                    value="3"
                   />
                   <Tab
                     style={{ color: "orange", width: "12%" }}
                     label="Successors"
-                    value="6"
+                    value="4"
                   />
                   <Tab
                     style={{ color: "orange", width: "12%" }}
                     label="Characters"
-                    value="7"
+                    value="5"
                   />
                   <Tab
                     style={{ color: "orange", width: "5%" }}
                     label="Areas"
-                    value="8"
+                    value="6"
                   />
                   <Tab
                     style={{ color: "orange", width: "5%" }}
                     label="Packages"
-                    value="9"
+                    value="7"
                   />
                   <Tab
                     style={{ color: "orange", width: "5%" }}
                     label="Items"
-                    value="10"
+                    value="8"
                   />
-                </TabList>
-                <TabList
-                  onChange={handleChange}
-                  aria-label="lab API tabs example"
-                >
                   <Tab
                     style={{ color: "orange", width: "2%" }}
                     label="Groups"
-                    value="11"
+                    value="9"
                   />
                   <Tab
                     style={{ color: "orange", width: "2%" }}
                     label="Reviews"
-                    value="12"
+                    value="10"
                   />
                 </TabList>
               </Box>
               <TabPanel value="1">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  {data.game.gameStory}
+                  <DescriptionTab
+                    story={data.game.gameStory}
+                    guide={data.game.gameGuide}
+                    trivia={data.game.trivia}
+                  />
                 </Typography>
               </TabPanel>
               <TabPanel value="2">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  {data.game.gameGuide}
+                  <Requirements data={data.game.systemRequirements} />
                 </Typography>
               </TabPanel>
               <TabPanel value="3">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  {data.game.trivia}
+                  <ListObject data={data.game.predecessors} />
                 </Typography>
               </TabPanel>
               <TabPanel value="4">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <Requirements data={data.game.systemRequirements} />
+                  <ListObject data={data.game.successors} />
                 </Typography>
               </TabPanel>
               <TabPanel value="5">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.predecessors} />
+                  <ListObject data={data.game.characters} />
                 </Typography>
               </TabPanel>
               <TabPanel value="6">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.successors} />
+                  <ListObject data={data.game.areas} />
                 </Typography>
               </TabPanel>
               <TabPanel value="7">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.characters} />
+                  <ListObject data={data.game.packages} />
                 </Typography>
               </TabPanel>
               <TabPanel value="8">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.areas} />
+                  <ListObject data={data.game.items} />
                 </Typography>
               </TabPanel>
               <TabPanel value="9">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.packages} />
-                </Typography>
-              </TabPanel>
-              <TabPanel value="10">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.items} />
-                </Typography>
-              </TabPanel>
-              <TabPanel value="11">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
                   <ListObject data={data.game.groups} />
                 </Typography>
               </TabPanel>
-              <TabPanel value="12">
+              <TabPanel value="10">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
                   <Reviews data={data.game.reviews} showButtons={auth} />
                 </Typography>
