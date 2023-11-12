@@ -16,6 +16,7 @@ import MuiAlert from "@mui/material/Alert";
 import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate } from "react-router-dom";
 
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -217,7 +218,7 @@ export default function Login() {
                     xs
                     sx={{ display: "flex", alignItems: "flex-start" }}
                   >
-                    <Link href="#" variant="body2" color="#F49A32">
+                    <Link href="/forgot-password" variant="body2" color="#F49A32">
                       Forgot password?
                     </Link>
                   </Grid>
