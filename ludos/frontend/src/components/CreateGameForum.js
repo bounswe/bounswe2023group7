@@ -11,6 +11,8 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateGameForm = () => {
   const [formData, setFormData] = useState({
@@ -71,25 +73,35 @@ const CreateGameForm = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    const parsedValue =
-      name === "tags" ||
-      name === "platforms" ||
-      name === "predecessors" ||
-      name === "successors"
-        ? value.split(",")
-        : value;
-    const [category, field] = name.split("-");
 
-    setFormData((prevData) => ({
-      ...prevData,
-      systemRequirements: {
-        ...prevData.systemRequirements,
-        [category]: {
-          ...prevData.systemRequirements[category],
-          [field]: parsedValue,
+    // Check if the input field is part of the system requirements
+    if (name.startsWith("systemRequirements")) {
+      const [, category, field] = name.split("-");
+
+      setFormData((prevData) => ({
+        ...prevData,
+        systemRequirements: {
+          ...prevData.systemRequirements,
+          [category]: {
+            ...prevData.systemRequirements[category],
+            [field]: value,
+          },
         },
-      },
-    }));
+      }));
+    } else {
+      const parsedValue =
+        name === "tags" ||
+        name === "platforms" ||
+        name === "predecessors" ||
+        name === "successors"
+          ? value.split(",")
+          : value;
+      // Update the main form fields
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: parsedValue,
+      }));
+    }
   };
 
   const handlePlatformSelect = (selectedPlatforms) => {
@@ -134,11 +146,27 @@ const CreateGameForm = () => {
         },
       })
       .then((response) => {
-        // Handle success, maybe redirect or show a success message
+        // Game created successfully
+        toast.success("Kudos to you! Game is created", {
+          position: "top-right",
+          autoClose: 3000, // 3 seconds
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         console.log("Game created successfully:", response.data);
       })
       .catch((error) => {
-        // Handle errors, show an error message, etc.
+        // Error creating game
+        toast.error("Game creation failed", {
+          position: "top-right",
+          autoClose: 3000, // 3 seconds
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         console.error("Error creating game:", error);
       });
   };
@@ -157,6 +185,7 @@ const CreateGameForm = () => {
                     value={formData.title}
                     onChange={handleInputChange}
                     fullWidth
+                    required
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -490,55 +519,58 @@ const CreateGameForm = () => {
   };
 
   return (
-    <Grid container justifyContent="center">
-      <Grid item xs={6}>
-        <Paper elevation={3} style={{ padding: 20, marginTop: 20 }}>
-          <Typography
-            variant="h5"
-            gutterBottom
-            style={{
-              fontWeight: "bold",
-              fontFamily: "Trebuchet MS, sans-serif",
-              color: "#0C1929",
-            }}
-          >
-            Create a Game - Step {currentStep}
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            {renderStepForm()}
-
-            {/* Navigation Buttons */}
-            <Grid
-              container
-              justifyContent="space-between"
-              style={{ marginTop: 10 }}
+    <>
+      <ToastContainer />
+      <Grid container justifyContent="center">
+        <Grid item xs={6}>
+          <Paper elevation={3} style={{ padding: 20, marginTop: 20 }}>
+            <Typography
+              variant="h5"
+              gutterBottom
+              style={{
+                fontWeight: "bold",
+                fontFamily: "Trebuchet MS, sans-serif",
+                color: "#0C1929",
+              }}
             >
-              <Button
-                onClick={handleBack}
-                disabled={currentStep === 1}
-                variant="outlined"
+              Create a Game - Step {currentStep}
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              {renderStepForm()}
+
+              {/* Navigation Buttons */}
+              <Grid
+                container
+                justifyContent="space-between"
+                style={{ marginTop: 10 }}
               >
-                Back
-              </Button>
-              {currentStep < totalSteps ? (
                 <Button
-                  onClick={handleNext}
-                  variant="contained"
-                  color="primary"
-                  type="button"
+                  onClick={handleBack}
+                  disabled={currentStep === 1}
+                  variant="outlined"
                 >
-                  Next
+                  Back
                 </Button>
-              ) : (
-                <Button type="submit" variant="contained" color="primary">
-                  Create Game
-                </Button>
-              )}
-            </Grid>
-          </form>
-        </Paper>
+                {currentStep < totalSteps ? (
+                  <Button
+                    onClick={handleNext}
+                    variant="contained"
+                    color="primary"
+                    type="button"
+                  >
+                    Next
+                  </Button>
+                ) : (
+                  <Button type="submit" variant="contained" color="primary">
+                    Create Game
+                  </Button>
+                )}
+              </Grid>
+            </form>
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 
