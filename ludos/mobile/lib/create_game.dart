@@ -7,29 +7,54 @@ import 'helper/colors.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 import 'helper/APIService.dart';
 
-TextFormField getbox(String hintText, TextEditingController controller) {
-  return TextFormField(
-    controller: controller,
-    style: const TextStyle(color: MyColors.red),
-    decoration: InputDecoration(
-      filled: true,
-      fillColor: MyColors.white,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10.0),
-        borderSide: const BorderSide(
-          color: Colors.white,
-          width: 2.0,
+Widget getbox(
+    String hintText, TextEditingController controller, bool isMandatory) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          if (isMandatory)
+            const Text(
+              '*',
+              style: TextStyle(
+                color: MyColors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          Text(
+            hintText,
+            style: const TextStyle(
+              color: MyColors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 8.0), // Adjust the spacing as needed
+      TextFormField(
+        controller: controller,
+        style: const TextStyle(color: MyColors.red),
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: MyColors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(
+              color: Colors.white,
+              width: 2.0,
+            ),
+          ),
+          hintText: '',
+          labelText: '',
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: MyColors.lightBlue, width: 2.0),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
         ),
+        cursorColor: MyColors.lightBlue,
       ),
-      hintText: hintText,
-      labelStyle: const TextStyle(
-          color: MyColors.lightBlue, fontWeight: FontWeight.bold),
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: MyColors.lightBlue, width: 2.0),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-    ),
-    cursorColor: MyColors.lightBlue,
+    ],
   );
 }
 
@@ -185,230 +210,260 @@ class _CreateGamePageState extends State<CreateGamePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const SizedBox(height: 50),
-              getbox("Title", titleController),
+              getbox("Title", titleController, true),
               const SizedBox(height: 20),
-              getbox("Coverlink", coverLinkController),
+              getbox("Coverlink", coverLinkController, false),
               const SizedBox(height: 20),
-              getbox("System Requirements", systemRequirementsController),
+              getbox(
+                  "System Requirements", systemRequirementsController, false),
               const SizedBox(height: 20),
-              TagEditor(
-                length: predecessorValues.length,
-                controller: predecessorsController,
-                delimiters: const [',', ' '],
-                hasAddButton: true,
-                resetTextOnSubmitted: true,
-                // This is set to grey just to illustrate the `textStyle` prop
-                textStyle: const TextStyle(
-                    color: MyColors.red, fontWeight: FontWeight.bold),
-                onSubmitted: (outstandingValue) {
-                  setState(() {
-                    predecessorValues.add(outstandingValue);
-                  });
-                },
-                inputDecoration: InputDecoration(
-                  filled: true,
-                  fillColor: MyColors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                      color: Colors.white,
-                      width: 2.0,
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text(
+                  "Predecessors",
+                  style: TextStyle(
+                    color: MyColors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                TagEditor(
+                  length: predecessorValues.length,
+                  controller: predecessorsController,
+                  delimiters: const [',', ' '],
+                  hasAddButton: true,
+                  resetTextOnSubmitted: true,
+                  // This is set to grey just to illustrate the `textStyle` prop
+                  textStyle: const TextStyle(
+                      color: MyColors.red, fontWeight: FontWeight.bold),
+                  onSubmitted: (outstandingValue) {
+                    setState(() {
+                      predecessorValues.add(outstandingValue);
+                    });
+                  },
+                  inputDecoration: InputDecoration(
+                    filled: true,
+                    fillColor: MyColors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: Colors.white,
+                        width: 2.0,
+                      ),
+                    ),
+                    labelStyle: const TextStyle(
+                        color: MyColors.red, fontWeight: FontWeight.bold),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: MyColors.lightBlue, width: 2.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  hintText: "Predecessors",
-                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-                  labelStyle: const TextStyle(
-                      color: MyColors.red, fontWeight: FontWeight.bold),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: MyColors.lightBlue, width: 2.0),
-                    borderRadius: BorderRadius.circular(10.0),
+                  onTagChanged: (newValue) {
+                    setState(() {
+                      predecessorValues.add(newValue);
+                    });
+                  },
+                  tagBuilder: (context, index) => _Chip(
+                    index: index,
+                    label: predecessorValues[index],
+                    onDeleted: _onDeletepr,
+                  ),
+                  // InputFormatters example, this disallow \ and /
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
+                  ],
+                ),
+              ]),
+              const SizedBox(height: 20),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text(
+                  "Successors",
+                  style: TextStyle(
+                    color: MyColors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTagChanged: (newValue) {
-                  setState(() {
-                    predecessorValues.add(newValue);
-                  });
-                },
-                tagBuilder: (context, index) => _Chip(
-                  index: index,
-                  label: predecessorValues[index],
-                  onDeleted: _onDeletepr,
-                ),
-                // InputFormatters example, this disallow \ and /
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
-                ],
-              ),
-              const SizedBox(height: 20),
-              // getlist("Successors", predecessorsController),
-              TagEditor(
-                length: successorValues.length,
-                controller: successorsController,
-                delimiters: const [',', ' '],
-                hasAddButton: true,
-                resetTextOnSubmitted: true,
-                // This is set to grey just to illustrate the `textStyle` prop
-                textStyle: const TextStyle(
-                    color: MyColors.red, fontWeight: FontWeight.bold),
-                onSubmitted: (outstandingValue) {
-                  setState(() {
-                    successorValues.add(outstandingValue);
-                  });
-                },
-                inputDecoration: InputDecoration(
-                  filled: true,
-                  fillColor: MyColors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                      color: Colors.white,
-                      width: 2.0,
+                SizedBox(height: 8.0),
+                TagEditor(
+                  length: successorValues.length,
+                  controller: successorsController,
+                  delimiters: const [',', ' '],
+                  hasAddButton: true,
+                  resetTextOnSubmitted: true,
+                  // This is set to grey just to illustrate the `textStyle` prop
+                  textStyle: const TextStyle(
+                      color: MyColors.red, fontWeight: FontWeight.bold),
+                  onSubmitted: (outstandingValue) {
+                    setState(() {
+                      successorValues.add(outstandingValue);
+                    });
+                  },
+                  inputDecoration: InputDecoration(
+                    filled: true,
+                    fillColor: MyColors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: Colors.white,
+                        width: 2.0,
+                      ),
+                    ),
+                    labelStyle: const TextStyle(
+                        color: MyColors.red, fontWeight: FontWeight.bold),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: MyColors.lightBlue, width: 2.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  hintText: "Successors",
-                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-                  labelStyle: const TextStyle(
-                      color: MyColors.red, fontWeight: FontWeight.bold),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: MyColors.lightBlue, width: 2.0),
-                    borderRadius: BorderRadius.circular(10.0),
+                  onTagChanged: (newValue) {
+                    setState(() {
+                      successorValues.add(newValue);
+                    });
+                  },
+                  tagBuilder: (context, index) => _Chip(
+                    index: index,
+                    label: successorValues[index],
+                    onDeleted: _onDeletes,
+                  ),
+                  // InputFormatters example, this disallow \ and /
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
+                  ],
+                ),
+              ]),
+              const SizedBox(height: 20),
+              getbox("Game Guide", gameGuideController, false),
+              const SizedBox(height: 20),
+              getbox("Game Story", gameStoryController, false),
+              const SizedBox(height: 20),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text(
+                  "Platforms",
+                  style: TextStyle(
+                    color: MyColors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTagChanged: (newValue) {
-                  setState(() {
-                    successorValues.add(newValue);
-                  });
-                },
-                tagBuilder: (context, index) => _Chip(
-                  index: index,
-                  label: successorValues[index],
-                  onDeleted: _onDeletes,
-                ),
-                // InputFormatters example, this disallow \ and /
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
-                ],
-              ),
-              const SizedBox(height: 20),
-              getbox("Game Guide", gameGuideController),
-              const SizedBox(height: 20),
-              getbox("Game Story", gameStoryController),
-              const SizedBox(height: 20),
-              // getlist("Platforms", platformsController),
-              TagEditor(
-                length: platformValues.length,
-                controller: platformsController,
-                delimiters: const [',', ' '],
-                hasAddButton: true,
-                resetTextOnSubmitted: true,
-                // This is set to grey just to illustrate the `textStyle` prop
-                textStyle: const TextStyle(
-                    color: MyColors.red, fontWeight: FontWeight.bold),
-                onSubmitted: (outstandingValue) {
-                  setState(() {
-                    platformValues.add(outstandingValue);
-                  });
-                },
-                inputDecoration: InputDecoration(
-                  filled: true,
-                  fillColor: MyColors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                      color: Colors.white,
-                      width: 2.0,
+                SizedBox(height: 8.0),
+                TagEditor(
+                  length: platformValues.length,
+                  controller: platformsController,
+                  delimiters: const [',', ' '],
+                  hasAddButton: true,
+                  resetTextOnSubmitted: true,
+                  // This is set to grey just to illustrate the `textStyle` prop
+                  textStyle: const TextStyle(
+                      color: MyColors.red, fontWeight: FontWeight.bold),
+                  onSubmitted: (outstandingValue) {
+                    setState(() {
+                      platformValues.add(outstandingValue);
+                    });
+                  },
+                  inputDecoration: InputDecoration(
+                    filled: true,
+                    fillColor: MyColors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: Colors.white,
+                        width: 2.0,
+                      ),
+                    ),
+                    labelStyle: const TextStyle(
+                        color: MyColors.red, fontWeight: FontWeight.bold),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: MyColors.lightBlue, width: 2.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  hintText: "Platforms",
-                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-                  labelStyle: const TextStyle(
-                      color: MyColors.red, fontWeight: FontWeight.bold),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: MyColors.lightBlue, width: 2.0),
-                    borderRadius: BorderRadius.circular(10.0),
+                  onTagChanged: (newValue) {
+                    setState(() {
+                      platformValues.add(newValue);
+                    });
+                  },
+                  tagBuilder: (context, index) => _Chip(
+                    index: index,
+                    label: platformValues[index],
+                    onDeleted: _onDeletepl,
+                  ),
+                  // InputFormatters example, this disallow \ and /
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
+                  ],
+                ),
+              ]),
+              const SizedBox(height: 20),
+              getbox("Age Restriction", ageRestrictionController, false),
+              const SizedBox(height: 20),
+              getbox("Game Bio", gameBioController, true),
+              const SizedBox(height: 20),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text(
+                  "Tags",
+                  style: TextStyle(
+                    color: MyColors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTagChanged: (newValue) {
-                  setState(() {
-                    platformValues.add(newValue);
-                  });
-                },
-                tagBuilder: (context, index) => _Chip(
-                  index: index,
-                  label: platformValues[index],
-                  onDeleted: _onDeletepl,
-                ),
-                // InputFormatters example, this disallow \ and /
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
-                ],
-              ),
-              const SizedBox(height: 20),
-              getbox("Age Restriction", ageRestrictionController),
-              const SizedBox(height: 20),
-              getbox("Game Bio", gameBioController),
-              const SizedBox(height: 20),
-              //  getlist("Tags", tagsController),
-              TagEditor(
-                length: tagValues.length,
-                controller: tagsController,
-                delimiters: const [',', ' '],
-                hasAddButton: true,
-                resetTextOnSubmitted: true,
-                // This is set to grey just to illustrate the `textStyle` prop
-                textStyle: const TextStyle(
-                    color: MyColors.red, fontWeight: FontWeight.bold),
-                onSubmitted: (outstandingValue) {
-                  setState(() {
-                    tagValues.add(outstandingValue);
-                  });
-                },
-                inputDecoration: InputDecoration(
-                  filled: true,
-                  fillColor: MyColors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                      color: Colors.white,
-                      width: 2.0,
+                SizedBox(height: 8.0),
+                TagEditor(
+                  length: tagValues.length,
+                  controller: tagsController,
+                  delimiters: const [',', ' '],
+                  hasAddButton: true,
+                  resetTextOnSubmitted: true,
+                  // This is set to grey just to illustrate the `textStyle` prop
+                  textStyle: const TextStyle(
+                      color: MyColors.red, fontWeight: FontWeight.bold),
+                  onSubmitted: (outstandingValue) {
+                    setState(() {
+                      tagValues.add(outstandingValue);
+                    });
+                  },
+                  inputDecoration: InputDecoration(
+                    filled: true,
+                    fillColor: MyColors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: Colors.white,
+                        width: 2.0,
+                      ),
+                    ),
+                    labelStyle: const TextStyle(
+                        color: MyColors.red, fontWeight: FontWeight.bold),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: MyColors.lightBlue, width: 2.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  hintText: "Tags",
-                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-                  labelStyle: const TextStyle(
-                      color: MyColors.red, fontWeight: FontWeight.bold),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: MyColors.lightBlue, width: 2.0),
-                    borderRadius: BorderRadius.circular(10.0),
+                  onTagChanged: (newValue) {
+                    setState(() {
+                      tagValues.add(newValue);
+                    });
+                  },
+                  tagBuilder: (context, index) => _Chip(
+                    index: index,
+                    label: tagValues[index],
+                    onDeleted: _onDeletet,
                   ),
+                  // InputFormatters example, this disallow \ and /
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
+                  ],
                 ),
-                onTagChanged: (newValue) {
-                  setState(() {
-                    tagValues.add(newValue);
-                  });
-                },
-                tagBuilder: (context, index) => _Chip(
-                  index: index,
-                  label: tagValues[index],
-                  onDeleted: _onDeletet,
-                ),
-                // InputFormatters example, this disallow \ and /
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
-                ],
-              ),
+              ]),
               const SizedBox(height: 20),
-              getbox("Release Date", releaseDateController),
+              getbox("Release Date", releaseDateController, true),
               const SizedBox(height: 20),
-              getbox("Developer", developerController),
+              getbox("Developer", developerController, true),
               const SizedBox(height: 20),
-              getbox("Publisher", publisherController),
+              getbox("Publisher", publisherController, true),
               const SizedBox(height: 20),
-              getbox("Trivia", triviaController),
+              getbox("Trivia", triviaController, false),
             ],
           ),
         ),
