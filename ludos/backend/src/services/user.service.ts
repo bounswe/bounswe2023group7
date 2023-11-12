@@ -19,11 +19,9 @@ import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
-import { SetProfilePhotoResponseDto } from '../dtos/user/response/set-profile-photo-response.dto';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
-import { S3Service } from '../services/s3.service';
 
 @Injectable()
 export class UserService {
@@ -32,7 +30,6 @@ export class UserService {
     private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly s3Service: S3Service,
   ) {}
 
   public async register(input: RegisterDto): Promise<RegisterResponseDto> {
@@ -182,36 +179,5 @@ export class UserService {
     user.password = changePasswordDto.newPassword;
     await this.userRepository.save(user);
     return new ChangePasswordResponseDto(true);
-  }
-
-  public async setProfilePhoto(userId: string, photoFile: Express.Multer.File): Promise<SetProfilePhotoResponseDto> {
-    let user = await this.userRepository.findUserById(userId);
-
-    if (!user) {
-      throw new HttpException(
-        'User not found',
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
-    let result = await this.s3Service.uploadPhoto(photoFile);
-
-    await this.userRepository.updateProfilePhotoKey(userId, result.Location);
-    return {
-      photoUrl: result.Location,
-    };
-  }
-
-  public async deleteProfilePhoto(userId: string) {
-    let user = await this.userRepository.findUserById(userId);
-
-    if (!user) {
-      throw new HttpException(
-        'User not found',
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
-    this.userRepository.updateProfilePhotoKey(userId, null);
   }
 }

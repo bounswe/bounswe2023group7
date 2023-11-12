@@ -6,8 +6,6 @@ import {
   Put,
   Req,
   UseGuards,
-  UseInterceptors,
-  UploadedFile,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -18,8 +16,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
   ApiNotFoundResponse,
-  ApiBody,
-  ApiConsumes,
 } from '@nestjs/swagger';
 import { LoginDto } from '../dtos/user/request/login.dto';
 import { RegisterDto } from '../dtos/user/request/register.dto';
@@ -29,12 +25,9 @@ import { ResetDto } from '../dtos/user/request/reset.dto';
 import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
-import { SetProfilePhotoResponseDto } from '../dtos/user/response/set-profile-photo-response.dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
-import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors';
-import { diskStorage } from 'multer';
 
 @ApiTags('user')
 @Controller('user')
@@ -122,59 +115,5 @@ export class UserController {
     @Body() input: ChangePasswordDto,
   ) {
     return await this.userService.changePassword(req.user.id, input);
-  }
-
-  @ApiOkResponse({
-    description: 'Profile photo updated',
-    type: SetProfilePhotoResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Bad Request',
-  })
-  @HttpCode(200)
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Endpoint for updating user profile photo' })
-  @Post('/set-profile-photo')
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  @UseInterceptors(FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-      }),
-    })
-  )
-  public async setProfilePhoto(
-    @Req() req: AuthorizedRequest,
-    @UploadedFile('file') file: Express.Multer.File,
-  ) {
-    return await this.userService.setProfilePhoto(req.user.id, file);
-  }
-
-  @ApiOkResponse({
-    description: 'Profile photo deleted',
-  })
-  @ApiBadRequestResponse({
-    description: 'Bad Request',
-  })
-  @HttpCode(200)
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Endpoint for deleting user profile photo' })
-  @Post('/delete-profile-photo')
-  public async deleteProfilePhoto(
-    @Req() req: AuthorizedRequest,
-  ) {
-    await this.userService.deleteProfilePhoto(req.user.id);
   }
 }

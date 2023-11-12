@@ -2,14 +2,13 @@ import {
   Injectable, StreamableFile,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { S3 } from 'aws-sdk';
 import { createReadStream } from 'fs';
+import { UploadResponseDto } from '../dtos/s3/response/upload-response.dto';
 
 @Injectable()
 export class S3Service {
   constructor(
-    private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -22,18 +21,23 @@ export class S3Service {
     return s3;
   }
 
-  public async uploadPhoto(file: Express.Multer.File): Promise<S3.ManagedUpload.SendData> {
+  public async uploadFile(file: Express.Multer.File): Promise<S3.ManagedUpload.SendData> {
     let s3 = this.initializeS3();
-    let stream = createReadStream(file.path);
     let uploadParams = {
       Bucket: this.configService.get<string>('AWS_BUCKET_NAME'),
-      Body: stream,
+      Body: createReadStream(file.path),
       Key: file.filename,
     }
     return s3.upload(uploadParams).promise();
   }
 
-  public async downloadPhoto(fileKey: string): Promise<StreamableFile> {
+  public async uploadFileAndGetUrl(file: Express.Multer.File): Promise<UploadResponseDto> {
+    return {
+      url: ((await this.uploadFile(file)).Location)
+    };
+  }
+
+  public async downloadFile(fileKey: string): Promise<StreamableFile> {
     let s3 = this.initializeS3();
     let downloadParams = {
       Bucket: this.configService.get<string>('AWS_BUCKET_NAME'),
