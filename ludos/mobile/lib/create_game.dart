@@ -18,7 +18,7 @@ Widget getbox(
             const Text(
               '*',
               style: TextStyle(
-                color: MyColors.red,
+                color: Colors.red,
                 fontWeight: FontWeight.bold,
               ),
             ),
