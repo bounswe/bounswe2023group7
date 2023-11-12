@@ -49,6 +49,8 @@ class Home extends StatelessWidget {
                     ));
                   },
                 ),
+              if (userProvider.isLoggedIn)
+
               ListTile(
                 title: const Text(
                   'Log Out',
