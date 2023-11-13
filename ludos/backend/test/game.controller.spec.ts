@@ -167,4 +167,39 @@ describe('GameController', () => {
       expect(gameSpy).toHaveBeenCalledWith(game.id);
     });
   });
+  describe('list games', () => {
+    it('should return list of games', async () => {
+      const game = new Game();
+      game.followerList = [];
+      game.id = '1';
+      const user = new User();
+      user.id = '1';
+      const listResponse = {
+        items: [game],
+        meta: {
+          currentPage: 1,
+          itemCount: 1,
+          itemsPerPage: 1,
+          totalItems: 1,
+          totalPages: 1,
+        },
+      };
+      const listSpy = jest
+        .spyOn(gameRepository, 'findGames')
+        .mockResolvedValue(listResponse);
+      const response = await gameController.listGames();
+      expect(response).toBe(listResponse);
+      expect(listSpy).toHaveBeenCalledWith(
+        1,
+        10,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+      );
+    });
+  });
 });

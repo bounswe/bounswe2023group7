@@ -7,6 +7,8 @@ import HomePage from "./pages/Homepage.js";
 import GamePage from "./pages/GamePage.js";
 import LoginPage from "./pages/LoginPage.js";
 import SignUpPage from "./pages/SignupPage.js";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage.js";
+import CreateGamePage from "./pages/CreateGamePage";
 
 function App() {
   const game = {
@@ -309,6 +311,14 @@ function App() {
             }
           />
           <Route
+            path="/create-game"
+            element={
+              <Layout>
+                <CreateGamePage />
+              </Layout>
+            }
+          />
+          <Route
             path="/game/God-of-War-2018"
             element={
               <Layout>
@@ -342,6 +352,7 @@ function App() {
               </Layout>
             }
           />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Routes>
       </div>
     </Router>

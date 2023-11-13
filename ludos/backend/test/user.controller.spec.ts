@@ -10,6 +10,7 @@ import { RegisterResponseDto } from '../src/dtos/user/response/register-response
 import { User } from '../src/entities/user.entity';
 import { UserRepository } from '../src/repositories/user.repository';
 import { UserService } from '../src/services/user.service';
+import { S3Service } from '../src/services/s3.service';
 import { ResetPassword } from '../src/entities/reset-password.entity';
 import { ResetDto } from '../src/dtos/user/request/reset.dto';
 import { ResetPasswordRepository } from '../src/repositories/reset-password.repository';
@@ -34,6 +35,7 @@ describe('UserController', () => {
       controllers: [UserController],
       providers: [
         UserService,
+        S3Service,
         UserRepository,
         ResetPasswordRepository,
         {
