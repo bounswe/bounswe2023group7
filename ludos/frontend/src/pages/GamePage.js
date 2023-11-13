@@ -127,7 +127,6 @@ function GamePage(id) {
     height: "90%",
     marginTop: "14px",
     padding: "10px",
-    color: "black",
   };
 
   const boxStyle = {
@@ -342,7 +341,15 @@ function GamePage(id) {
                 <TextField id="outlined-basic" style={inputStyle} />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4} style={submitStyle}>
-                <Button>Submit</Button>
+                <Button
+                  style={{
+                    color: "black",
+                    textTransform: "none",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                  }}
+                >
+                  Submit Your Duration
+                </Button>
               </Grid>
             </Grid>
           )}
