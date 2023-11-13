@@ -18,11 +18,13 @@ function Description(data) {
         variant="body1"
         color="white"
         align="left"
-        style={{ marginBottom: "8px", fontFamily: "Trebuchet MS, sans-serif" }}
+        style={{
+          marginBottom: "8px",
+          fontFamily: "Trebuchet MS, sans-serif",
+        }}
       >
         {data.story}
       </Typography>
-
       <Typography variant="h5" color="gray" align="left" style={headerStyle}>
         GUIDE
       </Typography>
@@ -30,11 +32,13 @@ function Description(data) {
         variant="body1"
         color="white"
         align="left"
-        style={{ marginBottom: "8px", fontFamily: "Trebuchet MS, sans-serif" }}
+        style={{
+          marginBottom: "8px",
+          fontFamily: "Trebuchet MS, sans-serif",
+        }}
       >
         {data.guide}
       </Typography>
-
       <Typography variant="h5" color="gray" align="left" style={headerStyle}>
         TRIVIA
       </Typography>
@@ -42,7 +46,10 @@ function Description(data) {
         variant="body1"
         color="white"
         align="left"
-        style={{ marginBottom: "8px", fontFamily: "Trebuchet MS, sans-serif" }}
+        style={{
+          marginBottom: "8px",
+          fontFamily: "Trebuchet MS, sans-serif",
+        }}
       >
         {data.trivia}
       </Typography>

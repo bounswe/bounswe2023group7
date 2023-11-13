@@ -9,21 +9,39 @@ import {
   Tab,
   TextField,
 } from "@mui/material";
+import axios from "axios";
 
 import { TabContext, TabList, TabPanel } from "@mui/lab/";
 
-import ListObject from "../components/ListObject.js";
 import PlatformRequirements from "../components/PlatformRequirements.js";
 import Reviews from "../components/Reviews.js";
 import DescriptionTab from "../components/DescriptionTab.js";
+import RelatedGames from "../components/RelatedGamesTab.js";
+import EntityTab from "../components/EntityTab.js";
 
-function GamePage(data) {
+function GamePage(id) {
   const [auth, setAuth] = useState(false);
+  const [game, setGame] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
       setAuth(true);
     }
+    console.log(id);
+    const link = `http://${process.env.REACT_APP_API_URL}/game/${id.gameId}`;
+
+    axios
+      .get(link, {
+        headers: {
+          Authorization: localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        setGame(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
   const [value, setValue] = useState("1");
 
@@ -143,7 +161,7 @@ function GamePage(data) {
               fontFamily: "Trebuchet MS, sans-serif",
             }}
           >
-            {data.game.title}
+            {game.title}
           </Typography>
         </Box>
         <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -154,16 +172,17 @@ function GamePage(data) {
               marginRight: "3%",
             }}
           >
-            {data.game.tags.map((data1, index1) => (
-              <Typography
-                variant="caption"
-                component="div"
-                style={tagBox}
-                key={index1}
-              >
-                {data1}
-              </Typography>
-            ))}
+            {game.tags &&
+              game.tags.map((tag, index1) => (
+                <Typography
+                  variant="caption"
+                  component="div"
+                  style={tagBox}
+                  key={index1}
+                >
+                  {tag}
+                </Typography>
+              ))}
             {auth && (
               <Button variant="contained" style={followButton}>
                 Follow
@@ -172,7 +191,7 @@ function GamePage(data) {
           </Grid>
         </Grid>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
-          <img src={data.game.coverLink} alt={data.game.title} />
+          <img src={game.coverLink} alt={game.title} />
         </Grid>
         <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "2%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
@@ -194,7 +213,7 @@ function GamePage(data) {
             </Typography>
             <Rating
               name="user-rating"
-              value={data.game.averageRating}
+              value={game.averageRating}
               precision={0.1}
               disabled={true}
             />
@@ -203,7 +222,7 @@ function GamePage(data) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {data.game.averageRating}/5
+              {game.averageRating}/5
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
@@ -218,7 +237,7 @@ function GamePage(data) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {data.game.followers}
+              {game.followers}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
@@ -233,7 +252,7 @@ function GamePage(data) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {data.game.averageUserCompilationDuration}
+              {game.averageUserCompilationDuration}
             </Typography>
           </Grid>
         </Grid>
@@ -250,7 +269,7 @@ function GamePage(data) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {data.game.releaseDate}
+              {game.releaseDate}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
@@ -265,7 +284,7 @@ function GamePage(data) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {data.game.ageRestriction}
+              {game.ageRestriction}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
@@ -280,7 +299,7 @@ function GamePage(data) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {data.game.publisher}
+              {game.publisher}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
@@ -295,7 +314,7 @@ function GamePage(data) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {data.game.developer}
+              {game.developer}
             </Typography>
           </Grid>
         </Grid>
@@ -305,7 +324,7 @@ function GamePage(data) {
               component="legend"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {data.game.gameBio}
+              {game.gameBio}
             </Typography>
           </Grid>
           {auth && (
@@ -328,8 +347,8 @@ function GamePage(data) {
             </Grid>
           )}
         </Grid>
-        <Grid>
-          <Box sx={{ width: "100%", typography: "body1" }}>
+        <Grid sx={{ width: "100%" }}>
+          <Box>
             <TabContext value={value}>
               <Box sx={{ borderBottom: 2, borderColor: "divider" }}>
                 <TabList
@@ -337,113 +356,119 @@ function GamePage(data) {
                   aria-label="lab API tabs example"
                 >
                   <Tab
-                    style={{ color: "orange", width: "10%" }}
+                    style={{
+                      color: "orange",
+                      width: "14%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
                     label="Description"
                     value="1"
                   />
                   <Tab
-                    style={{ color: "orange", width: "12%" }}
+                    style={{
+                      color: "orange",
+                      width: "15%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
                     label="System Requirements"
                     value="2"
                   />
                   <Tab
-                    style={{ color: "orange", width: "12%" }}
-                    label="Predecessors"
+                    style={{
+                      color: "orange",
+                      width: "15%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Related Games"
                     value="3"
                   />
                   <Tab
-                    style={{ color: "orange", width: "12%" }}
-                    label="Successors"
+                    style={{
+                      color: "orange",
+                      width: "14%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Entities"
                     value="4"
                   />
                   <Tab
-                    style={{ color: "orange", width: "12%" }}
-                    label="Characters"
+                    style={{
+                      color: "orange",
+                      width: "14%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Groups"
                     value="5"
                   />
                   <Tab
-                    style={{ color: "orange", width: "5%" }}
-                    label="Areas"
+                    style={{
+                      color: "orange",
+                      width: "14%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Reviews"
                     value="6"
                   />
                   <Tab
-                    style={{ color: "orange", width: "5%" }}
-                    label="Packages"
+                    style={{
+                      color: "orange",
+                      width: "14%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Forum"
                     value="7"
-                  />
-                  <Tab
-                    style={{ color: "orange", width: "5%" }}
-                    label="Items"
-                    value="8"
-                  />
-                  <Tab
-                    style={{ color: "orange", width: "2%" }}
-                    label="Groups"
-                    value="9"
-                  />
-                  <Tab
-                    style={{ color: "orange", width: "2%" }}
-                    label="Reviews"
-                    value="10"
                   />
                 </TabList>
               </Box>
               <TabPanel value="1">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
                   <DescriptionTab
-                    story={data.game.gameStory}
-                    guide={data.game.gameGuide}
-                    trivia={data.game.trivia}
+                    story={game.gameStory}
+                    guide={game.gameGuide}
+                    trivia={game.trivia}
                   />
                 </Typography>
               </TabPanel>
               <TabPanel value="2">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
                   <PlatformRequirements
-                    requirements={data.game.systemRequirements}
-                    platforms={data.game.platforms}
+                    requirements={game.systemRequirements}
+                    platforms={game.platforms}
                   />
                 </Typography>
               </TabPanel>
               <TabPanel value="3">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.predecessors} />
+                  <RelatedGames
+                    predecessors={game.predecessors}
+                    successors={game.successors}
+                  />
                 </Typography>
               </TabPanel>
               <TabPanel value="4">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.successors} />
+                  <EntityTab
+                    characters={game.characters}
+                    areas={game.areas}
+                    items={game.items}
+                    packages={game.packages}
+                  />
                 </Typography>
               </TabPanel>
               <TabPanel value="5">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.characters} />
-                </Typography>
+                <Typography
+                  style={{ fontSize: "15px", color: "white" }}
+                ></Typography>
               </TabPanel>
               <TabPanel value="6">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.areas} />
+                  <Reviews data={game.reviews} showButtons={auth} />
                 </Typography>
               </TabPanel>
               <TabPanel value="7">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.packages} />
-                </Typography>
-              </TabPanel>
-              <TabPanel value="8">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.items} />
-                </Typography>
-              </TabPanel>
-              <TabPanel value="9">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.groups} />
-                </Typography>
-              </TabPanel>
-              <TabPanel value="10">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <Reviews data={data.game.reviews} showButtons={auth} />
-                </Typography>
+                <Typography
+                  style={{ fontSize: "15px", color: "white" }}
+                ></Typography>
               </TabPanel>
             </TabContext>
           </Box>

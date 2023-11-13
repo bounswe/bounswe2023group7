@@ -11,7 +11,8 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage.js";
 import CreateGamePage from "./pages/CreateGamePage";
 
 function App() {
-  const game = {
+  const id = "20a93509-957f-447b-afe0-bc448438017d";
+  /*const game = {
     title: "God of War (2018)",
     coverLink:
       "https://upload.wikimedia.org/wikipedia/en/a/a7/God_of_War_4_cover.jpg",
@@ -296,7 +297,7 @@ function App() {
     ],
     trivia:
       "Did you know? The Witcher 3: Wild Hunt is based on a series of books by Polish author Andrzej Sapkowski.",
-  };
+  };*/
 
   return (
     <Router>
@@ -322,26 +323,26 @@ function App() {
             path="/game/God-of-War-2018"
             element={
               <Layout>
-                <GamePage game={game} />
+                <GamePage gameId={id} />
               </Layout>
             }
           />
-          <Route
+          {/*<Route
             path="/game/Red-Dead-Redemption-2"
             element={
               <Layout>
                 <GamePage game={game2} />
               </Layout>
             }
-          />
-          <Route
+          />*/}
+          {/*<Route
             path="/game/Witcher-3"
             element={
               <Layout>
                 <GamePage game={game3} />
               </Layout>
             }
-          />
+          />*/}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route
