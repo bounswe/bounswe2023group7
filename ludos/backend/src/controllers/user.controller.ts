@@ -23,9 +23,9 @@ import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
 import { ResetDto } from '../dtos/user/request/reset.dto';
 import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
-import { UserService } from '../services/user.service';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
+import { UserService } from '../services/user.service';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
 
@@ -95,6 +95,7 @@ export class UserController {
   public async verifyCode(@Body() input: VerifyCodeDto) {
     await this.userService.verifyCode(input);
   }
+
   @ApiOperation({ summary: 'Change Password Endpoint' })
   @ApiOkResponse({
     description: 'Password change has been succesful!',
