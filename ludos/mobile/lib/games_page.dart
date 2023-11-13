@@ -111,8 +111,8 @@ class _GamesPageState extends State<GamesPage> {
                     color: MyColors.lightBlue, // Set the background color
                     borderRadius: BorderRadius.circular(5.0), // Optional: Add border radius for rounded corners
                   ),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
                         backgroundColor: MyColors.lightBlue,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
@@ -122,7 +122,13 @@ class _GamesPageState extends State<GamesPage> {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const CreateGamePage(),
                       ));
-                    }, child: const Text('Create Game'),
+                    }, child: const Text(
+                      'Create Game',
+                          style: TextStyle(
+                            color: MyColors.white,
+                            fontSize: 16.0,
+                          ),
+                  ),
                   ),
                 ),
 
