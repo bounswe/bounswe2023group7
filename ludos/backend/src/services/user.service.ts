@@ -160,6 +160,7 @@ export class UserService {
       input.newPassword,
     );
   }
+
   public async changePassword(
     userId: string,
     changePasswordDto: ChangePasswordDto,

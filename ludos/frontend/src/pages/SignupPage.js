@@ -36,12 +36,12 @@ export default function SignUpForm() {
 
   const navigate = useNavigate();
 
-    const axiosInstance = axios.create({
-        baseURL: `http://${process.env.REACT_APP_API_URL}`,
-    })
+  const axiosInstance = axios.create({
+    baseURL: `http://${process.env.REACT_APP_API_URL}`,
+  })
 
-    const handleSignup = (event) => {
-        event.preventDefault();
+  const handleSignup = (event) => {
+    event.preventDefault();
 
     if (password.length < 8) {
       setPasswordError(true);
@@ -54,15 +54,14 @@ export default function SignUpForm() {
     }
 
 
-        axiosInstance.post('/user', { email, username, password })
-            .then(() => {
-                navigate("/login")
-                setDialogMessage('You have succesfully signed up.')
-                setOpen(true)
-            })
-            .catch((error) => {
-                console.error('Signup error: ', error);
-
+    axiosInstance.post('/user', { email, username, password })
+      .then(() => {
+        navigate("/login")
+        setDialogMessage('You have succesfully signed up.')
+        setOpen(true)
+      })
+      .catch((error) => {
+        console.error('Signup error: ', error);
         let errorMessage = "An error occurred.";
         if (error.response) {
           switch (error.response.status) {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'package:ludos_mobile_app/login_page.dart';
 import 'helper/APIService.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-import 'userProvider.dart';
+
 
 
 class SignUpPage extends StatelessWidget {
@@ -96,11 +95,8 @@ class SignUpPage extends StatelessWidget {
                         .signUp(usernameController.text, emailController.text, passwordController.text);
                     int status = token.statusCode;
                     if (status == 200) {
-                      // If logged-in successfully, go to the Home page
-                      Provider.of<UserProvider>(context, listen: false)
-                        .setLoggedIn(true, usernameController.text);
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (Home()),
+                        builder: (context) => (LoginPage()),
                       ));
                     }
                     if (status == 409) {
