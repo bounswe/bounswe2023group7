@@ -68,8 +68,8 @@ const Header = ({ userLoggedIn }) => {
                   display: "flex",
                   flexDirection: "row",
                   flex: "1",
-                  justifyContent: "space-between",
-                  marginLeft: "60px", // Adjust the left margin as needed
+                  justifyContent: "center",
+                  marginLeft: "160px", // Adjust the left margin as needed
                 }}
               >
                 <Link
@@ -80,13 +80,14 @@ const Header = ({ userLoggedIn }) => {
                     <img
                       src={MyGamesIcon}
                       alt="MyGames"
-                      style={{ width: "auto", height: "60px" }}
+                      style={{ width: "auto", height: "50px" }}
                     />
                     <p
                       style={{
                         textAlign: "center",
                         margin: "0",
-                        fontSize: "14px",
+                        fontSize: "12px",
+                        width: "60px",
                       }}
                     >
                       My Games
@@ -102,16 +103,16 @@ const Header = ({ userLoggedIn }) => {
                       src={MyGroupsIcon}
                       alt="MyGroups"
                       style={{
-                        width: "68px",
-                        height: "60px",
+                        width: "auto",
+                        height: "50px",
                       }}
                     />
                     <p
                       style={{
                         textAlign: "center",
                         margin: "0",
-                        fontSize: "14px",
-                        width: "100%",
+                        fontSize: "12px",
+                        width: "60px",
                       }}
                     >
                       My Groups
