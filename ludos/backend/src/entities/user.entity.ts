@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Game } from './game.entity';
+import { UserType } from '../enums/user-type.enum';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -26,6 +27,24 @@ export class User {
 
   @ManyToMany(() => Game, (game) => game.followerList)
   followedGames: Game[];
+
+  @Column({ default: false })
+  isNotificationEnabled: boolean;
+
+  @Column({ enum: UserType, type: 'enum', default: UserType.GAMER })
+  userType: UserType;
+
+  @Column({ nullable: true })
+  fullName: string;
+
+  @Column({ nullable: true })
+  avatar: string;
+
+  @Column({ nullable: true })
+  aboutMe: string;
+
+  @Column({ nullable: true })
+  steamUrl: string;
 
   @BeforeInsert()
   @BeforeUpdate()

@@ -16,8 +16,9 @@ import { GameService } from './services/game.service';
 import { GameRepository } from './repositories/game.repository';
 import { Game } from './entities/game.entity';
 import { TokenDecoderMiddleware } from './middlewares/tokenDecoder.middleware';
-
 import { ResetPasswordRepository } from './repositories/reset-password.repository';
+import { S3Service } from './services/s3.service';
+import { S3Controller } from './controllers/s3.controller';
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { ResetPasswordRepository } from './repositories/reset-password.repositor
     }),
     TypeOrmModule.forFeature([User, Game, ResetPassword]),
   ],
-  controllers: [AppController, UserController, GameController],
+  controllers: [AppController, UserController, GameController, S3Controller],
   providers: [
     AppService,
     UserRepository,
@@ -42,6 +43,7 @@ import { ResetPasswordRepository } from './repositories/reset-password.repositor
     GameRepository,
     GameService,
     ResetPasswordRepository,
+    S3Service,
   ],
 })
 export class AppModule implements NestModule {

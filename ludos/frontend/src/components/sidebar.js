@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Drawer,
   List,
@@ -61,6 +62,7 @@ const circleIcon = {
 
 function Sidebar({ userLoggedIn }) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -68,6 +70,16 @@ function Sidebar({ userLoggedIn }) {
 
   const handleProfileClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleCreateGameClick = () => {
+    if (userLoggedIn) {
+      // If the user is logged in, redirect to the create game page
+      navigate("/create-game");
+    } else {
+      // If the user is not logged in, redirect to the login page
+      navigate("/login");
+    }
   };
 
   function handleLogout() {
@@ -142,7 +154,7 @@ function Sidebar({ userLoggedIn }) {
                 </ListItemIcon>
               </div>
             </ListItem>
-            <ListItem button component={Link} to="/create-game">
+            <ListItem button onClick={handleCreateGameClick}>
               <div>
                 <ListItemIcon style={listItem}>
                   <div style={circleIcon}>
