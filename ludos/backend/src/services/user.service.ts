@@ -19,6 +19,7 @@ import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
+import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
@@ -179,5 +180,11 @@ export class UserService {
     user.password = changePasswordDto.newPassword;
     await this.userRepository.save(user);
     return new ChangePasswordResponseDto(true);
+  }
+
+  public async editInfo(userId: string, editInfoDto: EditUserInfoDto) {
+    let user = await this.userRepository.findUserById(userId);
+    let updated = Object.assign(user, editInfoDto);
+    await this.userRepository.save(updated);
   }
 }
