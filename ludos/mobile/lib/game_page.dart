@@ -100,6 +100,13 @@ class _GamePageState extends State<GamePage> {
               ),
             ),
             const SizedBox(height: 20),
+            const Text('Estimating Time: 120 hours',style: TextStyle(
+              color: MyColors.orange,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            ),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
