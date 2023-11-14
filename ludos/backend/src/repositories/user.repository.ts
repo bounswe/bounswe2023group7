@@ -26,11 +26,7 @@ export class UserRepository extends Repository<User> {
     return this.findOneBy({ id });
   }
 
-  public findUserById(id: string): Promise<User> {
-    return this.findOneBy({ id });
-  }
-
-  public async updateUserPassword(input: Partial<User>, newPassword: string) {
+    public async updateUserPassword(input: Partial<User>, newPassword: string) {
     const user = await this.findUserByUsername(input.username);
     user.password = newPassword;
     await this.save(user);
