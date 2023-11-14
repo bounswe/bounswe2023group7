@@ -32,13 +32,15 @@ export class UserRepository extends Repository<User> {
     return this.findOneBy({ id });
   }
 
-  public async getFollowedGamesByUserId(userId: string): Promise<Game[]> {
-    const user = await this.createQueryBuilder('users')
-      .leftJoinAndSelect('users.followedGames', 'followedGames')
-      .where('users.id = :userId', { userId })
-      .getOne();
+  public async findUserByIdWithRelations(id: string): Promise<User> {
+    return await this.findOne({
+      relations: this.getAllRelationsAsList(),
+      where: { id: id },
+    });
+  }
 
-    return user ? user.followedGames : [];
+  public getAllRelationsAsList() {
+    return this.metadata.relations.map((relation) => relation.propertyName);
   }
 
 }

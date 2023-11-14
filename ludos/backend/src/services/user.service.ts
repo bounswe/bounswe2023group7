@@ -182,19 +182,20 @@ export class UserService {
   }
 
   public async getUserInfo(userId: string): Promise<GetUserInfoResponseDto> {
-    const user = await this.userRepository.findUserById(userId);
+    const user = await this.userRepository.findUserByIdWithRelations(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    let games = await this.userRepository.getFollowedGamesByUserId(userId);
+    const response = new GetUserInfoResponseDto();
+    response.email = user.email;
+    response.username = user.username;
+    response.followedGames = user.followedGames;
+    response.fullName = user.fullName;
+    response.avatar = user.avatar;
+    response.aboutMe = user.aboutMe;
+    response.steamUrl = user.steamUrl;
 
-    console.log('games ->', games)
-    let returnObject = new GetUserInfoResponseDto();
-    returnObject.username = user.username;
-    returnObject.email = user.email;
-    returnObject.followedGames = games ?? []
-
-    return returnObject;
+    return response;
   }
 }
