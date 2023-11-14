@@ -2,7 +2,6 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
-
 class APIService {
   var baseURL = "http://3.125.225.39:8080";
   Future<(String?, int)> login(String username, String password) async {
@@ -39,7 +38,7 @@ class APIService {
     final response = await http.put(uri, body: body, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
     return response;
   }
-  
+
   Future<http.Response> createGame(String title, String coverLink, 
   String systemRequirements, List<String> predecessors, List<String> successors, 
   String gameGuide, String gameStory, List<String> platforms, String ageRestriction, 
@@ -90,13 +89,9 @@ class APIService {
     return response;
   }
 
-    Future<http.Response> changePassword(String newPassword, String oldPassword) async {
-    var uri = Uri.parse("$baseURL/user/change-password");
-    final body = jsonEncode(<String, Object>{
-      'newPassword': newPassword,
-      'oldPassword': oldPassword,
-    });
-    final response = await http.put(uri, body: body, headers: {'content-type': "application/json"});
+  Future<http.Response> listGames() async {
+    var uri = Uri.parse("$baseURL/game?limit=10");
+    final response = await http.get(uri, headers: {'content-type': "application/json"});
 
     return response;
   }
