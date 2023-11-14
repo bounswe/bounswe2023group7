@@ -1,28 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import InputBase from "@mui/material/InputBase";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import SettingsIcon from "@mui/icons-material/Settings";
 import SearchIcon from "@mui/icons-material/Search";
 import logo from "../assets/logo.png";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import MyGamesIcon from "../assets/my_games.png";
+import MyGroupsIcon from "../assets/my_groups.png";
 
 const Header = ({ userLoggedIn }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
   const navigate = useNavigate();
   const handleSignInClick = () => {
     navigate("/login");
@@ -31,14 +18,6 @@ const Header = ({ userLoggedIn }) => {
   const handleRegisterClick = () => {
     navigate("/signup");
   };
-
-  const handleSettingsClick = () => {
-    navigate("/settings");
-  };
-
-  function handleLogout() {
-    localStorage.removeItem("accessToken");
-  }
 
   return (
     <AppBar
@@ -84,27 +63,63 @@ const Header = ({ userLoggedIn }) => {
         <div>
           {userLoggedIn ? (
             <>
-              <div style={{ marginLeft: "250px" }}>
-                <IconButton
-                  color="inherit"
-                  onClick={handleMenuOpen}
-                  style={{ color: "white" }} // Make the Settings icon white
-                >
-                  <SettingsIcon />
-                </IconButton>
-              </div>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flex: "1",
+                  justifyContent: "center",
+                  marginLeft: "160px", // Adjust the left margin as needed
+                }}
               >
-                <MenuItem onClick={() => handleSettingsClick()}>
-                  Go to Settings
-                </MenuItem>
-                <MenuItem onClick={handleLogout} component={Link} to="/login">
-                  Log out
-                </MenuItem>
-              </Menu>
+                <Link
+                  to="/myGames"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <div>
+                    <img
+                      src={MyGamesIcon}
+                      alt="MyGames"
+                      style={{ width: "auto", height: "50px" }}
+                    />
+                    <p
+                      style={{
+                        textAlign: "center",
+                        margin: "0",
+                        fontSize: "12px",
+                        width: "60px",
+                      }}
+                    >
+                      My Games
+                    </p>
+                  </div>
+                </Link>
+                <Link
+                  to="/myGroups"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <div style={{ marginLeft: "50px" }}>
+                    <img
+                      src={MyGroupsIcon}
+                      alt="MyGroups"
+                      style={{
+                        width: "auto",
+                        height: "50px",
+                      }}
+                    />
+                    <p
+                      style={{
+                        textAlign: "center",
+                        margin: "0",
+                        fontSize: "12px",
+                        width: "60px",
+                      }}
+                    >
+                      My Groups
+                    </p>
+                  </div>
+                </Link>
+              </div>
             </>
           ) : (
             <div

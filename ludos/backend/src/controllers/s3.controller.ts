@@ -23,8 +23,8 @@ import { UploadResponseDto } from '../dtos/s3/response/upload-response.dto';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors';
 import { diskStorage } from 'multer';
 
-@ApiTags('user')
-@Controller('user')
+@ApiTags('external')
+@Controller('external')
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}
 
@@ -62,6 +62,6 @@ export class S3Controller {
     @Req() _req: AuthorizedRequest,
     @UploadedFile('file') file: Express.Multer.File,
   ) {
-    return await this.s3Service.uploadFileAndGetUrl(file);
+    return await this.s3Service.uploadFile(file);
   }
 }

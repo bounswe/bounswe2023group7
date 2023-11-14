@@ -122,7 +122,7 @@ export default function ForgotPasswordPage() {
               Forgot Your Password?
             </Typography>
             <Typography >
-              Enter your email address and we will send you a link to reset your password.
+              Enter your email address and we will send you a code to reset your password.
             </Typography>
             <TextField
               margin="normal"
