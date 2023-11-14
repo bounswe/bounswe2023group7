@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
-import { Game } from '../entities/game.entity';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -22,16 +21,17 @@ export class UserRepository extends Repository<User> {
   public findUserByEmail(email: string): Promise<User> {
     return this.findOneBy({ email: email });
   }
+  
+  public findUserById(id: string): Promise<User> {
+    return this.findOneBy({ id });
+  }
 
   public async updateUserPassword(input: Partial<User>, newPassword: string) {
     const user = await this.findUserByUsername(input.username);
     user.password = newPassword;
     await this.save(user);
   }
-  public findUserById(id: string): Promise<User> {
-    return this.findOneBy({ id });
-  }
-
+  
   public async findUserByIdWithRelations(id: string): Promise<User> {
     return await this.findOne({
       relations: this.getAllRelationsAsList(),

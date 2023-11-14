@@ -118,7 +118,26 @@ export class UserController {
     return await this.userService.changePassword(req.user.id, input);
   }
 
-
+  @ApiOperation({ summary: 'Edit User Info Endpoint' })
+  @ApiOkResponse({
+    description: 'User information edited.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid Credentials',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Put('/edit-info')
+  public async editUserInfo(
+    @Req() req: AuthorizedRequest,
+    @Body() input: EditUserInfoDto,
+  ) {
+    await this.userService.editInfo(req.user.id, input);
+  }
+  
   @HttpCode(200)
   @ApiUnauthorizedResponse({
     description: 'Invalid User',

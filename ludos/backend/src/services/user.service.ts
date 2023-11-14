@@ -181,6 +181,12 @@ export class UserService {
     return new ChangePasswordResponseDto(true);
   }
 
+  public async editInfo(userId: string, editInfoDto: EditUserInfoDto) {
+    let user = await this.userRepository.findUserById(userId);
+    let updated = Object.assign(user, editInfoDto);
+    await this.userRepository.save(updated);
+  }
+  
   public async getUserInfo(userId: string): Promise<GetUserInfoResponseDto> {
     const user = await this.userRepository.findUserByIdWithRelations(userId);
     if (!user) {
