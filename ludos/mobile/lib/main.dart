@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
+import 'package:ludos_mobile_app/game_page.dart';
 import 'login_page.dart';
 import 'games_page.dart';
 import 'userProvider.dart';
@@ -52,7 +53,18 @@ class Home extends StatelessWidget {
                   },
                 ),
               if (userProvider.isLoggedIn)
-
+                ListTile(
+                  title: const Text(
+                    'God of War',
+                    style: TextStyle(color: MyColors.white),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const GamePage(),
+                    ));
+                  },
+                ),
+              if (userProvider.isLoggedIn)
               ListTile(
                 title: const Text(
                   'Log Out',
