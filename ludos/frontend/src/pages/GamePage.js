@@ -377,7 +377,7 @@ function GamePage(id) {
                       width: "15%",
                       fontFamily: "Trebuchet MS, sans-serif",
                     }}
-                    label="System Requirements"
+                    label="Available Platforms"
                     value="2"
                   />
                   <Tab

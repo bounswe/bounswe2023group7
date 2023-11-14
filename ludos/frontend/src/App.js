@@ -12,7 +12,7 @@ import CreateGamePage from "./pages/CreateGamePage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 
 function App() {
-  const id = "20a93509-957f-447b-afe0-bc448438017d";
+  const id = "a8a3c090-cc6c-4944-b203-13919c1d2aed";
   /*const game = {
     title: "God of War (2018)",
     coverLink:
@@ -321,7 +321,7 @@ function App() {
             }
           />
           <Route
-            path="/game/God-of-War-2018"
+            path="/game/Tekken-5"
             element={
               <Layout>
                 <GamePage gameId={id} />
@@ -355,9 +355,14 @@ function App() {
             }
           />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/change-password" element={<Layout>
-            <ChangePasswordPage />
-          </Layout>} />
+          <Route
+            path="/change-password"
+            element={
+              <Layout>
+                <ChangePasswordPage />
+              </Layout>
+            }
+          />
         </Routes>
       </div>
     </Router>

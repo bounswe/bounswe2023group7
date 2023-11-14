@@ -39,109 +39,126 @@ function Description(data) {
             </Typography>
           ))}
       </Typography>
+      <Typography variant="h5" color="gray" align="left" style={headerStyle}>
+        MINIMUM SYSTEM REQUIREMENTS
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        Operating System: {data.requirements.minimum.OS}
+      </Typography>
 
-      {/*(
-        <>
-          <Typography
-            variant="h5"
-            color="gray"
-            align="left"
-            style={headerStyle}
-          >
-            MINIMUM SYSTEM REQUIREMENTS
-          </Typography>
-          {data.requirements.minimum["Operating System"] && (
-            <Typography
-              variant="body1"
-              color="white"
-              align="center"
-              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-            >
-              {data.requirements.minimum["Operating System"]}
-            </Typography>
-          )}
-          <Typography
-            variant="body1"
-            color="white"
-            align="center"
-            style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-          >
-            {data.requirements.minimum.Processor}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="white"
-            align="center"
-            style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-          >
-            {data.requirements.minimum.Memory}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="white"
-            align="center"
-            style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-          >
-            DirectX {data.requirements.minimum.DirectX}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="white"
-            align="center"
-            style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-          >
-            {data.requirements.minimum.Storage}
-          </Typography>
-          <Typography
-            variant="h5"
-            color="gray"
-            align="left"
-            style={headerStyle}
-          >
-            RECOMMENDED SYSTEM REQUIREMENTS
-          </Typography>
-          <Typography
-            variant="body1"
-            color="white"
-            align="center"
-            style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-          >
-            {data.requirements.recommended["Operating System"]}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="white"
-            align="center"
-            style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-          >
-            {data.requirements.recommended.Processor}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="white"
-            align="center"
-            style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-          >
-            {data.requirements.recommended.Memory}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="white"
-            align="center"
-            style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-          >
-            DirectX {data.requirements.recommended.DirectX}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="white"
-            align="center"
-            style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-          >
-            {data.requirements.recommended.Storage}
-          </Typography>
-        </>
-      )*/}
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        CPU: {data.requirements.minimum.CPU}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        GPU: {data.requirements.minimum.GPU}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        Memory: {data.requirements.minimum.RAM}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        DirectX: {data.requirements.minimum.DirectX}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        Storage: {data.requirements.minimum.Storage}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        Network: {data.requirements.minimum.Network}
+      </Typography>
+      <Typography variant="h5" color="gray" align="left" style={headerStyle}>
+        RECOMMENDED SYSTEM REQUIREMENTS
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        Operating System: {data.requirements.recommended.OS}
+      </Typography>
+
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        CPU: {data.requirements.recommended.CPU}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        GPU: {data.requirements.recommended.GPU}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        Memory: {data.requirements.recommended.RAM}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        DirectX: {data.requirements.recommended.DirectX}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        Storage: {data.requirements.recommended.Storage}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="white"
+        align="center"
+        style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+      >
+        Network: {data.requirements.recommended.Network}
+      </Typography>
     </Grid>
   );
 }
