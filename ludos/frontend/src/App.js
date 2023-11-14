@@ -12,7 +12,8 @@ import CreateGamePage from "./pages/CreateGamePage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 
 function App() {
-  const game = {
+  const id = "a8a3c090-cc6c-4944-b203-13919c1d2aed";
+  /*const game = {
     title: "God of War (2018)",
     coverLink:
       "https://upload.wikimedia.org/wikipedia/en/a/a7/God_of_War_4_cover.jpg",
@@ -297,7 +298,7 @@ function App() {
     ],
     trivia:
       "Did you know? The Witcher 3: Wild Hunt is based on a series of books by Polish author Andrzej Sapkowski.",
-  };
+  };*/
 
   return (
     <Router>
@@ -320,29 +321,29 @@ function App() {
             }
           />
           <Route
-            path="/game/God-of-War-2018"
+            path="/game/Tekken-5"
             element={
               <Layout>
-                <GamePage game={game} />
+                <GamePage gameId={id} />
               </Layout>
             }
           />
-          <Route
+          {/*<Route
             path="/game/Red-Dead-Redemption-2"
             element={
               <Layout>
                 <GamePage game={game2} />
               </Layout>
             }
-          />
-          <Route
+          />*/}
+          {/*<Route
             path="/game/Witcher-3"
             element={
               <Layout>
                 <GamePage game={game3} />
               </Layout>
             }
-          />
+          />*/}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route
@@ -354,9 +355,14 @@ function App() {
             }
           />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/change-password" element={<Layout>
-            <ChangePasswordPage />
-          </Layout>} />
+          <Route
+            path="/change-password"
+            element={
+              <Layout>
+                <ChangePasswordPage />
+              </Layout>
+            }
+          />
         </Routes>
       </div>
     </Router>
