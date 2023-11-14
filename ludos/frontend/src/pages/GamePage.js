@@ -22,22 +22,25 @@ import EntityTab from "../components/EntityTab.js";
 function GamePage(id) {
   const [auth, setAuth] = useState(false);
   const [game, setGame] = useState(false);
+  const [follow, setFollow] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
       setAuth(true);
     }
-    console.log(id);
     const link = `http://${process.env.REACT_APP_API_URL}/game/${id.gameId}`;
 
     axios
       .get(link, {
         headers: {
-          Authorization: localStorage.getItem("accessToken"),
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
       })
       .then((response) => {
         setGame(response.data);
+        setFollow(response.data.isFollowed);
+        console.log(response.data);
+        console.log(follow);
       })
       .catch((error) => {
         console.log(error);
@@ -62,10 +65,20 @@ function GamePage(id) {
   };
 
   const followButton = {
-    backgroundColor: "rgb(255, 165, 0)",
+    backgroundColor: "rgb(125, 165, 0)",
     color: "rgb(0, 0, 0)",
     height: "20px",
+    width: "8%",
     textTransform: "none",
+    fontFamily: "Trebuchet MS, sans-serif",
+  };
+  const unFollowButton = {
+    backgroundColor: "rgb(222, 49, 99)",
+    color: "rgb(255, 255, 255)",
+    height: "20px",
+    width: "8%",
+    textTransform: "none",
+    fontFamily: "Trebuchet MS, sans-serif",
   };
   const imageBoxStyle = {
     height: "auto",
@@ -145,7 +158,45 @@ function GamePage(id) {
     display: "flex",
   };
 
-  useEffect(() => {}, []);
+  const handleFollowClick = () => {
+    const followLink = `http://${process.env.REACT_APP_API_URL}/game/follow/${id.gameId}`;
+    axios
+      .put(
+        followLink,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        },
+      )
+      .then(() => {
+        setFollow(true);
+        console.log(follow);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleUnFollowClick = () => {
+    const followLink = `http://${process.env.REACT_APP_API_URL}/game/unfollow/${id.gameId}`;
+    axios
+      .put(
+        followLink,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        },
+      )
+      .then(() => {
+        setFollow(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <Container
@@ -182,8 +233,21 @@ function GamePage(id) {
                   {tag}
                 </Typography>
               ))}
-            {auth && (
-              <Button variant="contained" style={followButton}>
+            {auth && follow && (
+              <Button
+                variant="contained"
+                style={unFollowButton}
+                onClick={handleUnFollowClick}
+              >
+                Unfollow
+              </Button>
+            )}
+            {auth && !follow && (
+              <Button
+                variant="contained"
+                style={followButton}
+                onClick={handleFollowClick}
+              >
                 Follow
               </Button>
             )}

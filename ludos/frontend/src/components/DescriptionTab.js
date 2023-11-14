@@ -8,7 +8,6 @@ function Description(data) {
     borderBottom: "2px solid gray",
     paddingBottom: "4px",
   };
-  console.log(data);
   return (
     <Grid style={{ width: "100%" }}>
       <Typography variant="h5" color="gray" align="left" style={headerStyle}>
