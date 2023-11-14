@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage.js";
 import SignUpPage from "./pages/SignupPage.js";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.js";
 import CreateGamePage from "./pages/CreateGamePage";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
 
 function App() {
   const game = {
@@ -353,6 +354,9 @@ function App() {
             }
           />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/change-password" element={<Layout>
+            <ChangePasswordPage />
+          </Layout>} />
         </Routes>
       </div>
     </Router>
