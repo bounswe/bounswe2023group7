@@ -23,6 +23,7 @@ import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
+import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
 
 @Injectable()
 export class UserService {
@@ -31,7 +32,7 @@ export class UserService {
     private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+    ) {}
 
   public async register(input: RegisterDto): Promise<RegisterResponseDto> {
     try {
@@ -186,5 +187,19 @@ export class UserService {
     let user = await this.userRepository.findUserById(userId);
     let updated = Object.assign(user, editInfoDto);
     await this.userRepository.save(updated);
+  }
+  
+  public async getUserInfo(userId: string): Promise<GetUserInfoResponseDto> {
+    const user = await this.userRepository.findUserByIdWithRelations(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const response = new GetUserInfoResponseDto();
+    response.email = user.email;
+    response.username = user.username;
+    response.followedGames = user.followedGames;
+
+    return response;
   }
 }
