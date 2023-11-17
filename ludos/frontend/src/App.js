@@ -10,6 +10,7 @@ import SignUpPage from "./pages/SignupPage.js";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.js";
 import CreateGamePage from "./pages/CreateGamePage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const id = "a8a3c090-cc6c-4944-b203-13919c1d2aed";
@@ -360,6 +361,14 @@ function App() {
             element={
               <Layout>
                 <ChangePasswordPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/profile-page"
+            element={
+              <Layout>
+                <ProfilePage />
               </Layout>
             }
           />
