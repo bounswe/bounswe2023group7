@@ -20,9 +20,12 @@ import { ChangePasswordResponseDto } from '../dtos/user/response/change-password
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
 import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
+import { WriteCommentDto } from '../dtos/comment/request/write-comment.dto';
+import { LikeCommentDto } from '../dtos/comment/request/like-comment.dto';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
+import { CommentRepository } from '../repositories/comment.repository';
 import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
 
 @Injectable()
@@ -30,6 +33,7 @@ export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly resetPasswordRepository: ResetPasswordRepository,
+    private readonly commentRepository: CommentRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     ) {}
@@ -201,5 +205,37 @@ export class UserService {
     response.followedGames = user.followedGames;
 
     return response;
+  }
+
+  public async writeComment(userId: string, writeCommentDto: WriteCommentDto) {
+    let user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new HttpException(
+        'No user found with this email',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    let comment = {
+      author: userId, //user,
+      text: writeCommentDto.text,
+      postId: writeCommentDto.postId,
+      likes: 0,
+    }
+    let c = await this.commentRepository.createComment(comment);
+  }
+
+  public async likeComment(userId: string, likeCommentDto: LikeCommentDto) {
+    let comment = await this.commentRepository.findCommentById(likeCommentDto.commentId);
+
+    if (!comment) {
+      throw new HttpException(
+        'No comment found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    await this.commentRepository.incrementLikeCount(likeCommentDto.commentId);
   }
 }

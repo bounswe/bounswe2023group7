@@ -27,6 +27,8 @@ import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
 import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
+import { WriteCommentDto } from '../dtos/comment/request/write-comment.dto';
+import { LikeCommentDto } from '../dtos/comment/request/like-comment.dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
@@ -153,5 +155,47 @@ export class UserController {
   @Get('/info')
   public async getUserInfoById(@Req() req: AuthorizedRequest) {
     return await this.userService.getUserInfo(req.user.id);
+  }
+
+  @ApiOperation({ summary: 'Comment on a post' })
+  @ApiOkResponse({
+    description: 'Comment',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid Credentials',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Post('/write-comment')
+  public async writeComment(
+    @Req() req: AuthorizedRequest,
+    @Body() input: WriteCommentDto,
+  ) {
+    await this.userService.writeComment(req.user.id, input);
+  }
+
+  @ApiOperation({ summary: 'Like a comment' })
+  @ApiOkResponse({
+    description: 'Like Comment',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid Credentials',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Post('/like-comment')
+  public async likeComment(
+    @Req() req: AuthorizedRequest,
+    @Body() input: LikeCommentDto,
+  ) {
+    await this.userService.likeComment(req.user.id, input);
   }
 }
