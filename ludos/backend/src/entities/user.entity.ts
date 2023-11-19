@@ -5,6 +5,7 @@ import {
   BeforeInsert,
   BeforeUpdate,
   OneToMany,
+  JoinTable,
   Index,
   ManyToMany,
 } from 'typeorm';
@@ -50,6 +51,14 @@ export class User {
 
   @OneToMany(() => Review, (review) => review.user)
   reviews: Review[];
+
+  @ManyToMany(() => Review, review => review.likedUsers)
+  @JoinTable()
+  likedReviews: Review[];
+
+  @ManyToMany(() => Review, review => review.dislikedUsers)
+  @JoinTable()
+  dislikedReviews: Review[];
 
   @BeforeInsert()
   @BeforeUpdate()
