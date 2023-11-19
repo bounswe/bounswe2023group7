@@ -4,12 +4,14 @@ import {
   PrimaryGeneratedColumn,
   BeforeInsert,
   BeforeUpdate,
+  OneToMany,
   Index,
   ManyToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Game } from './game.entity';
 import { UserType } from '../enums/user-type.enum';
+import { Review } from './review.entity';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -45,6 +47,9 @@ export class User {
 
   @Column({ nullable: true })
   steamUrl: string;
+
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
 
   @BeforeInsert()
   @BeforeUpdate()
