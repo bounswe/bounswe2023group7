@@ -95,10 +95,10 @@ export class Game {
   @Column('text')
   trivia: string;
 
-  @OneToMany(() => Review, (review) => review.game)
+  @OneToMany('Review', 'game')
   reviews: Review[];
 
-  @ManyToMany(() => User, (user) => user.followedGames)
+  @ManyToMany('User', 'followedGames')
   @JoinTable({ name: 'game_user_follows' })
   followerList: User[];
 

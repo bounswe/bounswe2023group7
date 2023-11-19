@@ -22,7 +22,7 @@ import {
   import { Review } from '../entities/review.entity';
   import { AuthGuard } from '../services/guards/auth.guard';
   import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
-  import { ReviewService } from 'services/review.service';
+  import { ReviewService } from '../services/review.service';
   
   @ApiTags('review')
   @Controller('review')
@@ -41,7 +41,6 @@ import {
     })
     @ApiBearerAuth()
     @HttpCode(201)
-    @ApiOperation({ summary: 'Create Review Endpoint' })
     @UseGuards(AuthGuard)
     @Post(':gameId')
     public async createReview(

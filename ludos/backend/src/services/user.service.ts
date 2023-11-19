@@ -51,7 +51,9 @@ export class UserService {
     }
   }
   public async login(input: LoginDto): Promise<LoginResponseDto> {
+    console.log("HERE1");
     const user = await this.userRepository.findUserByUsername(input.username);
+    console.log("HERE2");
     if (!(user && (await user.compareEncryptedPassword(input.password)))) {
       throw new UnauthorizedException('Invalid Credentials!');
     }
@@ -60,7 +62,9 @@ export class UserService {
       email: user.email,
       username: user.username,
     };
+    console.log("HERE3");
     const accessToken = await this.jwtService.signAsync(payload);
+    console.log("HERE4");
     return {
       accessToken,
     };

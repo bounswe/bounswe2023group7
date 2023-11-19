@@ -22,18 +22,18 @@ import {
     @Column('float')
     rating: number;
   
-    @ManyToOne(() => Game, (game) => game.reviews)
+    @ManyToOne('Game', 'reviews')
     game: Game;
   
-    @ManyToOne(() => User, (user) => user.reviews)
+    @ManyToOne('User', 'reviews')
     user: User;
 
-    @ManyToMany(() => User, user => user.likedReviews)
-    @JoinTable()
+    @ManyToMany('User', 'likedReviews')
+    @JoinTable({ name: 'review_user_likes' })
     likedUsers: User[]
 
-    @ManyToMany(() => User, user => user.dislikedReviews)
-    @JoinTable()
+    @ManyToMany('User', 'dislikedReviews')
+    @JoinTable({ name: 'review_user_dislikes' })
     dislikedUsers: User[];
   
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })

@@ -49,15 +49,13 @@ export class User {
   @Column({ nullable: true })
   steamUrl: string;
 
-  @OneToMany(() => Review, (review) => review.user)
+  @OneToMany('Review', 'user')
   reviews: Review[];
 
-  @ManyToMany(() => Review, review => review.likedUsers)
-  @JoinTable()
+  @ManyToMany('Review', 'likedUsers')
   likedReviews: Review[];
 
-  @ManyToMany(() => Review, review => review.dislikedUsers)
-  @JoinTable()
+  @ManyToMany('Review', 'user')
   dislikedReviews: Review[];
 
   @BeforeInsert()

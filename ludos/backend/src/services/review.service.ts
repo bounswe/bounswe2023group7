@@ -6,9 +6,9 @@ import {
   } from '@nestjs/common';
   import { GameRepository } from '../repositories/game.repository';
   import { UserRepository } from '../repositories/user.repository';
-  import { ReviewCreateDto } from 'dtos/review/request/create.dto';
-  import { ReviewCreateResponseDto } from 'dtos/review/response/create.dto';
-  import { ReviewRepository } from 'repositories/review.repository';
+  import { ReviewCreateDto } from '../dtos/review/request/create.dto';
+  import { ReviewCreateResponseDto } from '../dtos/review/response/create.dto';
+  import { ReviewRepository } from '../repositories/review.repository';
   
   @Injectable()
   export class ReviewService {
@@ -32,6 +32,15 @@ import {
             user: user,
             game: game
           });
+
+          user.reviews.push(review);
+          game.reviews.push(review);
+  
+          await Promise.all([
+              this.userRepository.save(user),
+              this.gameRepository.save(game),
+          ]);
+          
         return {
           id: review.id,
           rating: review.rating,
