@@ -52,11 +52,12 @@ export class S3Controller {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('file', {
+  @UseInterceptors(
+    FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads',
       }),
-    })
+    }),
   )
   public async uploadFile(
     @Req() _req: AuthorizedRequest,

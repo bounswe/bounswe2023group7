@@ -32,7 +32,7 @@ export class GameService {
         developer: game.developer,
       };
     } catch (e) {
-      console.log(e)
+      console.log(e);
       if (e.code == '23505') {
         throw new ConflictException(e.detail);
       }
@@ -90,6 +90,8 @@ export class GameService {
     developer?: string,
     orderByKey?: keyof Game,
     order?: 'ASC' | 'DESC',
+    userId?: string,
+    isFollowed?: boolean,
   ): Promise<Pagination<Game, IPaginationMeta>> {
     const tagList = tags ? tags.split(',') : undefined;
     const platformList = platforms ? platforms.split(',') : undefined;
@@ -103,6 +105,8 @@ export class GameService {
       developer,
       orderByKey,
       order,
+      userId,
+      isFollowed,
     );
   }
 }

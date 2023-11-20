@@ -39,7 +39,13 @@ import { Review } from './entities/review.entity';
     }),
     TypeOrmModule.forFeature([User, Game, Review, ResetPassword]),
   ],
-  controllers: [AppController, UserController, GameController, S3Controller, ReviewController],
+  controllers: [
+    AppController,
+    UserController,
+    GameController,
+    S3Controller,
+    ReviewController,
+  ],
   providers: [
     AppService,
     UserRepository,
@@ -49,7 +55,7 @@ import { Review } from './entities/review.entity';
     ResetPasswordRepository,
     S3Service,
     ReviewRepository,
-    ReviewService
+    ReviewService,
   ],
 })
 export class AppModule implements NestModule {
