@@ -32,21 +32,14 @@ import {
             user: user,
             game: game
           });
-
-          user.reviews.push(review);
-          game.reviews.push(review);
-  
-          await Promise.all([
-              this.userRepository.save(user),
-              this.gameRepository.save(game),
-          ]);
-          
+    
+        console.log(game.reviews);  
         return {
           id: review.id,
           rating: review.rating,
           content: review.content,
-          user: review.user,
-          game: review.game,
+          userId: review.user.id,
+          gameId: review.game.id,
           createdAt: review.createdAt,
         };
       } catch (e) {

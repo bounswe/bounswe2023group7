@@ -16,8 +16,8 @@ export class ReviewCreateResponseDto {
   createdAt: Date;
 
   @ApiProperty()
-  user: User;
+  userId: string;
 
   @ApiProperty()
-  game: Game;
+  gameId: string;
 }

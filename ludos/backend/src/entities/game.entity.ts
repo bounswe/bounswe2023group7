@@ -98,7 +98,7 @@ export class Game {
   @OneToMany('Review', 'game')
   reviews: Review[];
 
-  @ManyToMany('User', 'followedGames')
+  @ManyToMany(() => User, (user) => user.followedGames)
   @JoinTable({ name: 'game_user_follows' })
   followerList: User[];
 
