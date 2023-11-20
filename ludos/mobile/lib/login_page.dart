@@ -93,7 +93,7 @@ class LoginPageState extends State<LoginPage> {
                 onPressed: () async {
                   (String?, int) token = await APIService()
                       .login(emailController.text, passwordController.text);
-                  print(token);
+                  //print(token);
                   if (token.$2 == 200) {
                     Provider.of<UserProvider>(context, listen: false)
                         .setLoggedIn(true, emailController.text, token.$1);
