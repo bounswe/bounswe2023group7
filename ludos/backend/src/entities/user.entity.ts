@@ -54,7 +54,7 @@ export class User {
   @ManyToMany('Review', 'likedUsers')
   likedReviews: Review[];
 
-  @ManyToMany('Review', 'user')
+  @ManyToMany('Review', 'dislikedUsers')
   dislikedReviews: Review[];
 
   @BeforeInsert()
