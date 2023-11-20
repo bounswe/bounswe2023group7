@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/edit_game.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -9,17 +9,17 @@ class GamePage extends StatefulWidget {
   @override
   State<GamePage> createState() => _GamePageState();
 }
+
 class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: const Color(0xFF101c2c),
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
         title: const Text('God of War (2018)'),
       ),
-      body:  SingleChildScrollView(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -79,18 +79,19 @@ class _GamePageState extends State<GamePage> {
                     print(rating);
                   },
                 ),
-                SizedBox(width: 8), // Add some spacing between RatingBar and Text
-                const Text('          Rating: 4.3/5',style: TextStyle(
-                  color: MyColors.orange,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+                SizedBox(
+                    width: 8), // Add some spacing between RatingBar and Text
+                const Text(
+                  '          Rating: 4.3/5',
+                  style: TextStyle(
+                    color: MyColors.orange,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
               ],
             ),
-
             const SizedBox(height: 10),
-
             const Text(
               '     His vengeance against the Gods of Olympus years behind him, Kratos now lives as a man in the realm of Norse Gods and monsters. It is in this harsh, unforgiving world that he must fight to survive… and teach his son to do the same.',
               style: TextStyle(
@@ -100,12 +101,21 @@ class _GamePageState extends State<GamePage> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text('Estimating Time: 120 hours',style: TextStyle(
-              color: MyColors.orange,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+            const Text(
+              'Estimating Time: 120 hours',
+              style: TextStyle(
+                color: MyColors.orange,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
-            ),
+            const SizedBox(height: 20),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => EditGamePage()));
+                },
+                child: Text("Edit")),
             const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +133,6 @@ class _GamePageState extends State<GamePage> {
                       style: TextStyle(color: Colors.white)),
                 ),
                 Container(
-
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -151,7 +160,6 @@ class _GamePageState extends State<GamePage> {
                           child: Text('@sena'),
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -179,7 +187,6 @@ class _GamePageState extends State<GamePage> {
                       style: TextStyle(color: Colors.white)),
                 ),
                 Container(
-
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -207,7 +214,6 @@ class _GamePageState extends State<GamePage> {
                           child: Text('@sena'),
                         ),
                       ),
-
                     ],
                   ),
                 ),
