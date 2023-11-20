@@ -23,7 +23,6 @@ import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
-import { CommentRepository } from '../repositories/comment.repository';
 import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
 
 @Injectable()

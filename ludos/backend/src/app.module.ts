@@ -42,7 +42,7 @@ import { Review } from './entities/review.entity';
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService],
     }),
-    TypeOrmModule.forFeature([User, Game, ResetPassword, Comment]),
+    TypeOrmModule.forFeature([User, Game, ResetPassword, Comment, Review]),
   ],
   controllers: [AppController, UserController, GameController, S3Controller, ReviewController, CommentController],
   providers: [
