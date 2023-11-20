@@ -23,6 +23,11 @@ import { S3Service } from './services/s3.service';
 import { S3Controller } from './controllers/s3.controller';
 import { CommentService } from './services/comment.service';
 import { CommentController } from './controllers/comment.controller';
+import { ReviewRepository } from './repositories/review.repository';
+import { ReviewService } from './services/review.service';
+import { ReviewController } from './controllers/review.controller';
+import { Review } from './entities/review.entity';
+
 
 @Module({
   imports: [
@@ -39,7 +44,7 @@ import { CommentController } from './controllers/comment.controller';
     }),
     TypeOrmModule.forFeature([User, Game, ResetPassword, Comment]),
   ],
-  controllers: [AppController, UserController, GameController, S3Controller, CommentController],
+  controllers: [AppController, UserController, GameController, S3Controller, ReviewController, CommentController],
   providers: [
     AppService,
     UserRepository,
@@ -50,6 +55,8 @@ import { CommentController } from './controllers/comment.controller';
     S3Service,
     CommentRepository,
     CommentService,
+    ReviewRepository,
+    ReviewService,
   ],
 })
 export class AppModule implements NestModule {
