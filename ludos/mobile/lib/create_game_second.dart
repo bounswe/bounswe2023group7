@@ -306,43 +306,50 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                         publisherController.text,
                         triviaController.text);
                     if (token.statusCode == 201) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Row(
-                            children: [
-                              Icon(
-                                Icons.check_circle_outline,
-                                color: MyColors.blue,
-                              ),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  'Your game is created successfully. You will be redirected to the Games Page.',
-                                  style: TextStyle(
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(
+                            SnackBar(
+                              content: const Row(
+                                children: [
+                                  Icon(
+                                    Icons.check_circle_outline,
                                     color: MyColors.blue,
-                                    fontSize: 16,
                                   ),
-                                ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      'Your game is created successfully. You will be redirected to the Games Page.',
+                                      style: TextStyle(
+                                        color: MyColors.blue,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          backgroundColor: MyColors.blue2,
-                          duration: const Duration(seconds: 100),
-                          action: SnackBarAction(
-                            label: 'OK',
-                            textColor: MyColors.blue,
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              Navigator.push(
+                              backgroundColor: MyColors.blue2,
+                              duration: const Duration(seconds: 5),
+                              action: SnackBarAction(
+                                label: 'OK',
+                                textColor: MyColors.blue,
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GamesPage()),
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                          .closed
+                          .then((reason) => Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => GamesPage()),
-                              );
-                            },
-                          ),
-                        ),
-                      );
+                              ));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
