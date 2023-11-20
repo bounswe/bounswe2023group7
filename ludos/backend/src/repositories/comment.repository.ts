@@ -29,4 +29,16 @@ export class CommentRepository extends Repository<Comment> {
     comment.dislikes += 1;
     await this.save(comment);
   }
+
+  public async deleteComment(commentId: string) {
+    let comment = await this.findCommentById(commentId);
+    await this.delete(comment);
+  }
+
+  public async editComment(commentId: string, newText: string) {
+    let comment = await this.findCommentById(commentId);
+    comment.text = newText;
+    comment.edited = true;
+    await this.save(comment);
+  }
 }

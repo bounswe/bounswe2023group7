@@ -6,6 +6,8 @@ import {
 import { WriteCommentDto } from '../dtos/comment/request/write-comment.dto';
 import { LikeCommentDto } from '../dtos/comment/request/like-comment.dto';
 import { DislikeCommentDto } from '../dtos/comment/request/dislike-comment.dto';
+import { DeleteCommentDto } from '../dtos/comment/request/delete-comment.dto';
+import { EditCommentDto } from '../dtos/comment/request/edit-comment.dto';
 import { UserRepository } from '../repositories/user.repository';
 import { CommentRepository } from '../repositories/comment.repository';
 
@@ -65,5 +67,31 @@ export class CommentService {
     }
 
     await this.commentRepository.incrementDislikeCount(dislikeCommentDto.commentId);
+  }
+
+  public async deleteComment(userId: string, deleteCommentDto: DeleteCommentDto) {
+    let comment = await this.commentRepository.findCommentById(deleteCommentDto.commentId);
+
+    if (!comment) {
+      throw new HttpException(
+        'No comment found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    await this.commentRepository.deleteComment(deleteCommentDto.commentId);
+  }
+
+  public async editComment(userId: string, editCommentDto: EditCommentDto) {
+    let comment = await this.commentRepository.findCommentById(editCommentDto.commentId);
+
+    if (!comment) {
+      throw new HttpException(
+        'No comment found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    await this.commentRepository.editComment(editCommentDto.commentId, editCommentDto.newText);
   }
 }

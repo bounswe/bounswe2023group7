@@ -27,4 +27,7 @@ export class Comment {
 
   @Column()
   dislikes: number;
+
+  @Column({default: false})
+  edited: boolean;
 }
