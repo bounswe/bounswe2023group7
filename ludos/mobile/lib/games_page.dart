@@ -6,7 +6,8 @@ import 'helper/APIService.dart';
 import 'create_game.dart';
 
 class GamesPage extends StatefulWidget {
-  const GamesPage({Key? key}) : super(key: key);
+  final String? token;
+  const GamesPage({Key? key, required this.token}) : super(key: key);
 
   @override
   State<GamesPage> createState() => _GamesPageState();
@@ -20,11 +21,12 @@ class _GamesPageState extends State<GamesPage> {
   @override
   void initState() {
     super.initState();
-    games = fetchData();
+    games = fetchData(widget.token);
   }
 
-  Future<List<GameSummary>> fetchData() async {
-    final response = await APIService().listGames();
+  Future<List<GameSummary>> fetchData(String? token) async {
+    //final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final response = await APIService().listGames(token);
     try {
       //print(json.decode(response.body));
       if (response.statusCode == 200) {
@@ -121,7 +123,7 @@ class _GamesPageState extends State<GamesPage> {
                     ),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const CreateGamePage(),
+                        builder: (context) => CreateGamePage(token: widget.token),
                       ));
                     }, child: const Text(
                       'Create Game',
