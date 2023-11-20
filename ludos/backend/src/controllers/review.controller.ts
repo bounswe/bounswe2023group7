@@ -1,9 +1,8 @@
 import {
     Body,
     Controller,
-    Get,
     HttpCode,
-    HttpStatus,
+    Delete,
     Param,
     Post,
     Req,
@@ -15,7 +14,6 @@ import {
     ApiConflictResponse,
     ApiCreatedResponse,
     ApiNotFoundResponse,
-    ApiOperation,
     ApiTags,
   } from '@nestjs/swagger';
   import { ReviewCreateDto } from '../dtos/review/request/create.dto';
@@ -74,6 +72,17 @@ import {
     ) {
       await this.reviewService.dislikeReview(req.user.id, reviewId);
       return { message: 'Review disliked successfully.' };
+    }
+
+    @ApiNotFoundResponse({ description: 'Review is not found!' })
+    @HttpCode(204)
+    @Delete(':reviewId')
+    public async deleteReview(
+      @Req() req: AuthorizedRequest,
+      @Param('reviewId') reviewId: string,
+    ) {
+      await this.reviewService.deleteReview(req.user.id, reviewId);
+      return { message: 'Review deleted successfully.'};
     }
 
   }

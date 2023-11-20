@@ -31,4 +31,8 @@ export class ReviewRepository extends Repository<Review> {
     await this.save(review);
   }
 
+  public async deleteReview(id: string): Promise<void> {
+    await this.delete(id);
+  }
+
 }

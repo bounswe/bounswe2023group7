@@ -110,6 +110,27 @@ import { log } from 'console';
         throw new InternalServerErrorException();
       }
     }
+
+    public async deleteReview(userId: string, reviewId: string): Promise<void> {
+      try {
+
+        const review = await this.reviewRepository.findReviewById(reviewId);
+        if (!review) {
+          throw new NotFoundException('Review Not Found!');
+        }
+
+        const user = await this.userRepository.findUserById(userId);
+        if (!user) {
+          throw new NotFoundException('User Not Found!');
+        }
+        
+        await this.reviewRepository.deleteReview(reviewId);
+  
+      } catch (e) {
+        console.log(e);
+        throw new InternalServerErrorException();
+      }
+    }
   
 
   }
