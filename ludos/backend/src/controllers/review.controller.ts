@@ -5,6 +5,7 @@ import {
     Delete,
     Param,
     Post,
+    Put,
     Req,
     UseGuards,
   } from '@nestjs/common';
@@ -21,6 +22,7 @@ import {
   import { AuthGuard } from '../services/guards/auth.guard';
   import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
   import { ReviewService } from '../services/review.service';
+  import { ReviewEditDto } from '../dtos/review/request/edit.dto';
   
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
@@ -84,6 +86,21 @@ import {
       await this.reviewService.deleteReview(req.user.id, reviewId);
       return { message: 'Review deleted successfully.'};
     }
+
+  @HttpCode(200)
+  @Put(':reviewId')
+  public async editReview(
+    @Req() req: AuthorizedRequest,
+    @Param('reviewId') reviewId: string,
+    @Body() reviewEditDto: ReviewEditDto,
+  ) {
+    const editedReview = await this.reviewService.editReview(
+      req.user.id,
+      reviewId,
+      reviewEditDto,
+    );
+    return editedReview;
+  }
 
   }
   

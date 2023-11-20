@@ -9,7 +9,9 @@ import {
   import { ReviewCreateDto } from '../dtos/review/request/create.dto';
   import { ReviewCreateResponseDto } from '../dtos/review/response/create.dto';
   import { ReviewRepository } from '../repositories/review.repository';
-import { log } from 'console';
+  import { log } from 'console';
+  import { ReviewEditDto } from '../dtos/review/request/edit.dto';
+import { ReviewEditResponseDto } from '../dtos/review/response/edit.dto';
   
   @Injectable()
   export class ReviewService {
@@ -76,8 +78,12 @@ import { log } from 'console';
         await this.reviewRepository.updateReview(review);
 
       } catch (e) {
-        console.log(e);
-        throw new InternalServerErrorException();
+        if (e instanceof NotFoundException) {
+          throw e;
+        } else {
+          console.log(e);
+          throw new InternalServerErrorException();
+        }
       }
     }
 
@@ -106,8 +112,12 @@ import { log } from 'console';
         await this.reviewRepository.updateReview(review);
         
       } catch (e) {
-        console.log(e);
-        throw new InternalServerErrorException();
+        if (e instanceof NotFoundException) {
+          throw e;
+        } else {
+          console.log(e);
+          throw new InternalServerErrorException();
+        }
       }
     }
 
@@ -123,12 +133,65 @@ import { log } from 'console';
         if (!user) {
           throw new NotFoundException('User Not Found!');
         }
-        
+
         await this.reviewRepository.deleteReview(reviewId);
   
       } catch (e) {
-        console.log(e);
-        throw new InternalServerErrorException();
+        if (e instanceof NotFoundException) {
+          throw e;
+        } else {
+          console.log(e);
+          throw new InternalServerErrorException();
+        }
+      }
+    }
+
+
+    public async editReview(
+      userId: string,
+      reviewId: string,
+      reviewEditDto: ReviewEditDto,
+    ): Promise<ReviewEditResponseDto> {
+      try {
+        const review = await this.reviewRepository.findReviewById(reviewId);
+        if (!review) {
+          throw new NotFoundException('Review Not Found!');
+        }
+    
+        const user = await this.userRepository.findUserById(userId);
+        if (!user) {
+          throw new NotFoundException('User Not Found!');
+        }
+
+        if (!reviewEditDto.content && !reviewEditDto.rating) {
+          throw new NotFoundException('Please provide at least one field to update!');
+        }
+    
+        if (reviewEditDto.content) {
+          review.content = reviewEditDto.content;
+        }
+    
+        if (reviewEditDto.rating) {
+          review.rating = reviewEditDto.rating;
+        }
+
+        await this.reviewRepository.updateReview(review);
+
+        return {
+          id: review.id,
+          content: reviewEditDto.content,
+          rating: reviewEditDto.rating,
+          updatedAt: review.updatedAt,
+        };
+
+    
+      } catch (e) {
+        if (e instanceof NotFoundException) {
+          throw e;
+        } else {
+          console.log(e);
+          throw new InternalServerErrorException();
+        }
       }
     }
   
