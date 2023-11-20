@@ -14,7 +14,6 @@ import { S3Service } from '../src/services/s3.service';
 import { ResetPassword } from '../src/entities/reset-password.entity';
 import { ResetDto } from '../src/dtos/user/request/reset.dto';
 import { ResetPasswordRepository } from '../src/repositories/reset-password.repository';
-import { CommentRepository } from '../src/repositories/comment.repository';
 
 describe('UserController', () => {
   let userController: UserController;
@@ -39,7 +38,6 @@ describe('UserController', () => {
         S3Service,
         UserRepository,
         ResetPasswordRepository,
-        CommentRepository,
         {
           provide: DataSource,
           useValue: dataSource,

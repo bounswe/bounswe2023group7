@@ -21,6 +21,8 @@ import { ResetPasswordRepository } from './repositories/reset-password.repositor
 import { CommentRepository } from './repositories/comment.repository';
 import { S3Service } from './services/s3.service';
 import { S3Controller } from './controllers/s3.controller';
+import { CommentService } from './services/comment.service';
+import { CommentController } from './controllers/comment.controller';
 
 @Module({
   imports: [
@@ -37,7 +39,7 @@ import { S3Controller } from './controllers/s3.controller';
     }),
     TypeOrmModule.forFeature([User, Game, ResetPassword, Comment]),
   ],
-  controllers: [AppController, UserController, GameController, S3Controller],
+  controllers: [AppController, UserController, GameController, S3Controller, CommentController],
   providers: [
     AppService,
     UserRepository,
@@ -47,6 +49,7 @@ import { S3Controller } from './controllers/s3.controller';
     ResetPasswordRepository,
     S3Service,
     CommentRepository,
+    CommentService,
   ],
 })
 export class AppModule implements NestModule {
