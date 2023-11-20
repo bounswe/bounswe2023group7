@@ -29,6 +29,7 @@ import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
 import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
 import { WriteCommentDto } from '../dtos/comment/request/write-comment.dto';
 import { LikeCommentDto } from '../dtos/comment/request/like-comment.dto';
+import { DislikeCommentDto } from '../dtos/comment/request/dislike-comment.dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
@@ -197,5 +198,26 @@ export class UserController {
     @Body() input: LikeCommentDto,
   ) {
     await this.userService.likeComment(req.user.id, input);
+  }
+
+  @ApiOperation({ summary: 'Dislike a comment' })
+  @ApiOkResponse({
+    description: 'Dislike Comment',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid Credentials',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Post('/dislike-comment')
+  public async dislikeComment(
+    @Req() req: AuthorizedRequest,
+    @Body() input: DislikeCommentDto,
+  ) {
+    await this.userService.dislikeComment(req.user.id, input);
   }
 }

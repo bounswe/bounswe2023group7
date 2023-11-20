@@ -23,4 +23,10 @@ export class CommentRepository extends Repository<Comment> {
     comment.likes += 1;
     await this.save(comment);
   }
+
+  public async incrementDislikeCount(commentId: string) {
+    let comment = await this.findCommentById(commentId);
+    comment.dislikes += 1;
+    await this.save(comment);
+  }
 }

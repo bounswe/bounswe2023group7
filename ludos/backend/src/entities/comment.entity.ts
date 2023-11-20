@@ -14,11 +14,17 @@ export class Comment {
   author: string; //User;
 
   @Column()
-  postId: string;
+  timestamp: Date;
+
+  @Column()
+  parentId: string;
 
   @Column()
   text: string;
 
   @Column()
   likes: number;
+
+  @Column()
+  dislikes: number;
 }

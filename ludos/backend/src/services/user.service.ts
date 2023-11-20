@@ -22,6 +22,7 @@ import { RegisterResponseDto } from '../dtos/user/response/register-response.dto
 import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
 import { WriteCommentDto } from '../dtos/comment/request/write-comment.dto';
 import { LikeCommentDto } from '../dtos/comment/request/like-comment.dto';
+import { DislikeCommentDto } from '../dtos/comment/request/dislike-comment.dto';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
@@ -217,13 +218,19 @@ export class UserService {
       );
     }
 
+    // check parent id
+    // post / comment / game review
+    // parent id should be the identifier of one of the above
+
     let comment = {
       author: userId, //user,
       text: writeCommentDto.text,
-      postId: writeCommentDto.postId,
+      parentId: writeCommentDto.parentId,
       likes: 0,
+      dislikes: 0,
+      timestamp: new Date(),
     }
-    let c = await this.commentRepository.createComment(comment);
+    await this.commentRepository.createComment(comment);
   }
 
   public async likeComment(userId: string, likeCommentDto: LikeCommentDto) {
@@ -237,5 +244,18 @@ export class UserService {
     }
 
     await this.commentRepository.incrementLikeCount(likeCommentDto.commentId);
+  }
+
+  public async dislikeComment(userId: string, dislikeCommentDto: DislikeCommentDto) {
+    let comment = await this.commentRepository.findCommentById(dislikeCommentDto.commentId);
+
+    if (!comment) {
+      throw new HttpException(
+        'No comment found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    await this.commentRepository.incrementDislikeCount(dislikeCommentDto.commentId);
   }
 }
