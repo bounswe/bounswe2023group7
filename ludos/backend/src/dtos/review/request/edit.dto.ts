@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsNumber, Min, Max, ValidateIf } from 'class-validator';
+import { IsOptional, IsString, IsNumber, Min, Max} from 'class-validator';
 
 export class ReviewEditDto {
   @ApiProperty({
     example: 'This game is amazing!',
   })
-  
+
   @IsOptional()
   @IsString()
   content: string;

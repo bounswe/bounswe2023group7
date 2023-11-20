@@ -22,10 +22,10 @@ import {
     @Column('float')
     rating: number;
   
-    @ManyToOne(type => Game, game => game.reviews, { cascade: true })
+    @ManyToOne(() => Game, game => game.reviews, { cascade: true })
     game: Game;
   
-    @ManyToOne(type => User, user => user.reviews, { cascade: true })
+    @ManyToOne(() => User, user => user.reviews, { cascade: true })
     user: User;
 
     @ManyToMany('User', 'likedReviews')
