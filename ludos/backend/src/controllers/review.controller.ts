@@ -24,6 +24,8 @@ import {
   import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
   import { ReviewService } from '../services/review.service';
   
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @ApiTags('review')
   @Controller('review')
   export class ReviewController {
@@ -39,9 +41,7 @@ import {
     @ApiBadRequestResponse({
       description: 'Bad Request',
     })
-    @ApiBearerAuth()
     @HttpCode(201)
-    @UseGuards(AuthGuard)
     @Post(':gameId')
     public async createReview(
       @Req() req: AuthorizedRequest,
@@ -55,5 +55,26 @@ import {
       );
       return createdReview;
     }
+
+    @HttpCode(200)
+    @Post(':reviewId/like')
+    public async likeReview(
+      @Req() req: AuthorizedRequest,
+      @Param('reviewId') reviewId: string,
+    ) {
+      await this.reviewService.likeReview(req.user.id, reviewId);
+      return { message: 'Review liked successfully.' };
+    }
+
+    @HttpCode(200)
+    @Post(':reviewId/dislike')
+    public async dislikeReview(
+      @Req() req: AuthorizedRequest,
+      @Param('reviewId') reviewId: string,
+    ) {
+      await this.reviewService.dislikeReview(req.user.id, reviewId);
+      return { message: 'Review disliked successfully.' };
+    }
+
   }
   

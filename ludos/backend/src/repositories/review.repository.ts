@@ -14,4 +14,21 @@ export class ReviewRepository extends Repository<Review> {
     return review;
   }
 
+  public findReviewById(id: string): Promise<Review> {
+    return this.findOneBy({ id });
+  }
+
+  public findReviewByIdWithLikedUsers(id: string): Promise<Review> {
+    return this.findOne({ where: { id }, relations: ['likedUsers'] });
+  }
+
+  public findReviewByIdWithDislikedUsers(id: string): Promise<Review> {
+    return this.findOne({ where: { id }, relations: ['dislikedUsers'] });
+  }
+
+  public async updateReview(input: Partial<Review>): Promise<void> {
+    const review = this.create(input);
+    await this.save(review);
+  }
+
 }
