@@ -37,6 +37,8 @@ export class GameRepository extends Repository<Game> {
     developer?: string,
     orderByKey: keyof Game = 'id',
     order: 'ASC' | 'DESC' = 'ASC',
+    userId?: string, // This is not the creator, this is used for follow check
+    isFollowed?: boolean,
   ): Promise<Pagination<Game, IPaginationMeta>> {
     const queryBuilder = this.createQueryBuilder('games').where('1=1');
     if (searchKey) {
@@ -58,10 +60,41 @@ export class GameRepository extends Repository<Game> {
     if (developer) {
       queryBuilder.andWhere('games.developer = :developer', { developer });
     }
+    if (userId && isFollowed) {
+      const subQuery = this.createQueryBuilder()
+        .select('1')
+        .from('game_user_follows', 'guf')
+        .where(`guf.usersId = '${userId}'`)
+        .andWhere('guf.gamesId = games.id')
+        .getQuery();
+      queryBuilder.andWhere(`EXISTS (${subQuery})`);
+    }
     if (orderByKey) {
       queryBuilder.orderBy(`games_${orderByKey}`, order);
     }
-    const games = await paginate<Game>(queryBuilder, { page, limit });
-    return games;
+    const paginationResult = await paginate<Game>(queryBuilder, {
+      page,
+      limit,
+    });
+    if (userId) {
+      await Promise.all(
+        paginationResult.items.map(async (game) => {
+          game.isFollowed = await this.checkIfGameIsFollowed(game.id, userId);
+        }),
+      );
+    }
+    return paginationResult;
+  }
+  private async checkIfGameIsFollowed(
+    gameId: string,
+    userId: string,
+  ): Promise<boolean> {
+    const result = await this.createQueryBuilder()
+      .select('1')
+      .from('game_user_follows', 'guf')
+      .where(`guf.usersId = '${userId}'`)
+      .andWhere('guf.gamesId = :gameId', { gameId })
+      .getExists();
+    return result ? true : false;
   }
 }

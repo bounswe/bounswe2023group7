@@ -8,6 +8,7 @@ import { User } from '../src/entities/user.entity';
 import { GameRepository } from '../src/repositories/game.repository';
 import { UserRepository } from '../src/repositories/user.repository';
 import { GameService } from '../src/services/game.service';
+import { AuthorizedRequest } from '../src/interfaces/common/authorized-request.interface';
 import { RatingRepository } from '../src/repositories/rating.repository';
 describe('GameController', () => {
   let gameController: GameController;
@@ -189,7 +190,8 @@ describe('GameController', () => {
       const listSpy = jest
         .spyOn(gameRepository, 'findGames')
         .mockResolvedValue(listResponse);
-      const response = await gameController.listGames();
+      const req = {}
+      const response = await gameController.listGames(req as AuthorizedRequest);
       expect(response).toBe(listResponse);
       expect(listSpy).toHaveBeenCalledWith(
         1,
@@ -201,6 +203,8 @@ describe('GameController', () => {
         undefined,
         undefined,
         undefined,
+        undefined,
+        undefined
       );
     });
   });
