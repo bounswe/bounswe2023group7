@@ -4,9 +4,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
 
 class GamePage extends StatefulWidget {
-
+  final String? token;
   final String id;
-  const GamePage({required this.id, Key? key}) : super(key: key);
+  const GamePage({required this.id, required this.token, Key? key}) : super(key: key);
   @override
   State<GamePage> createState() => _GamePageState();
 }
@@ -21,7 +21,7 @@ class _GamePageState extends State<GamePage> {
 
   Future<void> loadGameData() async {
     try {
-      gameData = await apiService.getGame(widget.id);
+      gameData = await apiService.getGame(widget.id, widget.token);
 
       setState(() {});
     } catch (e) {

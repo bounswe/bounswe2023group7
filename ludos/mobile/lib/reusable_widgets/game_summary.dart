@@ -14,6 +14,7 @@ class GameSummary extends StatefulWidget {
   final Color backgroundColor;
   final double fontSize;
   final String id;
+  final String? token;
 
   const GameSummary({
     Key? key,
@@ -27,6 +28,7 @@ class GameSummary extends StatefulWidget {
     required this.backgroundColor,
     required this.fontSize,
     required this.id,
+    required this.token,
   }) : super(key: key);
 
   @override
@@ -41,6 +43,7 @@ class GameSummary extends StatefulWidget {
         backgroundColor: backgroundColor,
         fontSize: fontSize,
         id: id,
+        token: token
       );
 }
 
@@ -55,6 +58,7 @@ class _GameSummaryState extends State<GameSummary> {
   final Color backgroundColor;
   final double fontSize;
   final String id;
+  final String? token;
 
   _GameSummaryState({
     required this.title,
@@ -67,6 +71,7 @@ class _GameSummaryState extends State<GameSummary> {
     required this.backgroundColor,
     required this.fontSize,
     required this.id,
+    required this.token,
   });
 
   @override
@@ -84,7 +89,7 @@ class _GameSummaryState extends State<GameSummary> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => GamePage(id: id),
+                builder: (context) => GamePage(id: id, token: token),
               ),
             );
 
