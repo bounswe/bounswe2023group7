@@ -84,6 +84,7 @@ String formatDateTime(DateTime dateTime) {
 }
 
 class CreateGamePageSecond extends StatefulWidget {
+  final String? token;
   final String title;
   final String coverLink;
   final String gameBio;
@@ -94,6 +95,7 @@ class CreateGamePageSecond extends StatefulWidget {
 
   const CreateGamePageSecond(
       {Key? key,
+        required this.token,
       required this.title,
       required this.coverLink,
       required this.gameBio,
@@ -286,6 +288,7 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                   ),
                   onPressed: () async {
                     http.Response token = await APIService().createGame(
+                        widget.token,
                         widget.title,
                         widget.coverLink,
                         systemRequirementsController.text,
@@ -338,7 +341,7 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => GamesPage()),
+                                        builder: (context) => GamesPage(token: widget.token)),
                                   );
                                 },
                               ),
@@ -348,7 +351,7 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                           .then((reason) => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => GamesPage()),
+                                    builder: (context) => GamesPage(token: widget.token)),
                               ));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

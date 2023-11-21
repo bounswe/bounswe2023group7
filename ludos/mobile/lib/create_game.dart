@@ -59,7 +59,8 @@ Widget getbox(String hintText, TextEditingController controller,
 }
 
 class CreateGamePage extends StatefulWidget {
-  const CreateGamePage({Key? key}) : super(key: key);
+  final String? token;
+  const CreateGamePage({Key? key, required this.token}) : super(key: key);
 
   @override
   State<CreateGamePage> createState() => _CreateGamePageState();
@@ -385,6 +386,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CreateGamePageSecond(
+                            token: widget.token,
                             title: titleController.text,
                             coverLink: coverLinkController.text,
                             gameBio: gameBioController.text,
