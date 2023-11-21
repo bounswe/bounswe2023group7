@@ -18,8 +18,11 @@ export class RatingRepository extends Repository<Rating> {
     return this.findOneBy({ id });
   }
 
-  public findRatingByUserIdAndGameId(userId: string, gameId: string): Promise<Rating> {
-    return this.findOneBy({ game: { id: gameId }, user: { id: userId} });
+  public findRatingByUserIdAndGameId(
+    userId: string,
+    gameId: string,
+  ): Promise<Rating> {
+    return this.findOneBy({ game: { id: gameId }, user: { id: userId } });
   }
 
   public async updateRating(input: Partial<Rating>): Promise<void> {
@@ -28,7 +31,6 @@ export class RatingRepository extends Repository<Rating> {
   }
 
   public async deleteRating(userId: string, gameId: string): Promise<void> {
-    await this.delete({user: {id: userId}, game: {id: gameId}});
+    await this.delete({ user: { id: userId }, game: { id: gameId } });
   }
-
 }

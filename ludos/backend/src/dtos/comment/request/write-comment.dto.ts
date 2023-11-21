@@ -9,4 +9,3 @@ export class WriteCommentDto {
   @IsString()
   text: string;
 }
-

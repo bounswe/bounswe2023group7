@@ -17,7 +17,7 @@ export class GameService {
   constructor(
     private readonly gameRepository: GameRepository,
     private readonly userRepository: UserRepository,
-    private readonly ratingRepository: RatingRepository
+    private readonly ratingRepository: RatingRepository,
   ) {}
 
   public async createGame(
@@ -34,7 +34,7 @@ export class GameService {
         developer: game.developer,
       };
     } catch (e) {
-      console.log(e)
+      console.log(e);
       if (e.code == '23505') {
         throw new ConflictException(e.detail);
       }
@@ -50,8 +50,11 @@ export class GameService {
     game.isFollowed = userId
       ? game.followerList.some((user) => user.id === userId)
       : false;
-    const rating = await this.ratingRepository.findRatingByUserIdAndGameId(userId, id);
-    game.userRating = (userId && rating) ?  rating.rating : null;
+    const rating = await this.ratingRepository.findRatingByUserIdAndGameId(
+      userId,
+      id,
+    );
+    game.userRating = userId && rating ? rating.rating : null;
     return game;
   }
   async followGame(userId: string, gameId: string): Promise<void> {

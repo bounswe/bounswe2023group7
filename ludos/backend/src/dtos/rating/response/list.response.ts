@@ -7,7 +7,7 @@ export class RatingListResponseDto {
 
   @ApiProperty()
   game: Game;
-  
+
   @ApiProperty()
   rating: number;
 }

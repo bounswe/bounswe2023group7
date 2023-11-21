@@ -27,7 +27,7 @@ import { RatingEditDto } from '../dtos/rating/request/edit.dto';
 @ApiTags('rating')
 @Controller('rating')
 export class RatingController {
-  constructor(private readonly ratingService: RatingService) { }
+  constructor(private readonly ratingService: RatingService) {}
 
   @ApiBearerAuth()
   @ApiCreatedResponse({
@@ -61,8 +61,11 @@ export class RatingController {
     @Req() req: AuthorizedRequest,
     @Param('gameId') gameId: string,
   ) {
-    const deletedRatingResponse = await this.ratingService.deleteRating(req.user.id, gameId);
-    return deletedRatingResponse
+    const deletedRatingResponse = await this.ratingService.deleteRating(
+      req.user.id,
+      gameId,
+    );
+    return deletedRatingResponse;
   }
 
   @UseGuards(AuthGuard)

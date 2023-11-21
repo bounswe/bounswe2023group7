@@ -19,7 +19,7 @@ export class RatingService {
     private readonly gameRepository: GameRepository,
     private readonly userRepository: UserRepository,
     private readonly ratingRepository: RatingRepository,
-  ) { }
+  ) {}
 
   public async createRating(
     userId: string,
@@ -31,18 +31,17 @@ export class RatingService {
 
     if (!user) {
       throw new NotFoundException('User Not Found!');
-    }
-    else if (!game) {
+    } else if (!game) {
       throw new NotFoundException('Game Not Found!');
     }
 
-    try{
+    try {
       const rating = await this.ratingRepository.createRating({
         rating: ratingCreateDto.rating,
         user: user,
-        game: game
+        game: game,
       });
-  
+
       return {
         id: rating.id,
         rating: rating.rating,
@@ -50,16 +49,21 @@ export class RatingService {
         gameId: rating.game.id,
         createdAt: rating.createdAt,
       };
-    } catch(e) {
-      if(e.code == "23505") {
-        throw new ConflictException("Rating already exists");
+    } catch (e) {
+      if (e.code == '23505') {
+        throw new ConflictException('Rating already exists');
       }
     }
-
   }
 
-  public async deleteRating(userId: string, gameId: string): Promise<RatingDeleteResponseDto> {
-    const rating = await this.ratingRepository.findRatingByUserIdAndGameId(userId, gameId);
+  public async deleteRating(
+    userId: string,
+    gameId: string,
+  ): Promise<RatingDeleteResponseDto> {
+    const rating = await this.ratingRepository.findRatingByUserIdAndGameId(
+      userId,
+      gameId,
+    );
     if (!rating) {
       throw new NotFoundException('Rating Not Found!');
     }
@@ -73,7 +77,7 @@ export class RatingService {
 
     return {
       id: rating.id,
-      message: "Rating is deleted!"
+      message: 'Rating is deleted!',
     };
   }
 
@@ -83,7 +87,10 @@ export class RatingService {
     ratingEditDto: RatingEditDto,
   ): Promise<RatingEditResponseDto> {
     try {
-      const rating = await this.ratingRepository.findRatingByUserIdAndGameId(userId, gameId);
+      const rating = await this.ratingRepository.findRatingByUserIdAndGameId(
+        userId,
+        gameId,
+      );
       if (!rating) {
         throw new NotFoundException('Rating Not Found!');
       }
@@ -94,11 +101,12 @@ export class RatingService {
       }
 
       if (!ratingEditDto.rating) {
-        throw new NotFoundException('Please provide at least one field to update!');
+        throw new NotFoundException(
+          'Please provide at least one field to update!',
+        );
       }
 
       rating.rating = ratingEditDto.rating;
-
 
       await this.ratingRepository.updateRating(rating);
 
@@ -107,7 +115,6 @@ export class RatingService {
         rating: ratingEditDto.rating,
         updatedAt: rating.updatedAt,
       };
-
     } catch (e) {
       if (e instanceof NotFoundException) {
         throw e;
@@ -117,5 +124,4 @@ export class RatingService {
       }
     }
   }
-
 }

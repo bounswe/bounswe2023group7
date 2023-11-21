@@ -5,4 +5,3 @@ export class EditCommentDto {
   @IsString()
   newText: string;
 }
-

@@ -13,7 +13,7 @@ export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, {eager: true})
+  @ManyToOne(() => User, { eager: true })
   author: User;
 
   @Column()
@@ -25,14 +25,14 @@ export class Comment {
   @Column()
   text: string;
 
-  @ManyToMany('User', {eager: true})
+  @ManyToMany('User', { eager: true })
   @JoinTable({ name: 'comment_user_likes' })
-  likedUsers: User[]
+  likedUsers: User[];
 
-  @ManyToMany('User', {eager: true})
+  @ManyToMany('User', { eager: true })
   @JoinTable({ name: 'comment_user_dislikes' })
   dislikedUsers: User[];
 
-  @Column({default: false})
+  @Column({ default: false })
   edited: boolean;
 }

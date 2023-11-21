@@ -23,11 +23,11 @@ export class Game {
   coverLink: string;
 
   @VirtualColumn({
-    query: (alias) => `SELECT AVG(rating) FROM ratings WHERE "gameId" = ${alias}.id`,
+    query: (alias) =>
+      `SELECT AVG(rating) FROM ratings WHERE "gameId" = ${alias}.id`,
   })
   averageRating: number;
 
-  
   userRating: number;
 
   @Column('jsonb')

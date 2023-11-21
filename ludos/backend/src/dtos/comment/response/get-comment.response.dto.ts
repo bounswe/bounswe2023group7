@@ -3,7 +3,7 @@ import { User } from '../../../entities/user.entity';
 import { IsDate, IsBoolean, IsString, IsNumber } from 'class-validator';
 
 export class GetCommentResponseDto {
-  @ApiProperty({type: () => User})
+  @ApiProperty({ type: () => User })
   author: User;
 
   @ApiProperty()

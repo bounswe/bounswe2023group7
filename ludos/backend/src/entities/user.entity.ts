@@ -61,7 +61,7 @@ export class User {
 
   @ManyToMany('Review', 'dislikedUsers')
   dislikedReviews: Review[];
-  
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPasswordBeforeInsertAndUpdate() {
