@@ -14,7 +14,9 @@ export class GetUserInfoResponseDto {
   ratings: Rating[];
   @ApiProperty()
   isNotificationEnabled: boolean;
-  @ApiProperty()
+  @ApiProperty({
+    enum: UserType,
+  })
   userType: UserType;
   @ApiProperty()
   fullName: string;

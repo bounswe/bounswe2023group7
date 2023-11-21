@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Game } from '../entities/game.entity';
 import { IPaginationMeta, Pagination, paginate } from 'nestjs-typeorm-paginate';
+import { RatingRepository } from './rating.repository';
 
 @Injectable()
 export class GameRepository extends Repository<Game> {
-  constructor(dataSource: DataSource) {
+  constructor(dataSource: DataSource, private readonly ratingRepository: RatingRepository) {
     super(Game, dataSource.createEntityManager());
   }
 
@@ -19,8 +20,9 @@ export class GameRepository extends Repository<Game> {
     return this.findOneBy({ id });
   }
 
-  public findGameByIdWithFollowerList(id: string): Promise<Game> {
-    return this.findOne({ where: { id }, relations: ['followerList'] });
+  public async findGameByIdWithFollowerList(id: string): Promise<Game> {
+    const game =  await this.findOne({ where: { id }, relations: ['followerList'] });
+    return game;
   }
 
   public async updateGame(input: Partial<Game>): Promise<void> {
@@ -80,6 +82,7 @@ export class GameRepository extends Repository<Game> {
       await Promise.all(
         paginationResult.items.map(async (game) => {
           game.isFollowed = await this.checkIfGameIsFollowed(game.id, userId);
+          game.userRating = await this.ratingRepository.getUserRatingOfGame(game.id, userId);
         }),
       );
     }
@@ -89,12 +92,13 @@ export class GameRepository extends Repository<Game> {
     gameId: string,
     userId: string,
   ): Promise<boolean> {
-    const result = await this.createQueryBuilder()
+    const query = this.createQueryBuilder()
       .select('1')
       .from('game_user_follows', 'guf')
       .where(`guf.usersId = '${userId}'`)
       .andWhere('guf.gamesId = :gameId', { gameId })
-      .getExists();
+
+    const result = await query.getExists();
     return result ? true : false;
   }
 }

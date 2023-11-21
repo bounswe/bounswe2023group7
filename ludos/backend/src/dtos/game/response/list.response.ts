@@ -35,4 +35,8 @@ export class GameListResponseDto {
   @Expose()
   @ApiProperty()
   isFollowed?: boolean;
+
+  @Expose()
+  @ApiProperty()
+  userRating?: number;
 }

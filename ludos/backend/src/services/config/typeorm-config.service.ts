@@ -6,6 +6,7 @@ import { ResetPassword } from '../../entities/reset-password.entity';
 import { Game } from '../../entities/game.entity';
 import { Comment } from '../../entities/comment.entity';
 import { Review } from '../../entities/review.entity';
+import { Post } from '../../entities/post.entity';
 import { Rating } from '../../entities/rating.entity';
 
 @Injectable()
@@ -20,7 +21,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       password: this.configService.get<string>('DB_PASSWORD'),
       port: this.configService.get<number>('DB_PORT'),
       database: this.configService.get<string>('DB_NAME'),
-      entities: [User, ResetPassword, Game, Review, Rating, Comment],
+      entities: [User, ResetPassword, Game, Review, Rating, Comment, Post],
       synchronize: true,
     };
   }

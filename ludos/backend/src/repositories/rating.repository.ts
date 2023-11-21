@@ -33,4 +33,17 @@ export class RatingRepository extends Repository<Rating> {
   public async deleteRating(userId: string, gameId: string): Promise<void> {
     await this.delete({ user: { id: userId }, game: { id: gameId } });
   }
+
+  public async getUserRatingOfGame(
+    gameId: string,
+    userId: string,
+  ): Promise<number> {
+    const query = this.createQueryBuilder("r")
+      .select('rating')
+      .where(`r.userId = '${userId}'`)
+      .andWhere(`r.gameId = '${gameId}'`)
+      
+    const result = await query.getRawOne();
+    return result ? result.rating : null;
+  }
 }

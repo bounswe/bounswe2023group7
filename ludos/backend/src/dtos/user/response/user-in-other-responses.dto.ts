@@ -1,28 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-export class GameGetResponseDto {
-  @Expose()
+export class UserInOtherResponsesDto {
   @ApiProperty()
+  @Expose()
   id: string;
-
-  @Expose()
   @ApiProperty()
-  title: string;
-
   @Expose()
+  username: string;
   @ApiProperty()
-  coverLink: string;
-
   @Expose()
+  email: string;
   @ApiProperty()
-  gameBio: string;
-
   @Expose()
+  avatar: string;
   @ApiProperty()
-  releaseDate: Date;
-
   @Expose()
-  @ApiProperty()
-  developer: string;
+  fullName: string;
 }

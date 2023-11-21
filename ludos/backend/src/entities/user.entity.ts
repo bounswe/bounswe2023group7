@@ -12,6 +12,7 @@ import * as bcrypt from 'bcrypt';
 import { Game } from './game.entity';
 import { UserType } from '../enums/user-type.enum';
 import { Review } from './review.entity';
+import { Post } from './post.entity';
 import { Rating } from './rating.entity';
 
 @Entity('users')
@@ -53,6 +54,8 @@ export class User {
   @OneToMany('Review', 'user')
   reviews: Review[];
 
+  @OneToMany('Post', 'user')
+  posts: Post[];
   @OneToMany('Rating', 'user')
   ratingList: Rating[];
 
@@ -61,6 +64,12 @@ export class User {
 
   @ManyToMany('Review', 'dislikedUsers')
   dislikedReviews: Review[];
+
+  @ManyToMany('Post', 'likedUsers')
+  likedPosts: Post[];
+
+  @ManyToMany('Post', 'dislikedUsers')
+  dislikedPosts: Post[];
 
   @BeforeInsert()
   @BeforeUpdate()
