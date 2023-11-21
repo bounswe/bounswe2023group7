@@ -11,6 +11,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage.js";
 import CreateGamePage from "./pages/CreateGamePage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ProfilePage from "./pages/ProfilePage";
+import CreatePostPage from "./pages/CreatePostPage.js";
 
 function App() {
   const id = "a8a3c090-cc6c-4944-b203-13919c1d2aed";
@@ -322,6 +323,14 @@ function App() {
             }
           />
           <Route
+            path="/create-post"
+            element={
+              <Layout>
+                <CreatePostPage />
+              </Layout>
+            }
+          />
+          <Route
             path="/game/Tekken-5"
             element={
               <Layout>
@@ -374,7 +383,7 @@ function App() {
           />
         </Routes>
       </div>
-    </Router>
+    </Router >
   );
 }
 
