@@ -33,10 +33,11 @@ export class UserRepository extends Repository<User> {
   }
   
   public async findUserByIdWithRelations(id: string): Promise<User> {
-    return await this.findOne({
+    const user = await this.findOne({
       relations: this.getAllRelationsAsList(),
       where: { id: id },
     });
+    return user;
   }
 
   public getAllRelationsAsList() {
