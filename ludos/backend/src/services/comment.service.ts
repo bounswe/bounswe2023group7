@@ -4,10 +4,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { WriteCommentDto } from '../dtos/comment/request/write-comment.dto';
-import { LikeCommentDto } from '../dtos/comment/request/like-comment.dto';
-import { DislikeCommentDto } from '../dtos/comment/request/dislike-comment.dto';
-import { DeleteCommentDto } from '../dtos/comment/request/delete-comment.dto';
 import { EditCommentDto } from '../dtos/comment/request/edit-comment.dto';
+import { GetCommentResponseDto } from '../dtos/comment/response/get-comment.response.dto';
 import { UserRepository } from '../repositories/user.repository';
 import { CommentRepository } from '../repositories/comment.repository';
 
@@ -17,13 +15,61 @@ export class CommentService {
     private readonly userRepository: UserRepository,
     private readonly commentRepository: CommentRepository,
     ) {}
+  
+  public async getComment(userId: string, commentId: string): Promise<GetCommentResponseDto> {
+    let user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new HttpException(
+        'No user found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    let comment = await this.commentRepository.findCommentById(commentId);
+
+    if (!comment) {
+      throw new HttpException(
+        'No comment found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    return {
+      author: comment.author,
+      timestamp: comment.timestamp,
+      edited: comment.edited,
+      text: comment.text,
+      parentId: comment.parentId,
+      likeCount: comment.likedUsers.length,
+      dislikeCount: comment.dislikedUsers.length,
+    }
+  }
+
+  public async getCommentsByParent(userId: string, parentId: string): Promise<GetCommentResponseDto[]> {
+    let user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new HttpException(
+        'No user found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    return (await this.commentRepository.findCommentsByParent(parentId)).map((comment) => {
+      return {
+        likeCount: comment.likedUsers.length,
+        dislikeCount: comment.dislikedUsers.length,
+        ...comment,
+      }
+    });
+  }
 
   public async writeComment(userId: string, writeCommentDto: WriteCommentDto) {
     let user = await this.userRepository.findUserById(userId);
 
     if (!user) {
       throw new HttpException(
-        'No user found with this email',
+        'No user found with this id',
         HttpStatus.FORBIDDEN,
       );
     }
@@ -33,18 +79,29 @@ export class CommentService {
     // parent id should be the identifier of one of the above
 
     let comment = {
-      author: userId, //user,
+      author: user,
       text: writeCommentDto.text,
       parentId: writeCommentDto.parentId,
       likes: 0,
       dislikes: 0,
       timestamp: new Date(),
+      likedUsers: [],
+      dislikedUsers: [],
     }
     await this.commentRepository.createComment(comment);
   }
 
-  public async likeComment(userId: string, likeCommentDto: LikeCommentDto) {
-    let comment = await this.commentRepository.findCommentById(likeCommentDto.commentId);
+  public async likeComment(userId: string, commentId: string) {
+    let user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new HttpException(
+        'No user found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    let comment = await this.commentRepository.findCommentById(commentId);
 
     if (!comment) {
       throw new HttpException(
@@ -53,11 +110,31 @@ export class CommentService {
       );
     }
 
-    await this.commentRepository.incrementLikeCount(likeCommentDto.commentId);
+    if (comment.likedUsers.find(likedUser => likedUser.id === userId)) {
+      comment.likedUsers = comment.likedUsers.filter(likedUser => likedUser.id !== userId);
+    }
+    else if (comment.dislikedUsers.find(dislikedUser => dislikedUser.id === userId)) {
+      comment.dislikedUsers = comment.dislikedUsers.filter(dislikedUser => dislikedUser.id !== userId);
+      comment.likedUsers.push(user);
+    }
+    else {
+      comment.likedUsers.push(user);
+    }
+
+    await this.commentRepository.save(comment);
   }
 
-  public async dislikeComment(userId: string, dislikeCommentDto: DislikeCommentDto) {
-    let comment = await this.commentRepository.findCommentById(dislikeCommentDto.commentId);
+  public async dislikeComment(userId: string, commentId: string) {
+    let user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new HttpException(
+        'No user found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    let comment = await this.commentRepository.findCommentById(commentId);
 
     if (!comment) {
       throw new HttpException(
@@ -66,11 +143,31 @@ export class CommentService {
       );
     }
 
-    await this.commentRepository.incrementDislikeCount(dislikeCommentDto.commentId);
+    if (comment.dislikedUsers.find(dislikedUser => dislikedUser.id === userId)) {
+      comment.dislikedUsers = comment.dislikedUsers.filter(dislikedUser => dislikedUser.id !== userId);
+    }
+    else if (comment.likedUsers.find(likedUser => likedUser.id === userId)) {
+      comment.likedUsers = comment.likedUsers.filter(likedUser => likedUser.id !== userId);
+      comment.dislikedUsers.push(user);
+    }
+    else {
+      comment.dislikedUsers.push(user);
+    }
+
+    await this.commentRepository.save(comment);
   }
 
-  public async deleteComment(userId: string, deleteCommentDto: DeleteCommentDto) {
-    let comment = await this.commentRepository.findCommentById(deleteCommentDto.commentId);
+  public async deleteComment(userId: string, commentId: string) {
+    let user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new HttpException(
+        'No user found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    let comment = await this.commentRepository.findCommentById(commentId);
 
     if (!comment) {
       throw new HttpException(
@@ -79,11 +176,27 @@ export class CommentService {
       );
     }
 
-    await this.commentRepository.deleteComment(deleteCommentDto.commentId);
+    if (comment.author.id !== user.id) {
+      throw new HttpException(
+        'User is not the author, can not delete',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    await this.commentRepository.deleteComment(commentId);
   }
 
-  public async editComment(userId: string, editCommentDto: EditCommentDto) {
-    let comment = await this.commentRepository.findCommentById(editCommentDto.commentId);
+  public async editComment(userId: string, commentId: string, editCommentDto: EditCommentDto) {
+    let user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new HttpException(
+        'No user found with this id',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    let comment = await this.commentRepository.findCommentById(commentId);
 
     if (!comment) {
       throw new HttpException(
@@ -92,6 +205,13 @@ export class CommentService {
       );
     }
 
-    await this.commentRepository.editComment(editCommentDto.commentId, editCommentDto.newText);
+    if (comment.author.id !== user.id) {
+      throw new HttpException(
+        'User is not the author, can not edit',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    await this.commentRepository.editComment(commentId, editCommentDto.newText);
   }
 }

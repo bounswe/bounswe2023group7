@@ -16,23 +16,13 @@ export class CommentRepository extends Repository<Comment> {
 
   public findCommentById(id: string): Promise<Comment> {
     return this.findOneBy({ id });
+    //return this.findOne({ where: {id}, relations: {likedUsers: true, dislikedUsers: true} });
   }
-
-  public async incrementLikeCount(commentId: string) {
-    let comment = await this.findCommentById(commentId);
-    comment.likes += 1;
-    await this.save(comment);
-  }
-
-  public async incrementDislikeCount(commentId: string) {
-    let comment = await this.findCommentById(commentId);
-    comment.dislikes += 1;
-    await this.save(comment);
-  }
-
+  
   public async deleteComment(commentId: string) {
-    let comment = await this.findCommentById(commentId);
-    await this.delete(comment);
+    console.log("delete", commentId);
+    let x = await this.delete({id: commentId});
+    console.log(x);
   }
 
   public async editComment(commentId: string, newText: string) {
@@ -41,4 +31,9 @@ export class CommentRepository extends Repository<Comment> {
     comment.edited = true;
     await this.save(comment);
   }
+
+  public findCommentsByParent(parentId: string): Promise<Comment[]> {
+    return this.findBy({ parentId });
+  }
+
 }

@@ -2,9 +2,13 @@ import {
   Body,
   Controller,
   HttpCode,
+  Get,
   Post,
+  Put,
+  Delete,
   Req,
   UseGuards,
+  Param,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -15,10 +19,8 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { WriteCommentDto } from '../dtos/comment/request/write-comment.dto';
-import { LikeCommentDto } from '../dtos/comment/request/like-comment.dto';
-import { DislikeCommentDto } from '../dtos/comment/request/dislike-comment.dto';
-import { DeleteCommentDto } from '../dtos/comment/request/delete-comment.dto';
 import { EditCommentDto } from '../dtos/comment/request/edit-comment.dto';
+import { GetCommentResponseDto } from '../dtos/comment/response/get-comment.response.dto';
 import { CommentService } from '../services/comment.service';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
@@ -28,7 +30,51 @@ import { AuthorizedRequest } from '../interfaces/common/authorized-request.inter
 export class CommentController {
   constructor(private readonly commentService: CommentService) { }
 
-  @ApiOperation({ summary: 'Comment on a post' })
+  @ApiOperation({ summary: 'Get comment details' })
+  @ApiOkResponse({
+    description: 'Comment details',
+    type: GetCommentResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid Credentials',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Get(':commentId/info')
+  public async getComment(
+    @Req() req: AuthorizedRequest,
+    @Param('commentId') commentId: string,
+  ) {
+    return await this.commentService.getComment(req.user.id, commentId);
+  }
+
+  @ApiOperation({ summary: 'Get comments of post/comment/review' })
+  @ApiOkResponse({
+    description: 'Comments of post/comment/review',
+    type: [GetCommentResponseDto],
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid Credentials',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Get(':parentId')
+  public async getCommentDetails(
+    @Req() req: AuthorizedRequest,
+    @Param('parentId') parentId: string,
+  ) {
+    return await this.commentService.getCommentsByParent(req.user.id, parentId);
+  }
+
+  @ApiOperation({ summary: 'Comment on a post/comment/review' })
   @ApiOkResponse({
     description: 'Comment',
   })
@@ -62,12 +108,12 @@ export class CommentController {
   @HttpCode(200)
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  @Post('/like-comment')
+  @Post(':commentId/like-comment')
   public async likeComment(
     @Req() req: AuthorizedRequest,
-    @Body() input: LikeCommentDto,
+    @Param('commentId') commentId: string,
   ) {
-    await this.commentService.likeComment(req.user.id, input);
+    await this.commentService.likeComment(req.user.id, commentId);
   }
 
   @ApiOperation({ summary: 'Dislike a comment' })
@@ -83,12 +129,12 @@ export class CommentController {
   @HttpCode(200)
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  @Post('/dislike-comment')
+  @Post(':commentId/dislike-comment')
   public async dislikeComment(
     @Req() req: AuthorizedRequest,
-    @Body() input: DislikeCommentDto,
+    @Param('commentId') commentId: string,
   ) {
-    await this.commentService.dislikeComment(req.user.id, input);
+    await this.commentService.dislikeComment(req.user.id, commentId);
   }
 
   @ApiOperation({ summary: 'Delete a comment' })
@@ -104,12 +150,13 @@ export class CommentController {
   @HttpCode(200)
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  @Post('/delete-comment')
+  @Delete(':commentId/delete-comment')
   public async deleteComment(
     @Req() req: AuthorizedRequest,
-    @Body() input: DeleteCommentDto,
+    @Param('commentId') commentId: string,
   ) {
-    await this.commentService.deleteComment(req.user.id, input);
+    console.log("comment id: ", commentId);
+    await this.commentService.deleteComment(req.user.id, commentId);
   }
 
   @ApiOperation({ summary: 'Edit a comment' })
@@ -125,11 +172,12 @@ export class CommentController {
   @HttpCode(200)
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  @Post('/edit-comment')
+  @Put(':commentId/edit-comment')
   public async editComment(
     @Req() req: AuthorizedRequest,
+    @Param('commentId') commentId: string,
     @Body() input: EditCommentDto,
   ) {
-    await this.commentService.editComment(req.user.id, input);
+    await this.commentService.editComment(req.user.id, commentId, input);
   }
 }
