@@ -4,8 +4,6 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  ManyToMany,
-  JoinTable,
   UpdateDateColumn,
 } from 'typeorm';
 import { Game } from './game.entity';

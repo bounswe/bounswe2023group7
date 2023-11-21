@@ -4,11 +4,7 @@ import {
   HttpCode,
   Delete,
   Param,
-  DefaultValuePipe,
-  ParseIntPipe,
   Post,
-  Get,
-  Query,
   Put,
   Req,
   UseGuards,
@@ -18,8 +14,6 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { RatingCreateDto } from '../dtos/rating/request/create.dto';
