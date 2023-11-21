@@ -39,8 +39,6 @@ function GamePage(id) {
       .then((response) => {
         setGame(response.data);
         setFollow(response.data.isFollowed);
-        console.log(response.data);
-        console.log(follow);
       })
       .catch((error) => {
         console.log(error);

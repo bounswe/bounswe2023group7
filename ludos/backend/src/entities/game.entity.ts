@@ -3,10 +3,12 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   VirtualColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Review } from './review.entity';
 
 @Entity('games')
 export class Game {
@@ -93,8 +95,8 @@ export class Game {
   @Column('text')
   trivia: string;
 
-  @Column('text', { array: true, default: '{}' })
-  reviews: string[];
+  @OneToMany('Review', 'game')
+  reviews: Review[];
 
   @ManyToMany(() => User, (user) => user.followedGames)
   @JoinTable({ name: 'game_user_follows' })

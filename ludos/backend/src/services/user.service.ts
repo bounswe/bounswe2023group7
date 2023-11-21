@@ -19,9 +19,11 @@ import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { LoginResponseDto } from '../dtos/user/response/login-response.dto';
 import { RegisterResponseDto } from '../dtos/user/response/register-response.dto';
+import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
 import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
+import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
 
 @Injectable()
 export class UserService {
@@ -30,7 +32,7 @@ export class UserService {
     private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+    ) {}
 
   public async register(input: RegisterDto): Promise<RegisterResponseDto> {
     try {
@@ -179,5 +181,25 @@ export class UserService {
     user.password = changePasswordDto.newPassword;
     await this.userRepository.save(user);
     return new ChangePasswordResponseDto(true);
+  }
+
+  public async editInfo(userId: string, editInfoDto: EditUserInfoDto) {
+    let user = await this.userRepository.findUserById(userId);
+    let updated = Object.assign(user, editInfoDto);
+    await this.userRepository.save(updated);
+  }
+  
+  public async getUserInfo(userId: string): Promise<GetUserInfoResponseDto> {
+    const user = await this.userRepository.findUserByIdWithRelations(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const response = new GetUserInfoResponseDto();
+    response.email = user.email;
+    response.username = user.username;
+    response.followedGames = user.followedGames;
+
+    return response;
   }
 }

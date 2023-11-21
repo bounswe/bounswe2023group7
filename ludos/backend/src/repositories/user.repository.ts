@@ -21,14 +21,26 @@ export class UserRepository extends Repository<User> {
   public findUserByEmail(email: string): Promise<User> {
     return this.findOneBy({ email: email });
   }
-
+  
   public findUserById(id: string): Promise<User> {
     return this.findOneBy({ id });
   }
 
-  public async updateUserPassword(input: Partial<User>, newPassword: string) {
+    public async updateUserPassword(input: Partial<User>, newPassword: string) {
     const user = await this.findUserByUsername(input.username);
     user.password = newPassword;
     await this.save(user);
+  }
+  
+  public async findUserByIdWithRelations(id: string): Promise<User> {
+    const user = await this.findOne({
+      relations: this.getAllRelationsAsList(),
+      where: { id: id },
+    });
+    return user;
+  }
+
+  public getAllRelationsAsList() {
+    return this.metadata.relations.map((relation) => relation.propertyName);
   }
 }

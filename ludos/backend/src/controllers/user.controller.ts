@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Post,
   Put,
@@ -25,6 +26,7 @@ import { ResetDto } from '../dtos/user/request/reset.dto';
 import { VerifyCodeDto } from '../dtos/user/request/verify-code.dto';
 import { ChangePasswordResponseDto } from '../dtos/user/response/change-password-response.dto';
 import { ChangePasswordDto } from '../dtos/user/request/change-password.dto';
+import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
@@ -32,7 +34,7 @@ import { AuthorizedRequest } from '../interfaces/common/authorized-request.inter
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
   @ApiOkResponse({
     description: 'Successful Register',
     type: RegisterResponseDto,
@@ -76,6 +78,7 @@ export class UserController {
   @ApiBadRequestResponse({
     description: 'Bad Request',
   })
+
   @HttpCode(200)
   @ApiOperation({ summary: 'Password Reset Request Endpoint' })
   @Post('/reset-password')
@@ -115,5 +118,40 @@ export class UserController {
     @Body() input: ChangePasswordDto,
   ) {
     return await this.userService.changePassword(req.user.id, input);
+  }
+
+  @ApiOperation({ summary: 'Edit User Info Endpoint' })
+  @ApiOkResponse({
+    description: 'User information edited.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid Credentials',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Put('/edit-info')
+  public async editUserInfo(
+    @Req() req: AuthorizedRequest,
+    @Body() input: EditUserInfoDto,
+  ) {
+    await this.userService.editInfo(req.user.id, input);
+  }
+  
+  @HttpCode(200)
+  @ApiUnauthorizedResponse({
+    description: 'Invalid User',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get User Info Request Endpoint' })
+  @Get('/info')
+  public async getUserInfoById(@Req() req: AuthorizedRequest) {
+    return await this.userService.getUserInfo(req.user.id);
   }
 }

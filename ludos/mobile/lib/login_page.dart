@@ -7,9 +7,15 @@ import 'helper/APIService.dart';
 import 'package:provider/provider.dart';
 import 'userProvider.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  LoginPageState createState() => LoginPageState();
+}
+
+class LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -50,20 +56,31 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 20),
               TextFormField(
                 controller: passwordController,
+                obscureText: _isObscure,
                 style: const TextStyle(color: MyColors.white),
-                obscureText: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                       color: MyColors.lightBlue, fontWeight: FontWeight.bold),
-                  prefixIcon: Icon(Icons.lock),
+                  prefixIcon: const Icon(Icons.lock),
                   prefixIconColor: MyColors.lightBlue,
-                  border: UnderlineInputBorder(
+                  border: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: MyColors.lightBlue, width: 2.0)),
-                  focusedBorder: UnderlineInputBorder(
+                  focusedBorder: const UnderlineInputBorder(
                     borderSide:
                         BorderSide(color: MyColors.lightBlue, width: 2.0),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isObscure ? Icons.visibility_off : Icons.visibility,
+                      color: MyColors.lightBlue,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isObscure = !_isObscure;
+                      });
+                    },
                   ),
                 ),
                 cursorColor: MyColors.lightBlue,
