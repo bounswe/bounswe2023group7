@@ -1,5 +1,5 @@
 import ForumPage from "./pages/forumPage.js";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./layout.js";
@@ -12,8 +12,49 @@ import CreateGamePage from "./pages/CreateGamePage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ForumsPage from "./pages/ForumsPage.js";
 import ProfilePage from "./pages/ProfilePage";
+import axios from "axios";
 
 function App() {
+  const [games, setGames] = useState([]);
+  const link = `http://${process.env.REACT_APP_API_URL}/game/`;
+  const convertToSlug = (text) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+      .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+      .replace(/--+/g, "-"); // Replace multiple dashes with single dash
+  };
+
+  const generateGameRoutes = () => {
+    return games.map((game) => {
+      const slug = convertToSlug(game.title); // Convert the title to a slug
+
+      return (
+        <Route
+          key={game.id}
+          path={`/game/${slug}`} // Use the slug in the route path
+          element={
+            <Layout>
+              {/* Render the GamePage component for each game */}
+              <GamePage gameId={game.id} />
+            </Layout>
+          }
+        />
+      );
+    });
+  };
+  useEffect(() => {
+    axios
+      .get(link)
+      .then((response) => {
+        setGames(response.data.items); // Set the games in state
+      })
+      .catch((error) => {
+        console.error("Error fetching games:", error);
+      });
+  }, []);
   const id = "a8a3c090-cc6c-4944-b203-13919c1d2aed";
   /*const game = {
     title: "God of War (2018)",
@@ -330,6 +371,7 @@ function App() {
               </Layout>
             }
           />
+
           <Route
             path="/game/Tekken-5"
             element={
@@ -338,6 +380,8 @@ function App() {
               </Layout>
             }
           />
+
+          {generateGameRoutes()}
           {/*<Route
             path="/game/Red-Dead-Redemption-2"
             element={
