@@ -54,6 +54,7 @@ export class PostRepository extends Repository<Post> {
     limit: number,
     searchKey?: string,
     tags?: string[],
+    gameId?: string,
     ownerUserId?: string,
     userId?: string, // denotes current user, used for like and dislike
     isLiked?: boolean,
@@ -62,7 +63,8 @@ export class PostRepository extends Repository<Post> {
     order: 'ASC' | 'DESC' = 'DESC',
   ): Promise<Pagination<Post, IPaginationMeta>> {
     const queryBuilder = this.createQueryBuilder('posts')
-      .leftJoinAndSelect('posts.user', 'user') // Assuming the relationship is named 'user'
+      .leftJoinAndSelect('posts.user', 'user')
+      .leftJoinAndSelect('posts.game', 'game')
       .where('1=1');
     if (searchKey) {
       searchKey = searchKey.trim().replace(/ /g, ' & ');
@@ -72,6 +74,9 @@ export class PostRepository extends Repository<Post> {
     }
     if (tags) {
       queryBuilder.andWhere('posts.tags @> :tags', { tags });
+    }
+    if (gameId) {
+      queryBuilder.andWhere('posts.gameId = :gameId', { gameId });
     }
     if (ownerUserId) {
       queryBuilder.andWhere('posts.userId = :ownerUserId', { ownerUserId });

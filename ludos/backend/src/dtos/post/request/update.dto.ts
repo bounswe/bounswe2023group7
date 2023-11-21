@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class PostUpdateDto {
   @ApiProperty({
@@ -16,6 +16,13 @@ export class PostUpdateDto {
   @IsString()
   @IsOptional()
   body?: string;
+
+  @ApiProperty({
+    description: 'Content of the post',
+  })
+  @IsUUID()
+  @IsOptional()
+  gameId?: string;
 
   @ApiProperty({
     description: 'Optional list of links for media',

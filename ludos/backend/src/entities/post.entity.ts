@@ -10,6 +10,7 @@ import {
   VirtualColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Game } from './game.entity';
 
 @Entity('posts')
 export class Post {
@@ -18,6 +19,9 @@ export class Post {
 
   @ManyToOne(() => User, { lazy: false })
   user: User;
+
+  @ManyToOne(() => Game, { lazy: false })
+  game: Game;
 
   @Column({ nullable: true })
   title: string;

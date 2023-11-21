@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class PostCreateDto {
   @ApiProperty({
@@ -15,6 +15,14 @@ export class PostCreateDto {
   })
   @IsString()
   body: string;
+
+  @ApiProperty({
+    description: 'Id of the game',
+    required: false,
+  })
+  @IsUUID()
+  @IsOptional()
+  gameId?: string;
 
   @ApiProperty({
     description: 'Optional list of links for media',

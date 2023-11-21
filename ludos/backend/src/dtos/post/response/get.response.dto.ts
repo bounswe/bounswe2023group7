@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { UserInOtherResponsesDto } from '../../user/response/user-in-other-responses.dto';
+import { GameGetResponseDto } from '../../game/response/get.response';
 
 export class PostGetResponseDto {
   @ApiProperty()
@@ -11,11 +12,13 @@ export class PostGetResponseDto {
   @Expose()
   title: string;
 
-  @ApiProperty({
-    type: () => UserInOtherResponsesDto,
-  })
+  @Expose()
+  @Type(() => GameGetResponseDto)
+  @ApiProperty({ type: GameGetResponseDto })
+  game: GameGetResponseDto;
   @Expose()
   @Type(() => UserInOtherResponsesDto)
+  @ApiProperty({ type: UserInOtherResponsesDto })
   user: UserInOtherResponsesDto;
   @ApiProperty()
   @Expose()

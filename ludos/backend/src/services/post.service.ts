@@ -6,22 +6,30 @@ import { PostCreateResponseDto } from '../dtos/post/response/create.response.dto
 import { Post } from '../entities/post.entity';
 import { PostRepository } from '../repositories/post.repository';
 import { UserRepository } from '../repositories/user.repository';
+import { GameRepository } from '../repositories/game.repository';
 
 @Injectable()
 export class PostService {
   constructor(
     private readonly postRepository: PostRepository,
     private readonly userRepository: UserRepository,
+    private readonly gameRepository: GameRepository,
   ) {}
 
   public async createPost(
     userId: string,
     input: PostCreateDto,
   ): Promise<PostCreateResponseDto> {
+    const { gameId, ...partialPost } = input;
     const user = await this.userRepository.findUserById(userId);
+    const game = await this.gameRepository.findGameById(gameId);
+    if (!game) {
+      throw new NotFoundException('Game not found');
+    }
     const post = await this.postRepository.createPost({
       user,
-      ...input,
+      game,
+      ...partialPost,
     });
     return post;
   }
@@ -30,10 +38,18 @@ export class PostService {
     input: PostUpdateDto,
     userId: string,
   ): Promise<void> {
+    const { gameId, ...partialPost } = input;
+    const game = await this.gameRepository.findGameById(gameId);
+    if (!game) {
+      throw new NotFoundException('Game not found');
+    }
     const updateResult = await this.postRepository.updatePostByIdAndUserId(
       id,
       userId,
-      input,
+      {
+        game,
+        ...partialPost,
+      },
     );
     if (updateResult.affected == 0) {
       throw new NotFoundException('Post not found or Forbidden');
@@ -115,6 +131,7 @@ export class PostService {
     limit: number,
     searchKey?: string,
     tags?: string,
+    gameId?: string,
     ownerUserId?: string,
     userId?: string,
     isLiked?: boolean,
@@ -128,6 +145,7 @@ export class PostService {
       limit,
       searchKey,
       tagList,
+      gameId,
       ownerUserId,
       userId,
       isLiked,

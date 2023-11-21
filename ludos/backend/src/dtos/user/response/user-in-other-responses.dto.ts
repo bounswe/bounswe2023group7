@@ -4,6 +4,9 @@ import { Expose } from 'class-transformer';
 export class UserInOtherResponsesDto {
   @ApiProperty()
   @Expose()
+  id: string;
+  @ApiProperty()
+  @Expose()
   username: string;
   @ApiProperty()
   @Expose()

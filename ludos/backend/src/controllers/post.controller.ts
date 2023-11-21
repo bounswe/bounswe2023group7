@@ -55,6 +55,7 @@ export class PostController {
     type: PostCreateResponseDto,
   })
   @ApiForbiddenResponse({ description: 'User should login' })
+  @ApiNotFoundResponse({ description: 'Game not found' })
   @ApiOperation({ summary: 'Create Post Endpoint' })
   @ApiBearerAuth()
   @UseInterceptors(new SerializerInterceptor(PostCreateResponseDto))
@@ -91,6 +92,7 @@ export class PostController {
   @ApiBadRequestResponse({
     description: 'Bad Request',
   })
+  @ApiNotFoundResponse({ description: 'Game not found' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Put(':id')
@@ -163,6 +165,7 @@ export class PostController {
     description: 'Comma separated list of tags. This filter works like AND',
     example: 'tag1,tag2,tag3',
   })
+  @ApiQuery({ name: 'gameId', required: false })
   @ApiQuery({ name: 'ownerUserId', required: false })
   @ApiQuery({
     name: 'isLiked',
@@ -203,6 +206,7 @@ export class PostController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
     @Query('searchKey') searchKey?: string,
     @Query('tags') tags?: string,
+    @Query('gameId') gameId?: string,
     @Query('ownerUserId') ownerUserId?: string,
     @Query('isLiked', new DefaultValuePipe(false), ParseBoolPipe)
     isLiked?: boolean,
@@ -216,6 +220,7 @@ export class PostController {
       limit,
       searchKey,
       tags,
+      gameId,
       ownerUserId,
       req.user && req.user.id,
       isLiked,
