@@ -207,7 +207,6 @@ export class UserService {
     response.avatar = user.avatar;
     response.aboutMe = user.aboutMe;
     response.steamUrl = user.steamUrl;
-
     return response;
   }
 }
