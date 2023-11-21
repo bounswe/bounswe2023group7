@@ -18,6 +18,7 @@ import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import GroupIcon from "@mui/icons-material/Groups";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ForumIcon from "@mui/icons-material/Forum";
 import { Link } from "react-router-dom";
 
 const drawerWidth = 90;
@@ -142,6 +143,27 @@ function Sidebar({ userLoggedIn }) {
                   <Stack direction="column" alignItems="center">
                     <ListItemText
                       primary="Groups"
+                      primaryTypographyProps={{
+                        style: {
+                          fontSize: "15px",
+                          fontFamily: "OCR A Std, monospace",
+                          fontWeight: "bold",
+                        },
+                      }}
+                    />
+                  </Stack>
+                </ListItemIcon>
+              </div>
+            </ListItem>
+            <ListItem button component={Link} to="/forums">
+              <div>
+                <ListItemIcon style={listItem}>
+                  <div style={circleIcon}>
+                    <ForumIcon />
+                  </div>
+                  <Stack direction="column" alignItems="center">
+                    <ListItemText
+                      primary="Forums"
                       primaryTypographyProps={{
                         style: {
                           fontSize: "15px",

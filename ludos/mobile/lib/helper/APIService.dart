@@ -4,6 +4,7 @@ import 'dart:convert';
 
 class APIService {
   var baseURL = "http://3.125.225.39:8080";
+  String? token = "";
   Future<(String?, int)> login(String username, String password) async {
     var uri = Uri.parse("$baseURL/user/login");
 
@@ -15,6 +16,10 @@ class APIService {
     Map<String, dynamic> responseBody = jsonDecode(response.body);
     String? authToken = responseBody['accessToken'];
     (String?, int) res = (authToken,response.statusCode);
+    token = authToken;
+    print("token");
+    print(token);
+    print("token");
     return res;
   }
 
@@ -96,4 +101,13 @@ class APIService {
     return response;
   }
 
+  Future<Map<String, dynamic>> getGame(String id,String? authToken) async {
+    var uri = Uri.parse("$baseURL/game/$id");
+    final response = await http.get(uri, headers: {'content-type': "application/json",'Authorization': 'Bearer $authToken'});
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to load game data');
+    }
+  }
 }

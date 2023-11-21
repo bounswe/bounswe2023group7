@@ -4,36 +4,26 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  ManyToMany,
-  JoinTable,
   UpdateDateColumn,
+  Unique,
 } from 'typeorm';
 import { Game } from './game.entity';
 import { User } from './user.entity';
 
-@Entity('reviews')
-export class Review {
+@Entity('ratings')
+@Unique(['game', 'user'])
+export class Rating {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('text')
-  content: string;
-
+  @Column('float')
   rating: number;
 
-  @ManyToOne(() => Game, (game) => game.reviews, { cascade: true })
+  @ManyToOne(() => Game, (game) => game.ratingList, { cascade: true })
   game: Game;
 
-  @ManyToOne(() => User, (user) => user.reviews, { cascade: true })
+  @ManyToOne(() => User, (user) => user.ratingList, { cascade: true })
   user: User;
-
-  @ManyToMany('User', 'likedReviews')
-  @JoinTable({ name: 'review_user_likes' })
-  likedUsers: User[];
-
-  @ManyToMany('User', 'dislikedReviews')
-  @JoinTable({ name: 'review_user_dislikes' })
-  dislikedUsers: User[];
 
   @CreateDateColumn({
     type: 'timestamp',

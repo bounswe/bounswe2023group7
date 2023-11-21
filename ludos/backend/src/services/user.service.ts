@@ -200,6 +200,13 @@ export class UserService {
     response.email = user.email;
     response.username = user.username;
     response.followedGames = user.followedGames;
+    response.ratings = user.ratingList;
+    response.isNotificationEnabled = user.isNotificationEnabled;
+    response.userType = user.userType;
+    response.fullName = user.fullName;
+    response.avatar = user.avatar;
+    response.aboutMe = user.aboutMe;
+    response.steamUrl = user.steamUrl;
 
     return response;
   }

@@ -13,6 +13,8 @@ import { Game } from './game.entity';
 import { UserType } from '../enums/user-type.enum';
 import { Review } from './review.entity';
 import { Post } from './post.entity';
+import { Rating } from './rating.entity';
+
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -54,6 +56,8 @@ export class User {
 
   @OneToMany('Post', 'user')
   posts: Post[];
+  @OneToMany('Rating', 'user')
+  ratingList: Rating[];
 
   @ManyToMany('Review', 'likedUsers')
   likedReviews: Review[];

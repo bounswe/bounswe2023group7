@@ -44,6 +44,8 @@ class _GamesPageState extends State<GamesPage> {
           textColor: MyColors.white,
           backgroundColor: MyColors.red,
           fontSize: 20,
+          id: item['id'],
+          token: widget.token
         )).toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
