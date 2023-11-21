@@ -32,7 +32,7 @@ export class UserService {
     private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    ) {}
+  ) { }
 
   public async register(input: RegisterDto): Promise<RegisterResponseDto> {
     try {
@@ -188,7 +188,7 @@ export class UserService {
     let updated = Object.assign(user, editInfoDto);
     await this.userRepository.save(updated);
   }
-  
+
   public async getUserInfo(userId: string): Promise<GetUserInfoResponseDto> {
     const user = await this.userRepository.findUserByIdWithRelations(userId);
     if (!user) {
@@ -199,6 +199,13 @@ export class UserService {
     response.email = user.email;
     response.username = user.username;
     response.followedGames = user.followedGames;
+    response.ratings = user.ratingList;
+    response.isNotificationEnabled = user.isNotificationEnabled;
+    response.userType = user.userType;
+    response.fullName = user.fullName;
+    response.avatar = user.avatar;
+    response.aboutMe = user.aboutMe;
+    response.steamUrl = user.steamUrl;
 
     return response;
   }

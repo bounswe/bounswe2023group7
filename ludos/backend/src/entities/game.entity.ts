@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Review } from './review.entity';
+import { Rating } from './rating.entity';
 
 @Entity('games')
 export class Game {
@@ -97,6 +98,9 @@ export class Game {
 
   @OneToMany('Review', 'game')
   reviews: Review[];
+
+  @OneToMany('Rating', 'game')
+  ratingList: Rating[];
 
   @ManyToMany(() => User, (user) => user.followedGames)
   @JoinTable({ name: 'game_user_follows' })
