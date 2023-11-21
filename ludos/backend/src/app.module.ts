@@ -47,7 +47,7 @@ import { Rating } from './entities/rating.entity';
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService],
     }),
-    TypeOrmModule.forFeature([User, Game,Review, ResetPassword,Rating]),
+    TypeOrmModule.forFeature([User, Game,Review, ResetPassword,Rating, Comment]),
   ],
   controllers: [AppController, UserController, GameController, S3Controller, ReviewController,RatingController, CommentController],
   providers: [
@@ -62,6 +62,8 @@ import { Rating } from './entities/rating.entity';
     CommentService,
     ReviewRepository,
     ReviewService,
+    RatingRepository,
+    RatingService
   ],
 })
 export class AppModule implements NestModule {
