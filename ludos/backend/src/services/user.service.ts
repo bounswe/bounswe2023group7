@@ -32,7 +32,7 @@ export class UserService {
     private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    ) {}
+  ) {}
 
   public async register(input: RegisterDto): Promise<RegisterResponseDto> {
     try {
@@ -189,7 +189,7 @@ export class UserService {
     delete updated.password;
     await this.userRepository.save(updated);
   }
-  
+
   public async getUserInfo(userId: string): Promise<GetUserInfoResponseDto> {
     const user = await this.userRepository.findUserByIdWithRelations(userId);
     if (!user) {
