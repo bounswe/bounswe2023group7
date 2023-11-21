@@ -184,8 +184,9 @@ export class UserService {
   }
 
   public async editInfo(userId: string, editInfoDto: EditUserInfoDto) {
-    let user = await this.userRepository.findUserById(userId);
-    let updated = Object.assign(user, editInfoDto);
+    const user = await this.userRepository.findUserById(userId);
+    const updated = Object.assign(user, editInfoDto);
+    delete updated.password;
     await this.userRepository.save(updated);
   }
   
