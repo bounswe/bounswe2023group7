@@ -44,7 +44,7 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @ApiCreatedResponse({
-    description: 'Game created successfully',
+    description: 'Post created successfully',
     type: PostCreateResponseDto,
   })
   @ApiBadRequestResponse({
