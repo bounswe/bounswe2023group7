@@ -186,6 +186,7 @@ export class UserService {
   public async editInfo(userId: string, editInfoDto: EditUserInfoDto) {
     const user = await this.userRepository.findUserById(userId);
     const updated = Object.assign(user, editInfoDto);
+    delete updated.password;
     await this.userRepository.save(updated);
   }
 
@@ -199,6 +200,13 @@ export class UserService {
     response.email = user.email;
     response.username = user.username;
     response.followedGames = user.followedGames;
+    response.ratings = user.ratingList;
+    response.isNotificationEnabled = user.isNotificationEnabled;
+    response.userType = user.userType;
+    response.fullName = user.fullName;
+    response.avatar = user.avatar;
+    response.aboutMe = user.aboutMe;
+    response.steamUrl = user.steamUrl;
 
     return response;
   }

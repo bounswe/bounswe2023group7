@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../game_page.dart';
 import '/helper/colors.dart';
 import '/reusable_widgets/single_rating_icon.dart';
 
@@ -12,6 +13,8 @@ class GameSummary extends StatefulWidget {
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
+  final String id;
+  final String? token;
 
   const GameSummary({
     Key? key,
@@ -24,20 +27,24 @@ class GameSummary extends StatefulWidget {
     required this.textColor,
     required this.backgroundColor,
     required this.fontSize,
+    required this.id,
+    required this.token,
   }) : super(key: key);
 
   @override
   State<GameSummary> createState() => _GameSummaryState(
-    title: title,
-    averageRating: averageRating,
-    coverLink: coverLink,
-    numOfFollowers: numOfFollowers,
-    gameStory: gameStory,
-    tags: tags,
-    textColor: textColor,
-    backgroundColor: backgroundColor,
-    fontSize: fontSize,
-  );
+        title: title,
+        averageRating: averageRating,
+        coverLink: coverLink,
+        numOfFollowers: numOfFollowers,
+        gameStory: gameStory,
+        tags: tags,
+        textColor: textColor,
+        backgroundColor: backgroundColor,
+        fontSize: fontSize,
+        id: id,
+        token: token
+      );
 }
 
 class _GameSummaryState extends State<GameSummary> {
@@ -50,6 +57,8 @@ class _GameSummaryState extends State<GameSummary> {
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
+  final String id;
+  final String? token;
 
   _GameSummaryState({
     required this.title,
@@ -61,6 +70,8 @@ class _GameSummaryState extends State<GameSummary> {
     required this.textColor,
     required this.backgroundColor,
     required this.fontSize,
+    required this.id,
+    required this.token,
   });
 
   @override
@@ -69,12 +80,20 @@ class _GameSummaryState extends State<GameSummary> {
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: backgroundColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            )
-          ),
+              backgroundColor: backgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              )),
           onPressed: () {
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GamePage(id: id, token: token),
+              ),
+            );
+
+
             // Handle button press for the specific game
             // Navigate to the game's profile page
           },
@@ -100,10 +119,17 @@ class _GameSummaryState extends State<GameSummary> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.network(
-                        coverLink,
+                      FadeInImage(
                         width: 100,
                         height: 160,
+                        image: NetworkImage(coverLink),
+                        placeholder: const AssetImage(
+                          'assets/images/default_game.jpg',
+                        ),
+                        imageErrorBuilder: (context, error, stackTrace) {
+                          return Image.asset('assets/images/default_game.jpg',
+                              width: 100, height: 160, fit: BoxFit.fill);
+                        },
                         fit: BoxFit.fill,
                       ),
                     ],
@@ -112,55 +138,65 @@ class _GameSummaryState extends State<GameSummary> {
                     height: 160,
                     width: 210,
                     child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Icon(Icons.favorite, size: 20, color: MyColors.lightBlue),
-                                    Text(
-                                      "+$numOfFollowers favorites",
-                                      style: const TextStyle(
-                                        color: MyColors.lightBlue,
-                                        fontSize: 16.0,
-                                      )
-                                    )
-                                  ]
-                                ),
-                                Row(
-                                  children: List<Widget>.generate(
-                                    5, // Total number of stars
-                                        (index) {
-                                      double diff = 4.5 - index;
-                                      if (diff >= 1.0) {
-                                        // Full star
-                                        return const SingleRatingIcon(icon: Icons.star, size: 20, iconColor: MyColors.lightBlue, rating: 10.0);
-                                      } else if (diff >= 0.5) {
-                                        // Floating star
-                                        return SingleRatingIcon(icon: Icons.star, size: 20, iconColor: MyColors.lightBlue, rating: diff * 10.0);
-                                      } else {
-                                        // Empty star
-                                        return const SingleRatingIcon(icon: Icons.star, size: 20, iconColor: MyColors.lightBlue, rating: 0.0);
-                                      }
-                                    },
-                                  ).toList(),
-                                ),
-                              ]
-                            ),
-                          const SizedBox(height: 10),
-                          Text(
-                              "Here will be brief game story.",
-                              softWrap: true,
-                              style: TextStyle(
-                                color: MyColors.darkBlue,
-                                fontSize: fontSize,
+                                    const Icon(Icons.favorite,
+                                        size: 20, color: MyColors.lightBlue),
+                                    Text("+$numOfFollowers favorites",
+                                        style: const TextStyle(
+                                          color: MyColors.lightBlue,
+                                          fontSize: 16.0,
+                                        ))
+                                  ]),
+                              Row(
+                                children: List<Widget>.generate(
+                                  5, // Total number of stars
+                                  (index) {
+                                    double diff = 4.5 - index;
+                                    if (diff >= 1.0) {
+                                      // Full star
+                                      return const SingleRatingIcon(
+                                          icon: Icons.star,
+                                          size: 20,
+                                          iconColor: MyColors.lightBlue,
+                                          rating: 10.0);
+                                    } else if (diff >= 0.5) {
+                                      // Floating star
+                                      return SingleRatingIcon(
+                                          icon: Icons.star,
+                                          size: 20,
+                                          iconColor: MyColors.lightBlue,
+                                          rating: diff * 10.0);
+                                    } else {
+                                      // Empty star
+                                      return const SingleRatingIcon(
+                                          icon: Icons.star,
+                                          size: 20,
+                                          iconColor: MyColors.lightBlue,
+                                          rating: 0.0);
+                                    }
+                                  },
+                                ).toList(),
                               ),
-                            ),
-                        ],
+                            ]),
+                        const SizedBox(height: 10),
+                        Text(
+                          "Here will be brief game story.",
+                          softWrap: true,
+                          style: TextStyle(
+                            color: MyColors.darkBlue,
+                            fontSize: fontSize,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -179,12 +215,12 @@ class _GameSummaryState extends State<GameSummary> {
                       textStyle: const TextStyle(color: MyColors.darkBlue),
                     ),
                     child: Text(
-                        tag,
-                        style: const TextStyle(
-                          color: MyColors.darkBlue,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17.0,
-                        ),
+                      tag,
+                      style: const TextStyle(
+                        color: MyColors.darkBlue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17.0,
+                      ),
                     ),
                   );
                 }).toList(),

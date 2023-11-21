@@ -5,6 +5,10 @@ import {
   Typography,
   Box,
   Button,
+  Modal,
+  TextField,
+  Input,
+  Snackbar,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import steamLogo from "../assets/steam.png";
@@ -12,12 +16,86 @@ import epicLogo from "../assets/epic.png";
 import itchioLogo from "../assets/itchio.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 function ProfilePage() {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    fullName: "",
+    steamUrl: "",
+    aboutMe: "",
+  });
+  const [open, setOpen] = useState(false);
   const [auth, setAuth] = useState(false);
   const [profile, setProfile] = useState("");
   const [favGames, setFavGames] = useState([]);
+  const [avatarImage, setAvatarImage] = useState(null);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbar, setSnackbar] = useState(false);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    console.log(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+      console.log(reader);
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        console.log(formData);
+        const link = `http://${process.env.REACT_APP_API_URL}/external/upload`;
+        axios
+          .post(link, formData, {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            const link2 = `http://${process.env.REACT_APP_API_URL}/user/edit-info`;
+            axios
+              .put(
+                link2,
+                {
+                  avatar: response.data.url,
+                },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " + localStorage.getItem("accessToken"),
+                  },
+                },
+              )
+              .then(() => {
+                setSnackbarMessage("Image uploaded successfully!");
+                setSnackbar(true);
+              })
+              .catch((error) => {
+                console.log(error);
+                setSnackbarMessage("Image could not be uploaded!");
+                setSnackbar(true);
+              });
+
+            // Now you can update the profile or perform any other action with the response data
+          })
+          .catch((error) => {
+            console.error("Error uploading file:", error);
+            setSnackbarMessage("Image could not be uploaded!");
+            setSnackbar(true);
+          });
+
+        // Now you can update the profile or perform any other action with the response data
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+    }
+  };
+
   useEffect(() => {
     setAuth(false);
     if (localStorage.getItem("accessToken")) {
@@ -49,6 +127,75 @@ function ProfilePage() {
     }
   }, []);
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const closeSnackbar = () => {
+    setSnackbarMessage("");
+    setSnackbar(false);
+  };
+  const submitInformation = () => {
+    console.log(formData);
+    const link = `http://${process.env.REACT_APP_API_URL}/user/edit-info`;
+
+    axios
+      .put(
+        link,
+        {
+          fullName: formData.fullName,
+          steamUrl: formData.steamUrl,
+          aboutMe: formData.aboutMe,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        },
+      )
+      .then(() => {
+        setSnackbarMessage("Information updated successfully!");
+        setSnackbar(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        setSnackbarMessage("Information could not be updated!");
+        setSnackbar(true);
+      });
+    setOpen(false);
+  };
+  const handleChange = (event) => {
+    const { id, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const openSteamTab = () => {
+    window.open(
+      "https://steamcommunity.com/profiles/76561199020341351/",
+      "_blank",
+    );
+  };
+
+  const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    backgroundColor: "rgba(255,170,0, 0.8)",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+    display: "flex",
+    flexDirection: "column",
+    borderRadius: "5%",
+  };
+
   const boxStyle = {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
     borderRadius: "10px",
@@ -60,9 +207,10 @@ function ProfilePage() {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
     borderRadius: "10px",
     paddingTop: "15px",
-    height: "300px",
+    height: "320px",
     marginTop: "7px",
   };
+
   const bioBoxStyle = {
     backgroundColor: "rgba(255, 255, 255, 0.06)",
     color: "rgb(0, 150, 255)",
@@ -123,6 +271,12 @@ function ProfilePage() {
         <Container
           style={{ backgroundColor: "rgb(0, 150, 255)", maxWidth: "1200px" }}
         >
+          <Snackbar
+            open={snackbar}
+            autoHideDuration={3000}
+            onClose={closeSnackbar}
+            message={snackbarMessage}
+          />
           <Grid container spacing={1} style={boxStyle}>
             <Grid
               item
@@ -132,51 +286,70 @@ function ProfilePage() {
               lg={3}
               style={{ marginLeft: "3%" }}
             >
-              <Avatar alt="Empty Profile Photo" style={avatarStyle} />
-              <Typography
-                component="legend"
+              <Input
+                type="file"
+                accept="image/*"
+                id="upload-avatar"
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+              />
+              <label htmlFor="upload-avatar">
+                <Button component="span" style={{ minWidth: 0 }}>
+                  {avatarImage ? (
+                    <img src={avatarImage} style={avatarStyle} alt="Profile" />
+                  ) : (
+                    <Avatar alt="Empty Profile Photo" style={avatarStyle} />
+                  )}
+                </Button>
+              </label>
+              <Grid
                 style={{
-                  fontFamily: "Trebuchet MS, sans-serif",
-                  color: "rgb(0, 150, 255)",
-                  marginTop: "2%",
+                  marginTop: "3%",
+                  display: "flex",
+                  justifyContent: "center",
                 }}
               >
-                @{profile.username}
-              </Typography>
+                <Typography
+                  component="legend"
+                  style={{
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    color: "rgb(0, 150, 255)",
+                    marginTop: "2%",
+                    marginLeft: "30%",
+                  }}
+                >
+                  @{profile.username}
+                </Typography>
+                <Button>
+                  <NotificationsIcon
+                    style={{ color: "red" }}
+                    className="notification-icon"
+                  />
+                </Button>
+              </Grid>
+
               <Grid style={{ marginTop: "3%" }}>
-                <Box
-                  component="img"
-                  sx={{
-                    height: 30,
-                    width: 30,
-                    marginRight: "2%",
-                  }}
-                  onClick={() => {}}
-                  alt="Steam"
-                  src={steamLogo}
-                />
-                <Box
-                  component="img"
-                  sx={{
-                    height: 30,
-                    width: 30,
-                    marginRight: "2%",
-                  }}
-                  onClick={() => {}}
-                  alt="Epic Games"
-                  src={epicLogo}
-                />
-                <Box
-                  component="img"
-                  sx={{
-                    height: 30,
-                    width: 30,
-                    marginRight: "2%",
-                  }}
-                  onClick={() => {}}
-                  alt="Itch.io"
-                  src={itchioLogo}
-                />
+                <Button onClick={openSteamTab} style={{ minWidth: 0 }}>
+                  <img
+                    src={steamLogo}
+                    style={{ height: 30, width: 30 }}
+                    alt="Steam"
+                  />
+                </Button>
+                <Button style={{ minWidth: 0 }}>
+                  <img
+                    src={epicLogo}
+                    style={{ height: 30, width: 30 }}
+                    alt="Epic"
+                  />
+                </Button>
+                <Button style={{ minWidth: 0 }}>
+                  <img
+                    src={itchioLogo}
+                    style={{ height: 30, width: 30 }}
+                    alt="Itch.io"
+                  />
+                </Button>
               </Grid>
             </Grid>
             <Grid
@@ -199,7 +372,7 @@ function ProfilePage() {
                   component="div"
                   style={{ fontFamily: "Trebuchet MS, sans-serif" }}
                 >
-                  Cemre Beydirel
+                  {profile.fullName || "Yunus Emre"}
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12} style={bioBoxStyle}>
@@ -211,7 +384,8 @@ function ProfilePage() {
                     color: "rgb(0, 150, 255)",
                   }}
                 >
-                  A university student who is interested in strategy games.
+                  {profile.aboutMe ||
+                    "A university student who is interested in strategy games."}
                 </Typography>
               </Grid>
             </Grid>
@@ -242,7 +416,7 @@ function ProfilePage() {
                   component="legend"
                   style={{ fontFamily: "Trebuchet MS, sans-serif" }}
                 >
-                  Nnumber of Posts
+                  Number of Posts
                 </Typography>
                 <Typography
                   component="div"
@@ -285,17 +459,110 @@ function ProfilePage() {
                   <Button
                     variant="contained"
                     style={{
-                      backgroundColor: "rgba(30, 30, 30, 0)",
+                      backgroundColor: "rgb(0, 150, 255)",
                       textTransform: "none",
-                      color: "green",
+                      color: "white",
                       fontFamily: "Trebuchet MS, sans-serif",
                       width: "100%",
                       marginTop: "4%",
                     }}
-                    onClick={() => {}}
+                    onClick={handleOpen}
                   >
                     Edit My Profile
                   </Button>
+                  <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Grid style={modalStyle}>
+                      <Typography
+                        component="legend"
+                        style={{
+                          fontFamily: "Trebuchet MS, sans-serif",
+                          marginTop: "2%",
+                          marginLeft: "5%",
+                          marginRight: "5%",
+                        }}
+                      >
+                        Full Name
+                      </Typography>
+                      <TextField
+                        id="fullName"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        style={{
+                          backgroundColor: "white",
+                          marginTop: "2%",
+                          marginLeft: "5%",
+                          marginRight: "5%",
+                        }}
+                      />
+                      <Typography
+                        component="legend"
+                        style={{
+                          fontFamily: "Trebuchet MS, sans-serif",
+                          marginTop: "2%",
+                          marginLeft: "5%",
+                          marginRight: "5%",
+                        }}
+                      >
+                        Steam ID:
+                      </Typography>
+                      <TextField
+                        id="steamUrl"
+                        value={formData.steamUrl}
+                        onChange={handleChange}
+                        style={{
+                          backgroundColor: "white",
+                          marginTop: "2%",
+                          marginLeft: "5%",
+                          marginRight: "5%",
+                        }}
+                      />
+                      <Typography
+                        component="legend"
+                        style={{
+                          fontFamily: "Trebuchet MS, sans-serif",
+                          marginTop: "2%",
+                          marginLeft: "5%",
+                          marginRight: "5%",
+                        }}
+                      >
+                        Bio:
+                      </Typography>
+                      <TextField
+                        id="aboutMe"
+                        value={formData.aboutMe}
+                        onChange={handleChange}
+                        style={{
+                          backgroundColor: "white",
+                          marginTop: "2%",
+                          marginLeft: "5%",
+                          marginRight: "5%",
+                        }}
+                        multiline
+                        maxRows={4}
+                      />
+                      <Button
+                        variant="contained"
+                        style={{
+                          backgroundColor: "rgb(0, 150, 255)",
+                          textTransform: "none",
+                          color: "white",
+                          fontFamily: "Trebuchet MS, sans-serif",
+                          width: "40%",
+                          marginTop: "4%",
+                          marginLeft: "55%",
+                          marginBottom: "4%",
+                        }}
+                        onClick={submitInformation}
+                      >
+                        Submit
+                      </Button>
+                    </Grid>
+                  </Modal>
                 </Grid>
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12} style={genreBoxStyle}>
@@ -364,15 +631,26 @@ function ProfilePage() {
               </Typography>
             </Grid>
             {favGames.map((game, index1) => (
-              <Grid key={index1} style={{ marginLeft: "5%" }}>
+              <Grid
+                key={index1}
+                style={{
+                  marginLeft: "5%",
+                  backgroundColor: "rgba(255, 255, 255, 0.06)",
+                  height: 240,
+                  width: 180,
+                  borderRadius: "5%",
+                }}
+              >
                 <Box
                   component="img"
                   sx={{
                     height: 200,
                     width: 150,
+                    borderRadius: "50%",
+                    marginTop: "5%",
                   }}
                   onClick={() => {}}
-                  alt="Steam"
+                  alt={game.title}
                   src={game.coverLink}
                 />
                 <Typography

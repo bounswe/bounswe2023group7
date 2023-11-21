@@ -9,6 +9,7 @@ import { GameRepository } from '../src/repositories/game.repository';
 import { UserRepository } from '../src/repositories/user.repository';
 import { GameService } from '../src/services/game.service';
 import { AuthorizedRequest } from '../src/interfaces/common/authorized-request.interface';
+import { RatingRepository } from '../src/repositories/rating.repository';
 describe('GameController', () => {
   let gameController: GameController;
   let gameRepository: GameRepository;
@@ -29,6 +30,7 @@ describe('GameController', () => {
         GameService,
         GameRepository,
         UserRepository,
+        RatingRepository,
         {
           provide: DataSource,
           useValue: dataSource,

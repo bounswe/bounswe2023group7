@@ -4,6 +4,7 @@ import 'dart:convert';
 
 class APIService {
   var baseURL = "http://3.125.225.39:8080";
+  String? token = "";
   Future<(String?, int)> login(String username, String password) async {
     var uri = Uri.parse("$baseURL/user/login");
 
@@ -15,6 +16,10 @@ class APIService {
     Map<String, dynamic> responseBody = jsonDecode(response.body);
     String? authToken = responseBody['accessToken'];
     (String?, int) res = (authToken,response.statusCode);
+    token = authToken;
+    print("token");
+    print(token);
+    print("token");
     return res;
   }
 
@@ -39,7 +44,7 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> createGame(String title, String coverLink, 
+  Future<http.Response> createGame(String? authToken, String title, String coverLink,
   String systemRequirements, List<String> predecessors, List<String> successors, 
   String gameGuide, String gameStory, List<String> platforms, String ageRestriction, 
   String gameBio, List<String> tags, String releaseDate, String developer, 
@@ -62,7 +67,7 @@ class APIService {
       'publisher': publisher,
       'trivia': trivia,
     });
-    final response = await http.post(uri, body: body, headers: {'content-type': "application/json"});
+    final response = await http.post(uri, body: body, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
 
     return response;
   }
@@ -89,11 +94,20 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> listGames() async {
-    var uri = Uri.parse("$baseURL/game?limit=10");
-    final response = await http.get(uri, headers: {'content-type': "application/json"});
+  Future<http.Response> listGames(String? authToken) async {
+    var uri = Uri.parse("$baseURL/game?limit=20");
+    final response = await http.get(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
 
     return response;
   }
 
+  Future<Map<String, dynamic>> getGame(String id,String? authToken) async {
+    var uri = Uri.parse("$baseURL/game/$id");
+    final response = await http.get(uri, headers: {'content-type': "application/json",'Authorization': 'Bearer $authToken'});
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to load game data');
+    }
+  }
 }
