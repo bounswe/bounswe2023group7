@@ -10,6 +10,7 @@ import SignUpPage from "./pages/SignupPage.js";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.js";
 import CreateGamePage from "./pages/CreateGamePage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
+import ForumsPage from "./pages/ForumsPage.js";
 import ProfilePage from "./pages/ProfilePage";
 
 function App() {
@@ -310,6 +311,14 @@ function App() {
             element={
               <Layout>
                 <HomePage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/forums"
+            element={
+              <Layout>
+                <ForumsPage />
               </Layout>
             }
           />

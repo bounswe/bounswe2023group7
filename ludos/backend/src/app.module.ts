@@ -15,10 +15,14 @@ import { GameController } from './controllers/game.controller';
 import { GameService } from './services/game.service';
 import { GameRepository } from './repositories/game.repository';
 import { Game } from './entities/game.entity';
+import { Comment } from './entities/comment.entity';
 import { TokenDecoderMiddleware } from './middlewares/tokenDecoder.middleware';
 import { ResetPasswordRepository } from './repositories/reset-password.repository';
+import { CommentRepository } from './repositories/comment.repository';
 import { S3Service } from './services/s3.service';
 import { S3Controller } from './controllers/s3.controller';
+import { CommentService } from './services/comment.service';
+import { CommentController } from './controllers/comment.controller';
 import { ReviewRepository } from './repositories/review.repository';
 import { ReviewService } from './services/review.service';
 import { ReviewController } from './controllers/review.controller';
@@ -27,6 +31,7 @@ import { RatingController } from './controllers/rating.controller';
 import { RatingRepository } from './repositories/rating.repository';
 import { RatingService } from './services/rating.service';
 import { Rating } from './entities/rating.entity';
+
 
 
 @Module({
@@ -44,7 +49,7 @@ import { Rating } from './entities/rating.entity';
     }),
     TypeOrmModule.forFeature([User, Game,Review, ResetPassword,Rating]),
   ],
-  controllers: [AppController, UserController, GameController, S3Controller, ReviewController,RatingController],
+  controllers: [AppController, UserController, GameController, S3Controller, ReviewController,RatingController, CommentController],
   providers: [
     AppService,
     UserRepository,
@@ -53,10 +58,10 @@ import { Rating } from './entities/rating.entity';
     GameService,
     ResetPasswordRepository,
     S3Service,
+    CommentRepository,
+    CommentService,
     ReviewRepository,
     ReviewService,
-    RatingRepository,
-    RatingService
   ],
 })
 export class AppModule implements NestModule {

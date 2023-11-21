@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../game_page.dart';
 import '/helper/colors.dart';
 import '/reusable_widgets/single_rating_icon.dart';
 
@@ -12,6 +13,8 @@ class GameSummary extends StatefulWidget {
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
+  final String id;
+  final String? token;
 
   const GameSummary({
     Key? key,
@@ -24,6 +27,8 @@ class GameSummary extends StatefulWidget {
     required this.textColor,
     required this.backgroundColor,
     required this.fontSize,
+    required this.id,
+    required this.token,
   }) : super(key: key);
 
   @override
@@ -37,6 +42,8 @@ class GameSummary extends StatefulWidget {
         textColor: textColor,
         backgroundColor: backgroundColor,
         fontSize: fontSize,
+        id: id,
+        token: token
       );
 }
 
@@ -50,6 +57,8 @@ class _GameSummaryState extends State<GameSummary> {
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
+  final String id;
+  final String? token;
 
   _GameSummaryState({
     required this.title,
@@ -61,6 +70,8 @@ class _GameSummaryState extends State<GameSummary> {
     required this.textColor,
     required this.backgroundColor,
     required this.fontSize,
+    required this.id,
+    required this.token,
   });
 
   @override
@@ -74,6 +85,15 @@ class _GameSummaryState extends State<GameSummary> {
                 borderRadius: BorderRadius.circular(15.0),
               )),
           onPressed: () {
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GamePage(id: id, token: token),
+              ),
+            );
+
+
             // Handle button press for the specific game
             // Navigate to the game's profile page
           },
