@@ -7,6 +7,8 @@ import {
   Button,
   Modal,
   TextField,
+  Input,
+  Snackbar,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import steamLogo from "../assets/steam.png";
@@ -14,6 +16,7 @@ import epicLogo from "../assets/epic.png";
 import itchioLogo from "../assets/itchio.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -26,6 +29,73 @@ function ProfilePage() {
   const [auth, setAuth] = useState(false);
   const [profile, setProfile] = useState("");
   const [favGames, setFavGames] = useState([]);
+  const [avatarImage, setAvatarImage] = useState(null);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbar, setSnackbar] = useState(false);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    console.log(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+      console.log(reader);
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        console.log(formData);
+        const link = `http://${process.env.REACT_APP_API_URL}/external/upload`;
+        axios
+          .post(link, formData, {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            const link2 = `http://${process.env.REACT_APP_API_URL}/user/edit-info`;
+            axios
+              .put(
+                link2,
+                {
+                  avatar: response.data.url,
+                },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " + localStorage.getItem("accessToken"),
+                  },
+                },
+              )
+              .then(() => {
+                setSnackbarMessage("Image uploaded successfully!");
+                setSnackbar(true);
+              })
+              .catch((error) => {
+                console.log(error);
+                setSnackbarMessage("Image could not be uploaded!");
+                setSnackbar(true);
+              });
+
+            // Now you can update the profile or perform any other action with the response data
+          })
+          .catch((error) => {
+            console.error("Error uploading file:", error);
+            setSnackbarMessage("Image could not be uploaded!");
+            setSnackbar(true);
+          });
+
+        // Now you can update the profile or perform any other action with the response data
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+    }
+  };
+
   useEffect(() => {
     setAuth(false);
     if (localStorage.getItem("accessToken")) {
@@ -63,6 +133,10 @@ function ProfilePage() {
   const handleClose = () => {
     setOpen(false);
   };
+  const closeSnackbar = () => {
+    setSnackbarMessage("");
+    setSnackbar(false);
+  };
   const submitInformation = () => {
     console.log(formData);
     const link = `http://${process.env.REACT_APP_API_URL}/user/edit-info`;
@@ -81,9 +155,14 @@ function ProfilePage() {
           },
         },
       )
-      .then(() => {})
+      .then(() => {
+        setSnackbarMessage("Information updated successfully!");
+        setSnackbar(true);
+      })
       .catch((error) => {
         console.log(error);
+        setSnackbarMessage("Information could not be updated!");
+        setSnackbar(true);
       });
     setOpen(false);
   };
@@ -101,8 +180,6 @@ function ProfilePage() {
       "_blank",
     );
   };
-
-  const editProfile = () => {};
 
   const modalStyle = {
     position: "absolute",
@@ -130,7 +207,7 @@ function ProfilePage() {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
     borderRadius: "10px",
     paddingTop: "15px",
-    height: "300px",
+    height: "320px",
     marginTop: "7px",
   };
 
@@ -194,6 +271,12 @@ function ProfilePage() {
         <Container
           style={{ backgroundColor: "rgb(0, 150, 255)", maxWidth: "1200px" }}
         >
+          <Snackbar
+            open={snackbar}
+            autoHideDuration={3000}
+            onClose={closeSnackbar}
+            message={snackbarMessage}
+          />
           <Grid container spacing={1} style={boxStyle}>
             <Grid
               item
@@ -203,20 +286,48 @@ function ProfilePage() {
               lg={3}
               style={{ marginLeft: "3%" }}
             >
-              <Button onClick={editProfile} style={{ minWidth: 0 }}>
-                <Avatar alt="Empty Profile Photo" style={avatarStyle} />
-              </Button>
-
-              <Typography
-                component="legend"
+              <Input
+                type="file"
+                accept="image/*"
+                id="upload-avatar"
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+              />
+              <label htmlFor="upload-avatar">
+                <Button component="span" style={{ minWidth: 0 }}>
+                  {avatarImage ? (
+                    <img src={avatarImage} style={avatarStyle} alt="Profile" />
+                  ) : (
+                    <Avatar alt="Empty Profile Photo" style={avatarStyle} />
+                  )}
+                </Button>
+              </label>
+              <Grid
                 style={{
-                  fontFamily: "Trebuchet MS, sans-serif",
-                  color: "rgb(0, 150, 255)",
-                  marginTop: "2%",
+                  marginTop: "3%",
+                  display: "flex",
+                  justifyContent: "center",
                 }}
               >
-                @{profile.username}
-              </Typography>
+                <Typography
+                  component="legend"
+                  style={{
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    color: "rgb(0, 150, 255)",
+                    marginTop: "2%",
+                    marginLeft: "30%",
+                  }}
+                >
+                  @{profile.username}
+                </Typography>
+                <Button>
+                  <NotificationsIcon
+                    style={{ color: "red" }}
+                    className="notification-icon"
+                  />
+                </Button>
+              </Grid>
+
               <Grid style={{ marginTop: "3%" }}>
                 <Button onClick={openSteamTab} style={{ minWidth: 0 }}>
                   <img
