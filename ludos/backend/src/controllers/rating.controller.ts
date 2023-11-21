@@ -56,27 +56,27 @@ export class RatingController {
   @ApiBearerAuth()
   @ApiNotFoundResponse({ description: 'Rating is not found!' })
   @HttpCode(204)
-  @Delete(':ratingId')
+  @Delete(':gameId')
   public async deleteRating(
     @Req() req: AuthorizedRequest,
-    @Param('ratingId') ratingId: string,
+    @Param('gameId') gameId: string,
   ) {
-    const deletedRatingResponse = await this.ratingService.deleteRating(req.user.id, ratingId);
+    const deletedRatingResponse = await this.ratingService.deleteRating(req.user.id, gameId);
     return deletedRatingResponse
   }
 
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   @HttpCode(200)
-  @Put(':ratingId')
+  @Put(':gameId')
   public async editRating(
     @Req() req: AuthorizedRequest,
-    @Param('ratingId') ratingId: string,
+    @Param('gameId') gameId: string,
     @Body() ratingEditDto: RatingEditDto,
   ) {
     const editedRating = await this.ratingService.editRating(
       req.user.id,
-      ratingId,
+      gameId,
       ratingEditDto,
     );
     return editedRating;

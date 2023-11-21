@@ -5,11 +5,13 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  Unique
 } from 'typeorm';
 import { Game } from './game.entity';
 import { User } from './user.entity';
 
-@Entity('tests')
+@Entity('ratings')
+@Unique(["game", "user"])
 export class Rating {
   @PrimaryGeneratedColumn('uuid')
   id: string;
