@@ -39,7 +39,7 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> createGame(String title, String coverLink, 
+  Future<http.Response> createGame(String? authToken, String title, String coverLink,
   String systemRequirements, List<String> predecessors, List<String> successors, 
   String gameGuide, String gameStory, List<String> platforms, String ageRestriction, 
   String gameBio, List<String> tags, String releaseDate, String developer, 
@@ -62,7 +62,7 @@ class APIService {
       'publisher': publisher,
       'trivia': trivia,
     });
-    final response = await http.post(uri, body: body, headers: {'content-type': "application/json"});
+    final response = await http.post(uri, body: body, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
 
     return response;
   }
@@ -89,9 +89,9 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> listGames() async {
-    var uri = Uri.parse("$baseURL/game?limit=10");
-    final response = await http.get(uri, headers: {'content-type': "application/json"});
+  Future<http.Response> listGames(String? authToken) async {
+    var uri = Uri.parse("$baseURL/game?limit=20");
+    final response = await http.get(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
 
     return response;
   }
