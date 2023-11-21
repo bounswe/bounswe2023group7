@@ -28,7 +28,7 @@ import { AuthorizedRequest } from '../interfaces/common/authorized-request.inter
 @ApiTags('comment')
 @Controller('comment')
 export class CommentController {
-  constructor(private readonly commentService: CommentService) { }
+  constructor(private readonly commentService: CommentService) {}
 
   @ApiOperation({ summary: 'Get comment details' })
   @ApiOkResponse({
@@ -155,7 +155,7 @@ export class CommentController {
     @Req() req: AuthorizedRequest,
     @Param('commentId') commentId: string,
   ) {
-    console.log("comment id: ", commentId);
+    console.log('comment id: ', commentId);
     await this.commentService.deleteComment(req.user.id, commentId);
   }
 

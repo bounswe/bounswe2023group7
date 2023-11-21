@@ -34,7 +34,7 @@ import { AuthorizedRequest } from '../interfaces/common/authorized-request.inter
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
   @ApiOkResponse({
     description: 'Successful Register',
     type: RegisterResponseDto,
@@ -78,7 +78,6 @@ export class UserController {
   @ApiBadRequestResponse({
     description: 'Bad Request',
   })
-
   @HttpCode(200)
   @ApiOperation({ summary: 'Password Reset Request Endpoint' })
   @Post('/reset-password')
@@ -139,7 +138,7 @@ export class UserController {
   ) {
     await this.userService.editInfo(req.user.id, input);
   }
-  
+
   @HttpCode(200)
   @ApiUnauthorizedResponse({
     description: 'Invalid User',
@@ -147,7 +146,6 @@ export class UserController {
   @ApiBadRequestResponse({
     description: 'Bad Request',
   })
-
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get User Info Request Endpoint' })
   @Get('/info')

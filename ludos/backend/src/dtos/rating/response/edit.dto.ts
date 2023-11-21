@@ -1,14 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ReviewEditResponseDto {
+export class RatingEditResponseDto {
   @ApiProperty()
   id: string;
 
   @ApiProperty()
-  content?: string;
-
-  @ApiProperty()
-  rating?: number;
+  rating: number;
 
   @ApiProperty()
   updatedAt: Date;

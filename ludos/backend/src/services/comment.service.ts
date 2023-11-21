@@ -1,8 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { WriteCommentDto } from '../dtos/comment/request/write-comment.dto';
 import { EditCommentDto } from '../dtos/comment/request/edit-comment.dto';
 import { GetCommentResponseDto } from '../dtos/comment/response/get-comment.response.dto';
@@ -14,10 +10,13 @@ export class CommentService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly commentRepository: CommentRepository,
-    ) {}
-  
-  public async getComment(userId: string, commentId: string): Promise<GetCommentResponseDto> {
-    let user = await this.userRepository.findUserById(userId);
+  ) {}
+
+  public async getComment(
+    userId: string,
+    commentId: string,
+  ): Promise<GetCommentResponseDto> {
+    const user = await this.userRepository.findUserById(userId);
 
     if (!user) {
       throw new HttpException(
@@ -26,7 +25,7 @@ export class CommentService {
       );
     }
 
-    let comment = await this.commentRepository.findCommentById(commentId);
+    const comment = await this.commentRepository.findCommentById(commentId);
 
     if (!comment) {
       throw new HttpException(
@@ -42,11 +41,14 @@ export class CommentService {
       parentId: comment.parentId,
       likeCount: comment.likedUsers.length,
       dislikeCount: comment.dislikedUsers.length,
-    }
+    };
   }
 
-  public async getCommentsByParent(userId: string, parentId: string): Promise<GetCommentResponseDto[]> {
-    let user = await this.userRepository.findUserById(userId);
+  public async getCommentsByParent(
+    userId: string,
+    parentId: string,
+  ): Promise<GetCommentResponseDto[]> {
+    const user = await this.userRepository.findUserById(userId);
 
     if (!user) {
       throw new HttpException(
@@ -55,17 +57,19 @@ export class CommentService {
       );
     }
 
-    return (await this.commentRepository.findCommentsByParent(parentId)).map((comment) => {
-      return {
-        likeCount: comment.likedUsers.length,
-        dislikeCount: comment.dislikedUsers.length,
-        ...comment,
-      }
-    });
+    return (await this.commentRepository.findCommentsByParent(parentId)).map(
+      (comment) => {
+        return {
+          likeCount: comment.likedUsers.length,
+          dislikeCount: comment.dislikedUsers.length,
+          ...comment,
+        };
+      },
+    );
   }
 
   public async writeComment(userId: string, writeCommentDto: WriteCommentDto) {
-    let user = await this.userRepository.findUserById(userId);
+    const user = await this.userRepository.findUserById(userId);
 
     if (!user) {
       throw new HttpException(
@@ -78,7 +82,7 @@ export class CommentService {
     // post / comment / game review
     // parent id should be the identifier of one of the above
 
-    let comment = {
+    const comment = {
       author: user,
       text: writeCommentDto.text,
       parentId: writeCommentDto.parentId,
@@ -87,12 +91,12 @@ export class CommentService {
       timestamp: new Date(),
       likedUsers: [],
       dislikedUsers: [],
-    }
+    };
     await this.commentRepository.createComment(comment);
   }
 
   public async likeComment(userId: string, commentId: string) {
-    let user = await this.userRepository.findUserById(userId);
+    const user = await this.userRepository.findUserById(userId);
 
     if (!user) {
       throw new HttpException(
@@ -101,7 +105,7 @@ export class CommentService {
       );
     }
 
-    let comment = await this.commentRepository.findCommentById(commentId);
+    const comment = await this.commentRepository.findCommentById(commentId);
 
     if (!comment) {
       throw new HttpException(
@@ -110,14 +114,18 @@ export class CommentService {
       );
     }
 
-    if (comment.likedUsers.find(likedUser => likedUser.id === userId)) {
-      comment.likedUsers = comment.likedUsers.filter(likedUser => likedUser.id !== userId);
-    }
-    else if (comment.dislikedUsers.find(dislikedUser => dislikedUser.id === userId)) {
-      comment.dislikedUsers = comment.dislikedUsers.filter(dislikedUser => dislikedUser.id !== userId);
+    if (comment.likedUsers.find((likedUser) => likedUser.id === userId)) {
+      comment.likedUsers = comment.likedUsers.filter(
+        (likedUser) => likedUser.id !== userId,
+      );
+    } else if (
+      comment.dislikedUsers.find((dislikedUser) => dislikedUser.id === userId)
+    ) {
+      comment.dislikedUsers = comment.dislikedUsers.filter(
+        (dislikedUser) => dislikedUser.id !== userId,
+      );
       comment.likedUsers.push(user);
-    }
-    else {
+    } else {
       comment.likedUsers.push(user);
     }
 
@@ -125,7 +133,7 @@ export class CommentService {
   }
 
   public async dislikeComment(userId: string, commentId: string) {
-    let user = await this.userRepository.findUserById(userId);
+    const user = await this.userRepository.findUserById(userId);
 
     if (!user) {
       throw new HttpException(
@@ -134,7 +142,7 @@ export class CommentService {
       );
     }
 
-    let comment = await this.commentRepository.findCommentById(commentId);
+    const comment = await this.commentRepository.findCommentById(commentId);
 
     if (!comment) {
       throw new HttpException(
@@ -143,14 +151,20 @@ export class CommentService {
       );
     }
 
-    if (comment.dislikedUsers.find(dislikedUser => dislikedUser.id === userId)) {
-      comment.dislikedUsers = comment.dislikedUsers.filter(dislikedUser => dislikedUser.id !== userId);
-    }
-    else if (comment.likedUsers.find(likedUser => likedUser.id === userId)) {
-      comment.likedUsers = comment.likedUsers.filter(likedUser => likedUser.id !== userId);
+    if (
+      comment.dislikedUsers.find((dislikedUser) => dislikedUser.id === userId)
+    ) {
+      comment.dislikedUsers = comment.dislikedUsers.filter(
+        (dislikedUser) => dislikedUser.id !== userId,
+      );
+    } else if (
+      comment.likedUsers.find((likedUser) => likedUser.id === userId)
+    ) {
+      comment.likedUsers = comment.likedUsers.filter(
+        (likedUser) => likedUser.id !== userId,
+      );
       comment.dislikedUsers.push(user);
-    }
-    else {
+    } else {
       comment.dislikedUsers.push(user);
     }
 
@@ -158,7 +172,7 @@ export class CommentService {
   }
 
   public async deleteComment(userId: string, commentId: string) {
-    let user = await this.userRepository.findUserById(userId);
+    const user = await this.userRepository.findUserById(userId);
 
     if (!user) {
       throw new HttpException(
@@ -167,7 +181,7 @@ export class CommentService {
       );
     }
 
-    let comment = await this.commentRepository.findCommentById(commentId);
+    const comment = await this.commentRepository.findCommentById(commentId);
 
     if (!comment) {
       throw new HttpException(
@@ -186,8 +200,12 @@ export class CommentService {
     await this.commentRepository.deleteComment(commentId);
   }
 
-  public async editComment(userId: string, commentId: string, editCommentDto: EditCommentDto) {
-    let user = await this.userRepository.findUserById(userId);
+  public async editComment(
+    userId: string,
+    commentId: string,
+    editCommentDto: EditCommentDto,
+  ) {
+    const user = await this.userRepository.findUserById(userId);
 
     if (!user) {
       throw new HttpException(
@@ -196,7 +214,7 @@ export class CommentService {
       );
     }
 
-    let comment = await this.commentRepository.findCommentById(commentId);
+    const comment = await this.commentRepository.findCommentById(commentId);
 
     if (!comment) {
       throw new HttpException(

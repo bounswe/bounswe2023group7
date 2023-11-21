@@ -27,7 +27,10 @@ import { ReviewRepository } from './repositories/review.repository';
 import { ReviewService } from './services/review.service';
 import { ReviewController } from './controllers/review.controller';
 import { Review } from './entities/review.entity';
-
+import { RatingController } from './controllers/rating.controller';
+import { RatingRepository } from './repositories/rating.repository';
+import { RatingService } from './services/rating.service';
+import { Rating } from './entities/rating.entity';
 
 @Module({
   imports: [
@@ -42,9 +45,24 @@ import { Review } from './entities/review.entity';
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService],
     }),
-    TypeOrmModule.forFeature([User, Game, ResetPassword, Comment, Review]),
+    TypeOrmModule.forFeature([
+      User,
+      Game,
+      Review,
+      ResetPassword,
+      Rating,
+      Comment,
+    ]),
   ],
-  controllers: [AppController, UserController, GameController, S3Controller, ReviewController, CommentController],
+  controllers: [
+    AppController,
+    UserController,
+    GameController,
+    S3Controller,
+    ReviewController,
+    RatingController,
+    CommentController,
+  ],
   providers: [
     AppService,
     UserRepository,
@@ -57,6 +75,8 @@ import { Review } from './entities/review.entity';
     CommentService,
     ReviewRepository,
     ReviewService,
+    RatingRepository,
+    RatingService,
   ],
 })
 export class AppModule implements NestModule {

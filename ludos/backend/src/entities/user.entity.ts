@@ -12,6 +12,8 @@ import * as bcrypt from 'bcrypt';
 import { Game } from './game.entity';
 import { UserType } from '../enums/user-type.enum';
 import { Review } from './review.entity';
+import { Rating } from './rating.entity';
+
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -50,6 +52,9 @@ export class User {
 
   @OneToMany('Review', 'user')
   reviews: Review[];
+
+  @OneToMany('Rating', 'user')
+  ratingList: Rating[];
 
   @ManyToMany('Review', 'likedUsers')
   likedReviews: Review[];

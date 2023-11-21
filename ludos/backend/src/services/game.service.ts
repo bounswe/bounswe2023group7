@@ -10,12 +10,14 @@ import { GameCreateResponseDto } from '../dtos/game/response/create.response';
 import { GameRepository } from '../repositories/game.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
+import { RatingRepository } from '../repositories/rating.repository';
 
 @Injectable()
 export class GameService {
   constructor(
     private readonly gameRepository: GameRepository,
     private readonly userRepository: UserRepository,
+    private readonly ratingRepository: RatingRepository,
   ) {}
 
   public async createGame(
@@ -32,7 +34,7 @@ export class GameService {
         developer: game.developer,
       };
     } catch (e) {
-      console.log(e)
+      console.log(e);
       if (e.code == '23505') {
         throw new ConflictException(e.detail);
       }
@@ -48,6 +50,11 @@ export class GameService {
     game.isFollowed = userId
       ? game.followerList.some((user) => user.id === userId)
       : false;
+    const rating = await this.ratingRepository.findRatingByUserIdAndGameId(
+      userId,
+      id,
+    );
+    game.userRating = userId && rating ? rating.rating : null;
     return game;
   }
   async followGame(userId: string, gameId: string): Promise<void> {
