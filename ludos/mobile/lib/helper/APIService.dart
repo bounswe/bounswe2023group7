@@ -4,6 +4,7 @@ import 'dart:convert';
 
 class APIService {
   var baseURL = "http://3.125.225.39:8080";
+  String? token = "";
   Future<(String?, int)> login(String username, String password) async {
     var uri = Uri.parse("$baseURL/user/login");
 
@@ -15,6 +16,10 @@ class APIService {
     Map<String, dynamic> responseBody = jsonDecode(response.body);
     String? authToken = responseBody['accessToken'];
     (String?, int) res = (authToken,response.statusCode);
+    token = authToken;
+    print("token");
+    print(token);
+    print("token");
     return res;
   }
 
@@ -96,4 +101,13 @@ class APIService {
     return response;
   }
 
+  Future<Map<String, dynamic>> getGame(String id) async {
+    var uri = Uri.parse("$baseURL/game/$id");
+    final response = await http.get(uri, headers: {'content-type': "application/json",'Authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJpZCI6ImE2NWQ0MTZhLTQ0ZmMtNGFjZC1hMDBhLWJjYTFmZWZlMDM0OSIsImVtYWlsIjoic2VuYUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6IlNFIiwiaWF0IjoxNzAwNTE3NDk4LCJleHAiOjE3MDA2MDM4OTh9SrwVz5S9WUBfQgsv6jfXkzBWV84w5Vu4QjdKaOZ0"});
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to load game data');
+    }
+  }
 }

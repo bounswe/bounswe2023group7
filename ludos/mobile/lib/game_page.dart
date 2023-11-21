@@ -1,72 +1,100 @@
 import 'package:flutter/material.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
+import 'helper/APIService.dart';
 
 class GamePage extends StatefulWidget {
-  const GamePage({super.key});
 
+  final String id;
+  const GamePage({required this.id, Key? key}) : super(key: key);
   @override
   State<GamePage> createState() => _GamePageState();
 }
 class _GamePageState extends State<GamePage> {
+  final APIService apiService = APIService();
+  Map<String, dynamic> gameData = {};
+  @override
+  void initState() {
+    super.initState();
+    loadGameData();
+  }
+
+  Future<void> loadGameData() async {
+    try {
+      gameData = await apiService.getGame(widget.id);
+
+      setState(() {});
+    } catch (e) {
+      print('Error loading game data: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: const Color(0xFF101c2c),
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
-        title: const Text('God of War (2018)'),
+        title: Text('${gameData['title']}'),
       ),
       body:  SingleChildScrollView(
+
         padding: EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            SizedBox(
-              width: 200.0,
-              height: 200.0,
-              child: Image.asset('assets/images/header_gow.jpg'),
+            if (gameData['coverLink'] != null)
+              SizedBox(
+                width: 200.0,
+                height: 200.0,
+                  child: Image.network(gameData['coverLink']),
+              ),
+            const SizedBox(height: 10),
+            if (gameData['releaseDate'] != null)
+              Text('Release Date: ${gameData['releaseDate']}',style: const TextStyle(
+                color: MyColors.orange,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              ),
+            const SizedBox(height: 10),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  if (gameData['tags'] != null)
+                    for (var i = 0; i < gameData['tags'].length; i++)
+                          TextButton(
+                            style: TextButton.styleFrom(
+                                foregroundColor: MyColors.lightBlue),
+                            onPressed: () {},
+                            child: Text(gameData['tags'][i].toString()),
+                          ),
+                  ],
+              ),
             ),
             const SizedBox(height: 10),
             Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                        foregroundColor: MyColors.lightBlue),
-                    onPressed: () {},
-                    child: Text('adventure'),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                        foregroundColor: MyColors.lightBlue),
-                    onPressed: () {},
-                    child: Text('singleplayer'),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                        foregroundColor: MyColors.lightBlue),
-                    onPressed: () {},
-                    child: Text('action'),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                        foregroundColor: MyColors.lightBlue),
-                    onPressed: () {},
-                    child: Text('mythology'),
-                  ),
+                  if (gameData['tags'] != null)
+                    for (var i = 0; i < gameData['platforms'].length; i++)
+                      TextButton(
+                        style: TextButton.styleFrom(
+                            foregroundColor: MyColors.lightBlue),
+                        onPressed: () {},
+                        child: Text(gameData['platforms'][i].toString()),
+                      ),
                 ],
               ),
             ),
             Row(
               children: [
+                if (gameData['userRating'] != null)
                 RatingBar.builder(
-                  initialRating: 3,
-                  minRating: 1,
+                  initialRating: gameData['userRating'].toDouble(),
+                  minRating: 0,
                   direction: Axis.horizontal,
                   allowHalfRating: true,
                   itemCount: 5,
@@ -80,7 +108,8 @@ class _GamePageState extends State<GamePage> {
                   },
                 ),
                 SizedBox(width: 8), // Add some spacing between RatingBar and Text
-                const Text('          Rating: 4.3/5',style: TextStyle(
+                if (gameData['averageRating'] != null)
+                  Text('${gameData['averageRating']}/5'.padLeft(22),style: const TextStyle(
                   color: MyColors.orange,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -90,21 +119,22 @@ class _GamePageState extends State<GamePage> {
             ),
 
             const SizedBox(height: 10),
-
-            const Text(
-              '     His vengeance against the Gods of Olympus years behind him, Kratos now lives as a man in the realm of Norse Gods and monsters. It is in this harsh, unforgiving world that he must fight to survive… and teach his son to do the same.',
-              style: TextStyle(
-                color: MyColors.white,
+            if(gameData['gameStory'] != null)
+              Text(
+                gameData['gameStory'].toString(),
+                style: const TextStyle(
+                  color: MyColors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            const SizedBox(height: 20),
+            if(gameData['averageUserCompilationDuration'] != null)
+              Text('Average User Compilation Time: ${gameData['averageUserCompilationDuration']}',style: const TextStyle(
+                color: MyColors.orange,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text('Estimating Time: 120 hours',style: TextStyle(
-              color: MyColors.orange,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
             ),
             const SizedBox(height: 20),
             Column(
