@@ -97,8 +97,8 @@ class CreateGamePageSecond extends StatefulWidget {
 
   const CreateGamePageSecond(
       {Key? key,
-        required this.userProvider,
-        required this.token,
+      required this.userProvider,
+      required this.token,
       required this.title,
       required this.coverLink,
       required this.gameBio,
@@ -160,7 +160,7 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
-        title: const Text('Ludos'),
+        title: const Text('Create Game'),
       ),
       backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
