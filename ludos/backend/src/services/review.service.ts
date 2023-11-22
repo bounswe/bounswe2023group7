@@ -11,7 +11,10 @@ import {
   import { ReviewRepository } from '../repositories/review.repository';
   import { log } from 'console';
   import { ReviewEditDto } from '../dtos/review/request/edit.dto';
-import { ReviewEditResponseDto } from '../dtos/review/response/edit.dto';
+  import { ReviewEditResponseDto } from '../dtos/review/response/edit.dto';
+  import { ReviewGetInfoResponseDto } from '../dtos/review/response/getInfo.dto';
+  import { Review } from '../entities/review.entity';
+
   
   @Injectable()
   export class ReviewService {
@@ -194,7 +197,43 @@ import { ReviewEditResponseDto } from '../dtos/review/response/edit.dto';
         }
       }
     }
-  
 
-  }
+    public async getReviewById(reviewId: string): Promise<ReviewGetInfoResponseDto> {
+      const review = await this.reviewRepository.findReviewInfoById(reviewId);
+      if (!review) {
+        throw new NotFoundException('Review Not Found!');
+      }
+      const likedUserCount = review.likedUsers.length;
+      const dislikedUserCount = review.dislikedUsers.length;
+      return {
+        content: review.content,
+        rating: review.rating,
+        createdAt: review.createdAt,
+        userId: review.user.id,
+        gameId: review.game.id,
+        likedUserCount: likedUserCount,
+        dislikedUserCount: dislikedUserCount
+      };
+    }
+
+    public async getReviewsByGameId(gameId: string): Promise<ReviewGetInfoResponseDto[]> {
+      const game = await this.gameRepository.findGameById(gameId);
+      if (!game) {
+        throw new NotFoundException('Game Not Found!');
+      }
+  
+      const reviews = await this.reviewRepository.findReviewsByGame(game);
+
+      const mappedReviews: ReviewGetInfoResponseDto[] = reviews.map((review) => ({
+        content: review.content,
+        rating: review.rating,
+        createdAt: review.createdAt,
+        userId: review.user.id,
+        gameId: review.game.id,
+        likedUserCount: review.likedUsers.length,
+        dislikedUserCount: review.dislikedUsers.length,
+      }));
+      return mappedReviews;
+    }
+}
   
