@@ -23,12 +23,8 @@ export class ReviewRepository extends Repository<Review> {
     return this.findOne({ where: { id }, relations: ['game', 'user', 'likedUsers', 'dislikedUsers'] });
   }
 
-  public findReviewByIdWithLikedUsers(id: string): Promise<Review> {
-    return this.findOne({ where: { id }, relations: ['likedUsers'] });
-  }
-
-  public findReviewByIdWithDislikedUsers(id: string): Promise<Review> {
-    return this.findOne({ where: { id }, relations: ['dislikedUsers'] });
+  public findReviewByIdWithLikedAndDislikedUsers(id: string): Promise<Review> {
+    return this.findOne({ where: { id }, relations: ['likedUsers', 'dislikedUsers'] });
   }
 
   public async updateReview(input: Partial<Review>): Promise<void> {

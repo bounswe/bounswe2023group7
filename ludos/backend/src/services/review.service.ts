@@ -61,12 +61,11 @@ import {
   public async likeReview(userId: string, reviewId: string): Promise<void> {
     try {
       const user = await this.userRepository.findUserById(userId);
+
       if (!user) {
         throw new NotFoundException('User Not Found!');
       }
-
-      const review =
-        await this.reviewRepository.findReviewByIdWithLikedUsers(reviewId);
+      const review = await this.reviewRepository.findReviewByIdWithLikedAndDislikedUsers(reviewId);
       if (!review) {
         throw new NotFoundException('Review Not Found!');
       }
@@ -76,6 +75,11 @@ import {
         review.likedUsers = review.likedUsers.filter(
           (likedUser) => likedUser.id !== userId,
         );
+      }
+      else if (review.dislikedUsers.find((dislikedUser) => dislikedUser.id === userId)) {
+        log('User has already disliked the review.');
+        review.dislikedUsers = review.dislikedUsers.filter((dislikedUser) => dislikedUser.id !== userId);
+        review.likedUsers.push(user);
       } else {
         review.likedUsers.push(user);
       }
@@ -99,7 +103,7 @@ import {
       }
 
       const review =
-        await this.reviewRepository.findReviewByIdWithDislikedUsers(reviewId);
+        await this.reviewRepository.findReviewByIdWithLikedAndDislikedUsers(reviewId);
       if (!review) {
         throw new NotFoundException('Review Not Found!');
       }
@@ -108,9 +112,11 @@ import {
         review.dislikedUsers.find((dislikedUser) => dislikedUser.id === userId)
       ) {
         log('User has already disliked the review.');
-        review.dislikedUsers = review.dislikedUsers.filter(
-          (dislikedUser) => dislikedUser.id !== userId,
-        );
+        review.dislikedUsers = review.dislikedUsers.filter((dislikedUser) => dislikedUser.id !== userId);
+      } else if (review.likedUsers.find((likedUser) => likedUser.id === userId)) {
+        log('User has already liked the review.');
+        review.likedUsers = review.likedUsers.filter((likedUser) => likedUser.id !== userId);
+        review.dislikedUsers.push(user);
       } else {
         review.dislikedUsers.push(user);
       }
