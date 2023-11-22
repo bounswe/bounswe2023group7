@@ -420,7 +420,7 @@ class Home extends StatelessWidget {
                  */
                   if(userProvider.isLoggedIn){
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => GamesPage(token: userProvider.token),
+                      builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
                     ));
                   }
                   else{

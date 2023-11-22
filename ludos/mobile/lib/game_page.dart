@@ -1,22 +1,78 @@
+import 'dart:convert';
+import 'dart:core';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
 
 class GamePage extends StatefulWidget {
+  final UserProvider userProvider;
   final String? token;
   final String id;
-  const GamePage({required this.id, required this.token, Key? key}) : super(key: key);
+  const GamePage({required this.id, required this.token, Key? key, required this.userProvider}) : super(key: key);
   @override
   State<GamePage> createState() => _GamePageState();
 }
 class _GamePageState extends State<GamePage> {
+  late bool followState;
+  late String buttonText;
   final APIService apiService = APIService();
   Map<String, dynamic> gameData = {};
+
   @override
   void initState() {
     super.initState();
     loadGameData();
+    initializeFollowState();
+  }
+
+  void initializeFollowState() async {
+    try {
+      bool value = await getFollowState();
+      setState(() {
+        followState = value;
+        buttonText = followState ? "Unfollow" : "Follow";
+      });
+    } catch (error) {
+      print("Error initializing follow state: $error");
+    }
+  }
+/*
+  Future<void> updateFollowState() async {
+    var response = await apiService.userInfo(widget.token);
+    var bool = false;
+    for (var i = 0; i < json.decode(response.body)['followedGames'].length; i++) {
+      if ((json.decode(response.body)['followedGames'][i])['id'] == widget.id) {
+        bool = true;
+      }
+    }
+    setState((){
+      followState = bool;
+    });
+    setState(() {
+      if(followState){
+        buttonText = "Unfollow";
+      }
+      else{
+        buttonText = "Follow";
+      }
+    });
+  }
+*/
+
+  Future<bool> getFollowState() async {
+    var response = await APIService().userInfo(widget.token);
+    var bool = false;
+    for (var i = 0; i < json.decode(response.body)['followedGames'].length; i++) {
+      if (json.decode(response.body)['followedGames'][i]['id'] == widget.id) {
+        bool = true;
+        break;
+      }
+    }
+    return bool;
   }
 
   Future<void> loadGameData() async {
@@ -119,6 +175,68 @@ class _GamePageState extends State<GamePage> {
             ),
 
             const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.red),
+                    ),
+                    onPressed: () {
+                      bool state = false;
+                      Future<bool> executeAsyncActions() async {
+                        bool state = false;
+                        try {
+                          if (followState) {
+                            http.Response token = await APIService()
+                                .unfollowGame(widget.token, widget.id);
+                            if (token.statusCode == 200) {
+                              state = false;
+                              print("Unfollowed");
+                            } else {
+                              print("Error: ${token.statusCode}");
+                            }
+                          } else {
+                            http.Response token = await APIService().followGame(
+                                widget.token, widget.id);
+                            if (token.statusCode == 200) {
+                              state = true;
+                              print("Followed");
+                            } else {
+                              print("Error: ${token.statusCode}");
+                            }
+                          }
+                        } catch (error) {
+                          print("Error: $error");
+                        }
+                        bool asd = await getFollowState();
+                        return state;
+                      }
+                      executeAsyncActions().then((bool value) {
+                        followState = value;
+                        if (followState) {
+                          setState(() {
+                            buttonText = "Unfollow";
+                          });
+                        } else {
+                          setState(() {
+                            buttonText = "Follow";
+                          });
+                        }
+                      });
+                      /*
+                      setState(() {
+                        followState = state;
+                        buttonText = state ? "Unfollow" : "Follow";
+                      });
+                      */
+                    },
+
+                  child: Text(buttonText),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
             if(gameData['gameStory'] != null)
               Text(
                 gameData['gameStory'].toString(),

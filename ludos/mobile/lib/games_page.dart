@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'reusable_widgets/game_summary.dart';
 import 'helper/APIService.dart';
@@ -7,7 +8,8 @@ import 'create_game.dart';
 
 class GamesPage extends StatefulWidget {
   final String? token;
-  const GamesPage({Key? key, required this.token}) : super(key: key);
+  final UserProvider userProvider;
+  const GamesPage({Key? key, required this.token, required this.userProvider}) : super(key: key);
 
   @override
   State<GamesPage> createState() => _GamesPageState();

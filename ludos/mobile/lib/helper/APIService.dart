@@ -101,6 +101,24 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> followGame(String? authToken, String gameID) async {
+    var uri = Uri.parse("$baseURL/game/follow/$gameID");
+    final response = await http.put(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+    return response;
+  }
+
+  Future<http.Response> unfollowGame(String? authToken, String gameID) async {
+    var uri = Uri.parse("$baseURL/game/unfollow/$gameID");
+    final response = await http.put(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+    return response;
+  }
+
+  Future<http.Response> userInfo(String? authToken) async {
+    var uri = Uri.parse("$baseURL/user/info");
+    final response = await http.get(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+    return response;
+  }
+
   Future<Map<String, dynamic>> getGame(String id,String? authToken) async {
     var uri = Uri.parse("$baseURL/game/$id");
     final response = await http.get(uri, headers: {'content-type': "application/json",'Authorization': 'Bearer $authToken'});

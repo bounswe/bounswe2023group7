@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/games_page.dart';
+import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'helper/colors.dart';
 import 'helper/APIService.dart';
@@ -84,6 +85,7 @@ String formatDateTime(DateTime dateTime) {
 }
 
 class CreateGamePageSecond extends StatefulWidget {
+  final UserProvider userProvider;
   final String? token;
   final String title;
   final String coverLink;
@@ -95,6 +97,7 @@ class CreateGamePageSecond extends StatefulWidget {
 
   const CreateGamePageSecond(
       {Key? key,
+      required this.userProvider,
       required this.token,
       required this.title,
       required this.coverLink,
@@ -341,8 +344,7 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            GamesPage(token: widget.token)),
+                                        builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider)),
                                   );
                                 },
                               ),
@@ -352,8 +354,7 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                           .then((reason) => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        GamesPage(token: widget.token)),
+                                    builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider)),
                               ));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
