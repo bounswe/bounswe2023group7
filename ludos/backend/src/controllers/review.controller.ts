@@ -58,36 +58,36 @@ import {
       return createdReview;
     }
 
-    @HttpCode(200)
-    @Post(':reviewId/like')
-    public async likeReview(
-      @Req() req: AuthorizedRequest,
-      @Param('reviewId') reviewId: string,
-    ) {
-      await this.reviewService.likeReview(req.user.id, reviewId);
-      return { message: 'Review liked successfully.' };
-    }
+  @HttpCode(200)
+  @Post(':reviewId/like')
+  public async likeReview(
+    @Req() req: AuthorizedRequest,
+    @Param('reviewId') reviewId: string,
+  ) {
+    await this.reviewService.likeReview(req.user.id, reviewId);
+    return { message: 'Review liked successfully.' };
+  }
 
-    @HttpCode(200)
-    @Post(':reviewId/dislike')
-    public async dislikeReview(
-      @Req() req: AuthorizedRequest,
-      @Param('reviewId') reviewId: string,
-    ) {
-      await this.reviewService.dislikeReview(req.user.id, reviewId);
-      return { message: 'Review disliked successfully.' };
-    }
+  @HttpCode(200)
+  @Post(':reviewId/dislike')
+  public async dislikeReview(
+    @Req() req: AuthorizedRequest,
+    @Param('reviewId') reviewId: string,
+  ) {
+    await this.reviewService.dislikeReview(req.user.id, reviewId);
+    return { message: 'Review disliked successfully.' };
+  }
 
-    @ApiNotFoundResponse({ description: 'Review is not found!' })
-    @HttpCode(204)
-    @Delete(':reviewId')
-    public async deleteReview(
-      @Req() req: AuthorizedRequest,
-      @Param('reviewId') reviewId: string,
-    ) {
-      await this.reviewService.deleteReview(req.user.id, reviewId);
-      return { message: 'Review deleted successfully.'};
-    }
+  @ApiNotFoundResponse({ description: 'Review is not found!' })
+  @HttpCode(204)
+  @Delete(':reviewId')
+  public async deleteReview(
+    @Req() req: AuthorizedRequest,
+    @Param('reviewId') reviewId: string,
+  ) {
+    await this.reviewService.deleteReview(req.user.id, reviewId);
+    return { message: 'Review deleted successfully.' };
+  }
 
   @HttpCode(200)
   @Put(':reviewId')

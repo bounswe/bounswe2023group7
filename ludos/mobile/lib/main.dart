@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
-import 'package:ludos_mobile_app/game_page.dart';
 import 'login_page.dart';
 import 'games_page.dart';
 import 'userProvider.dart';
 import 'package:provider/provider.dart';
 import 'helper/colors.dart';
-import 'create_game.dart';
 
 void main() => runApp(ChangeNotifierProvider(
       create: (context) => UserProvider(),
@@ -49,18 +47,6 @@ class Home extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const ChangePassword(),
-                    ));
-                  },
-                ),
-              if (userProvider.isLoggedIn)
-                ListTile(
-                  title: const Text(
-                    'God of War',
-                    style: TextStyle(color: MyColors.white),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const GamePage(),
                     ));
                   },
                 ),
@@ -432,10 +418,53 @@ class Home extends StatelessWidget {
                     builder: (context) => const CreateGamePage(key: null,),
                   ));
                  */
+                  if(userProvider.isLoggedIn){
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const GamesPage(),
+                      builder: (context) => GamesPage(token: userProvider.token),
                     ));
-
+                  }
+                  else{
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                      SnackBar(
+                        content: const Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline,
+                              color: MyColors.blue,
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Please log in to view games',
+                                style: TextStyle(
+                                  color: MyColors.blue,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        backgroundColor: MyColors.blue2,
+                        duration: const Duration(seconds: 5),
+                        action: SnackBarAction(
+                          label: 'Log In',
+                          textColor: MyColors.blue,
+                          onPressed: () {
+                            ScaffoldMessenger.of(context)
+                                .hideCurrentSnackBar();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                        .closed
+                        .then((reason) => {});
+                  }
                   },
                   icon: const Icon(Icons.games)),
               IconButton(

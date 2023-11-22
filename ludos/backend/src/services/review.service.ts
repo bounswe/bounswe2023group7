@@ -58,127 +58,128 @@ import {
     }
 
 
-    public async likeReview(userId: string, reviewId: string): Promise<void> {
-      try {
-        const user = await this.userRepository.findUserById(userId);
-        if (!user) {
-          throw new NotFoundException('User Not Found!');
-        }
+  public async likeReview(userId: string, reviewId: string): Promise<void> {
+    try {
+      const user = await this.userRepository.findUserById(userId);
+      if (!user) {
+        throw new NotFoundException('User Not Found!');
+      }
 
-        const review = await this.reviewRepository.findReviewByIdWithLikedUsers(reviewId);
-        if (!review) {
-          throw new NotFoundException('Review Not Found!');
-        }
-  
-        if (review.likedUsers.find(likedUser => likedUser.id === userId)) {
-          log("User already liked the review.");
-          review.likedUsers = review.likedUsers.filter(likedUser => likedUser.id !== userId);
-        }
-        else {
-          review.likedUsers.push(user);
-        }
-        
-        await this.reviewRepository.updateReview(review);
+      const review =
+        await this.reviewRepository.findReviewByIdWithLikedUsers(reviewId);
+      if (!review) {
+        throw new NotFoundException('Review Not Found!');
+      }
 
-      } catch (e) {
-        if (e instanceof NotFoundException) {
-          throw e;
-        } else {
-          console.log(e);
-          throw new InternalServerErrorException();
-        }
+      if (review.likedUsers.find((likedUser) => likedUser.id === userId)) {
+        log('User already liked the review.');
+        review.likedUsers = review.likedUsers.filter(
+          (likedUser) => likedUser.id !== userId,
+        );
+      } else {
+        review.likedUsers.push(user);
+      }
+
+      await this.reviewRepository.updateReview(review);
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw e;
+      } else {
+        console.log(e);
+        throw new InternalServerErrorException();
       }
     }
+  }
 
+  public async dislikeReview(userId: string, reviewId: string): Promise<void> {
+    try {
+      const user = await this.userRepository.findUserById(userId);
+      if (!user) {
+        throw new NotFoundException('User Not Found!');
+      }
 
-    public async dislikeReview(userId: string, reviewId: string): Promise<void> {
-      try {
-        const user = await this.userRepository.findUserById(userId);
-        if (!user) {
-          throw new NotFoundException('User Not Found!');
-        }
+      const review =
+        await this.reviewRepository.findReviewByIdWithDislikedUsers(reviewId);
+      if (!review) {
+        throw new NotFoundException('Review Not Found!');
+      }
 
-        const review = await this.reviewRepository.findReviewByIdWithDislikedUsers(reviewId);
-        if (!review) {
-          throw new NotFoundException('Review Not Found!');
-        }
-  
-        if (review.dislikedUsers.find(dislikedUser => dislikedUser.id === userId)) {
-          log('User has already disliked the review.');
-          review.dislikedUsers = review.dislikedUsers.filter(dislikedUser => dislikedUser.id !== userId);
-        }
+      if (
+        review.dislikedUsers.find((dislikedUser) => dislikedUser.id === userId)
+      ) {
+        log('User has already disliked the review.');
+        review.dislikedUsers = review.dislikedUsers.filter(
+          (dislikedUser) => dislikedUser.id !== userId,
+        );
+      } else {
+        review.dislikedUsers.push(user);
+      }
 
-        else {
-          review.dislikedUsers.push(user);
-        }
-
-        await this.reviewRepository.updateReview(review);
-        
-      } catch (e) {
-        if (e instanceof NotFoundException) {
-          throw e;
-        } else {
-          console.log(e);
-          throw new InternalServerErrorException();
-        }
+      await this.reviewRepository.updateReview(review);
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw e;
+      } else {
+        console.log(e);
+        throw new InternalServerErrorException();
       }
     }
+  }
 
-    public async deleteReview(userId: string, reviewId: string): Promise<void> {
-      try {
+  public async deleteReview(userId: string, reviewId: string): Promise<void> {
+    try {
+      const review = await this.reviewRepository.findReviewById(reviewId);
+      if (!review) {
+        throw new NotFoundException('Review Not Found!');
+      }
 
-        const review = await this.reviewRepository.findReviewById(reviewId);
-        if (!review) {
-          throw new NotFoundException('Review Not Found!');
-        }
+      const user = await this.userRepository.findUserById(userId);
+      if (!user) {
+        throw new NotFoundException('User Not Found!');
+      }
 
-        const user = await this.userRepository.findUserById(userId);
-        if (!user) {
-          throw new NotFoundException('User Not Found!');
-        }
-
-        await this.reviewRepository.deleteReview(reviewId);
-  
-      } catch (e) {
-        if (e instanceof NotFoundException) {
-          throw e;
-        } else {
-          console.log(e);
-          throw new InternalServerErrorException();
-        }
+      await this.reviewRepository.deleteReview(reviewId);
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw e;
+      } else {
+        console.log(e);
+        throw new InternalServerErrorException();
       }
     }
+  }
 
+  public async editReview(
+    userId: string,
+    reviewId: string,
+    reviewEditDto: ReviewEditDto,
+  ): Promise<ReviewEditResponseDto> {
+    try {
+      const review = await this.reviewRepository.findReviewById(reviewId);
+      if (!review) {
+        throw new NotFoundException('Review Not Found!');
+      }
 
-    public async editReview(
-      userId: string,
-      reviewId: string,
-      reviewEditDto: ReviewEditDto,
-    ): Promise<ReviewEditResponseDto> {
-      try {
-        const review = await this.reviewRepository.findReviewById(reviewId);
-        if (!review) {
-          throw new NotFoundException('Review Not Found!');
-        }
-    
-        const user = await this.userRepository.findUserById(userId);
-        if (!user) {
-          throw new NotFoundException('User Not Found!');
-        }
+      const user = await this.userRepository.findUserById(userId);
+      if (!user) {
+        throw new NotFoundException('User Not Found!');
+      }
 
-        if (!reviewEditDto.content && !reviewEditDto.rating) {
-          throw new NotFoundException('Please provide at least one field to update!');
-        }
-    
-        if (reviewEditDto.content) {
-          review.content = reviewEditDto.content;
-        }
-    
-        if (reviewEditDto.rating) {
-          review.rating = reviewEditDto.rating;
-        }
+      if (!reviewEditDto.content && !reviewEditDto.rating) {
+        throw new NotFoundException(
+          'Please provide at least one field to update!',
+        );
+      }
 
-        await this.reviewRepository.updateReview(review);
+      if (reviewEditDto.content) {
+        review.content = reviewEditDto.content;
+      }
+
+      if (reviewEditDto.rating) {
+        review.rating = reviewEditDto.rating;
+      }
+
+      await this.reviewRepository.updateReview(review);
 
         return {
           id: review.id,

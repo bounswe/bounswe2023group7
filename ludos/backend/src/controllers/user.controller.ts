@@ -30,11 +30,12 @@ import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
+import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
   @ApiOkResponse({
     description: 'Successful Register',
     type: RegisterResponseDto,
@@ -78,7 +79,6 @@ export class UserController {
   @ApiBadRequestResponse({
     description: 'Bad Request',
   })
-
   @HttpCode(200)
   @ApiOperation({ summary: 'Password Reset Request Endpoint' })
   @Post('/reset-password')
@@ -139,7 +139,7 @@ export class UserController {
   ) {
     await this.userService.editInfo(req.user.id, input);
   }
-  
+
   @HttpCode(200)
   @ApiUnauthorizedResponse({
     description: 'Invalid User',
@@ -147,9 +147,11 @@ export class UserController {
   @ApiBadRequestResponse({
     description: 'Bad Request',
   })
-
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get User Info Request Endpoint' })
+  @ApiOkResponse({
+    type: GetUserInfoResponseDto,
+  })
   @Get('/info')
   public async getUserInfoById(@Req() req: AuthorizedRequest) {
     return await this.userService.getUserInfo(req.user.id);
