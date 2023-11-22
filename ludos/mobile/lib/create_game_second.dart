@@ -95,7 +95,7 @@ class CreateGamePageSecond extends StatefulWidget {
 
   const CreateGamePageSecond(
       {Key? key,
-        required this.token,
+      required this.token,
       required this.title,
       required this.coverLink,
       required this.gameBio,
@@ -157,7 +157,7 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
-        title: const Text('Ludos'),
+        title: const Text('Create Game'),
       ),
       backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
@@ -341,7 +341,8 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => GamesPage(token: widget.token)),
+                                        builder: (context) =>
+                                            GamesPage(token: widget.token)),
                                   );
                                 },
                               ),
@@ -351,7 +352,8 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                           .then((reason) => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => GamesPage(token: widget.token)),
+                                    builder: (context) =>
+                                        GamesPage(token: widget.token)),
                               ));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

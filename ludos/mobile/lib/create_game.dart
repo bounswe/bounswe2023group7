@@ -130,7 +130,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
-        title: const Text('Ludos'),
+        title: const Text('Create Game'),
       ),
       backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
