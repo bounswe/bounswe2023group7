@@ -16,7 +16,9 @@ import axios from "axios";
 
 function App() {
   const [games, setGames] = useState([]);
-  const link = `http://${process.env.REACT_APP_API_URL}/game/`;
+  const limit = 50; // Set the desired limit (number of games per request)
+  const link = `http://${process.env.REACT_APP_API_URL}/game/?limit=${limit}`;
+
   const convertToSlug = (text) => {
     return text
       .toString()

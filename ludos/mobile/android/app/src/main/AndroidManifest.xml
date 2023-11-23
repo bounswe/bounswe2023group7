@@ -3,7 +3,8 @@
     <application
         android:label="ludos_mobile_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:roundIcon="@mipmap/ludos_logos_round">
+        android:icon="@mipmap/ludos_logos">
         <activity
             android:name=".MainActivity"
             android:exported="true"
