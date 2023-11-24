@@ -199,7 +199,7 @@ export class UserService {
     const response = new GetUserInfoResponseDto();
     response.email = user.email;
     response.username = user.username;
-    response.followedGames = user.followedGames;
+    response.followedGames = user?.followedGames.filter(game => game.id !== null);
     response.ratings = user.ratingList;
     response.isNotificationEnabled = user.isNotificationEnabled;
     response.userType = user.userType;
