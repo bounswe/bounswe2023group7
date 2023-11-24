@@ -7,6 +7,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Post,
   Put,
@@ -139,12 +140,20 @@ export class GameController {
     description: 'ASC or DESC. Default is ASC',
     example: 'ASC',
   })
+  @ApiQuery({
+    name: 'isFollowed',
+    required: false,
+    description: 'Filter by followed games. If false no filter is applied',
+    example: 'true',
+  })
   @ApiOkResponse({
     type: GamePageResponseDto,
   })
+  @ApiBearerAuth()
   @UseInterceptors(new SerializerInterceptor(GamePageResponseDto))
   @Get()
   public async listGames(
+    @Req() req: AuthorizedRequest,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
     @Query('searchKey') searchKey?: string,
@@ -154,6 +163,8 @@ export class GameController {
     @Query('developer') developer?: string,
     @Query('orderByKey') orderByKey?: keyof Game,
     @Query('order') order?: 'ASC' | 'DESC',
+    @Query('isFollowed', new DefaultValuePipe(false), ParseBoolPipe)
+    isFollowed?: boolean,
   ) {
     return await this.gameService.listGames(
       page,
@@ -165,6 +176,8 @@ export class GameController {
       developer,
       orderByKey,
       order,
+      req.user && req.user.id,
+      isFollowed,
     );
   }
 }

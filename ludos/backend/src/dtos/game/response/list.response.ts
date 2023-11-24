@@ -32,4 +32,11 @@ export class GameListResponseDto {
   @Expose()
   @ApiProperty()
   ageRestriction: string;
+  @Expose()
+  @ApiProperty()
+  isFollowed?: boolean;
+
+  @Expose()
+  @ApiProperty()
+  userRating?: number;
 }

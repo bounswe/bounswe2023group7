@@ -1,24 +1,39 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from './controllers/app.controller';
-import { AppService } from './services/app.service';
+import { MiddlewareConsumer, Module, NestModule, Post } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from './services/config/typeorm-config.service';
-import { User } from './entities/user.entity';
-import { ResetPassword } from './entities/reset-password.entity';
-import { UserRepository } from './repositories/user.repository';
-import { UserController } from './controllers/user.controller';
-import { UserService } from './services/user.service';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtConfigService } from './services/config/jwt-config.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './controllers/app.controller';
+import { CommentController } from './controllers/comment.controller';
 import { GameController } from './controllers/game.controller';
-import { GameService } from './services/game.service';
-import { GameRepository } from './repositories/game.repository';
-import { Game } from './entities/game.entity';
-import { TokenDecoderMiddleware } from './middlewares/tokenDecoder.middleware';
-import { ResetPasswordRepository } from './repositories/reset-password.repository';
-import { S3Service } from './services/s3.service';
+import { PostController } from './controllers/post.controller';
+import { RatingController } from './controllers/rating.controller';
+import { ReviewController } from './controllers/review.controller';
 import { S3Controller } from './controllers/s3.controller';
+import { UserController } from './controllers/user.controller';
+import { Comment } from './entities/comment.entity';
+import { Game } from './entities/game.entity';
+import { Rating } from './entities/rating.entity';
+import { ResetPassword } from './entities/reset-password.entity';
+import { Review } from './entities/review.entity';
+import { User } from './entities/user.entity';
+import { TokenDecoderMiddleware } from './middlewares/tokenDecoder.middleware';
+import { CommentRepository } from './repositories/comment.repository';
+import { GameRepository } from './repositories/game.repository';
+import { PostRepository } from './repositories/post.repository';
+import { RatingRepository } from './repositories/rating.repository';
+import { ResetPasswordRepository } from './repositories/reset-password.repository';
+import { ReviewRepository } from './repositories/review.repository';
+import { UserRepository } from './repositories/user.repository';
+import { AppService } from './services/app.service';
+import { CommentService } from './services/comment.service';
+import { JwtConfigService } from './services/config/jwt-config.service';
+import { TypeOrmConfigService } from './services/config/typeorm-config.service';
+import { GameService } from './services/game.service';
+import { PostService } from './services/post.service';
+import { RatingService } from './services/rating.service';
+import { ReviewService } from './services/review.service';
+import { S3Service } from './services/s3.service';
+import { UserService } from './services/user.service';
 
 @Module({
   imports: [
@@ -33,9 +48,26 @@ import { S3Controller } from './controllers/s3.controller';
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService],
     }),
-    TypeOrmModule.forFeature([User, Game, ResetPassword]),
+    TypeOrmModule.forFeature([User, Game, Review, ResetPassword, Post]),
+    TypeOrmModule.forFeature([
+      User,
+      Game,
+      Review,
+      ResetPassword,
+      Rating,
+      Comment,
+    ]),
   ],
-  controllers: [AppController, UserController, GameController, S3Controller],
+  controllers: [
+    AppController,
+    UserController,
+    GameController,
+    S3Controller,
+    ReviewController,
+    PostController,
+    RatingController,
+    CommentController,
+  ],
   providers: [
     AppService,
     UserRepository,
@@ -44,6 +76,14 @@ import { S3Controller } from './controllers/s3.controller';
     GameService,
     ResetPasswordRepository,
     S3Service,
+    CommentRepository,
+    CommentService,
+    ReviewRepository,
+    ReviewService,
+    PostRepository,
+    PostService,
+    RatingRepository,
+    RatingService,
   ],
 })
 export class AppModule implements NestModule {

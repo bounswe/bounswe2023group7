@@ -1,14 +1,13 @@
-import 'dart:convert';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'package:material_tag_editor/tag_editor.dart';
-import 'helper/APIService.dart';
+import 'create_game_second.dart';
 
-Widget getbox(
-    String hintText, TextEditingController controller, bool isMandatory) {
+Widget getbox(String hintText, TextEditingController controller,
+    bool isMandatory, bool multiLine) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -31,15 +30,17 @@ Widget getbox(
           ),
         ],
       ),
-      SizedBox(height: 8.0), // Adjust the spacing as needed
+      const SizedBox(height: 8.0), // Adjust the spacing as needed
       TextFormField(
         controller: controller,
         style: const TextStyle(color: MyColors.red),
+        keyboardType: multiLine ? TextInputType.multiline : null,
+        maxLines: multiLine ? 5 : 1,
         decoration: InputDecoration(
           filled: true,
           fillColor: MyColors.white,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(25.0),
             borderSide: const BorderSide(
               color: Colors.white,
               width: 2.0,
@@ -49,7 +50,7 @@ Widget getbox(
           labelText: '',
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: MyColors.lightBlue, width: 2.0),
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(25.0),
           ),
         ),
         cursorColor: MyColors.lightBlue,
@@ -59,7 +60,9 @@ Widget getbox(
 }
 
 class CreateGamePage extends StatefulWidget {
-  const CreateGamePage({Key? key}) : super(key: key);
+  final String? token;
+  final UserProvider userProvider;
+  const CreateGamePage({Key? key, required this.token, required this.userProvider}) : super(key: key);
 
   @override
   State<CreateGamePage> createState() => _CreateGamePageState();
@@ -68,8 +71,17 @@ class CreateGamePage extends StatefulWidget {
 class _CreateGamePageState extends State<CreateGamePage> {
   List<String> predecessorValues = [];
   List<String> successorValues = [];
-  List<String> platformValues = [];
   List<String> tagValues = [];
+  int selectdAgeRestriction = 0;
+  List<String> ageRestrictions = [
+    'Early Childhood',
+    'Everyone',
+    'Everyone 10 and older',
+    'Teen',
+    'Mature',
+    'Adults Only',
+    'Rating Pending',
+  ];
 
   _onDeletepr(index) {
     setState(() {
@@ -83,139 +95,174 @@ class _CreateGamePageState extends State<CreateGamePage> {
     });
   }
 
-  _onDeletepl(index) {
-    setState(() {
-      platformValues.removeAt(index);
-    });
-  }
-
   _onDeletet(index) {
     setState(() {
       tagValues.removeAt(index);
     });
   }
 
+  void _showDialog(Widget child) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        height: 216,
+        padding: const EdgeInsets.only(top: 6.0),
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        child: SafeArea(
+          top: false,
+          child: child,
+        ),
+      ),
+    );
+  }
+
   final TextEditingController titleController = TextEditingController();
   final TextEditingController coverLinkController = TextEditingController();
-  final TextEditingController systemRequirementsController =
-      TextEditingController();
   final TextEditingController predecessorsController = TextEditingController();
   final TextEditingController successorsController = TextEditingController();
-  final TextEditingController gameGuideController = TextEditingController();
-  final TextEditingController gameStoryController = TextEditingController();
-  final TextEditingController platformsController = TextEditingController();
-  final TextEditingController ageRestrictionController =
-      TextEditingController();
   final TextEditingController gameBioController = TextEditingController();
   final TextEditingController tagsController = TextEditingController();
-  final TextEditingController releaseDateController = TextEditingController();
-  final TextEditingController developerController = TextEditingController();
-  final TextEditingController publisherController = TextEditingController();
-  final TextEditingController triviaController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColors.orange,
+        backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
-        title: const Text('Ludos'),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              http.Response token = await APIService().createGame(
-                  titleController.text,
-                  coverLinkController.text,
-                  systemRequirementsController.text,
-                  predecessorValues,
-                  successorValues,
-                  gameGuideController.text,
-                  gameStoryController.text,
-                  platformValues,
-                  ageRestrictionController.text,
-                  gameBioController.text,
-                  tagValues,
-                  releaseDateController.text,
-                  developerController.text,
-                  publisherController.text,
-                  triviaController.text);
-              if (token.statusCode == 201) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Row(
-                      children: [
-                        Icon(
-                          Icons.check_circle_outline,
-                          color: MyColors.blue,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          'Your game is created successfully.',
-                          style: TextStyle(
-                            color: MyColors.blue,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    backgroundColor: MyColors.blue2,
-                    duration: const Duration(seconds: 10),
-                    action: SnackBarAction(
-                      label: 'OK',
-                      textColor: MyColors.blue,
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      },
-                    ),
-                  ),
-                );
-              } else if (token.statusCode == 409) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(
-                        json.decode(token.body)["message"],
-                        style: const TextStyle(
-                          color: MyColors.blue,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    backgroundColor: MyColors.blue2,
-                    duration: const Duration(seconds: 10),
-                    action: SnackBarAction(
-                      label: 'OK',
-                      textColor: MyColors.blue,
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      },
-                    ),
-                  ),
-                );
-              }
-            },
-            child: const Text(
-              'Save Game',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+        title: const Text('Create Game'),
       ),
-      backgroundColor: MyColors.blue,
+      backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const SizedBox(height: 50),
-              getbox("Title", titleController, true),
               const SizedBox(height: 20),
-              getbox("Coverlink", coverLinkController, false),
+              getbox("Title", titleController, true, false),
               const SizedBox(height: 20),
-              getbox(
-                  "System Requirements", systemRequirementsController, false),
+              getbox("Coverlink", coverLinkController, true, false),
+              const SizedBox(height: 20),
+              getbox("Game Bio", gameBioController, true, true),
+              const SizedBox(height: 20),
+              const Row(
+                children: [
+                  Text(
+                    '*',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "Age Restriction",
+                    style: TextStyle(
+                      color: MyColors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Container(
+                  padding: const EdgeInsets.only(),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: MyColors.white,
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2.0,
+                    ),
+                  ),
+                  child: CupertinoButton(
+                    padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                    onPressed: () => _showDialog(
+                      CupertinoPicker(
+                        magnification: 1.22,
+                        squeeze: 1.2,
+                        useMagnifier: true,
+                        itemExtent: 32.0,
+                        scrollController: FixedExtentScrollController(
+                          initialItem: selectdAgeRestriction,
+                        ),
+                        onSelectedItemChanged: (int selectedItem) {
+                          setState(() {
+                            selectdAgeRestriction = selectedItem;
+                          });
+                        },
+                        children: List<Widget>.generate(ageRestrictions.length,
+                            (int index) {
+                          return Center(child: Text(ageRestrictions[index]));
+                        }),
+                      ),
+                    ),
+                    child: Text(
+                      ageRestrictions[selectdAgeRestriction],
+                      style: const TextStyle(color: MyColors.blue),
+                    ),
+                  ),
+                ),
+              ]),
+              const SizedBox(height: 20),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text(
+                  "Tags",
+                  style: TextStyle(
+                    color: MyColors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                TagEditor(
+                  length: tagValues.length,
+                  controller: tagsController,
+                  delimiters: const [',', ' '],
+                  hasAddButton: true,
+                  resetTextOnSubmitted: true,
+                  textStyle: const TextStyle(
+                      color: MyColors.red, fontWeight: FontWeight.bold),
+                  onSubmitted: (outstandingValue) {
+                    setState(() {
+                      tagValues.add(outstandingValue);
+                    });
+                  },
+                  inputDecoration: InputDecoration(
+                    filled: true,
+                    fillColor: MyColors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: const BorderSide(
+                        color: Colors.white,
+                        width: 2.0,
+                      ),
+                    ),
+                    labelStyle: const TextStyle(
+                        color: MyColors.red, fontWeight: FontWeight.bold),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: MyColors.lightBlue, width: 2.0),
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                  ),
+                  onTagChanged: (newValue) {
+                    setState(() {
+                      tagValues.add(newValue);
+                    });
+                  },
+                  tagBuilder: (context, index) => _Chip(
+                    index: index,
+                    label: tagValues[index],
+                    onDeleted: _onDeletet,
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
+                  ],
+                ),
+              ]),
               const SizedBox(height: 20),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Text(
@@ -232,7 +279,6 @@ class _CreateGamePageState extends State<CreateGamePage> {
                   delimiters: const [',', ' '],
                   hasAddButton: true,
                   resetTextOnSubmitted: true,
-                  // This is set to grey just to illustrate the `textStyle` prop
                   textStyle: const TextStyle(
                       color: MyColors.red, fontWeight: FontWeight.bold),
                   onSubmitted: (outstandingValue) {
@@ -244,7 +290,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     filled: true,
                     fillColor: MyColors.white,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(25.0),
                       borderSide: const BorderSide(
                         color: Colors.white,
                         width: 2.0,
@@ -255,7 +301,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     focusedBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
                           color: MyColors.lightBlue, width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(25.0),
                     ),
                   ),
                   onTagChanged: (newValue) {
@@ -268,7 +314,6 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     label: predecessorValues[index],
                     onDeleted: _onDeletepr,
                   ),
-                  // InputFormatters example, this disallow \ and /
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
                   ],
@@ -290,7 +335,6 @@ class _CreateGamePageState extends State<CreateGamePage> {
                   delimiters: const [',', ' '],
                   hasAddButton: true,
                   resetTextOnSubmitted: true,
-                  // This is set to grey just to illustrate the `textStyle` prop
                   textStyle: const TextStyle(
                       color: MyColors.red, fontWeight: FontWeight.bold),
                   onSubmitted: (outstandingValue) {
@@ -302,7 +346,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     filled: true,
                     fillColor: MyColors.white,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(25.0),
                       borderSide: const BorderSide(
                         color: Colors.white,
                         width: 2.0,
@@ -313,7 +357,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     focusedBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
                           color: MyColors.lightBlue, width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(25.0),
                     ),
                   ),
                   onTagChanged: (newValue) {
@@ -326,144 +370,46 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     label: successorValues[index],
                     onDeleted: _onDeletes,
                   ),
-                  // InputFormatters example, this disallow \ and /
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
                   ],
                 ),
-              ]),
-              const SizedBox(height: 20),
-              getbox("Game Guide", gameGuideController, false),
-              const SizedBox(height: 20),
-              getbox("Game Story", gameStoryController, false),
-              const SizedBox(height: 20),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text(
-                  "Platforms",
-                  style: TextStyle(
-                    color: MyColors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                const SizedBox(
+                  height: 20,
                 ),
-                SizedBox(height: 8.0),
-                TagEditor(
-                  length: platformValues.length,
-                  controller: platformsController,
-                  delimiters: const [',', ' '],
-                  hasAddButton: true,
-                  resetTextOnSubmitted: true,
-                  // This is set to grey just to illustrate the `textStyle` prop
-                  textStyle: const TextStyle(
-                      color: MyColors.red, fontWeight: FontWeight.bold),
-                  onSubmitted: (outstandingValue) {
-                    setState(() {
-                      platformValues.add(outstandingValue);
-                    });
-                  },
-                  inputDecoration: InputDecoration(
-                    filled: true,
-                    fillColor: MyColors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: const BorderSide(
-                        color: Colors.white,
-                        width: 2.0,
+                Center(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: MyColors.lightBlue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
                       ),
                     ),
-                    labelStyle: const TextStyle(
-                        color: MyColors.red, fontWeight: FontWeight.bold),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: MyColors.lightBlue, width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  onTagChanged: (newValue) {
-                    setState(() {
-                      platformValues.add(newValue);
-                    });
-                  },
-                  tagBuilder: (context, index) => _Chip(
-                    index: index,
-                    label: platformValues[index],
-                    onDeleted: _onDeletepl,
-                  ),
-                  // InputFormatters example, this disallow \ and /
-                  inputFormatters: [
-                    FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
-                  ],
-                ),
-              ]),
-              const SizedBox(height: 20),
-              getbox("Age Restriction", ageRestrictionController, false),
-              const SizedBox(height: 20),
-              getbox("Game Bio", gameBioController, true),
-              const SizedBox(height: 20),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text(
-                  "Tags",
-                  style: TextStyle(
-                    color: MyColors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8.0),
-                TagEditor(
-                  length: tagValues.length,
-                  controller: tagsController,
-                  delimiters: const [',', ' '],
-                  hasAddButton: true,
-                  resetTextOnSubmitted: true,
-                  // This is set to grey just to illustrate the `textStyle` prop
-                  textStyle: const TextStyle(
-                      color: MyColors.red, fontWeight: FontWeight.bold),
-                  onSubmitted: (outstandingValue) {
-                    setState(() {
-                      tagValues.add(outstandingValue);
-                    });
-                  },
-                  inputDecoration: InputDecoration(
-                    filled: true,
-                    fillColor: MyColors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: const BorderSide(
-                        color: Colors.white,
-                        width: 2.0,
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => CreateGamePageSecond(
+                            userProvider: widget.userProvider,
+                            token: widget.token,
+                            title: titleController.text,
+                            coverLink: coverLinkController.text,
+                            gameBio: gameBioController.text,
+                            ageRestriction:
+                                ageRestrictions[selectdAgeRestriction],
+                            tags: tagValues,
+                            predecessors: predecessorValues,
+                            successors: successorValues),
+                      ));
+                    },
+                    child: const Text(
+                      'Next',
+                      style: TextStyle(
+                        color: MyColors.white,
+                        fontSize: 16.0,
                       ),
                     ),
-                    labelStyle: const TextStyle(
-                        color: MyColors.red, fontWeight: FontWeight.bold),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: MyColors.lightBlue, width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
                   ),
-                  onTagChanged: (newValue) {
-                    setState(() {
-                      tagValues.add(newValue);
-                    });
-                  },
-                  tagBuilder: (context, index) => _Chip(
-                    index: index,
-                    label: tagValues[index],
-                    onDeleted: _onDeletet,
-                  ),
-                  // InputFormatters example, this disallow \ and /
-                  inputFormatters: [
-                    FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
-                  ],
                 ),
               ]),
-              const SizedBox(height: 20),
-              getbox("Release Date", releaseDateController, true),
-              const SizedBox(height: 20),
-              getbox("Developer", developerController, true),
-              const SizedBox(height: 20),
-              getbox("Publisher", publisherController, true),
-              const SizedBox(height: 20),
-              getbox("Trivia", triviaController, false),
             ],
           ),
         ),
@@ -486,6 +432,7 @@ class _Chip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
+      backgroundColor: MyColors.blue2,
       labelPadding: const EdgeInsets.only(left: 8.0),
       label: Text(label),
       deleteIcon: const Icon(

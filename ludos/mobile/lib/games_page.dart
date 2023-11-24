@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'reusable_widgets/game_summary.dart';
 import 'helper/APIService.dart';
 import 'create_game.dart';
 
 class GamesPage extends StatefulWidget {
-  const GamesPage({Key? key}) : super(key: key);
+  final String? token;
+  final UserProvider userProvider;
+  const GamesPage({Key? key, required this.token, required this.userProvider}) : super(key: key);
 
   @override
   State<GamesPage> createState() => _GamesPageState();
@@ -20,29 +23,34 @@ class _GamesPageState extends State<GamesPage> {
   @override
   void initState() {
     super.initState();
-    games = fetchData();
+    games = fetchData(widget.token);
   }
 
-  Future<List<GameSummary>> fetchData() async {
-    final response = await APIService().listGames();
+  Future<List<GameSummary>> fetchData(String? token) async {
+    //final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final response = await APIService().listGames(token);
     try {
       //print(json.decode(response.body));
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> gamesList = responseData['items'];
-
-        return gamesList.map((dynamic item) => GameSummary(
-          title: item['title'],
-          averageRating: item['averageRating'].toDouble(),
-          coverLink: item['coverLink'],
-          numOfFollowers: item['followers'],
-          gameStory: 'gameStory',
-          tags: item['tags'],
-          textColor: MyColors.white,
-          backgroundColor: MyColors.red,
-          fontSize: 20,
-        )).toList();
+        return gamesList
+            .map((dynamic item) => GameSummary(
+                title: item['title'],
+                averageRating: (item['averageRating'] == null
+                    ? 0
+                    : item['averageRating'].toDouble()),
+                coverLink: item['coverLink'],
+                numOfFollowers: item['followers'],
+                gameStory: 'gameStory',
+                tags: item['tags'],
+                textColor: MyColors.white,
+                backgroundColor: MyColors.red,
+                fontSize: 20,
+                id: item['id'],
+                token: widget.token))
+            .toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load games');
@@ -60,6 +68,19 @@ class _GamesPageState extends State<GamesPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
         title: const Text('Games'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CreateGamePage(token: widget.token),
+              ));
+            },
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -78,13 +99,14 @@ class _GamesPageState extends State<GamesPage> {
                     decoration: const InputDecoration(
                       labelText: 'Search',
                       labelStyle: TextStyle(
-                          color: MyColors.lightBlue, fontWeight: FontWeight.bold),
+                          color: MyColors.lightBlue,
+                          fontWeight: FontWeight.bold),
                       border: UnderlineInputBorder(
-                          borderSide:
-                          BorderSide(color: MyColors.lightBlue, width: 2.0)),
+                          borderSide: BorderSide(
+                              color: MyColors.lightBlue, width: 2.0)),
                       focusedBorder: UnderlineInputBorder(
                         borderSide:
-                        BorderSide(color: MyColors.lightBlue, width: 2.0),
+                            BorderSide(color: MyColors.lightBlue, width: 2.0),
                       ),
                     ),
                     cursorColor: MyColors.lightBlue,
@@ -93,45 +115,20 @@ class _GamesPageState extends State<GamesPage> {
                 Container(
                   decoration: BoxDecoration(
                     color: MyColors.lightBlue, // Set the background color
-                    borderRadius: BorderRadius.circular(5.0), // Optional: Add border radius for rounded corners
+                    borderRadius: BorderRadius.circular(
+                        5.0), // Optional: Add border radius for rounded corners
                   ),
                   child: IconButton(
                     onPressed: () {
                       setState(() {
-                         searchText = searchInputController.text;
-                         //print(searchText);
-                       });
+                        searchText = searchInputController.text;
+                        //print(searchText);
+                      });
                     },
                     icon: const Icon(Icons.search, color: MyColors.white),
                   ),
                 ),
                 const SizedBox(width: 5.0),
-                Container(
-                  decoration: BoxDecoration(
-                    color: MyColors.lightBlue, // Set the background color
-                    borderRadius: BorderRadius.circular(5.0), // Optional: Add border radius for rounded corners
-                  ),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                        backgroundColor: MyColors.lightBlue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        )
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const CreateGamePage(),
-                      ));
-                    }, child: const Text(
-                      'Create Game',
-                          style: TextStyle(
-                            color: MyColors.white,
-                            fontSize: 16.0,
-                          ),
-                  ),
-                  ),
-                ),
-
               ],
             ),
             //const SafeArea(child: SizedBox(height: 10)),
