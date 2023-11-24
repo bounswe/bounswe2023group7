@@ -76,10 +76,8 @@ function Review(data, index1) {
             textAlign="left"
             style={userStyle}
           >
-            {data.review.createdAt.slice(5, 7)}
-            {"/"}
-            {data.review.createdAt.slice(8, 10)}
-            {"/"}
+            {data.review.createdAt.slice(5, 7)}/
+            {data.review.createdAt.slice(8, 10)}/
             {data.review.createdAt.slice(0, 4)}{" "}
             {data.review.createdAt.slice(11, 19)}
           </Typography>
