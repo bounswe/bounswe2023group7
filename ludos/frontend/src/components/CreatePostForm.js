@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const CreatePostPage = () => {
-    const [tags, setTags] = useState(["test"]);
+    const [tags, setTags] = useState([]);
     const [currTag, setCurrTag] = useState("");
     const [games, setGames] = useState([]);
     const [title, setTitle] = useState('');
