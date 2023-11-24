@@ -24,8 +24,7 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Future<List<PostSummary>> fetchData(String? token) async {
-    /*
-    final response = await APIService().listPosts(token);
+    final response = await APIService().listPosts(gameId, token);
     try {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -34,12 +33,12 @@ class _ForumPageState extends State<ForumPage> {
 
         return postLists.map((dynamic item) => PostSummary(
           title: item['title'],
-          game: item['game'],
-          username: item['username'],
-          thumbUps: item['thumbUps'],
-          thumbDowns: item['thumbDowns'],
+          game: item['game']['title'],
+          username: item['user']['username'],
+          thumbUps: item['numberOfLikes'],
+          thumbDowns: item['NumberOfDislikes'],
           textColor: MyColors.white,
-          backgroundColor: MyColors.red,
+          backgroundColor: MyColors.blue,
           fontSize: 20,
         )).toList();
       } else {
@@ -50,7 +49,6 @@ class _ForumPageState extends State<ForumPage> {
       print("Error: $error");
       throw Exception('Failed to load posts');
     }
-     */
 
     // mock data
     var item = const PostSummary(
@@ -87,6 +85,7 @@ class _ForumPageState extends State<ForumPage> {
         backgroundColor: MyColors.blue,
         fontSize: 20
     )).toList();
+    */
   }
 
   @override

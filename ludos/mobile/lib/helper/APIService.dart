@@ -96,4 +96,12 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> listPosts(String gameId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/post?gameId={gameId}&limit=20");
+
+    final response = await http.get(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+
+    return response;
+  }
+
 }
