@@ -12,7 +12,7 @@ import CreateGamePage from "./pages/CreateGamePage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ForumsPage from "./pages/ForumsPage.js";
 import ProfilePage from "./pages/ProfilePage";
-import CreatePostPage from "./pages/CreatePostPage.js";
+import CreateThreadPage from "./pages/CreateThreadPage.js";
 import axios from "axios";
 
 function App() {
@@ -378,7 +378,7 @@ function App() {
             path="/create-post"
             element={
               <Layout>
-                <CreatePostPage />
+                <CreateThreadPage />
               </Layout>
             }
           />

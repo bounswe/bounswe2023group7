@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Autocomplete, Grid, Box, FormControl, Chip, Input } from '@mui/material';
 import axios from 'axios';
-import 'react-quill/dist/quill.snow.css';
 import Textarea from '@mui/joy/Textarea';
 import FormatBold from '@mui/icons-material/FormatBold';
 import FormatItalic from '@mui/icons-material/FormatItalic';
@@ -17,7 +16,7 @@ import Alert from '@mui/material/Alert';
 import { useNavigate } from "react-router-dom";
 
 
-const CreatePostPage = () => {
+const CreateThreadPage = () => {
     const [tags, setTags] = useState([]);
     const [currTag, setCurrTag] = useState("");
     const [games, setGames] = useState([]);
@@ -149,13 +148,13 @@ const CreatePostPage = () => {
             tags,
         })
             .then((response) => {
-                setSnackbarMessage("Post created successfully!");
+                setSnackbarMessage("Thread created successfully!");
                 setSnackbar(true)
                 navigate(`/post/${response.data.id}}`);
                 console.log(response);
             })
             .catch((error) => {
-                setSnackbarMessage("An error occurred while creating the post!: " + error.response.data.message);
+                setSnackbarMessage("An error occurred while creating the thread!: " + error.response.data.message);
                 setServerError(true);
                 console.log(error);
             });
@@ -165,7 +164,7 @@ const CreatePostPage = () => {
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', height: '90%' }}>
             <Grid container spacing={1} xs={8} sx={{ backgroundColor: 'white', padding: '15px', borderRadius: '25px' }}>
-                <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Create Post</h1>
+                <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Create Thread</h1>
                 <Grid item xs={12} spacing={1} >
                     <h3 style={{ display: 'flex', alignItems: 'flex-start' }}>Title:</h3>
                     <TextField
@@ -334,4 +333,4 @@ const CreatePostPage = () => {
     );
 };
 
-export default CreatePostPage;
+export default CreateThreadPage;
