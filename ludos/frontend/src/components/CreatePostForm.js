@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Autocomplete, Grid, Box, FormControl, Chip, Input } from '@mui/material';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
 import axios from 'axios';
 import 'react-quill/dist/quill.snow.css';
 import Textarea from '@mui/joy/Textarea';
@@ -12,6 +11,10 @@ import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import IconButton from '@mui/joy/IconButton';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Check from '@mui/icons-material/Check';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import { useNavigate } from "react-router-dom";
 
 
 const CreatePostPage = () => {
@@ -23,9 +26,16 @@ const CreatePostPage = () => {
     const [media, setMedia] = useState([]);
     const [value, setValue] = useState('');
     const [searchKey, setSearchKey] = useState('');
-    const [italic, setItalic] = React.useState(false);
-    const [fontWeight, setFontWeight] = React.useState('normal');
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [italic, setItalic] = useState(false);
+    const [fontWeight, setFontWeight] = useState('normal');
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [snackbar, setSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [serverError, setServerError] = useState(false);
+    const [titleEmpty, setTitleEmpty] = useState(false);
+    const [bodyEmpty, setBodyEmpty] = useState(false);
+
+    const navigate = useNavigate();
 
     const axiosInstance = axios.create({
         baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -41,8 +51,37 @@ const CreatePostPage = () => {
         }
     };
 
-    const handleFileUpload = (e) => {
-        setMedia(e.target.files[0]);
+    const handleCloseSnackbar = () => {
+        setSnackbar(false);
+    };
+
+
+    const handleImageUpload = (event) => {
+
+        const file = event.target.files[0];
+
+        if (file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                // Axios ile POST isteği yapılıyor
+                const response = axiosInstance.post('/external/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }).then((response) => {
+                    setSnackbarMessage("Image uploaded successfully!");
+                    setSnackbar(true)
+                    setMedia((oldMedia) => [...oldMedia, response.data]);
+                });
+                console.log('File is successfully uploaded:', response.data);
+            } catch (error) {
+                console.error('Error while uploading:', error);
+                setSnackbarMessage("An error occurred while uploading the image!");
+                setServerError(true);
+            }
+        }
     };
 
     const handleChange = (e) => {
@@ -77,6 +116,29 @@ const CreatePostPage = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        if (title.length === 0 || title === "") {
+            setSnackbarMessage("Title cannot be empty!");
+            setServerError(true);
+            setTitleEmpty(true);
+            setSnackbar(true);
+            return;
+        }
+
+        if (body.length === 0 || body === "") {
+            setSnackbarMessage("Body cannot be empty!");
+            setServerError(true);
+            setBodyEmpty(true);
+            setSnackbar(true);
+            return;
+        }
+
+        if (!value || value.length === 0 || value === "") {
+            setSnackbarMessage("Game cannot be empty!");
+            setServerError(true);
+            setSnackbar(true);
+            return;
+        }
+
         let gameId = games.filter((game) => game.title === value)[0].id;
 
         axiosInstance.post('/post', {
@@ -87,9 +149,14 @@ const CreatePostPage = () => {
             tags,
         })
             .then((response) => {
+                setSnackbarMessage("Post created successfully!");
+                setSnackbar(true)
+                navigate(`/post/${response.data.id}}`);
                 console.log(response);
             })
             .catch((error) => {
+                setSnackbarMessage("An error occurred while creating the post!: " + error.response.data.message);
+                setServerError(true);
                 console.log(error);
             });
 
@@ -109,7 +176,12 @@ const CreatePostPage = () => {
                         id='title'
                         onChange={(event) => {
                             setTitle(event.target.value);
-                        }} />
+                            setTitleEmpty(false);
+                        }}
+                        error={titleEmpty}
+                        helperText={titleEmpty ? "Title cannot be empty." : ""}
+                    />
+
                 </Grid>
                 <Grid item xs={12} spacing={1} >
                     <h3 style={{ display: 'flex', alignItems: 'flex-start' }}>Game:</h3>
@@ -122,6 +194,7 @@ const CreatePostPage = () => {
                         onInputChange={(event, newInputValue) => {
                             setSearchKey(newInputValue);
                         }}
+                        required
                         renderInput={(params) => <TextField {...params} label="Forum" />}
                     />
                 </Grid>
@@ -215,21 +288,26 @@ const CreatePostPage = () => {
                             }}
                             onChange={(event) => {
                                 setBody(event.target.value);
+                                setBodyEmpty(false);
                             }}
+                            error={bodyEmpty}
+                            helperText={bodyEmpty ? "Body cannot be empty." : ""}
                         />
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} spacing={1} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Button
-                        variant="contained"
-                        color="primary"
-                        my={10}
-                        sx={{ mt: 5 }}
-                        endIcon={<UploadFileIcon />}
-
+                        component="label"
+                        variant="secondary"
+                        sx={{ height: "40px", display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}
+                        startIcon={<CloudUploadIcon />}
                     >
-                        Add Image
-                        <input type="file" accept=".png" hidden onChange={handleFileUpload} />
+                        Upload file
+                        <input
+                            type="file"
+                            onChange={handleImageUpload}
+                            style={{ display: 'none' }}
+                        />
                     </Button>
                     <Button
                         variant="contained"
@@ -243,6 +321,15 @@ const CreatePostPage = () => {
                 </Grid>
             </Grid>
 
+            <Snackbar open={snackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity={serverError ? "error" : "success"}
+                    sx={{ width: "100%" }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };
