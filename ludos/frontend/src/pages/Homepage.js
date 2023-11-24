@@ -3,7 +3,7 @@ import TrendingGamesSlider from '../components/TrendingGamesSlider';
 import Game1 from "../assets/witcher3.jpg";
 import Game2 from "../assets/sims4.png";
 import Game3 from "../assets/Tekken5Cover.jpg";
-import { Typography } from '@material-ui/core';
+import { Typography , Container} from '@material-ui/core';
 
 
 const Homepage = () => {
@@ -16,7 +16,7 @@ const Homepage = () => {
   ];
 
   return (
-    <div>
+    <div style={{display:"flex", flexDirection: "column"}}>
       {/* Other homepage content */}
       <Typography variant="h2" gutterBottom align="center" style={{
               fontSize: "25px",
@@ -27,6 +27,76 @@ const Homepage = () => {
       </Typography>
       <TrendingGamesSlider games={games} />
       {/* Other sections */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          maxWidth: "1152px",
+          width:"100%",
+          alignSelf: "center",
+          position: "relative" /* Set position to relative */,
+          gap: "48px",
+        }}
+      >
+        <Container
+          style={{
+            backgroundColor: "rgb(255, 255, 255, 0.6)",
+            flex: "1",
+            borderRadius: "10px",
+            textAlign: "center",
+            padding: "20px",
+          }}
+        >
+          <Typography
+            variant="h5"
+            gutterBottom
+            style={{
+              color: "white",
+              fontFamily: "Trebuchet MS, sans-serif",
+              fontWeight: "bold",
+            }}
+          >
+            Trend Topics
+          </Typography>
+          {/* Render your forum topics below */}
+          {/* Replace this section with your actual forum topics */}
+          <div
+            style={{ gap: "16px", display: "flex", flexDirection: "column" }}
+          >
+            Content
+          </div>
+        </Container>
+        <Container
+          style={{
+            backgroundColor: "rgb(255, 255, 255, 0.6)",
+            flex: "1",
+            borderRadius: "10px",
+            textAlign: "center",
+            padding: "20px",
+          }}
+        >
+          <Typography
+            variant="h5"
+            gutterBottom
+            style={{
+              color: "white",
+              fontFamily: "Trebuchet MS, sans-serif",
+              fontWeight: "bold",
+            }}
+          >
+          Join a Group!
+          </Typography>
+          {/* Render your forum topics below */}
+          {/* Replace this section with your actual forum topics */}
+          <div>
+            <div
+              style={{ gap: "16px", display: "flex", flexDirection: "column", alignItems: "center", alignSelf: "center" }}
+            >
+             Content
+            </div>
+          </div>
+        </Container>
+      </div>
     </div>
   );
 };
