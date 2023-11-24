@@ -49,7 +49,9 @@ class _GamesPageState extends State<GamesPage> {
                 backgroundColor: MyColors.red,
                 fontSize: 20,
                 id: item['id'],
-                token: widget.token))
+                token: widget.token,
+                userProvider: widget.userProvider)
+            )
             .toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
@@ -72,7 +74,7 @@ class _GamesPageState extends State<GamesPage> {
           TextButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CreateGamePage(token: widget.token),
+                builder: (context) => CreateGamePage(token: widget.token, userProvider: widget.userProvider),
               ));
             },
             child: const Icon(

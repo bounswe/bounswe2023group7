@@ -3,10 +3,14 @@ import 'helper/APIService.dart';
 import 'helper/colors.dart';
 import 'reusable_widgets/forum_post.dart';
 import 'dart:convert';
+import 'package:ludos_mobile_app/userProvider.dart';
+import 'create_thread_page.dart';
 
 class ForumPage extends StatefulWidget {
   final String? token;
-  const ForumPage({Key? key, required this.token}) : super(key: key);
+  final UserProvider userProvider;
+  final String gameid;
+  const ForumPage({Key? key, required this.gameid, required this.token, required this.userProvider}) : super(key: key);
 
   @override
   State<ForumPage> createState() => _ForumPageState();
@@ -24,7 +28,7 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Future<List<PostSummary>> fetchData(String? token) async {
-    final response = await APIService().listPosts(gameId, token);
+    final response = await APIService().listPosts(widget.gameid, widget.token);
     try {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -49,43 +53,6 @@ class _ForumPageState extends State<ForumPage> {
       print("Error: $error");
       throw Exception('Failed to load posts');
     }
-
-    // mock data
-    var item = const PostSummary(
-      title: "Assassins Creed Mirage launch brings 18% player rise across AC series",
-      game: "Assassins Creed",
-      username: "@senaal",
-      thumbUps: 100,
-      thumbDowns: 50,
-      textColor: MyColors.white,
-      backgroundColor: MyColors.blue,
-      fontSize: 20,
-    );
-
-    var item1 = const PostSummary(
-      title: "Assassins Creed Mirage launch brings 18% player rise across AC series",
-      game: "Assassins Creed",
-      username: "@aaaaaa",
-      thumbUps: 100,
-      thumbDowns: 50,
-      textColor: MyColors.white,
-      backgroundColor: MyColors.blue,
-      fontSize: 20,
-    );
-
-    List<dynamic> postsList = [item, item1];
-
-    return postsList.map((dynamic item) => PostSummary(
-        game: "Assassins Creed",
-        title: "Assassins Creed Mirage launch brings 18% player rise across AC series",
-        username: "@aaaaaa",
-        thumbUps: 100,
-        thumbDowns: 50,
-        textColor: MyColors.white,
-        backgroundColor: MyColors.blue,
-        fontSize: 20
-    )).toList();
-    */
   }
 
   @override
@@ -94,7 +61,20 @@ class _ForumPageState extends State<ForumPage> {
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
-        title: const Text('Games'),
+        title: const Text('Forum'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CreateThreadPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider),
+              ));
+            },
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -94,6 +94,29 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> createThread(
+      String? authToken,
+      String title,
+      String content,
+      List<String> media,
+      List<String> tags,
+      String gameid) async {
+    var uri = Uri.parse("$baseURL/post");
+    final body = jsonEncode(<String, Object>{
+      'title': title,
+      'body': content,
+      'gameId': gameid,
+      'media': media,
+      'tags': tags,
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
   Future<http.Response> resetPassword(String email) async {
     var uri = Uri.parse("$baseURL/user/reset-password");
     final body = jsonEncode(<String, Object>{
@@ -130,14 +153,16 @@ class APIService {
   }
 
   Future<http.Response> listPosts(String gameId, String? authToken) async {
-    var uri = Uri.parse("$baseURL/post?gameId={gameId}&limit=20");
-
+    var uri = Uri.parse("$baseURL/post?gameId=$gameId");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
-    return response;
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to load threads data');
+    }
   }
 
   Future<http.Response> followGame(String? authToken, String gameID) async {
@@ -178,16 +203,5 @@ class APIService {
     } else {
       throw Exception('Failed to load game data');
     }
-  }
-
-  Future<http.Response> listPosts(String gameId, String? authToken) async {
-    var uri = Uri.parse("$baseURL/post?gameId={gameId}&limit=20");
-
-    final response = await http.get(uri, headers: {
-      'content-type': "application/json",
-      'Authorization': 'Bearer $authToken'
-    });
-
-    return response;
   }
 }

@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'game_forum.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
@@ -235,6 +236,22 @@ class _GamePageState extends State<GamePage> {
                   child: Text(buttonText),
                 ),
               ],
+            ),
+
+            TextButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(MyColors.red),
+                ),
+                onPressed: ()
+                {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ForumPage(gameid: widget.id, token: widget.token, userProvider: widget.userProvider),
+                  ));
+                },
+                child: const Text(
+                  'Explore the Forum',
+                    style: TextStyle(color: MyColors.white)
+                ),
             ),
             const SizedBox(height: 20),
             if(gameData['gameStory'] != null)

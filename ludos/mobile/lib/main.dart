@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
 import 'login_page.dart';
 import 'games_page.dart';
-import 'game_forum.dart';
 import 'userProvider.dart';
 import 'package:provider/provider.dart';
 import 'helper/colors.dart';
@@ -410,9 +409,6 @@ class Home extends StatelessWidget {
               IconButton(
                   color: Colors.white,
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ForumPage(token: userProvider.token),
-                    ));
                   },
                   icon: const Icon(Icons.group)),
               IconButton(

@@ -5,8 +5,8 @@ class PostSummary extends StatefulWidget {
   final String game;
   final String title;
   final String username;
-  final int thumbUps;
-  final int thumbDowns;
+  final int? thumbUps;
+  final int? thumbDowns;
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
@@ -40,8 +40,8 @@ class _PostSummaryState extends State<PostSummary> {
   final String game;
   final String title;
   final String username;
-  final int thumbUps;
-  final int thumbDowns;
+  final int? thumbUps;
+  final int? thumbDowns;
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
