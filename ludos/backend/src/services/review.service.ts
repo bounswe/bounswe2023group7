@@ -13,7 +13,6 @@ import {
   import { ReviewEditDto } from '../dtos/review/request/edit.dto';
   import { ReviewEditResponseDto } from '../dtos/review/response/edit.dto';
   import { ReviewGetInfoResponseDto } from '../dtos/review/response/getInfo.dto';
-  import { Review } from '../entities/review.entity';
 
   
   @Injectable()
