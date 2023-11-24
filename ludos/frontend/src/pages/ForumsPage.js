@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import ForumsBackground from "../assets/forumBackground.png";
 import { Typography, Button, TextField, Container } from "@mui/material";
 import ForumTopic from "../components/ForumTopic";
@@ -147,6 +148,38 @@ const ForumsPage = () => {
           </form>
         </div>
       </div>
+      <Container
+          style={{
+            backgroundColor: "#68A849",
+            maxWidth: "960px",
+            borderRadius: "10px",
+            textAlign: "center",
+            padding: "20px",
+          }}
+        >
+          <Typography
+            variant="h5"
+            gutterBottom
+            style={{
+              color: "white",
+              fontFamily: "Trebuchet MS, sans-serif",
+              fontWeight: "bold",
+            }}
+          >
+            Join the discussion! Create your forum thread now.
+          </Typography>
+          <Link to="/create-thread" style={{ textDecoration: 'none' }}>
+          <Button
+              variant="contained"
+              type="regular"
+              size="large"
+              style={{ marginTop: "10px", backgroundColor: "#9c27b0" }}
+              sx={{ marginLeft: "10px" }}
+            >
+              Create a Thread
+            </Button>
+            </Link>
+        </Container>
       <div
         style={{
           display: "flex",
@@ -160,7 +193,7 @@ const ForumsPage = () => {
       >
         <Container
           style={{
-            backgroundColor: "#68A849",
+            backgroundColor: "rgb(200,200,200,0.6)",
             width: "456px",
             borderRadius: "10px",
             textAlign: "center",
@@ -190,7 +223,7 @@ const ForumsPage = () => {
         </Container>
         <Container
           style={{
-            backgroundColor: "#68A849",
+            backgroundColor: "rgb(200,200,200,0.6)",
             width: "456px",
             borderRadius: "10px",
             textAlign: "center",
