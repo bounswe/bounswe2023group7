@@ -6,6 +6,11 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
 
 function ChangePasswordPage() {
     const [oldPassword, setOldPassword] = useState("");
@@ -15,6 +20,7 @@ function ChangePasswordPage() {
     const [oldPasswordError, setOldPasswordError] = useState(false);
     const [passwordsMatch, setPasswordsMatch] = useState(false);
     const [window, setWindow] = useState(true);
+    const [showPassword, setShowPassword] = useState(false);
 
     const axiosInstance = axios.create({
         baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -24,6 +30,12 @@ function ChangePasswordPage() {
     });
 
     const navigate = useNavigate();
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     const handleClose = () => {
         navigate("/");
@@ -89,42 +101,66 @@ function ChangePasswordPage() {
                     error={oldPasswordError}
                     helperText={oldPasswordError ? "Old password cannot be empty." : ""}
                 />
-                <TextField
-                    required
-                    autoFocus
-                    margin="dense"
-                    id="newPassword"
-                    label="New Password"
-                    type="password"
-                    fullWidth
-                    variant="outlined"
-                    onChange={(e) => {
-                        setPasswordError(false);
-                        setNewPassword(e.target.value);
-                    }
-                    }
-                    error={passwordError}
-                    helperText={
-                        passwordError ? "Password must be at least 8 characters" : ""
-                    }
-                />
-                <TextField
-                    required
-                    autoFocus
-                    margin="dense"
-                    id="newPasswordAgain"
-                    label="Confirm New Password"
-                    type="password"
-                    fullWidth
-                    variant="outlined"
-                    onChange={(e) => {
-                        setPasswordsMatch(false);
-                        setNewPasswordAgain(e.target.value);
-                    }
-                    }
-                    error={passwordsMatch}
-                    helperText={passwordsMatch ? "Passwords must match." : ""}
-                />
+                <FormControl variant="outlined" fullWidth margin="normal">
+                    <TextField
+                        id="newPassword"
+                        label="New Password"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        type={showPassword ? 'text' : 'password'}
+                        error={passwordError}
+                        helperText={passwordError ? "New password should be eight character or longer" : ""}
+                        onChange={(e) => {
+                            setPasswordError(false);
+                            setNewPassword(e.target.value);
+                        }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </FormControl>
+                <FormControl variant="outlined" fullWidth margin="normal">
+                    <TextField
+                        id="passwordAgain"
+                        label="Confirm New Password"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        type={showPassword ? 'text' : 'password'}
+                        error={passwordsMatch}
+                        helperText={passwordsMatch ? "Passwords should match" : ""}
+                        onChange={(e) => {
+                            setPasswordsMatch(false);
+                            setNewPasswordAgain(e.target.value);
+                        }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </FormControl>
             </DialogContent>
             <DialogActions >
                 <Link href="/forgot-password" variant="body2" color="#F49A32" marginLeft={2}>
