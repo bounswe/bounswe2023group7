@@ -375,7 +375,7 @@ function App() {
             }
           />
           <Route
-            path="/create-post"
+            path="/create-thread"
             element={
               <Layout>
                 <CreateThreadPage />
