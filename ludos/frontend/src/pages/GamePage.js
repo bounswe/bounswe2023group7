@@ -535,7 +535,7 @@ function GamePage(id) {
               </TabPanel>
               <TabPanel value="6">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <Reviews data={game.reviews} showButtons={auth} />
+                  <Reviews data={[]} id={game.id} showButtons={auth} />
                 </Typography>
               </TabPanel>
               <TabPanel value="7">
