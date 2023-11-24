@@ -9,22 +9,16 @@ import { Typography , Container} from '@material-ui/core';
 const Homepage = () => {
   // Replace this with your actual game data
   const games = [
-    { title: 'The Witcher 3', image: Game1},
-    { title: 'Sims 4', image: Game2 },
-    { title: 'Tekken 5', image: Game3 },
+    { title: 'The Witcher 3', image: Game1, content: "Embark on an epic adventure in Witcher 3, where every choice you make shapes your destiny. Immerse yourself in a rich, vast open world filled with monsters, mysteries, and morally complex decisions."},
+    { title: 'Sims 4', image: Game2, content: "Dive into the captivating world of life simulation with Sims 4 – create, build, and explore endless possibilities! Get lost in the ultimate virtual reality where your imagination knows no bounds." },
+    { title: 'Tekken 5', image: Game3, content: "Experience the thrill of the fight in Tekken 5! Engage in heart-pounding battles, master martial arts skills, and challenge opponents in this legendary fighting game. Are you ready to claim victory?" },
     // Add more game objects as needed
   ];
 
   return (
-    <div style={{display:"flex", flexDirection: "column"}}>
+    <div style={{display:"flex", flexDirection: "column", gap: "48px"}}>
       {/* Other homepage content */}
-      <Typography variant="h2" gutterBottom align="center" style={{
-              fontSize: "25px",
-              color: "white",
-              fontFamily: "Trebuchet MS, sans-serif",
-            }}>
-        Trending Games of the Day
-      </Typography>
+      
       <TrendingGamesSlider games={games} />
       {/* Other sections */}
       <div
@@ -48,7 +42,7 @@ const Homepage = () => {
           }}
         >
           <Typography
-            variant="h5"
+            variant="h3"
             gutterBottom
             style={{
               color: "white",
@@ -76,7 +70,7 @@ const Homepage = () => {
           }}
         >
           <Typography
-            variant="h5"
+            variant="h3"
             gutterBottom
             style={{
               color: "white",
