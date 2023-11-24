@@ -1,8 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Box, Typography, Button, Rating } from "@mui/material";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import axios from "axios";
 
 function Review(data, index1) {
+  const [user, setUser] = useState({ username: "" });
+  const link = `http://${process.env.REACT_APP_API_URL}/user/byId/${data.review.userId}`;
+  useEffect(() => {
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        setUser(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const boxStyle = {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
     borderRadius: "10px",
@@ -49,7 +68,7 @@ function Review(data, index1) {
             textAlign="left"
             style={userStyle}
           >
-            {data.review.username}
+            {user.username}
           </Typography>
           <Typography
             variant="caption"
@@ -57,7 +76,12 @@ function Review(data, index1) {
             textAlign="left"
             style={userStyle}
           >
-            {data.review.timestamp}
+            {data.review.createdAt.slice(5, 7)}
+            {"/"}
+            {data.review.createdAt.slice(8, 10)}
+            {"/"}
+            {data.review.createdAt.slice(0, 4)}{" "}
+            {data.review.createdAt.slice(11, 19)}
           </Typography>
           <Rating
             name="game-rating"
@@ -72,7 +96,7 @@ function Review(data, index1) {
           textAlign="left"
           style={descriptionStyle}
         >
-          {data.review.reviewText}
+          {data.review.content}
         </Typography>
         <Grid
           style={{

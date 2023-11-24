@@ -6,6 +6,7 @@ import axios from "axios";
 function Reviews(reviews) {
   const [review, setReview] = useState("");
   const [submission, setSubmission] = useState(0);
+  const [reviewsScreen, setReviewsScreen] = useState([]);
   const boxStyle = {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
     borderRadius: "10px",
@@ -17,12 +18,24 @@ function Reviews(reviews) {
   };
 
   useEffect(() => {
+    const link = `http://${process.env.REACT_APP_API_URL}/review/game/${reviews.id}/`;
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        setReviewsScreen(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     setReview("");
   }, [submission]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(reviews);
     const link = `http://${process.env.REACT_APP_API_URL}/review/${reviews.id}/`;
     const formData = {
       rating: 5,
@@ -48,7 +61,7 @@ function Reviews(reviews) {
 
   return (
     <Grid>
-      {reviews.data.map((review, index1) => (
+      {reviewsScreen.map((review, index1) => (
         <Review review={review} key={index1} showButton={reviews.showButtons} />
       ))}
       {reviews.showButtons && (
