@@ -7,21 +7,20 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-  ApiConsumes,
-  ApiBody,
 } from '@nestjs/swagger';
-import { S3Service } from '../services/s3.service';
-import { AuthGuard } from '../services/guards/auth.guard';
-import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
 import { UploadResponseDto } from '../dtos/s3/response/upload-response.dto';
-import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors';
-import { diskStorage } from 'multer';
+import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
+import { AuthGuard } from '../services/guards/auth.guard';
+import { S3Service } from '../services/s3.service';
 
 @ApiTags('external')
 @Controller('external')
@@ -52,16 +51,10 @@ export class S3Controller {
       },
     },
   })
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-      }),
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file'))
   public async uploadFile(
     @Req() _req: AuthorizedRequest,
-    @UploadedFile('file') file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     return await this.s3Service.uploadFile(file);
   }
