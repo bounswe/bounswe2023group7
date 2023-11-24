@@ -19,6 +19,10 @@ export class ReviewRepository extends Repository<Review> {
     return this.findOneBy({ id });
   }
 
+  public findReviewByUserIdAndGameId(userId: string, gameId: string): Promise<Review | undefined> {
+    return this.findOne({ where: { user: { id: userId }, game: { id: gameId } } });
+  }
+
   public findReviewInfoById(id: string): Promise<Review> {
     return this.findOne({ where: { id }, relations: ['game', 'user', 'likedUsers', 'dislikedUsers'] });
   }

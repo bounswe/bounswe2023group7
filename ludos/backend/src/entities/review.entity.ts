@@ -19,6 +19,7 @@ export class Review {
   @Column('text')
   content: string;
 
+  @Column('float')
   rating: number;
 
   @ManyToOne(() => Game, (game) => game.reviews, { cascade: true })

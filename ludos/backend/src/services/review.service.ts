@@ -30,6 +30,16 @@ import {
         reviewCreateDto: ReviewCreateDto,
     ): Promise<ReviewCreateResponseDto> {
       try {
+
+        const existingReview = await this.reviewRepository.findReviewByUserIdAndGameId(
+          userId,
+          gameId,
+        );
+    
+        if (existingReview) {
+          throw new ConflictException('User has already submitted a review for this game.');
+        }
+
         const user = await this.userRepository.findUserById(userId);
         const game = await this.gameRepository.findGameById(gameId);
         const review = await this.reviewRepository.createReview({
@@ -39,7 +49,6 @@ import {
             game: game
           });
     
-        console.log(game.reviews);  
         return {
           id: review.id,
           rating: review.rating,
@@ -50,8 +59,8 @@ import {
         };
       } catch (e) {
         console.log(e)
-        if (e.code == '23505') {
-          throw new ConflictException(e.detail);
+        if (e instanceof NotFoundException) {
+          throw e;
         }
         throw new InternalServerErrorException();
       }
