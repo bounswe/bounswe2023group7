@@ -7,6 +7,7 @@ import {
 import { Game } from 'entities/game.entity';
 import { GameCreateDto } from '../dtos/game/request/create.dto';
 import { GameCreateResponseDto } from '../dtos/game/response/create.response';
+import { GameEditDto } from '../dtos/game/request/edit.dto';
 import { GameRepository } from '../repositories/game.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
@@ -115,5 +116,11 @@ export class GameService {
       userId,
       isFollowed,
     );
+  }
+
+  public async editGame(gameEditDto: GameEditDto, gameID: string) {
+    let game = await this.gameRepository.findGameById(gameID);
+    let updated = Object.assign(game, gameEditDto);
+    await this.gameRepository.save(updated);
   }
 }

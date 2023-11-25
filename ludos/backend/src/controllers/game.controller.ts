@@ -30,6 +30,7 @@ import {
 } from '@nestjs/swagger';
 import { GameCreateDto } from '../dtos/game/request/create.dto';
 import { GameCreateResponseDto } from '../dtos/game/response/create.response';
+import { GameEditDto } from '../dtos/game/request/edit.dto';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
 import { GameService } from '../services/game.service';
 import { AuthGuard } from '../services/guards/auth.guard';
@@ -179,5 +180,23 @@ export class GameController {
       req.user && req.user.id,
       isFollowed,
     );
+  }
+
+  @ApiOperation({ summary: 'Edit Game Endpoint' })
+  @ApiCreatedResponse({
+    description: 'Game edited',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @HttpCode(201)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Put(':gameID/edit')
+  public async editGame(
+    @Body() input: GameEditDto,
+    @Param('gameID') gameID: string,
+  ) {
+    await this.gameService.editGame(input, gameID);
   }
 }
