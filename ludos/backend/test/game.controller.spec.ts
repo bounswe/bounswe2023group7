@@ -190,7 +190,7 @@ describe('GameController', () => {
       const listSpy = jest
         .spyOn(gameRepository, 'findGames')
         .mockResolvedValue(listResponse);
-      const req = {}
+      const req = {};
       const response = await gameController.listGames(req as AuthorizedRequest);
       expect(response).toBe(listResponse);
       expect(listSpy).toHaveBeenCalledWith(
@@ -204,7 +204,7 @@ describe('GameController', () => {
         undefined,
         undefined,
         undefined,
-        undefined
+        undefined,
       );
     });
   });
