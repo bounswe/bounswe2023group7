@@ -161,7 +161,7 @@ class APIService {
     if (response.statusCode == 200) {
       return response;
     } else {
-      throw Exception('Failed to load threads data');
+      throw Exception('Failed to load threads');
     }
   }
 
@@ -204,4 +204,36 @@ class APIService {
       throw Exception('Failed to load game data');
     }
   }
+
+  Future<Map<String, dynamic>> getThread(String threadId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/post/$threadId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to load thread data');
+    }
+  }
+
+  Future<http.Response> likeThread(String? authToken, String threadId) async {
+    var uri = Uri.parse("$baseURL/post/like/$threadId");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> dislikeThread(String? authToken, String threadId) async {
+    var uri = Uri.parse("$baseURL/post/dislike/$threadId");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
 }

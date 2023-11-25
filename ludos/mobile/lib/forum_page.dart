@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'helper/APIService.dart';
 import 'helper/colors.dart';
-import 'reusable_widgets/forum_post.dart';
+import 'reusable_widgets/forum_thread.dart';
 import 'dart:convert';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'create_thread_page.dart';
@@ -17,7 +17,7 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage> {
-  late Future<List<PostSummary>> posts;
+  late Future<List<ThreadSummary>> posts;
   final TextEditingController searchInputController = TextEditingController();
   String searchText = '';
 
@@ -27,7 +27,7 @@ class _ForumPageState extends State<ForumPage> {
     posts = fetchData(widget.token);
   }
 
-  Future<List<PostSummary>> fetchData(String? token) async {
+  Future<List<ThreadSummary>> fetchData(String? token) async {
     final response = await APIService().listPosts(widget.gameid, widget.token);
     try {
       if (response.statusCode == 200) {
@@ -35,12 +35,19 @@ class _ForumPageState extends State<ForumPage> {
 
         List<dynamic> postLists = responseData['items'];
 
-        return postLists.map((dynamic item) => PostSummary(
+        return postLists.map((dynamic item) => ThreadSummary(
+          token: widget.token,
+          userProvider: widget.userProvider,
+          threadId: item['id'],
           title: item['title'],
           game: item['game']['title'],
+          gameId: item['game']['id'],
           username: item['user']['username'],
           thumbUps: item['numberOfLikes'],
           thumbDowns: item['NumberOfDislikes'],
+          time: item['createdAt'],
+          isLiked: item['isLiked'],
+          isDisliked: item['isDisliked'],
           textColor: MyColors.white,
           backgroundColor: MyColors.blue,
           fontSize: 20,
@@ -127,7 +134,7 @@ class _ForumPageState extends State<ForumPage> {
             //const SafeArea(child: SizedBox(height: 10)),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: FutureBuilder<List<PostSummary>>(
+              child: FutureBuilder<List<ThreadSummary>>(
                 future: posts,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -158,7 +165,7 @@ class _ForumPageState extends State<ForumPage> {
 }
 
 
-Future<List<PostSummary>> appendElements(PostSummary item, Future<List<PostSummary>> posts) async {
+Future<List<ThreadSummary>> appendElements(ThreadSummary item, Future<List<ThreadSummary>> posts) async {
   final list = await posts;
   list.add(item);
   return list;

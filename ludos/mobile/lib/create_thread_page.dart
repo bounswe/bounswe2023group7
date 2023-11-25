@@ -7,7 +7,7 @@ import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 import 'helper/colors.dart';
 import 'helper/APIService.dart';
-import 'package:ludos_mobile_app/game_forum.dart';
+import 'package:ludos_mobile_app/forum_page.dart';
 
 Widget getbox(String hintText, TextEditingController controller,
     bool isMandatory, bool multiLine) {
@@ -113,7 +113,7 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
                 const SizedBox(height: 20),
                 getbox("Body", bodyController, true, false),
                 const SizedBox(height: 20),
-                getbox("Media", coverLinkController, true, false),
+                getbox("Media", coverLinkController, false, false),
                 const SizedBox(height: 20),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const Text(
