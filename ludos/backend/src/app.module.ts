@@ -2,13 +2,13 @@ import { MiddlewareConsumer, Module, NestModule, Post } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './controllers/app.controller';
 import { CommentController } from './controllers/comment.controller';
 import { GameController } from './controllers/game.controller';
 import { PostController } from './controllers/post.controller';
 import { RatingController } from './controllers/rating.controller';
 import { ReviewController } from './controllers/review.controller';
 import { S3Controller } from './controllers/s3.controller';
+import { SearchController } from './controllers/search.controller';
 import { UserController } from './controllers/user.controller';
 import { Comment } from './entities/comment.entity';
 import { Game } from './entities/game.entity';
@@ -24,7 +24,6 @@ import { RatingRepository } from './repositories/rating.repository';
 import { ResetPasswordRepository } from './repositories/reset-password.repository';
 import { ReviewRepository } from './repositories/review.repository';
 import { UserRepository } from './repositories/user.repository';
-import { AppService } from './services/app.service';
 import { CommentService } from './services/comment.service';
 import { JwtConfigService } from './services/config/jwt-config.service';
 import { TypeOrmConfigService } from './services/config/typeorm-config.service';
@@ -33,6 +32,7 @@ import { PostService } from './services/post.service';
 import { RatingService } from './services/rating.service';
 import { ReviewService } from './services/review.service';
 import { S3Service } from './services/s3.service';
+import { SearchService } from './services/search.service';
 import { UserService } from './services/user.service';
 import { Entity } from './entities/entity.entity';
 import { EntityService } from './services/entity.service';
@@ -64,7 +64,7 @@ import { EntityController } from './controllers/entity.controller';
     ]),
   ],
   controllers: [
-    AppController,
+    SearchController,
     UserController,
     GameController,
     S3Controller,
@@ -75,7 +75,7 @@ import { EntityController } from './controllers/entity.controller';
     EntityController,
   ],
   providers: [
-    AppService,
+    SearchService,
     UserRepository,
     UserService,
     GameRepository,

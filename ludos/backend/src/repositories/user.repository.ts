@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
+import { IPaginationMeta, Pagination, paginate } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -42,5 +43,30 @@ export class UserRepository extends Repository<User> {
 
   public getAllRelationsAsList() {
     return this.metadata.relations.map((relation) => relation.propertyName);
+  }
+
+  public async findUsers(
+    page: number,
+    limit: number,
+    searchKey?: string,
+    orderByKey: keyof User = 'id',
+    order: 'ASC' | 'DESC' = 'ASC',
+  ): Promise<Pagination<User, IPaginationMeta>> {
+    const queryBuilder = this.createQueryBuilder('users').where('1=1');
+    if (searchKey) {
+      searchKey = searchKey.trim().replace(/ /g, ':* & ');
+      searchKey += ':*';
+      queryBuilder.andWhere(
+        `(to_tsvector(\'english\', users.username) @@ to_tsquery('${searchKey}') OR to_tsvector(\'english\', users.fullName) @@ to_tsquery('${searchKey}'))`,
+      );
+    }
+    if (orderByKey) {
+      queryBuilder.orderBy(`users_${orderByKey}`, order);
+    }
+    const paginationResult = await paginate<User>(queryBuilder, {
+      page,
+      limit,
+    });
+    return paginationResult;
   }
 }
