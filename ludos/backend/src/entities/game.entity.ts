@@ -25,7 +25,7 @@ export class Game {
   @VirtualColumn({
     query: (alias) =>
       `SELECT AVG(rating) FROM ratings WHERE "gameId" = ${alias}.id`,
-      type: 'float'
+    type: 'float',
   })
   averageRating: number;
 
