@@ -98,7 +98,7 @@ export default function CreateThreadPage() {
                 marginTop: "3px",
                 marginRight: "10px",
                 }}>
-                TrahsPanda
+                AhriFoxie
                 </Typography>
                 <AccessTimeOutlinedIcon style={{color: "white", marginRight: "3px"}}/>
                 <Typography variant="caption" component="div" style={{
