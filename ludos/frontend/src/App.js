@@ -13,6 +13,7 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ForumsPage from "./pages/ForumsPage.js";
 import ProfilePage from "./pages/ProfilePage";
 import CreateThreadPage from "./pages/CreateThreadPage.js";
+import ThreadPage from "./pages/ThreadPage.js"
 import axios from "axios";
 
 function App() {
@@ -432,6 +433,14 @@ function App() {
             element={
               <Layout>
                 <ProfilePage />
+              </Layout>
+            }
+          />
+           <Route
+            path="/thread"
+            element={
+              <Layout>
+                <ThreadPage />
               </Layout>
             }
           />
