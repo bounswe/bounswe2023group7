@@ -197,7 +197,9 @@ class _GameSummaryState extends State<GameSummary> {
                 ],
               ),
               const SizedBox(height: 10),
-              Row(
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: tags.map((tag) {
@@ -220,6 +222,7 @@ class _GameSummaryState extends State<GameSummary> {
                   );
                 }).toList(),
               ),
+          ),
               const SizedBox(height: 20),
             ],
           ),

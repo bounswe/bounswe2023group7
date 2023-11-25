@@ -45,11 +45,14 @@ class _GamePageState extends State<GamePage> {
           children: <Widget>[
             if(gameData['coverLink'] != null)
               Image.network(
+                width: 200,
+                height: 200,
                 gameData['coverLink'].toString(),
                 errorBuilder:
                     (BuildContext context, Object exception, StackTrace? stackTrace) {
                   return const Text('');
                 },
+                fit: BoxFit.fill,
               ),
 
             const SizedBox(height: 10),
@@ -61,27 +64,32 @@ class _GamePageState extends State<GamePage> {
               ),
               ),
             const SizedBox(height: 10),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (gameData['tags'] != null)
-                    for (var i = 0; i < gameData['tags'].length; i++)
-                          TextButton(
-                            style: TextButton.styleFrom(
-                                foregroundColor: MyColors.lightBlue),
-                            onPressed: () {},
-                            child: Text(gameData['tags'][i].toString()),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (gameData['tags'] != null)
+                        for (var i = 0; i < gameData['tags'].length; i++)
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                  foregroundColor: MyColors.lightBlue),
+                              onPressed: () {},
+                                child: Text(gameData['tags'][i].toString()),
                           ),
-                  ],
-              ),
-            ),
+                      ],
+                  ),
+                ),
             const SizedBox(height: 10),
-            Container(
+
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (gameData['tags'] != null)
+                  if (gameData['platforms'] != null)
                     for (var i = 0; i < gameData['platforms'].length; i++)
                       TextButton(
                         style: TextButton.styleFrom(
