@@ -64,40 +64,43 @@ class _GamePageState extends State<GamePage> {
               ),
               ),
             const SizedBox(height: 10),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (gameData['tags'] != null)
-                        for (var i = 0; i < gameData['tags'].length; i++)
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                  foregroundColor: MyColors.lightBlue),
-                              onPressed: () {},
-                                child: Text(gameData['tags'][i].toString()),
-                          ),
-                      ],
+                Center(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        if (gameData['tags'] != null)
+                          for (var i = 0; i < gameData['tags'].length; i++)
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                    foregroundColor: MyColors.lightBlue),
+                                onPressed: () {},
+                                  child: Text(gameData['tags'][i].toString()),
+                            ),
+                        ],
+                    ),
                   ),
                 ),
             const SizedBox(height: 10),
 
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (gameData['platforms'] != null)
-                    for (var i = 0; i < gameData['platforms'].length; i++)
-                      TextButton(
-                        style: TextButton.styleFrom(
-                            foregroundColor: MyColors.lightBlue),
-                        onPressed: () {},
-                        child: Text(gameData['platforms'][i].toString()),
-                      ),
-                ],
+            Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (gameData['platforms'] != null)
+                      for (var i = 0; i < gameData['platforms'].length; i++)
+                        Text('${gameData['platforms'][i].toString()}   ',
+                          style: const TextStyle(
+                              color: MyColors.lightBlue,
+                              fontWeight: FontWeight.bold
+                          )),
+                  ],
+                ),
               ),
             ),
             Row(
