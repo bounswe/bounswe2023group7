@@ -60,7 +60,7 @@ import { EntityController } from './controllers/entity.controller';
       ResetPassword,
       Rating,
       Comment,
-      Entity
+      Entity,
     ]),
   ],
   controllers: [
@@ -91,7 +91,7 @@ import { EntityController } from './controllers/entity.controller';
     RatingRepository,
     RatingService,
     EntityService,
-    EntityRepository
+    EntityRepository,
   ],
 })
 export class AppModule implements NestModule {

@@ -15,21 +15,22 @@ export class EntityRepository extends Repository<Entity> {
   }
 
   public findEntityById(id: string): Promise<Entity> {
-    return this.findOne({ where: {id}, relations: {game: true}});
+    return this.findOne({ where: { id }, relations: { game: true } });
   }
 
-  public findEntitiesByGameId(
-    gameId: string,
-  ): Promise<Entity[]> {
-    return this.findBy({ game: { id: gameId }});
+  public findEntitiesByGameId(gameId: string): Promise<Entity[]> {
+    return this.findBy({ game: { id: gameId } });
   }
 
-  public async updateEntity(id: string, input: Partial<Entity>): Promise<UpdateResult> {
+  public async updateEntity(
+    id: string,
+    input: Partial<Entity>,
+  ): Promise<UpdateResult> {
     const entity = this.create(input);
-    return await this.update({id}, entity);
+    return await this.update({ id }, entity);
   }
 
   public async deleteEntity(id: string): Promise<DeleteResult> {
-    return await this.delete({id});
+    return await this.delete({ id });
   }
 }

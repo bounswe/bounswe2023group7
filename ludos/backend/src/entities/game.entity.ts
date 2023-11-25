@@ -12,7 +12,6 @@ import { Review } from './review.entity';
 import { Rating } from './rating.entity';
 import { Entity } from './entity.entity';
 
-
 @EntityDecorator('games')
 export class Game {
   @PrimaryGeneratedColumn('uuid')
@@ -119,6 +118,6 @@ export class Game {
 
   isFollowed: boolean;
 
-  @OneToMany("Entity", "game")
+  @OneToMany('Entity', 'game')
   entities: Entity[];
 }

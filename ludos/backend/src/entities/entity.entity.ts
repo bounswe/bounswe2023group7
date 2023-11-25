@@ -3,7 +3,7 @@ import {
   Entity as EntityDecorator,
   ManyToOne,
   PrimaryGeneratedColumn,
-  JoinColumn
+  JoinColumn,
 } from 'typeorm';
 import { EntityType } from '../enums/entity-type.enum';
 import { Game } from './game.entity';
@@ -17,10 +17,10 @@ export class Entity {
   @JoinColumn()
   game: Game;
 
-  @Column({type: "enum", enum: EntityType})
+  @Column({ type: 'enum', enum: EntityType })
   type: EntityType;
 
-  @Column({type: "json", default: {}})
+  @Column({ type: 'json', default: {} })
   content: object;
 
   @Column()

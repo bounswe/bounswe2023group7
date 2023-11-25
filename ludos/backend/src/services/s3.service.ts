@@ -1,4 +1,7 @@
-import { CompleteMultipartUploadCommandOutput, S3Client } from '@aws-sdk/client-s3';
+import {
+  CompleteMultipartUploadCommandOutput,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -31,7 +34,7 @@ export class S3Service {
       params: uploadParams,
     }).done();
     return {
-      url: d.Location
-    }
+      url: d.Location,
+    };
   }
 }

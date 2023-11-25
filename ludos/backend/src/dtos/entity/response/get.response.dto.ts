@@ -1,16 +1,15 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Game } from "../../../entities/game.entity";
-import { EntityType } from "../../../enums/entity-type.enum";
-import { GameGetResponseDto } from "../../game/response/get.response";
+import { ApiProperty } from '@nestjs/swagger';
+import { EntityType } from '../../../enums/entity-type.enum';
+import { GameGetResponseDto } from '../../game/response/get.response';
 
 export class EntityGetResponseDto {
   @ApiProperty()
   id: string;
 
-  @ApiProperty({type: () => GameGetResponseDto})
+  @ApiProperty({ type: () => GameGetResponseDto })
   game: GameGetResponseDto;
 
-  @ApiProperty({type: "enum", enum: EntityType})
+  @ApiProperty({ type: 'enum', enum: EntityType })
   type: EntityType;
 
   @ApiProperty()
