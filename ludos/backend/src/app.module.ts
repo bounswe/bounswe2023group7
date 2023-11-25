@@ -34,6 +34,10 @@ import { RatingService } from './services/rating.service';
 import { ReviewService } from './services/review.service';
 import { S3Service } from './services/s3.service';
 import { UserService } from './services/user.service';
+import { Entity } from './entities/entity.entity';
+import { EntityService } from './services/entity.service';
+import { EntityRepository } from './repositories/entity.repository';
+import { EntityController } from './controllers/entity.controller';
 
 @Module({
   imports: [
@@ -56,6 +60,7 @@ import { UserService } from './services/user.service';
       ResetPassword,
       Rating,
       Comment,
+      Entity
     ]),
   ],
   controllers: [
@@ -67,6 +72,7 @@ import { UserService } from './services/user.service';
     PostController,
     RatingController,
     CommentController,
+    EntityController,
   ],
   providers: [
     AppService,
@@ -84,6 +90,8 @@ import { UserService } from './services/user.service';
     PostService,
     RatingRepository,
     RatingService,
+    EntityService,
+    EntityRepository
   ],
 })
 export class AppModule implements NestModule {

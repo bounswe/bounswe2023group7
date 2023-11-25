@@ -1,6 +1,6 @@
 import {
   Column,
-  Entity,
+  Entity as EntityDecorator,
   JoinTable,
   ManyToMany,
   OneToMany,
@@ -10,8 +10,10 @@ import {
 import { User } from './user.entity';
 import { Review } from './review.entity';
 import { Rating } from './rating.entity';
+import { Entity } from './entity.entity';
 
-@Entity('games')
+
+@EntityDecorator('games')
 export class Game {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -116,4 +118,7 @@ export class Game {
   followers: number;
 
   isFollowed: boolean;
+
+  @OneToMany("Entity", "game")
+  entities: Entity[];
 }

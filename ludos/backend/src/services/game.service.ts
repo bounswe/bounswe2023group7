@@ -12,6 +12,7 @@ import { GameRepository } from '../repositories/game.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 import { RatingRepository } from '../repositories/rating.repository';
+import { EntityRepository } from '../repositories/entity.repository';
 
 @Injectable()
 export class GameService {
@@ -19,6 +20,7 @@ export class GameService {
     private readonly gameRepository: GameRepository,
     private readonly userRepository: UserRepository,
     private readonly ratingRepository: RatingRepository,
+    private readonly entityRepository: EntityRepository
   ) {}
 
   public async createGame(
@@ -44,7 +46,7 @@ export class GameService {
   }
 
   public async getGame(id: string, userId?: string): Promise<Game> {
-    const game = await this.gameRepository.findGameByIdWithFollowerList(id);
+    const game = await this.gameRepository.findGameByIdWithAllRelations(id);
     if (!game) {
       throw new NotFoundException('Game not found');
     }

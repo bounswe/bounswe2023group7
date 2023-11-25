@@ -30,6 +30,13 @@ export class GameRepository extends Repository<Game> {
     });
     return game;
   }
+  public async findGameByIdWithAllRelations(id: string): Promise<Game> {
+    const game = await this.findOne({
+      where: { id },
+      relations: this.getAllRelationsAsList(),
+    });
+    return game;
+  }
 
   public async updateGame(input: Partial<Game>): Promise<void> {
     const game = this.create(input);
@@ -109,5 +116,8 @@ export class GameRepository extends Repository<Game> {
 
     const result = await query.getExists();
     return result ? true : false;
+  }
+  public getAllRelationsAsList() {
+    return this.metadata.relations.map((relation) => relation.propertyName);
   }
 }
