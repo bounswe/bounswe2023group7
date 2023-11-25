@@ -36,7 +36,9 @@ class _GamesPageState extends State<GamesPage> {
 
         return gamesList.map((dynamic item) => GameSummary(
           title: item['title'],
-          averageRating: item['averageRating'].toDouble(),
+          averageRating: (item['averageRating'] == null
+              ? 0
+              : item['averageRating'].toDouble()),
           coverLink: item['coverLink'],
           numOfFollowers: item['followers'],
           gameStory: 'gameStory',
