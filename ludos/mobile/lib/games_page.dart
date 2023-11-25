@@ -36,22 +36,20 @@ class _GamesPageState extends State<GamesPage> {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> gamesList = responseData['items'];
-        return gamesList
-            .map((dynamic item) => GameSummary(
-                title: item['title'],
-                averageRating: (item['averageRating'] == null
-                    ? 0
-                    : item['averageRating'].toDouble()),
-                coverLink: item['coverLink'],
-                numOfFollowers: item['followers'],
-                gameStory: 'gameStory',
-                tags: item['tags'],
-                textColor: MyColors.white,
-                backgroundColor: MyColors.red,
-                fontSize: 20,
-                id: item['id'],
-                token: widget.token, userProvider: widget.userProvider))
-            .toList();
+        return gamesList.map((dynamic item) => GameSummary(
+          title: item['title'],
+          averageRating: (item['averageRating'] == null
+              ? 0
+              : item['averageRating'].toDouble()),
+          coverLink: item['coverLink'],
+          numOfFollowers: item['followers'],
+          gameStory: 'gameStory',
+          tags: item['tags'],
+          textColor: MyColors.white,
+          backgroundColor: MyColors.red,
+          fontSize: 20,
+          id: item['id'],
+        )).toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load games');
