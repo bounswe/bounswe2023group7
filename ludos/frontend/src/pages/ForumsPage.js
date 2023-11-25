@@ -1,10 +1,27 @@
-import React from "react";
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
 import ForumsBackground from "../assets/forumBackground.png";
 import { Typography, Button, TextField, Container } from "@mui/material";
 import ForumTopic from "../components/ForumTopic";
 
 const ForumsPage = () => {
+  const navigate = useNavigate();
+
+  const handleButtonClickUnlogged = () => {
+    navigate("/login");
+  };
+
+  const handleButtonClickLogged = () => {
+    navigate("/create-thread");
+  };
+
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      setUserLoggedIn(true);
+    }
+  }, []);
+ 
   const latestTopics = [
     {
       title: "Are League of Legends players smart?",
@@ -168,17 +185,32 @@ const ForumsPage = () => {
           >
             Join the discussion! Create your forum thread now.
           </Typography>
-          <Link to="/create-thread" style={{ textDecoration: 'none' }}>
-          <Button
-              variant="contained"
-              type="regular"
-              size="large"
-              style={{ marginTop: "10px", backgroundColor: "#9c27b0" }}
-              sx={{ marginLeft: "10px" }}
-            >
-              Create a Thread
-            </Button>
-            </Link>
+          {userLoggedIn ? (
+              
+                <Button
+                  variant="contained"
+                  type="regular"
+                  size="large"
+                  style={{ marginTop: "10px", backgroundColor: "#9c27b0" }}
+                  sx={{ marginLeft: "10px" }}
+                  onClick={handleButtonClickLogged}
+                >
+                  Create a Thread
+              </Button>
+            )
+            : (
+                <Button
+                  variant="contained"
+                  type="regular"
+                  size="large"
+                  style={{ marginTop: "10px", backgroundColor: "#9c27b0" }}
+                  sx={{ marginLeft: "10px" }}
+                  onClick={handleButtonClickUnlogged}
+                >
+                  Create a Thread
+              </Button>
+            )}
+          
         </Container>
       <div
         style={{

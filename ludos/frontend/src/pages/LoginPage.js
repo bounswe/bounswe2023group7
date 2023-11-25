@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -24,6 +24,10 @@ const defaultTheme = createTheme();
 const backgroundImage = require("../assets/logo.png");
 
 export default function Login() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+}, []);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [open, setOpen] = useState("");
