@@ -1,6 +1,6 @@
 import {
   Column,
-  Entity,
+  Entity as EntityDecorator,
   JoinTable,
   ManyToMany,
   OneToMany,
@@ -9,8 +9,10 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Review } from './review.entity';
+import { Rating } from './rating.entity';
+import { Entity } from './entity.entity';
 
-@Entity('games')
+@EntityDecorator('games')
 export class Game {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -21,10 +23,13 @@ export class Game {
   @Column({ type: 'text' })
   coverLink: string;
 
-  @Column({ type: 'float', default: 0 })
+  @VirtualColumn({
+    query: (alias) =>
+      `SELECT AVG(rating) FROM ratings WHERE "gameId" = ${alias}.id`,
+    type: 'float',
+  })
   averageRating: number;
 
-  @Column({ type: 'float', default: 0 })
   userRating: number;
 
   @Column('jsonb')
@@ -38,11 +43,14 @@ export class Game {
     };
   };
 
-  @Column({ type: 'float', default: 0 })
-  userCompilationDuration: number;
+  userCompletionDuration: number;
 
-  @Column({ type: 'float', default: 0 })
-  averageUserCompilationDuration: number;
+  @VirtualColumn({
+    query: (alias) =>
+      `SELECT AVG(duration) FROM completion_durations WHERE "gameId" = ${alias}.id`,
+    type: 'float',
+  })
+  averageCompletionDuration: number;
 
   @Column('text', { array: true })
   predecessors: string[];
@@ -98,6 +106,9 @@ export class Game {
   @OneToMany('Review', 'game')
   reviews: Review[];
 
+  @OneToMany('Rating', 'game')
+  ratingList: Rating[];
+
   @ManyToMany(() => User, (user) => user.followedGames)
   @JoinTable({ name: 'game_user_follows' })
   followerList: User[];
@@ -109,4 +120,7 @@ export class Game {
   followers: number;
 
   isFollowed: boolean;
+
+  @OneToMany('Entity', 'game')
+  entities: Entity[];
 }

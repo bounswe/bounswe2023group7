@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/userProvider.dart';
 import '../game_page.dart';
 import '/helper/colors.dart';
 import '/reusable_widgets/single_rating_icon.dart';
@@ -14,6 +15,8 @@ class GameSummary extends StatefulWidget {
   final Color backgroundColor;
   final double fontSize;
   final String id;
+  final String? token;
+  final UserProvider userProvider;
 
   const GameSummary({
     Key? key,
@@ -27,6 +30,8 @@ class GameSummary extends StatefulWidget {
     required this.backgroundColor,
     required this.fontSize,
     required this.id,
+    required this.token,
+    required this.userProvider
   }) : super(key: key);
 
   @override
@@ -41,6 +46,8 @@ class GameSummary extends StatefulWidget {
         backgroundColor: backgroundColor,
         fontSize: fontSize,
         id: id,
+        token: token,
+        userProvider: userProvider
       );
 }
 
@@ -55,6 +62,8 @@ class _GameSummaryState extends State<GameSummary> {
   final Color backgroundColor;
   final double fontSize;
   final String id;
+  final String? token;
+  final UserProvider userProvider;
 
   _GameSummaryState({
     required this.title,
@@ -67,6 +76,8 @@ class _GameSummaryState extends State<GameSummary> {
     required this.backgroundColor,
     required this.fontSize,
     required this.id,
+    required this.token,
+    required this.userProvider,
   });
 
   @override
@@ -84,7 +95,7 @@ class _GameSummaryState extends State<GameSummary> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => GamePage(id: id),
+                builder: (context) => GamePage(id: id, token: token, userProvider: userProvider),
               ),
             );
 
