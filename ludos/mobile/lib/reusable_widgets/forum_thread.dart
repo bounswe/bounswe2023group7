@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import '../game_page.dart';
 import '../helper/APIService.dart';
+import '../login_page.dart';
 import '../thread_page.dart';
 import '../userProvider.dart';
 import '/helper/colors.dart';
@@ -254,24 +255,102 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                   color: MyColors.darkBlue,
                 ),
                 Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
                   IconButton(
                     onPressed: () => setState(() {
-                      userPressed(true);
-                    }),
-                    icon: Icon(
-                      Icons.thumb_up,
-                      color: isLiked ? Colors.green : Colors.white,
-                    ),
+                      if(!widget.userProvider.isLoggedIn){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Row(
+                              children: [
+                                Icon(Icons.error, color: MyColors.blue),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Please log in to like the thread',
+                                    style: TextStyle(
+                                      color: MyColors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: MyColors.blue2,
+                            duration: const Duration(seconds: 5),
+                            action: SnackBarAction(
+                              label: 'Log In',
+                              textColor: MyColors.blue,
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                            .closed
+                            .then((reason) => {});
+                      } else {
+                        userPressed(true);
+                      }
+                      }),
+                      icon: Icon(
+                        Icons.thumb_up,
+                        color: isLiked ? Colors.green : Colors.white,
+                        ),
                   ),
                   IconButton(
                     onPressed: () => setState(() {
-                      userPressed(false);
-                    }),
-                    icon: Icon(
-                      Icons.thumb_down,
-                      color: isDisliked ? Colors.red : Colors.white,
+                        if(!widget.userProvider.isLoggedIn){
+                          ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Row(
+                              children: [
+                                Icon(Icons.error, color: MyColors.blue),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Please log in to dislike the thread',
+                                    style: TextStyle(
+                                      color: MyColors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: MyColors.blue2,
+                            duration: const Duration(seconds: 5),
+                            action: SnackBarAction(
+                              label: 'Log In',
+                              textColor: MyColors.blue,
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                                );
+                                },
+                            ),
+                          ),
+                          )
+                              .closed
+                              .then((reason) => {});
+                          } else {
+                          userPressed(false);
+                          }
+                          }),
+                      icon: Icon(
+                        Icons.thumb_down,
+                        color: isDisliked ? Colors.red : Colors.white,
                     ),
                   ),
                   IconButton(

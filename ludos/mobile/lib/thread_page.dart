@@ -5,6 +5,7 @@ import 'package:ludos_mobile_app/userProvider.dart';
 
 import 'game_page.dart';
 import 'helper/APIService.dart';
+import 'login_page.dart';
 
 
 class ThreadPage extends StatefulWidget
@@ -266,7 +267,46 @@ class _ThreadPageState extends State<ThreadPage>
                         children: [
                           IconButton(
                             onPressed: () => setState(() {
-                              userPressed(true);
+                              if(!widget.userProvider.isLoggedIn){
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Row(
+                                      children: [
+                                        Icon(Icons.error, color: MyColors.blue),
+                                        SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            'Please log in to like the thread',
+                                            style: TextStyle(
+                                              color: MyColors.blue,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    backgroundColor: MyColors.blue2,
+                                    duration: const Duration(seconds: 5),
+                                    action: SnackBarAction(
+                                      label: 'Log In',
+                                      textColor: MyColors.blue,
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => LoginPage()),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                )
+                                    .closed
+                                    .then((reason) => {});
+                              } else {
+                                userPressed(true);
+                              }
                             }),
                             icon: Icon(
                               Icons.thumb_up,
@@ -275,7 +315,46 @@ class _ThreadPageState extends State<ThreadPage>
                           ),
                           IconButton(
                             onPressed: () => setState(() {
-                              userPressed(false);
+                              if(!widget.userProvider.isLoggedIn){
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Row(
+                                      children: [
+                                        Icon(Icons.error, color: MyColors.blue),
+                                        SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            'Please log in to dislike the thread',
+                                            style: TextStyle(
+                                              color: MyColors.blue,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    backgroundColor: MyColors.blue2,
+                                    duration: const Duration(seconds: 5),
+                                    action: SnackBarAction(
+                                      label: 'Log In',
+                                      textColor: MyColors.blue,
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => LoginPage()),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                )
+                                    .closed
+                                    .then((reason) => {});
+                              } else {
+                                userPressed(false);
+                              }
                             }),
                             icon: Icon(
                               Icons.thumb_down,
