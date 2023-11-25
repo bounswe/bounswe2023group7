@@ -12,14 +12,22 @@ function ForumTopic(data) {
     fontFamily: "Trebuchet MS, sans-serif",
     marginBottom: "10px",
   };
-  const forumStyle = { color: "rgb(0, 150, 255)", fontWeight: "bold" };
+  const forumStyle = { color: "rgb(100, 70, 144)", fontWeight: "bold" };
+  const gameStyle = {
+    backgroundColor: "rgb(9 ,63 ,83)",
+    color: "white", 
+    borderRadius: "10px",
+    padding: "2px",
+    fontWeight: "bold",
+    fontSize: "13px",
+  }
   const userStyle = { color: "rgb(100, 80, 90)", marginRight: "2%" };
 
   const tagBox = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgb(0, 150, 255)",
+    backgroundColor: "rgb(19, 142, 19)",
     color: "white",
     height: "6px",
     borderRadius: "10px",
@@ -40,7 +48,7 @@ function ForumTopic(data) {
           lg={12}
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Typography variant="caption" component="div" style={forumStyle}>
+          <Typography variant="caption" component="div" style={gameStyle}>
             {data.topic.forumGame}
           </Typography>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>

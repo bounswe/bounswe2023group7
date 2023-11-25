@@ -191,7 +191,7 @@ const ForumsPage = () => {
                   variant="contained"
                   type="regular"
                   size="large"
-                  style={{ marginTop: "10px", backgroundColor: "#9c27b0" }}
+                  style={{ marginTop: "10px", backgroundColor: "rgb(9,63,83, 0.6)" }}
                   sx={{ marginLeft: "10px" }}
                   onClick={handleButtonClickLogged}
                 >
@@ -203,7 +203,7 @@ const ForumsPage = () => {
                   variant="contained"
                   type="regular"
                   size="large"
-                  style={{ marginTop: "10px", backgroundColor: "#9c27b0" }}
+                  style={{ marginTop: "10px", backgroundColor: "rgb(9,63,83, 0.9)" }}
                   sx={{ marginLeft: "10px" }}
                   onClick={handleButtonClickUnlogged}
                 >
@@ -241,7 +241,7 @@ const ForumsPage = () => {
               fontWeight: "bold",
             }}
           >
-            Trend Topics
+            Trending
           </Typography>
           {/* Render your forum topics below */}
           {/* Replace this section with your actual forum topics */}
@@ -271,7 +271,7 @@ const ForumsPage = () => {
               fontWeight: "bold",
             }}
           >
-            Latest Topics
+            Latest
           </Typography>
           {/* Render your forum topics below */}
           {/* Replace this section with your actual forum topics */}
