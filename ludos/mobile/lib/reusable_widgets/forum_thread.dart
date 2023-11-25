@@ -256,26 +256,20 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                 Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColors.darkBlue,
-                    ),
+                  IconButton(
                     onPressed: () => setState(() {
                       userPressed(true);
                     }),
-                    child: Icon(
+                    icon: Icon(
                       Icons.thumb_up,
                       color: isLiked ? Colors.green : Colors.white,
                     ),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: MyColors.darkBlue,
-                    ),
+                  IconButton(
                     onPressed: () => setState(() {
                       userPressed(false);
                     }),
-                    child: Icon(
+                    icon: Icon(
                       Icons.thumb_down,
                       color: isDisliked ? Colors.red : Colors.white,
                     ),

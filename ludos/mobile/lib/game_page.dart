@@ -181,7 +181,7 @@ class _GamePageState extends State<GamePage> {
               children: [
                 ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.red),
+                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.blue),
                     ),
                     onPressed: () {
                       bool state = false;
@@ -237,22 +237,6 @@ class _GamePageState extends State<GamePage> {
                 ),
               ],
             ),
-
-            TextButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(MyColors.red),
-                ),
-                onPressed: ()
-                {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ForumPage(gameid: widget.id, token: widget.token, userProvider: widget.userProvider),
-                  ));
-                },
-                child: const Text(
-                  'Explore the Forum',
-                    style: TextStyle(color: MyColors.white)
-                ),
-            ),
             const SizedBox(height: 20),
             if(gameData['gameStory'] != null)
               Text(
@@ -263,6 +247,22 @@ class _GamePageState extends State<GamePage> {
                   fontSize: 16,
                 ),
               ),
+            const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.lightBlue),
+                    ),
+                    onPressed: ()
+                    {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ForumPage(gameid: widget.id, token: widget.token, userProvider: widget.userProvider),
+                      ));
+                    },
+                    child: const Text(
+                      'Explore the Forum',
+                      //style: TextStyle(color: Colors.black)
+                    ),
+                  ),
             const SizedBox(height: 20),
             if(gameData['averageUserCompilationDuration'] != null)
               Text('Average User Compilation Time: ${gameData['averageUserCompilationDuration']}',style: const TextStyle(

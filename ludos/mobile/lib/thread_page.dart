@@ -222,12 +222,16 @@ class _ThreadPageState extends State<ThreadPage>
                       ),
 
                       if(threadData['body'] != null)
-                        Text(
-                          threadData['body'].toString(),
-                          style: const TextStyle(
-                            color: MyColors.lightBlue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                              threadData['body'].toString(),
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                color: MyColors.lightBlue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                           ),
                         ),
                       const SizedBox(height: 20.0),
@@ -260,26 +264,20 @@ class _ThreadPageState extends State<ThreadPage>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: MyColors.darkBlue,
-                            ),
+                          IconButton(
                             onPressed: () => setState(() {
                               userPressed(true);
                             }),
-                            child: Icon(
+                            icon: Icon(
                               Icons.thumb_up,
                               color: isLiked ? Colors.green : Colors.white,
                             ),
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: MyColors.darkBlue,
-                            ),
+                          IconButton(
                             onPressed: () => setState(() {
                               userPressed(false);
                             }),
-                            child: Icon(
+                            icon: Icon(
                               Icons.thumb_down,
                               color: isDisliked ? Colors.red : Colors.white,
                             ),

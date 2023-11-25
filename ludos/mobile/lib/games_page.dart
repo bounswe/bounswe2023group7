@@ -46,7 +46,7 @@ class _GamesPageState extends State<GamesPage> {
                 gameStory: 'gameStory',
                 tags: item['tags'],
                 textColor: MyColors.white,
-                backgroundColor: MyColors.red,
+                backgroundColor: MyColors.blue,
                 fontSize: 20,
                 id: item['id'],
                 token: widget.token,
