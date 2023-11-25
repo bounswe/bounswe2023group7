@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:core';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'game_reviews_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
@@ -93,6 +94,10 @@ class _GamePageState extends State<GamePage> {
       print('Error loading game data: $e');
     }
   }
+
+  final TextEditingController contentController = TextEditingController();
+  final TextEditingController rateController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -305,6 +310,202 @@ class _GamePageState extends State<GamePage> {
               ),
             ),
             const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 150.0,
+                    child: ElevatedButton(
+                      style: TextButton.styleFrom(backgroundColor: MyColors.orange),
+                      onPressed: () {
+                        if(widget.userProvider.isLoggedIn) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  scrollable: true,
+                                  title: Text('Add Review'),
+                                  content: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Form(
+                                      child: Column(
+                                        children: <Widget>[
+                                          TextField(
+                                            decoration: InputDecoration(
+                                              labelText: 'Review',
+                                              icon: Icon(Icons.reviews),
+                                            ),
+                                            controller: contentController,
+                                            maxLines: 5,
+                                            minLines: 2,
+                                          ),
+                                          TextField(
+                                            keyboardType: TextInputType.number,
+                                            decoration: InputDecoration(
+                                              labelText: 'Rate',
+                                              icon: Icon(Icons.star_rate),
+                                            ),
+                                            controller: rateController,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                        onPressed: () async {
+                                          http.Response token = await APIService().createReview(
+                                              widget.token,
+                                              widget.id,
+                                              contentController.text,
+                                              double.parse(rateController.text) );
+                                          if (token.statusCode == 201) {
+                                            print("status is ok");
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: const Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.check_circle_outline,
+                                                      color: MyColors.blue,
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    Expanded(
+                                                      child: Text(
+                                                        'Your review is added successfully. You will be redirected to the Game Page.',
+                                                        style: TextStyle(
+                                                          color: MyColors.blue,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                backgroundColor: MyColors.blue2,
+                                                duration: const Duration(seconds: 5),
+                                                action: SnackBarAction(
+                                                  label: 'OK',
+                                                  textColor: MyColors.blue,
+                                                  onPressed: () {
+                                                    ScaffoldMessenger.of(context)
+                                                        .hideCurrentSnackBar();
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => GamePage(token: widget.token, userProvider: widget.userProvider, id: widget.id)),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              )
+                                                .closed
+                                                .then((reason) => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => GamePage(token: widget.token, userProvider: widget.userProvider, id: widget.id)),
+                                            ));
+                                          } else {
+                                            print("status is not ok");
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: SizedBox(
+                                                  width: MediaQuery.of(context).size.width,
+                                                  child: Text(
+                                                    json.decode(token.body)["message"],
+                                                    style: const TextStyle(
+                                                      color: MyColors.blue,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ),
+                                                backgroundColor: MyColors.blue2,
+                                                duration: const Duration(seconds: 10),
+                                                action: SnackBarAction(
+                                                  label: 'OK',
+                                                  textColor: MyColors.blue,
+                                                  onPressed: () {
+                                                    ScaffoldMessenger.of(context)
+                                                        .hideCurrentSnackBar();
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: const Text("Submit"),
+                                    )
+                                  ],
+                                );
+                              });
+                          } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
+                            SnackBar(
+                              content: const Row(
+                                children: [
+                                  Icon(
+                                    Icons.check_circle_outline,
+                                    color: MyColors.blue,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      'Please log in to add review',
+                                      style: TextStyle(
+                                        color: MyColors.blue,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              backgroundColor: MyColors.blue2,
+                              duration: const Duration(seconds: 5),
+                              action: SnackBarAction(
+                                label: 'Log In',
+                                textColor: MyColors.blue,
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()),
+                                  );
+                                },
+                              ),
+                            ),
+                          ).closed.then((reason) => {});
+                        }
+                      },
+                      child: const Text(
+                        'Add Review',
+                        style: TextStyle(color: MyColors.darkBlue),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 2.0),
+                  Container(
+                    child: TextButton(
+                      style:
+                      TextButton.styleFrom(foregroundColor: Colors.black),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ReviewPage(gameid: widget.id, token: widget.token, userProvider: widget.userProvider),
+                        ));
+                      },
+                      child: const Text(
+                        'All Reviews -->',
+                        style: TextStyle(color: MyColors.orange),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

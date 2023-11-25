@@ -128,4 +128,40 @@ class APIService {
       throw Exception('Failed to load game data');
     }
   }
+
+  Future<http.Response> createReview(String? authToken, String gameId, String content, double rate) async {
+    var uri = Uri.parse("$baseURL/review/$gameId");
+    final body = jsonEncode(<String, Object>{
+      'content': content,
+      'rate': rate
+    });
+    final response = await http.post(uri, body: body, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+
+    return response;
+  }
+
+  Future<http.Response> likeReview(String? authToken, String reviewId) async {
+    var uri = Uri.parse("$baseURL/review/$reviewId/like");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> dislikeReview(String? authToken, String reviewId) async {
+    var uri = Uri.parse("$baseURL/review/$reviewId/dislike");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> listReviews(String? authToken, String gameId) async {
+    var uri = Uri.parse("$baseURL/review/game/$gameId");
+    final response = await http.get(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+
+    return response;
+  }
 }
