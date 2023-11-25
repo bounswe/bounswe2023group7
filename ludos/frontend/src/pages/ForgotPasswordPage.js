@@ -31,9 +31,11 @@ export default function ForgotPasswordPage() {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [query, setQuery] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -212,7 +214,7 @@ export default function ForgotPasswordPage() {
               variant="outlined"
               required
               fullWidth
-              type={showPassword ? 'text' : 'password'}
+              type={showNewPassword ? 'text' : 'password'}
               error={passwordError}
               helperText={passwordError ? "New password should be eight character or longer" : ""}
               onChange={(e) => {
@@ -224,11 +226,11 @@ export default function ForgotPasswordPage() {
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
+                      onClick={handleClickShowNewPassword}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showNewPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -242,7 +244,7 @@ export default function ForgotPasswordPage() {
               variant="outlined"
               required
               fullWidth
-              type={showPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? 'text' : 'password'}
               error={passwordsMatch}
               helperText={passwordsMatch ? "Passwords should match" : ""}
               onChange={(e) => {
@@ -254,11 +256,11 @@ export default function ForgotPasswordPage() {
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
+                      onClick={handleClickShowConfirmPassword}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 ),

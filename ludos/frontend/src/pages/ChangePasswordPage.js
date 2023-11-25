@@ -20,7 +20,9 @@ function ChangePasswordPage() {
     const [oldPasswordError, setOldPasswordError] = useState(false);
     const [passwordsMatch, setPasswordsMatch] = useState(false);
     const [window, setWindow] = useState(true);
-    const [showPassword, setShowPassword] = useState(false);
+    const [showOldPassword, setShowOldPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const axiosInstance = axios.create({
         baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -31,7 +33,9 @@ function ChangePasswordPage() {
 
     const navigate = useNavigate();
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleClickShowOldPassword = () => setShowOldPassword((show) => !show);
+    const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
+    const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -85,22 +89,36 @@ function ChangePasswordPage() {
                     To change your password, please enter your old password and your new password.
                     If you do not remember your old password, you can reset your password.
                 </DialogContentText>
-                <TextField
-                    required
-                    autoFocus
-                    margin="dense"
-                    id="oldPassword"
-                    label="Old Password"
-                    type="password"
-                    fullWidth
-                    variant="outlined"
-                    onChange={(e) => {
-                        setOldPassword(e.target.value);
-                        setOldPasswordError(false);
-                    }}
-                    error={oldPasswordError}
-                    helperText={oldPasswordError ? "Old password cannot be empty." : ""}
-                />
+                <FormControl variant="outlined" fullWidth margin="normal">
+                    <TextField
+                        id="oldPassword"
+                        label="Old Password"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        type={showOldPassword ? 'text' : 'password'}
+                        error={oldPasswordError}
+                        helperText={oldPasswordError ? "Old password cannot be empty." : ""}
+                        onChange={(e) => {
+                            setOldPasswordError(false);
+                            setOldPassword(e.target.value);
+                        }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowOldPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showOldPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </FormControl>
                 <FormControl variant="outlined" fullWidth margin="normal">
                     <TextField
                         id="newPassword"
@@ -108,7 +126,7 @@ function ChangePasswordPage() {
                         variant="outlined"
                         required
                         fullWidth
-                        type={showPassword ? 'text' : 'password'}
+                        type={showNewPassword ? 'text' : 'password'}
                         error={passwordError}
                         helperText={passwordError ? "New password should be eight character or longer" : ""}
                         onChange={(e) => {
@@ -120,11 +138,11 @@ function ChangePasswordPage() {
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
+                                        onClick={handleClickShowNewPassword}
                                         onMouseDown={handleMouseDownPassword}
                                         edge="end"
                                     >
-                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
                             ),
@@ -138,7 +156,7 @@ function ChangePasswordPage() {
                         variant="outlined"
                         required
                         fullWidth
-                        type={showPassword ? 'text' : 'password'}
+                        type={showConfirmPassword ? 'text' : 'password'}
                         error={passwordsMatch}
                         helperText={passwordsMatch ? "Passwords should match" : ""}
                         onChange={(e) => {
@@ -150,11 +168,11 @@ function ChangePasswordPage() {
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
+                                        onClick={handleClickShowConfirmPassword}
                                         onMouseDown={handleMouseDownPassword}
                                         edge="end"
                                     >
-                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
                             ),

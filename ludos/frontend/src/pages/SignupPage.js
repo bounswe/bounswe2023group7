@@ -41,6 +41,7 @@ export default function SignUpForm() {
   const [dialogMessage, setDialogMessage] = useState("");
   const [serverError, setServerError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -49,6 +50,7 @@ export default function SignUpForm() {
   })
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -243,7 +245,7 @@ export default function SignUpForm() {
                   variant="outlined"
                   required
                   fullWidth
-                  type={showPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? 'text' : 'password'}
                   error={passwordsMatch}
                   helperText={passwordsMatch ? "Passwords should match" : ""}
                   onChange={(e) => {
@@ -255,11 +257,11 @@ export default function SignUpForm() {
                       <InputAdornment position="end">
                         <IconButton
                           aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
+                          onClick={handleClickShowConfirmPassword}
                           onMouseDown={handleMouseDownPassword}
                           edge="end"
                         >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                          {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </InputAdornment>
                     ),
