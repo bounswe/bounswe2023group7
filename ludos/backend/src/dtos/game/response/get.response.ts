@@ -25,4 +25,12 @@ export class GameGetResponseDto {
   @Expose()
   @ApiProperty()
   developer: string;
+
+  @Expose()
+  @ApiProperty()
+  userCompletionDuration?: number;
+
+  @Expose()
+  @ApiProperty()
+  averageCompletionDuration?: number;
 }

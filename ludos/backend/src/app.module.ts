@@ -38,6 +38,8 @@ import { Entity } from './entities/entity.entity';
 import { EntityService } from './services/entity.service';
 import { EntityRepository } from './repositories/entity.repository';
 import { EntityController } from './controllers/entity.controller';
+import { CompletionDuration } from './entities/completion-duration.entity';
+import { CompletionDurationRepository } from './repositories/completion-duration.repository';
 
 @Module({
   imports: [
@@ -52,7 +54,14 @@ import { EntityController } from './controllers/entity.controller';
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService],
     }),
-    TypeOrmModule.forFeature([User, Game, Review, ResetPassword, Post]),
+    TypeOrmModule.forFeature([
+      User,
+      Game,
+      Review,
+      ResetPassword,
+      Post,
+      CompletionDuration,
+    ]),
     TypeOrmModule.forFeature([
       User,
       Game,
@@ -92,6 +101,7 @@ import { EntityController } from './controllers/entity.controller';
     RatingService,
     EntityService,
     EntityRepository,
+    CompletionDurationRepository,
   ],
 })
 export class AppModule implements NestModule {

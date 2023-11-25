@@ -43,11 +43,14 @@ export class Game {
     };
   };
 
-  @Column({ type: 'float', default: 0 })
-  userCompilationDuration: number;
+  userCompletionDuration: number;
 
-  @Column({ type: 'float', default: 0 })
-  averageUserCompilationDuration: number;
+  @VirtualColumn({
+    query: (alias) =>
+      `SELECT AVG(duration) FROM completion_durations WHERE "gameId" = ${alias}.id`,
+    type: 'float',
+  })
+  averageCompletionDuration: number;
 
   @Column('text', { array: true })
   predecessors: string[];

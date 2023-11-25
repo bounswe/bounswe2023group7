@@ -51,9 +51,6 @@ export class PostController {
     description: 'Bad Request',
   })
   @HttpCode(201)
-  @ApiCreatedResponse({
-    type: PostCreateResponseDto,
-  })
   @ApiForbiddenResponse({ description: 'User should login' })
   @ApiNotFoundResponse({ description: 'Game not found' })
   @ApiOperation({ summary: 'Create Post Endpoint' })

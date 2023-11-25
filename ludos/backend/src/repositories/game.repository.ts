@@ -3,12 +3,14 @@ import { DataSource, Repository } from 'typeorm';
 import { Game } from '../entities/game.entity';
 import { IPaginationMeta, Pagination, paginate } from 'nestjs-typeorm-paginate';
 import { RatingRepository } from './rating.repository';
+import { CompletionDurationRepository } from './completion-duration.repository';
 
 @Injectable()
 export class GameRepository extends Repository<Game> {
   constructor(
     dataSource: DataSource,
     private readonly ratingRepository: RatingRepository,
+    private readonly completionDurationRepository: CompletionDurationRepository,
   ) {
     super(Game, dataSource.createEntityManager());
   }
@@ -99,6 +101,11 @@ export class GameRepository extends Repository<Game> {
             game.id,
             userId,
           );
+          game.userCompletionDuration =
+            await this.completionDurationRepository.findCompletionDurationByUserIdAndGameId(
+              userId,
+              game.id,
+            );
         }),
       );
     }
