@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
-
 class GamePage extends StatefulWidget {
 
   final String id;
@@ -28,6 +27,7 @@ class _GamePageState extends State<GamePage> {
       print('Error loading game data: $e');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,12 +43,15 @@ class _GamePageState extends State<GamePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (gameData['coverLink'] != null)
-              SizedBox(
-                width: 200.0,
-                height: 200.0,
-                  child: Image.network(gameData['coverLink']),
+            if(gameData['coverLink'] != null)
+              Image.network(
+                gameData['coverLink'].toString(),
+                errorBuilder:
+                    (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return const Text('');
+                },
               ),
+
             const SizedBox(height: 10),
             if (gameData['releaseDate'] != null)
               Text('Release Date: ${gameData['releaseDate']}',style: const TextStyle(
