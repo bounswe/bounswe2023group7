@@ -113,7 +113,7 @@ export class ReviewController {
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
   ) {
-    const review = await this.reviewService.getReviewById(reviewId);
+    const review = await this.reviewService.getReviewById(req.user.id, reviewId);
     return review;
   }
 
@@ -129,7 +129,7 @@ export class ReviewController {
     @Req() req: AuthorizedRequest,
     @Param('gameId') gameId: string,
   ) {
-    const reviews = await this.reviewService.getReviewsByGameId(gameId);
+    const reviews = await this.reviewService.getReviewsByGameId(req.user.id, gameId);
     return reviews;
   }
 }
