@@ -33,8 +33,18 @@ export class PostGetResponseDto {
   tags: string[];
 
   @Expose()
+  @ApiProperty({type: () => UserInOtherResponsesDto})
+  @Type(() => UserInOtherResponsesDto)
+  likedUsers: UserInOtherResponsesDto;
+
+  @Expose()
   @ApiProperty()
   numberOfLikes: number;
+
+  @Expose()
+  @ApiProperty({type: () => UserInOtherResponsesDto})
+  @Type(() => UserInOtherResponsesDto)
+  dislikedUsers: UserInOtherResponsesDto;
 
   @Expose()
   @ApiProperty()

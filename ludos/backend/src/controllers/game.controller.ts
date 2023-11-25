@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -28,15 +29,17 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { CompletionDurationCreateDto } from '../dtos/completion-duration/request/create-update.dto';
 import { GameCreateDto } from '../dtos/game/request/create.dto';
 import { GameCreateResponseDto } from '../dtos/game/response/create.response';
 import { GameEditDto } from '../dtos/game/request/edit.dto';
+import { GamePageResponseDto } from '../dtos/game/response/page.response';
+import { CompletionDuration } from '../entities/completion-duration.entity';
+import { Game } from '../entities/game.entity';
+import { SerializerInterceptor } from '../interceptors/customSerializer.interceptor';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
 import { GameService } from '../services/game.service';
 import { AuthGuard } from '../services/guards/auth.guard';
-import { Game } from '../entities/game.entity';
-import { GamePageResponseDto } from '../dtos/game/response/page.response';
-import { SerializerInterceptor } from '../interceptors/customSerializer.interceptor';
 
 @ApiTags('game')
 @Controller('game')
@@ -198,5 +201,66 @@ export class GameController {
     @Param('gameID') gameID: string,
   ) {
     await this.gameService.editGame(input, gameID);
+  }
+
+  @ApiBearerAuth()
+  @ApiCreatedResponse({
+    description: 'Completion Duration created successfully.',
+    type: CompletionDuration,
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @ApiForbiddenResponse({ description: 'User should login' })
+  @HttpCode(201)
+  @Post('completionDuration/:gameId')
+  @ApiOperation({ summary: 'Create Completion Duration Endpoint' })
+  public async createCompletionDuration(
+    @Req() req: AuthorizedRequest,
+    @Param('gameId') gameId: string,
+    @Body() completionDurationCreateDto: CompletionDurationCreateDto,
+  ) {
+    const createdCompletionDuration =
+      await this.gameService.addCompletionDuration(
+        req.user.id,
+        gameId,
+        completionDurationCreateDto.duration,
+      );
+    return createdCompletionDuration;
+  }
+
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiNotFoundResponse({ description: 'CompletionDuration is not found!' })
+  @ApiForbiddenResponse({ description: 'User should login' })
+  @ApiOperation({ summary: 'Delete Completion Duration Endpoint' })
+  @HttpCode(204)
+  @Delete('completionDuration/:gameId')
+  public async deleteCompletionDuration(
+    @Req() req: AuthorizedRequest,
+    @Param('gameId') gameId: string,
+  ) {
+    await this.gameService.deleteCompletionDuration(req.user.id, gameId);
+    return HttpStatus.OK;
+  }
+
+  @UseGuards(AuthGuard)
+  @ApiForbiddenResponse({ description: 'User should login' })
+  @ApiBearerAuth()
+  @ApiNotFoundResponse({ description: 'CompletionDuration is not found!' })
+  @ApiOperation({ summary: 'Edit Completion Duration Endpoint' })
+  @HttpCode(200)
+  @Put('completionDuration/:gameId')
+  public async editCompletionDuration(
+    @Req() req: AuthorizedRequest,
+    @Param('gameId') gameId: string,
+    @Body() completionDurationUpdateDto: CompletionDurationCreateDto,
+  ) {
+    await this.gameService.editCompletionDuration(
+      req.user.id,
+      gameId,
+      completionDurationUpdateDto.duration,
+    );
+    return HttpStatus.OK;
   }
 }

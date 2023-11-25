@@ -5,13 +5,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Game } from 'entities/game.entity';
-import { GameCreateDto } from '../dtos/game/request/create.dto';
-import { GameCreateResponseDto } from '../dtos/game/response/create.response';
-import { GameEditDto } from '../dtos/game/request/edit.dto';
-import { GameRepository } from '../repositories/game.repository';
-import { UserRepository } from '../repositories/user.repository';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
+import { GameCreateDto } from '../dtos/game/request/create.dto';
+import { GameEditDto } from '../dtos/game/request/edit.dto';
+import { GameCreateResponseDto } from '../dtos/game/response/create.response';
+import { GameRepository } from '../repositories/game.repository';
 import { RatingRepository } from '../repositories/rating.repository';
+import { UserRepository } from '../repositories/user.repository';
+import { CompletionDurationRepository } from '../repositories/completion-duration.repository';
 
 @Injectable()
 export class GameService {
@@ -19,6 +20,7 @@ export class GameService {
     private readonly gameRepository: GameRepository,
     private readonly userRepository: UserRepository,
     private readonly ratingRepository: RatingRepository,
+    private readonly completionDurationRepository: CompletionDurationRepository,
   ) {}
 
   public async createGame(
@@ -44,7 +46,7 @@ export class GameService {
   }
 
   public async getGame(id: string, userId?: string): Promise<Game> {
-    const game = await this.gameRepository.findGameByIdWithFollowerList(id);
+    const game = await this.gameRepository.findGameByIdWithAllRelations(id);
     if (!game) {
       throw new NotFoundException('Game not found');
     }
@@ -56,6 +58,13 @@ export class GameService {
       id,
     );
     game.userRating = userId && rating ? rating.rating : null;
+    const completionDuration =
+      await this.completionDurationRepository.findCompletionDurationByUserIdAndGameId(
+        userId,
+        id,
+      );
+    game.userCompletionDuration =
+      userId && completionDuration ? completionDuration : null;
     return game;
   }
   async followGame(userId: string, gameId: string): Promise<void> {
@@ -119,8 +128,66 @@ export class GameService {
   }
 
   public async editGame(gameEditDto: GameEditDto, gameID: string) {
-    let game = await this.gameRepository.findGameById(gameID);
-    let updated = Object.assign(game, gameEditDto);
+    const game = await this.gameRepository.findGameById(gameID);
+    const updated = Object.assign(game, gameEditDto);
     await this.gameRepository.save(updated);
+  }
+  
+  async addCompletionDuration(
+    userId: string,
+    gameId: string,
+    duration: number,
+  ) {
+    const user = await this.userRepository.findUserById(userId);
+    const game = await this.gameRepository.findGameById(gameId);
+
+    if (!user) {
+      throw new NotFoundException('User Not Found!');
+    } else if (!game) {
+      throw new NotFoundException('Game Not Found!');
+    }
+
+    try {
+      const completionDuration =
+        await this.completionDurationRepository.createCompletionDuration({
+          duration: duration,
+          user: user,
+          game: game,
+        });
+      return completionDuration;
+    } catch (e) {
+      if (e.code == '23505') {
+        throw new ConflictException('Completion Duration already exists');
+      }
+    }
+  }
+  public async deleteCompletionDuration(
+    userId: string,
+    gameId: string,
+  ): Promise<void> {
+    const deleteResult =
+      await this.completionDurationRepository.deleteCompletionDuration(
+        userId,
+        gameId,
+      );
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException('Completion Duration Not Found!');
+    }
+  }
+
+  public async editCompletionDuration(
+    userId: string,
+    gameId: string,
+    duration: number,
+  ): Promise<void> {
+    const updateResult =
+      await this.completionDurationRepository.updateCompletionDuration(
+        gameId,
+        userId,
+        duration,
+      );
+    if (updateResult.affected === 0) {
+      throw new NotFoundException('Completion Duration Not Found!');
+    }
   }
 }

@@ -3,12 +3,14 @@ import { DataSource, Repository } from 'typeorm';
 import { Game } from '../entities/game.entity';
 import { IPaginationMeta, Pagination, paginate } from 'nestjs-typeorm-paginate';
 import { RatingRepository } from './rating.repository';
+import { CompletionDurationRepository } from './completion-duration.repository';
 
 @Injectable()
 export class GameRepository extends Repository<Game> {
   constructor(
     dataSource: DataSource,
     private readonly ratingRepository: RatingRepository,
+    private readonly completionDurationRepository: CompletionDurationRepository,
   ) {
     super(Game, dataSource.createEntityManager());
   }
@@ -27,6 +29,13 @@ export class GameRepository extends Repository<Game> {
     const game = await this.findOne({
       where: { id },
       relations: ['followerList'],
+    });
+    return game;
+  }
+  public async findGameByIdWithAllRelations(id: string): Promise<Game> {
+    const game = await this.findOne({
+      where: { id },
+      relations: this.getAllRelationsAsList(),
     });
     return game;
   }
@@ -92,6 +101,11 @@ export class GameRepository extends Repository<Game> {
             game.id,
             userId,
           );
+          game.userCompletionDuration =
+            await this.completionDurationRepository.findCompletionDurationByUserIdAndGameId(
+              userId,
+              game.id,
+            );
         }),
       );
     }
@@ -109,5 +123,8 @@ export class GameRepository extends Repository<Game> {
 
     const result = await query.getExists();
     return result ? true : false;
+  }
+  public getAllRelationsAsList() {
+    return this.metadata.relations.map((relation) => relation.propertyName);
   }
 }
