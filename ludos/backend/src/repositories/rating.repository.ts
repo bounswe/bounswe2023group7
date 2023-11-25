@@ -38,11 +38,11 @@ export class RatingRepository extends Repository<Rating> {
     gameId: string,
     userId: string,
   ): Promise<number> {
-    const query = this.createQueryBuilder("r")
+    const query = this.createQueryBuilder('r')
       .select('rating')
       .where(`r.userId = '${userId}'`)
-      .andWhere(`r.gameId = '${gameId}'`)
-      
+      .andWhere(`r.gameId = '${gameId}'`);
+
     const result = await query.getRawOne();
     return result ? result.rating : null;
   }
