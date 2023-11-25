@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Req } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseInterceptors } from '@nestjs/common';
 import { SearchService } from '../services/search.service';
 import { SearchResponseDto } from '../dtos/search/response/search.response.dto';
 import {
@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
+import { SerializerInterceptor } from '../interceptors/customSerializer.interceptor';
 
 @Controller('search')
 @ApiTags('search')
@@ -21,6 +22,7 @@ export class SearchController {
   @ApiOperation({
     summary: 'Search for users, games and posts',
   })
+  @UseInterceptors(new SerializerInterceptor(SearchResponseDto))
   @Get('/:searchKey')
   async search(
     @Req() req: AuthorizedRequest,
