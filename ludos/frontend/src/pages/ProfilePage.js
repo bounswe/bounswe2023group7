@@ -619,7 +619,7 @@ function ProfilePage() {
             </Grid>
           </Grid>
           <Grid container spacing={1} style={gameBoxStyle}>
-            <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Grid id="favGamesSection" item xs={12} sm={12} md={12} lg={12}>
               <Typography
                 style={{
                   fontSize: "25px",

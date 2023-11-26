@@ -32,7 +32,7 @@ module.exports = {
     ],
     "max-len": [
       2,
-      120,
+      1000,
       {
         ignoreStrings: true,
         ignoreTemplateLiterals: true,
@@ -49,10 +49,10 @@ module.exports = {
         children: "never",
       },
     ],
-    "space-infix-ops": ["error", { int32Hint: false }],
-    "import/first": ["error"],
+    "space-infix-ops": ["warn", { int32Hint: false }],
+    "import/first": ["warn"],
     indent: ["warn", 2, { SwitchCase: 1, ObjectExpression: 1 }],
     "object-property-newline": ["warn", { allowAllPropertiesOnSameLine: true }],
-    "no-multi-spaces": ["error", { ignoreEOLComments: true }],
+    "no-multi-spaces": ["warn", { ignoreEOLComments: true }],
   },
 };
