@@ -11,7 +11,7 @@ export class GetUserInfoResponseDto {
   @ApiProperty()
   followedGames: Game[];
   @ApiProperty()
-  ratings: Rating[];
+  ratingList: Rating[];
   @ApiProperty()
   isNotificationEnabled: boolean;
   @ApiProperty({

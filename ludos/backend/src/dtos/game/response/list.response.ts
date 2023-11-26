@@ -39,4 +39,12 @@ export class GameListResponseDto {
   @Expose()
   @ApiProperty()
   userRating?: number;
+
+  @Expose()
+  @ApiProperty()
+  userCompletionDuration?: number;
+
+  @Expose()
+  @ApiProperty()
+  averageCompletionDuration?: number;
 }

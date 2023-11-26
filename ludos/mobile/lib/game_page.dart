@@ -4,9 +4,11 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'forum_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
+import 'login_page.dart';
 
 class GamePage extends StatefulWidget {
   final UserProvider userProvider;
@@ -31,11 +33,19 @@ class _GamePageState extends State<GamePage> {
 
   void initializeFollowState() async {
     try {
-      bool value = await getFollowState();
-      setState(() {
-        followState = value;
-        buttonText = followState ? "Unfollow" : "Follow";
-      });
+      if(widget.userProvider.isLoggedIn){
+        bool value = await getFollowState();
+        setState(() {
+          followState = value;
+          buttonText = followState ? "Unfollow" : "Follow";
+        });
+      }else{
+        setState(() {
+          followState = false;
+          buttonText = "Follow";
+        });
+      }
+
     } catch (error) {
       print("Error initializing follow state: $error");
     }
@@ -84,6 +94,7 @@ class _GamePageState extends State<GamePage> {
       print('Error loading game data: $e');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,17 +105,23 @@ class _GamePageState extends State<GamePage> {
       ),
       body:  SingleChildScrollView(
 
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (gameData['coverLink'] != null)
-              SizedBox(
-                width: 200.0,
-                height: 200.0,
-                  child: Image.network(gameData['coverLink']),
+            if(gameData['coverLink'] != null)
+              Image.network(
+                width: 200,
+                height: 200,
+                gameData['coverLink'].toString(),
+                errorBuilder:
+                    (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return const Text('');
+                },
+                fit: BoxFit.fill,
               ),
+
             const SizedBox(height: 10),
             if (gameData['releaseDate'] != null)
               Text('Release Date: ${gameData['releaseDate']}',style: const TextStyle(
@@ -114,35 +131,43 @@ class _GamePageState extends State<GamePage> {
               ),
               ),
             const SizedBox(height: 10),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (gameData['tags'] != null)
-                    for (var i = 0; i < gameData['tags'].length; i++)
-                          TextButton(
-                            style: TextButton.styleFrom(
-                                foregroundColor: MyColors.lightBlue),
-                            onPressed: () {},
-                            child: Text(gameData['tags'][i].toString()),
-                          ),
-                  ],
-              ),
-            ),
+                Center(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        if (gameData['tags'] != null)
+                          for (var i = 0; i < gameData['tags'].length; i++)
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                    foregroundColor: MyColors.lightBlue),
+                                onPressed: () {},
+                                  child: Text(gameData['tags'][i].toString()),
+                            ),
+                        ],
+                    ),
+                  ),
+                ),
             const SizedBox(height: 10),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (gameData['tags'] != null)
-                    for (var i = 0; i < gameData['platforms'].length; i++)
-                      TextButton(
-                        style: TextButton.styleFrom(
-                            foregroundColor: MyColors.lightBlue),
-                        onPressed: () {},
-                        child: Text(gameData['platforms'][i].toString()),
-                      ),
-                ],
+
+            Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (gameData['platforms'] != null)
+                      for (var i = 0; i < gameData['platforms'].length; i++)
+                        Text('${gameData['platforms'][i].toString()}   ',
+                          style: const TextStyle(
+                              color: MyColors.lightBlue,
+                              fontWeight: FontWeight.bold
+                          )),
+                  ],
+                ),
               ),
             ),
             Row(
@@ -163,7 +188,8 @@ class _GamePageState extends State<GamePage> {
                     print(rating);
                   },
                 ),
-                SizedBox(width: 8), // Add some spacing between RatingBar and Text
+
+                const SizedBox(width: 8), // Add some spacing between RatingBar and Text
                 if (gameData['averageRating'] != null)
                   Text('${gameData['averageRating']}/5'.padLeft(22),style: const TextStyle(
                   color: MyColors.orange,
@@ -180,50 +206,90 @@ class _GamePageState extends State<GamePage> {
               children: [
                 ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.red),
+                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.blue),
                     ),
                     onPressed: () {
-                      bool state = false;
-                      Future<bool> executeAsyncActions() async {
-                        bool state = false;
-                        try {
-                          if (followState) {
-                            http.Response token = await APIService()
-                                .unfollowGame(widget.token, widget.id);
-                            if (token.statusCode == 200) {
-                              state = false;
-                              print("Unfollowed");
+                        if(!widget.userProvider.isLoggedIn){
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Row(
+                                children: [
+                                  Icon(Icons.error, color: MyColors.blue),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      'Please log in to follow game',
+                                      style: TextStyle(
+                                        color: MyColors.blue,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              backgroundColor: MyColors.blue2,
+                              duration: const Duration(seconds: 5),
+                              action: SnackBarAction(
+                                label: 'Log In',
+                                textColor: MyColors.blue,
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()),
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                              .closed
+                              .then((reason) => {});
+                        }else{
+                          bool state = false;
+                          Future<bool> executeAsyncActions() async {
+                            bool state = false;
+                          try {
+                            if (followState) {
+                              http.Response token = await APIService()
+                                  .unfollowGame(widget.token, widget.id);
+                              if (token.statusCode == 200) {
+                                state = false;
+                                print("Unfollowed");
+                              } else {
+                                print("Error: ${token.statusCode}");
+                              }
                             } else {
-                              print("Error: ${token.statusCode}");
+                              http.Response token = await APIService().followGame(
+                                  widget.token, widget.id);
+                              if (token.statusCode == 200) {
+                                state = true;
+                                print("Followed");
+                              } else {
+                                print("Error: ${token.statusCode}");
+                              }
                             }
-                          } else {
-                            http.Response token = await APIService().followGame(
-                                widget.token, widget.id);
-                            if (token.statusCode == 200) {
-                              state = true;
-                              print("Followed");
-                            } else {
-                              print("Error: ${token.statusCode}");
-                            }
+                          } catch (error) {
+                            print("Error: $error");
                           }
-                        } catch (error) {
-                          print("Error: $error");
+                          bool asd = await getFollowState();
+                          return state;
                         }
-                        bool asd = await getFollowState();
-                        return state;
-                      }
-                      executeAsyncActions().then((bool value) {
-                        followState = value;
-                        if (followState) {
-                          setState(() {
-                            buttonText = "Unfollow";
-                          });
-                        } else {
-                          setState(() {
-                            buttonText = "Follow";
-                          });
+                        executeAsyncActions().then((bool value) {
+                          followState = value;
+                          if (followState) {
+                            setState(() {
+                              buttonText = "Unfollow";
+                            });
+                          } else {
+                            setState(() {
+                              buttonText = "Follow";
+                            });
+                          }
+                        });
                         }
-                      });
+
                       /*
                       setState(() {
                         followState = state;
@@ -246,6 +312,22 @@ class _GamePageState extends State<GamePage> {
                   fontSize: 16,
                 ),
               ),
+            const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.lightBlue),
+                    ),
+                    onPressed: ()
+                    {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ForumPage(gameid: widget.id, token: widget.token, userProvider: widget.userProvider),
+                      ));
+                    },
+                    child: const Text(
+                      'Explore the Forum',
+                      //style: TextStyle(color: Colors.black)
+                    ),
+                  ),
             const SizedBox(height: 20),
             if(gameData['averageUserCompilationDuration'] != null)
               Text('Average User Compilation Time: ${gameData['averageUserCompilationDuration']}',style: const TextStyle(

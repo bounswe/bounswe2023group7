@@ -12,6 +12,7 @@ import { ReviewRepository } from '../repositories/review.repository';
 import { log } from 'console';
 import { ReviewEditDto } from '../dtos/review/request/edit.dto';
 import { ReviewEditResponseDto } from '../dtos/review/response/edit.dto';
+import { ReviewGetInfoResponseDto } from '../dtos/review/response/getInfo.dto';
 
 @Injectable()
 export class ReviewService {
@@ -27,6 +28,15 @@ export class ReviewService {
     reviewCreateDto: ReviewCreateDto,
   ): Promise<ReviewCreateResponseDto> {
     try {
+      const existingReview =
+        await this.reviewRepository.findReviewByUserIdAndGameId(userId, gameId);
+
+      if (existingReview) {
+        throw new ConflictException(
+          'User has already submitted a review for this game.',
+        );
+      }
+
       const user = await this.userRepository.findUserById(userId);
       const game = await this.gameRepository.findGameById(gameId);
       const review = await this.reviewRepository.createReview({
@@ -36,7 +46,6 @@ export class ReviewService {
         game: game,
       });
 
-      console.log(game.reviews);
       return {
         id: review.id,
         rating: review.rating,
@@ -47,8 +56,8 @@ export class ReviewService {
       };
     } catch (e) {
       console.log(e);
-      if (e.code == '23505') {
-        throw new ConflictException(e.detail);
+      if (e instanceof NotFoundException) {
+        throw e;
       }
       throw new InternalServerErrorException();
     }
@@ -57,12 +66,14 @@ export class ReviewService {
   public async likeReview(userId: string, reviewId: string): Promise<void> {
     try {
       const user = await this.userRepository.findUserById(userId);
+
       if (!user) {
         throw new NotFoundException('User Not Found!');
       }
-
       const review =
-        await this.reviewRepository.findReviewByIdWithLikedUsers(reviewId);
+        await this.reviewRepository.findReviewByIdWithLikedAndDislikedUsers(
+          reviewId,
+        );
       if (!review) {
         throw new NotFoundException('Review Not Found!');
       }
@@ -72,6 +83,14 @@ export class ReviewService {
         review.likedUsers = review.likedUsers.filter(
           (likedUser) => likedUser.id !== userId,
         );
+      } else if (
+        review.dislikedUsers.find((dislikedUser) => dislikedUser.id === userId)
+      ) {
+        log('User has already disliked the review.');
+        review.dislikedUsers = review.dislikedUsers.filter(
+          (dislikedUser) => dislikedUser.id !== userId,
+        );
+        review.likedUsers.push(user);
       } else {
         review.likedUsers.push(user);
       }
@@ -95,7 +114,9 @@ export class ReviewService {
       }
 
       const review =
-        await this.reviewRepository.findReviewByIdWithDislikedUsers(reviewId);
+        await this.reviewRepository.findReviewByIdWithLikedAndDislikedUsers(
+          reviewId,
+        );
       if (!review) {
         throw new NotFoundException('Review Not Found!');
       }
@@ -107,6 +128,14 @@ export class ReviewService {
         review.dislikedUsers = review.dislikedUsers.filter(
           (dislikedUser) => dislikedUser.id !== userId,
         );
+      } else if (
+        review.likedUsers.find((likedUser) => likedUser.id === userId)
+      ) {
+        log('User has already liked the review.');
+        review.likedUsers = review.likedUsers.filter(
+          (likedUser) => likedUser.id !== userId,
+        );
+        review.dislikedUsers.push(user);
       } else {
         review.dislikedUsers.push(user);
       }
@@ -191,5 +220,64 @@ export class ReviewService {
         throw new InternalServerErrorException();
       }
     }
+  }
+
+  public async getReviewById(
+    userId: string,
+    reviewId: string,
+  ): Promise<ReviewGetInfoResponseDto> {
+    const review = await this.reviewRepository.findReviewInfoById(reviewId);
+    if (!review) {
+      throw new NotFoundException('Review Not Found!');
+    }
+
+    const loggedUser = await this.userRepository.findUserById(userId);
+      if (!loggedUser) {
+        throw new NotFoundException('User Not Found!');
+      }
+
+    const likedUserCount = review.likedUsers.length;
+    const dislikedUserCount = review.dislikedUsers.length;
+    return {
+      reviewId: review.id,
+      content: review.content,
+      rating: review.rating,
+      createdAt: review.createdAt,
+      userId: review.user.id,
+      gameId: review.game.id,
+      likedUserCount: likedUserCount,
+      dislikedUserCount: dislikedUserCount,
+      isBelongToUser: review.user.id == loggedUser.id
+    };
+  }
+
+  public async getReviewsByGameId(
+    userId: string,
+    gameId: string,
+  ): Promise<ReviewGetInfoResponseDto[]> {
+    const game = await this.gameRepository.findGameById(gameId);
+    if (!game) {
+      throw new NotFoundException('Game Not Found!');
+    }
+
+    const loggedUser = await this.userRepository.findUserById(userId);
+      if (!loggedUser) {
+        throw new NotFoundException('User Not Found!');
+      }
+
+    const reviews = await this.reviewRepository.findReviewsByGame(game);
+
+    const mappedReviews: ReviewGetInfoResponseDto[] = reviews.map((review) => ({
+      reviewId: review.id,
+      content: review.content,
+      rating: review.rating,
+      createdAt: review.createdAt,
+      userId: review.user.id,
+      gameId: review.game.id,
+      likedUserCount: review.likedUsers.length,
+      dislikedUserCount: review.dislikedUsers.length,
+      isBelongToUser: review.user.id == loggedUser.id
+    }));
+    return mappedReviews;
   }
 }

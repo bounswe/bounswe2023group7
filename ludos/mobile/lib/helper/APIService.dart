@@ -12,10 +12,11 @@ class APIService {
       'username': username,
       'password': password,
     });
-    final response = await http.post(uri, body: body, headers: {'content-type': "application/json"});
+    final response = await http
+        .post(uri, body: body, headers: {'content-type': "application/json"});
     Map<String, dynamic> responseBody = jsonDecode(response.body);
     String? authToken = responseBody['accessToken'];
-    (String?, int) res = (authToken,response.statusCode);
+    (String?, int) res = (authToken, response.statusCode);
     token = authToken;
     print("token");
     print(token);
@@ -23,37 +24,55 @@ class APIService {
     return res;
   }
 
-  Future<http.Response> signUp(String username, String email, String password) async {
+  Future<http.Response> signUp(
+      String username, String email, String password) async {
     var uri = Uri.parse("$baseURL/user");
     final body = jsonEncode(<String, Object>{
       'username': username,
       'email': email,
       'password': password,
     });
-    final response = await http.post(uri, body: body, headers: {'content-type': "application/json"});
+    final response = await http
+        .post(uri, body: body, headers: {'content-type': "application/json"});
     return response;
   }
 
-  Future<http.Response> changePassword(String oldPassword, String newPassword, String? authToken) async {
+  Future<http.Response> changePassword(
+      String oldPassword, String newPassword, String? authToken) async {
     var uri = Uri.parse("$baseURL/user/change-password");
     final body = jsonEncode(<String, Object>{
       'oldPassword': oldPassword,
       'newPassword': newPassword
     });
-    final response = await http.put(uri, body: body, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+    final response = await http.put(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
     return response;
   }
 
-  Future<http.Response> createGame(String? authToken, String title, String coverLink,
-  String systemRequirements, List<String> predecessors, List<String> successors, 
-  String gameGuide, String gameStory, List<String> platforms, String ageRestriction, 
-  String gameBio, List<String> tags, String releaseDate, String developer, 
-  String publisher, String trivia) async {
+  Future<http.Response> createGame(
+      String? authToken,
+      String title,
+      String coverLink,
+      String systemRequirements,
+      List<String> predecessors,
+      List<String> successors,
+      String gameGuide,
+      String gameStory,
+      List<String> platforms,
+      String ageRestriction,
+      String gameBio,
+      List<String> tags,
+      String releaseDate,
+      String developer,
+      String publisher,
+      String trivia) async {
     var uri = Uri.parse("$baseURL/game");
     final body = jsonEncode(<String, Object>{
       'title': title,
       'coverLink': coverLink,
-      'systemRequirements':systemRequirements,
+      'systemRequirements': systemRequirements,
       'predecessors': predecessors,
       'successors': successors,
       'gameGuide': gameGuide,
@@ -67,65 +86,154 @@ class APIService {
       'publisher': publisher,
       'trivia': trivia,
     });
-    final response = await http.post(uri, body: body, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
 
     return response;
   }
-  
-   Future<http.Response> resetPassword(String email) async {
+
+  Future<http.Response> createThread(
+      String? authToken,
+      String title,
+      String content,
+      List<String> media,
+      List<String> tags,
+      String gameid) async {
+    var uri = Uri.parse("$baseURL/post");
+    final body = jsonEncode(<String, Object>{
+      'title': title,
+      'body': content,
+      'gameId': gameid,
+      'media': media,
+      'tags': tags,
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+  Future<http.Response> resetPassword(String email) async {
     var uri = Uri.parse("$baseURL/user/reset-password");
     final body = jsonEncode(<String, Object>{
       'email': email,
     });
-    final response = await http.post(uri, body: body, headers: {'content-type': "application/json"});
+    final response = await http
+        .post(uri, body: body, headers: {'content-type': "application/json"});
 
     return response;
   }
-  
-    Future<http.Response> verifyCode(String email, String code, String newPassword) async {
+
+  Future<http.Response> verifyCode(
+      String email, String code, String newPassword) async {
     var uri = Uri.parse("$baseURL/user/verify-code");
     final body = jsonEncode(<String, Object>{
       'code': code,
       'email': email,
       'newPassword': newPassword,
     });
-    final response = await http.post(uri, body: body, headers: {'content-type': "application/json"});
+    final response = await http
+        .post(uri, body: body, headers: {'content-type': "application/json"});
 
     return response;
   }
 
   Future<http.Response> listGames(String? authToken) async {
     var uri = Uri.parse("$baseURL/game?limit=20");
-    final response = await http.get(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
 
     return response;
   }
 
+  Future<http.Response> listPosts(String gameId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/post?gameId=$gameId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to load threads');
+    }
+  }
+
   Future<http.Response> followGame(String? authToken, String gameID) async {
     var uri = Uri.parse("$baseURL/game/follow/$gameID");
-    final response = await http.put(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
     return response;
   }
 
   Future<http.Response> unfollowGame(String? authToken, String gameID) async {
     var uri = Uri.parse("$baseURL/game/unfollow/$gameID");
-    final response = await http.put(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
     return response;
   }
 
   Future<http.Response> userInfo(String? authToken) async {
     var uri = Uri.parse("$baseURL/user/info");
-    final response = await http.get(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
     return response;
   }
 
-  Future<Map<String, dynamic>> getGame(String id,String? authToken) async {
+  Future<Map<String, dynamic>> getGame(String id, String? authToken) async {
     var uri = Uri.parse("$baseURL/game/$id");
-    final response = await http.get(uri, headers: {'content-type': "application/json",'Authorization': 'Bearer $authToken'});
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
     if (response.statusCode == 200) {
       return json.decode(response.body) as Map<String, dynamic>;
     } else {
       throw Exception('Failed to load game data');
     }
   }
+
+  Future<Map<String, dynamic>> getThread(String threadId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/post/$threadId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to load thread data');
+    }
+  }
+
+  Future<http.Response> likeThread(String? authToken, String threadId) async {
+    var uri = Uri.parse("$baseURL/post/like/$threadId");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> dislikeThread(String? authToken, String threadId) async {
+    var uri = Uri.parse("$baseURL/post/dislike/$threadId");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
 }

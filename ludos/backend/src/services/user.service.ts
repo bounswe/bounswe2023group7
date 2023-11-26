@@ -195,18 +195,17 @@ export class UserService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
-    const response = new GetUserInfoResponseDto();
-    response.email = user.email;
-    response.username = user.username;
-    response.followedGames = user?.followedGames.filter(game => game.id !== null);
-    response.ratings = user.ratingList;
-    response.isNotificationEnabled = user.isNotificationEnabled;
-    response.userType = user.userType;
-    response.fullName = user.fullName;
-    response.avatar = user.avatar;
-    response.aboutMe = user.aboutMe;
-    response.steamUrl = user.steamUrl;
+    const response = user;
+    response.followedGames = user?.followedGames.filter(
+      (game) => game.id !== null,
+    );
+    response.likedPosts = user?.dislikedPosts.filter(
+      (post) => post.id !== null,
+    );
+    response.dislikedPosts = user?.dislikedPosts.filter(
+      (post) => post.id !== null,
+    );
+    delete response.password;
     return response;
   }
 }

@@ -12,6 +12,7 @@ import CreateGamePage from "./pages/CreateGamePage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ForumsPage from "./pages/ForumsPage.js";
 import ProfilePage from "./pages/ProfilePage";
+import CreateThreadPage from "./pages/CreateThreadPage.js";
 import axios from "axios";
 
 function App() {
@@ -375,6 +376,14 @@ function App() {
           />
 
           <Route
+            path="/create-thread"
+            element={
+              <Layout>
+                <CreateThreadPage />
+              </Layout>
+            }
+          />
+          <Route
             path="/game/Tekken-5"
             element={
               <Layout>
@@ -429,7 +438,7 @@ function App() {
           />
         </Routes>
       </div>
-    </Router>
+    </Router >
   );
 }
 

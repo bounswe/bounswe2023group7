@@ -1,9 +1,27 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
 import ForumsBackground from "../assets/forumBackground.png";
 import { Typography, Button, TextField, Container } from "@mui/material";
 import ForumTopic from "../components/ForumTopic";
 
 const ForumsPage = () => {
+  const navigate = useNavigate();
+
+  const handleButtonClickUnlogged = () => {
+    navigate("/login");
+  };
+
+  const handleButtonClickLogged = () => {
+    navigate("/create-thread");
+  };
+
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      setUserLoggedIn(true);
+    }
+  }, []);
+ 
   const latestTopics = [
     {
       title: "Are League of Legends players smart?",
@@ -147,6 +165,53 @@ const ForumsPage = () => {
           </form>
         </div>
       </div>
+      <Container
+          style={{
+            backgroundColor: "#68A849",
+            maxWidth: "960px",
+            borderRadius: "10px",
+            textAlign: "center",
+            padding: "20px",
+          }}
+        >
+          <Typography
+            variant="h5"
+            gutterBottom
+            style={{
+              color: "white",
+              fontFamily: "Trebuchet MS, sans-serif",
+              fontWeight: "bold",
+            }}
+          >
+            Join the discussion! Create your forum thread now.
+          </Typography>
+          {userLoggedIn ? (
+              
+                <Button
+                  variant="contained"
+                  type="regular"
+                  size="large"
+                  style={{ marginTop: "10px", backgroundColor: "#9c27b0" }}
+                  sx={{ marginLeft: "10px" }}
+                  onClick={handleButtonClickLogged}
+                >
+                  Create a Thread
+              </Button>
+            )
+            : (
+                <Button
+                  variant="contained"
+                  type="regular"
+                  size="large"
+                  style={{ marginTop: "10px", backgroundColor: "#9c27b0" }}
+                  sx={{ marginLeft: "10px" }}
+                  onClick={handleButtonClickUnlogged}
+                >
+                  Create a Thread
+              </Button>
+            )}
+          
+        </Container>
       <div
         style={{
           display: "flex",
@@ -160,7 +225,7 @@ const ForumsPage = () => {
       >
         <Container
           style={{
-            backgroundColor: "#68A849",
+            backgroundColor: "rgb(200,200,200,0.6)",
             width: "456px",
             borderRadius: "10px",
             textAlign: "center",
@@ -190,7 +255,7 @@ const ForumsPage = () => {
         </Container>
         <Container
           style={{
-            backgroundColor: "#68A849",
+            backgroundColor: "rgb(200,200,200,0.6)",
             width: "456px",
             borderRadius: "10px",
             textAlign: "center",

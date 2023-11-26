@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Get,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiConflictResponse,
+  ApiOkResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiTags,
@@ -100,5 +102,34 @@ export class ReviewController {
       reviewEditDto,
     );
     return editedReview;
+  }
+
+  @ApiOkResponse({ description: 'Review retrieved successfully', type: Review })
+  @ApiNotFoundResponse({ description: 'Review is not found!' })
+  @HttpCode(200)
+  @UseGuards(AuthGuard)
+  @Get(':reviewId')
+  public async getReviewById(
+    @Req() req: AuthorizedRequest,
+    @Param('reviewId') reviewId: string,
+  ) {
+    const review = await this.reviewService.getReviewById(req.user.id, reviewId);
+    return review;
+  }
+
+  @ApiOkResponse({
+    description: 'Reviews retrieved successfully',
+    type: [Review],
+  })
+  @ApiNotFoundResponse({ description: 'Game is not found!' })
+  @HttpCode(200)
+  @UseGuards(AuthGuard)
+  @Get('game/:gameId')
+  public async getReviewsByGameId(
+    @Req() req: AuthorizedRequest,
+    @Param('gameId') gameId: string,
+  ) {
+    const reviews = await this.reviewService.getReviewsByGameId(req.user.id, gameId);
+    return reviews;
   }
 }

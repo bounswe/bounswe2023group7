@@ -72,6 +72,8 @@ export class PostService {
     if (!post) {
       throw new NotFoundException('Post not found');
     }
+    post.dislikedUsers = post.dislikedUsers.filter((user) => user.id != null);
+    post.likedUsers = post.likedUsers.filter((user) => user.id != null);
     post.isLiked = userId
       ? post.likedUsers.some((user) => user.id === userId)
       : false;

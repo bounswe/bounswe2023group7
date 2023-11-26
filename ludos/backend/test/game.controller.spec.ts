@@ -10,6 +10,7 @@ import { UserRepository } from '../src/repositories/user.repository';
 import { GameService } from '../src/services/game.service';
 import { AuthorizedRequest } from '../src/interfaces/common/authorized-request.interface';
 import { RatingRepository } from '../src/repositories/rating.repository';
+import { CompletionDurationRepository } from '../src/repositories/completion-duration.repository';
 describe('GameController', () => {
   let gameController: GameController;
   let gameRepository: GameRepository;
@@ -31,6 +32,7 @@ describe('GameController', () => {
         GameRepository,
         UserRepository,
         RatingRepository,
+        CompletionDurationRepository,
         {
           provide: DataSource,
           useValue: dataSource,
@@ -190,7 +192,7 @@ describe('GameController', () => {
       const listSpy = jest
         .spyOn(gameRepository, 'findGames')
         .mockResolvedValue(listResponse);
-      const req = {}
+      const req = {};
       const response = await gameController.listGames(req as AuthorizedRequest);
       expect(response).toBe(listResponse);
       expect(listSpy).toHaveBeenCalledWith(
@@ -204,7 +206,7 @@ describe('GameController', () => {
         undefined,
         undefined,
         undefined,
-        undefined
+        undefined,
       );
     });
   });
