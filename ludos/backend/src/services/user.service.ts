@@ -32,7 +32,7 @@ export class UserService {
     private readonly resetPasswordRepository: ResetPasswordRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    ) {}
+  ) {}
 
   public async register(input: RegisterDto): Promise<RegisterResponseDto> {
     try {
@@ -184,22 +184,28 @@ export class UserService {
   }
 
   public async editInfo(userId: string, editInfoDto: EditUserInfoDto) {
-    let user = await this.userRepository.findUserById(userId);
-    let updated = Object.assign(user, editInfoDto);
+    const user = await this.userRepository.findUserById(userId);
+    const updated = Object.assign(user, editInfoDto);
+    delete updated.password;
     await this.userRepository.save(updated);
   }
-  
+
   public async getUserInfo(userId: string): Promise<GetUserInfoResponseDto> {
     const user = await this.userRepository.findUserByIdWithRelations(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
-    const response = new GetUserInfoResponseDto();
-    response.email = user.email;
-    response.username = user.username;
-    response.followedGames = user.followedGames;
-
+    const response = user;
+    response.followedGames = user?.followedGames.filter(
+      (game) => game.id !== null,
+    );
+    response.likedPosts = user?.dislikedPosts.filter(
+      (post) => post.id !== null,
+    );
+    response.dislikedPosts = user?.dislikedPosts.filter(
+      (post) => post.id !== null,
+    );
+    delete response.password;
     return response;
   }
 }
