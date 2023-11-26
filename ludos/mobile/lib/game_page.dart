@@ -35,6 +35,7 @@ class _GamePageState extends State<GamePage> {
     loadGameData();
     initializeFollowState();
     ToList(fetchReviewData(widget.token));
+    print("getlisted");
   }
 
   void initializeFollowState() async {
@@ -104,8 +105,6 @@ class _GamePageState extends State<GamePage> {
   void toggleFormVisibility() {
     setState(() {
       showForm = !showForm;
-      print(showForm);
-      print(widget.id);
     });
   }
 
@@ -565,7 +564,8 @@ class _GamePageState extends State<GamePage> {
                   thickness: 5.0,
                   color: MyColors.lightBlue,
                 ),
-                reviews[0],
+                if(reviews.isNotEmpty)
+                  reviews[0],
               ]
             )
 
