@@ -3,7 +3,7 @@ import { Box, Typography, Grid } from "@mui/material";
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BadgeIcon from '@mui/icons-material/Badge';
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 
 function ForumTopic(data) {
   const boxStyle = {

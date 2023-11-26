@@ -3,7 +3,7 @@ import TrendingGamesSlider from '../components/TrendingGamesSlider';
 import Game1 from "../assets/witcher3.jpg";
 import Game2 from "../assets/sims4.png";
 import Game3 from "../assets/Tekken5Cover.jpg";
-import { Typography , Container} from '@material-ui/core';
+import { Typography , Container} from '@mui/material';
 import ForumTopic from "../components/ForumTopic";
 import GroupTopic from '../components/GroupTopic';
 
