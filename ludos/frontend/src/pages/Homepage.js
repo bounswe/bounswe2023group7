@@ -13,26 +13,29 @@ const Homepage = () => {
     {
       title: "OMG! New Character for Dota",
       numOfReplies: 150,
-      userOpened: "@loverGame",
+      userOpened: "loverGame",
       whenOpened: "2 days ago",
       forumTags: ["New Feature", "Dota"],
       forumGame: "Dota",
+      imgsrc: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_oAlf6eD-4mrGrbTaWeg2Ec17AhQLgfuYBQ&usqp=CAU",
     },
     {
       title: "Tell your best memory of Minecraft",
       numOfReplies: 240,
-      userOpened: "@minemine",
+      userOpened: "minemine",
       whenOpened: "1 week ago",
       forumTags: ["Curious", "Minecraft"],
       forumGame: "Minecraft",
+      imgsrc: "https://cdn-www.bluestacks.com/bs-images/54ea74e2f2d10d2ad3a957260f564bea.png",
     },
     {
       title: "Who is your favorite character in Witcher 3",
       numOfReplies: 167,
-      userOpened: "@witchPlay",
+      userOpened: "witchPlay",
       whenOpened: "5 days ago",
       forumTags: ["favorites", "Witcher3"],
       forumGame: "Witcher 3",
+      imgsrc: "https://assets-prd.ignimgs.com/2022/04/15/zuko-alone-1650039877625.jpg",
     },
     // Add more topics as needed...
   ];
@@ -92,7 +95,7 @@ const Homepage = () => {
       >
         <Container
           style={{
-            backgroundColor: "rgb(255, 255, 255, 0.6)",
+            backgroundColor: "rgb(30, 30, 30, 0.9)",
             flex: "1",
             borderRadius: "10px",
             textAlign: "center",
@@ -122,7 +125,7 @@ const Homepage = () => {
         </Container>
         <Container
           style={{
-            backgroundColor: "rgb(255, 255, 255, 0.6)",
+            backgroundColor: "rgb(30, 30, 30, 0.9)",
             flex: "1",
             borderRadius: "10px",
             textAlign: "center",

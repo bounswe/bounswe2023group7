@@ -26,7 +26,7 @@ const ForumsPage = () => {
     {
       title: "Are League of Legends players smart?",
       numOfReplies: 10,
-      userOpened: "@ClementKachepa",
+      userOpened: "ClementKachepa",
       whenOpened: "2 hours ago",
       forumTags: ["question", "leagueOfLegends"],
       forumGame: "League of Legends",
@@ -34,7 +34,7 @@ const ForumsPage = () => {
     {
       title: "How many houses do you have in Sims 3?",
       numOfReplies: 8,
-      userOpened: "@wannaPlayWithLife",
+      userOpened: "wannaPlayWithLife",
       whenOpened: "4 hours ago",
       forumTags: ["question", "Sims3"],
       forumGame: "Sims 3",
@@ -42,7 +42,7 @@ const ForumsPage = () => {
     {
       title: "I stuck on the mission 65, HELPP!!",
       numOfReplies: 16,
-      userOpened: "@GtaLoveeer",
+      userOpened: "GtaLoveeer",
       whenOpened: "10 hours ago",
       forumTags: ["help", "GTA5"],
       forumGame: "GTA 5",
@@ -54,7 +54,7 @@ const ForumsPage = () => {
     {
       title: "OMG! New Character for Dota",
       numOfReplies: 150,
-      userOpened: "@loverGame",
+      userOpened: "loverGame",
       whenOpened: "2 days ago",
       forumTags: ["New Feature", "Dota"],
       forumGame: "Dota",
@@ -62,7 +62,7 @@ const ForumsPage = () => {
     {
       title: "Tell your best memory of Minecraft",
       numOfReplies: 240,
-      userOpened: "@minemine",
+      userOpened: "minemine",
       whenOpened: "1 week ago",
       forumTags: ["Curious", "Minecraft"],
       forumGame: "Minecraft",
@@ -70,7 +70,7 @@ const ForumsPage = () => {
     {
       title: "Who is your favorite character in Witcher 3",
       numOfReplies: 167,
-      userOpened: "@witchPlay",
+      userOpened: "witchPlay",
       whenOpened: "5 days ago",
       forumTags: ["favorites", "Witcher3"],
       forumGame: "Witcher 3",
@@ -217,7 +217,8 @@ const ForumsPage = () => {
           display: "flex",
           flexDirection: "row",
           flex: 1,
-          maxWidth: "960px",
+          maxWidth: "1152px",
+          width: "100%",
           alignSelf: "center",
           position: "relative" /* Set position to relative */,
           gap: "48px",
@@ -226,10 +227,12 @@ const ForumsPage = () => {
         <Container
           style={{
             backgroundColor: "rgb(200,200,200,0.6)",
-            width: "456px",
+            width: "100%",
             borderRadius: "10px",
             textAlign: "center",
-            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            flex: "1",
           }}
         >
           <Typography
@@ -256,10 +259,12 @@ const ForumsPage = () => {
         <Container
           style={{
             backgroundColor: "rgb(200,200,200,0.6)",
-            width: "456px",
+            width: "100%",
             borderRadius: "10px",
             textAlign: "center",
-            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            flex: "1",
           }}
         >
           <Typography

@@ -15,6 +15,7 @@ import ProfilePage from "./pages/ProfilePage";
 import CreateThreadPage from "./pages/CreateThreadPage.js";
 import ThreadPage from "./pages/ThreadPage.js"
 import axios from "axios";
+import SampleThreadPage from "./pages/SampleThreadPage.js";
 
 function App() {
   const [games, setGames] = useState([]);
@@ -442,6 +443,14 @@ function App() {
             element={
               <Layout>
                 <ThreadPage />
+              </Layout>
+            }
+          />
+           <Route
+            path="/thread/"
+            element={
+              <Layout>
+                <SampleThreadPage />
               </Layout>
             }
           />
