@@ -1,16 +1,56 @@
 import React , {useEffect, useState} from "react";
+import { useParams } from 'react-router-dom';
 import { Grid, Box, Typography, TextField, Button} from "@mui/material";
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
 import ThreadComponent from "../components/ThreadComponent";
+import axios from "axios";
 
 
-export default function CreateThreadPage() {
+const ThreadPage = () => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const [replyContent, setReplyContent] = useState('');
+    const { threadId } = useParams(); // Get the id from URL params
+    const [threadDetails, setThreadDetails] = useState([]);
+    const [loading, setLoading] = useState(true); // Add a loading state
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
+  
+  console.log(threadId);
+const link = `http://${process.env.REACT_APP_API_URL}/post/${threadId}`;
+
+useEffect(() => {
+  const fetchThread = async () => {
+    try {
+      const response = await axios.get(link, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      setThreadDetails(response.data);
+      setLoading(false); // Set loading to false when data is fetched
+    } catch (error) {
+      console.error('Error fetching thread details:', error);
+      setLoading(false); // In case of error, also set loading to false
+    }
+  };
+
+  fetchThread();
+}, [threadId]);
+
+if (loading) {
+  return <div>Loading...</div>; // Display a loading message while fetching data
+}
+
+if (!threadDetails) {
+  return <div>Error fetching data...</div>; // Display an error message if data is not available
+}
+
 
     const handleReplyChange = (event) => {
         setReplyContent(event.target.value);
@@ -65,17 +105,20 @@ export default function CreateThreadPage() {
           style={{ display: "flex", justifyContent: "space-between" }}
         >
             <Typography variant="body1" component="div" style={forumStyle}>
-                The Witcher 3
+            {"The Witcher 3" || threadDetails.game.title}
             </Typography>
             <Grid style={{ display: "flex"}}>
+            {threadDetails.tags &&
+              threadDetails.tags.map((data1, index1) => (
                 <Typography
-                    variant="caption"
-                    component="div"
-                    style={tagBox}
-                    >
-                    discussion
+                  variant="caption"
+                  component="div"
+                  style={tagBox}
+                  key={index1}
+                >
+                  {data1}
                 </Typography>
-
+              ))}
             </Grid>
             </Grid>
             <Typography variant="h4" component="div" style={{
@@ -84,7 +127,7 @@ export default function CreateThreadPage() {
                 fontSize: "2rem",
                 paddingBottom: "1rem",
                 }}>
-                The Witcher 3 was amazing! What do you think???
+               {threadDetails.title ||  "The Witcher 3 was amazing! What do you think???"}
             </Typography>
             <Grid style={{
                 display: "flex", 
@@ -98,7 +141,7 @@ export default function CreateThreadPage() {
                 marginTop: "3px",
                 marginRight: "10px",
                 }}>
-                AhriFoxie
+               {threadDetails.user.username ||  "AhriFoxie"}
                 </Typography>
                 <AccessTimeOutlinedIcon style={{color: "white", marginRight: "3px"}}/>
                 <Typography variant="caption" component="div" style={{
@@ -106,7 +149,7 @@ export default function CreateThreadPage() {
                 marginTop: "3px",
                 marginRight: "10px",
                 }}>
-                Dec 20, 2023
+                {new Date(threadDetails.createdAt).toLocaleDateString('en-US', options) || "Dec 20, 2023"}
                 </Typography>
                 <MapsUgcOutlinedIcon style={{color: "white", marginRight: "3px"}}/>
                 <Typography variant="caption" component="div" style={{
@@ -119,9 +162,9 @@ export default function CreateThreadPage() {
             <Grid style={{display: "flex", flexDirection: "column", gap: "32px", alignSelf: "center"}}>
                 <ThreadComponent 
                 imgsrc="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_27.jpg"
-                username="AhriFoxie"
-                date="Dec 20, 2023"
-                content="Hey everyone! I recently finished playing The Witcher 3 and I'm absolutely blown away by this game. The storyline, the characters, the open-world—it's all so immersive and engaging. What are your thoughts on The Witcher 3? Favorite quests or characters? Let's discuss!"
+                username={threadDetails.user.username || "AhriFoxie"}
+                date={new Date(threadDetails.createdAt).toLocaleDateString('en-US', options) || "Dec 20, 2023"}
+                content={threadDetails.body || "Hey everyone! I recently finished playing The Witcher 3 and I'm absolutely blown away by this game. The storyline, the characters, the open-world—it's all so immersive and engaging. What are your thoughts on The Witcher 3? Favorite quests or characters? Let's discuss!"}
                 />
                 <ThreadComponent 
                 imgsrc="https://img.wattpad.com/c90dc9c60617cc0b0970b1c8eeef09ed383f99d2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f76582d4974533075434f704275673d3d2d3131372e3136373136363361333535386265353839353431383136353735322e6a7067?s=fit&w=720&h=720"
@@ -192,3 +235,5 @@ export default function CreateThreadPage() {
     );
 
 }
+
+  export default ThreadPage;

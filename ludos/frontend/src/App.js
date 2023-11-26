@@ -437,7 +437,7 @@ function App() {
             }
           />
            <Route
-            path="/thread"
+            path="/thread/:threadId"
             element={
               <Layout>
                 <ThreadPage />
