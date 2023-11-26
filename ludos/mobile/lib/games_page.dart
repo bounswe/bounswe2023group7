@@ -10,7 +10,8 @@ import 'create_game.dart';
 class GamesPage extends StatefulWidget {
   final String? token;
   final UserProvider userProvider;
-  const GamesPage({Key? key, required this.token, required this.userProvider}) : super(key: key);
+  const GamesPage({Key? key, required this.token, required this.userProvider})
+      : super(key: key);
 
   @override
   State<GamesPage> createState() => _GamesPageState();
@@ -36,20 +37,23 @@ class _GamesPageState extends State<GamesPage> {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> gamesList = responseData['items'];
-        return gamesList.map((dynamic item) => GameSummary(
-          title: item['title'],
-          averageRating: (item['averageRating'] == null
-              ? 0
-              : item['averageRating'].toDouble()),
-          coverLink: item['coverLink'],
-          numOfFollowers: item['followers'],
-          gameStory: 'gameStory',
-          tags: item['tags'],
-          textColor: MyColors.white,
-          backgroundColor: MyColors.red,
-          fontSize: 20,
-          id: item['id'],
-        )).toList();
+        return gamesList
+            .map((dynamic item) => GameSummary(
+                title: item['title'],
+                averageRating: (item['averageRating'] == null
+                    ? 0
+                    : item['averageRating'].toDouble()),
+                coverLink: item['coverLink'],
+                numOfFollowers: item['followers'],
+                gameStory: 'gameStory',
+                tags: item['tags'],
+                textColor: MyColors.white,
+                backgroundColor: MyColors.blue,
+                fontSize: 20,
+                id: item['id'],
+                token: widget.token,
+                userProvider: widget.userProvider))
+            .toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load games');
@@ -72,50 +76,49 @@ class _GamesPageState extends State<GamesPage> {
         actions: [
           TextButton(
             onPressed: () {
-              if(widget.userProvider.isLoggedIn){
+              if (widget.userProvider.isLoggedIn) {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => CreateGamePage(token: widget.token, userProvider: widget.userProvider),
+                  builder: (context) => CreateGamePage(
+                      token: widget.token, userProvider: widget.userProvider),
                 ));
-              }
-              else{
+              } else {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(
-                  SnackBar(
-                    content: const Row(
-                      children: [
-                        Icon(
-                          Icons.check_circle_outline,
-                          color: MyColors.blue,
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'Please log in to create game',
-                            style: TextStyle(
+                      SnackBar(
+                        content: const Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline,
                               color: MyColors.blue,
-                              fontSize: 16,
                             ),
-                          ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Please log in to create game',
+                                style: TextStyle(
+                                  color: MyColors.blue,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    backgroundColor: MyColors.blue2,
-                    duration: const Duration(seconds: 5),
-                    action: SnackBarAction(
-                      label: 'Log In',
-                      textColor: MyColors.blue,
-                      onPressed: () {
-                        ScaffoldMessenger.of(context)
-                            .hideCurrentSnackBar();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginPage()),
-                        );
-                      },
-                    ),
-                  ),
-                )
+                        backgroundColor: MyColors.blue2,
+                        duration: const Duration(seconds: 5),
+                        action: SnackBarAction(
+                          label: 'Log In',
+                          textColor: MyColors.blue,
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                            );
+                          },
+                        ),
+                      ),
+                    )
                     .closed
                     .then((reason) => {});
               }
