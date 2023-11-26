@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
+import 'login_page.dart';
 import 'reusable_widgets/game_summary.dart';
 import 'helper/APIService.dart';
 import 'create_game.dart';
@@ -9,7 +10,8 @@ import 'create_game.dart';
 class GamesPage extends StatefulWidget {
   final String? token;
   final UserProvider userProvider;
-  const GamesPage({Key? key, required this.token, required this.userProvider}) : super(key: key);
+  const GamesPage({Key? key, required this.token, required this.userProvider})
+      : super(key: key);
 
   @override
   State<GamesPage> createState() => _GamesPageState();
@@ -46,10 +48,11 @@ class _GamesPageState extends State<GamesPage> {
                 gameStory: 'gameStory',
                 tags: item['tags'],
                 textColor: MyColors.white,
-                backgroundColor: MyColors.red,
+                backgroundColor: MyColors.blue,
                 fontSize: 20,
                 id: item['id'],
-                token: widget.token))
+                token: widget.token,
+                userProvider: widget.userProvider))
             .toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
@@ -60,10 +63,12 @@ class _GamesPageState extends State<GamesPage> {
       throw Exception('Failed to load games');
     }
   }
+  // Feature/MB/529/update-on-page-visibility
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
@@ -71,9 +76,52 @@ class _GamesPageState extends State<GamesPage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CreateGamePage(token: widget.token),
-              ));
+              if (widget.userProvider.isLoggedIn) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CreateGamePage(
+                      token: widget.token, userProvider: widget.userProvider),
+                ));
+              } else {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(
+                      SnackBar(
+                        content: const Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline,
+                              color: MyColors.blue,
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Please log in to create game',
+                                style: TextStyle(
+                                  color: MyColors.blue,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        backgroundColor: MyColors.blue2,
+                        duration: const Duration(seconds: 5),
+                        action: SnackBarAction(
+                          label: 'Log In',
+                          textColor: MyColors.blue,
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                    .closed
+                    .then((reason) => {});
+              }
             },
             child: const Icon(
               Icons.add,

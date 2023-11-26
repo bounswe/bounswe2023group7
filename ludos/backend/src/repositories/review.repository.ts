@@ -19,16 +19,27 @@ export class ReviewRepository extends Repository<Review> {
     return this.findOneBy({ id });
   }
 
-  public findReviewByUserIdAndGameId(userId: string, gameId: string): Promise<Review | undefined> {
-    return this.findOne({ where: { user: { id: userId }, game: { id: gameId } } });
+  public findReviewByUserIdAndGameId(
+    userId: string,
+    gameId: string,
+  ): Promise<Review | undefined> {
+    return this.findOne({
+      where: { user: { id: userId }, game: { id: gameId } },
+    });
   }
 
   public findReviewInfoById(id: string): Promise<Review> {
-    return this.findOne({ where: { id }, relations: ['game', 'user', 'likedUsers', 'dislikedUsers'] });
+    return this.findOne({
+      where: { id },
+      relations: ['game', 'user', 'likedUsers', 'dislikedUsers'],
+    });
   }
 
   public findReviewByIdWithLikedAndDislikedUsers(id: string): Promise<Review> {
-    return this.findOne({ where: { id }, relations: ['likedUsers', 'dislikedUsers'] });
+    return this.findOne({
+      where: { id },
+      relations: ['likedUsers', 'dislikedUsers'],
+    });
   }
 
   public async updateReview(input: Partial<Review>): Promise<void> {
@@ -49,5 +60,4 @@ export class ReviewRepository extends Repository<Review> {
       .where('game.id = :gameId', { gameId: game.id })
       .getMany();
   }
-
 }

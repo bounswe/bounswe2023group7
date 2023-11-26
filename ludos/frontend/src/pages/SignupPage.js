@@ -15,6 +15,11 @@ import axios from "axios";
 import MuiAlert from "@mui/material/Alert";
 import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -30,9 +35,13 @@ export default function SignUpForm() {
   const [passwordAgain, setPasswordAgain] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
   const [open, setOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
   const [serverError, setServerError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -40,8 +49,25 @@ export default function SignUpForm() {
     baseURL: `http://${process.env.REACT_APP_API_URL}`,
   })
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   const handleSignup = (event) => {
     event.preventDefault();
+
+    if (email === "") {
+      setEmailError(true);
+      return;
+    }
+
+    if (username === "") {
+      setUsernameError(true);
+      return;
+    }
 
     if (password.length < 8) {
       setPasswordError(true);
@@ -161,7 +187,12 @@ export default function SignUpForm() {
                 autoComplete="email"
                 autoFocus
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError(false);
+                }}
+                error={emailError}
+                helperText={emailError ? "Email cannot be empty." : ""}
               />
               <TextField
                 margin="normal"
@@ -170,42 +201,73 @@ export default function SignUpForm() {
                 label="Username"
                 variant="outlined"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Password"
-                type="password"
-                value={password}
-                id={passwordError ? "" : "outlined-error-helper-text"}
-                autoComplete="current-password"
                 onChange={(e) => {
-                  setPasswordError(false);
-                  setPassword(e.target.value);
+                  setUsername(e.target.value);
+                  setUsernameError(false);
                 }}
-                error={passwordError}
-                helperText={
-                  passwordError ? "Password must be at least 8 characters" : ""
-                }
+                error={usernameError}
+                helperText={usernameError ? "Username cannot be empty." : ""}
               />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Password Again"
-                type="password"
-                value={passwordAgain}
-                id={passwordsMatch ? "outlined-error-helper-text" : ""}
-                autoComplete="current-password"
-                onChange={(e) => {
-                  setPasswordsMatch(false);
-                  setPasswordAgain(e.target.value);
-                }}
-                error={passwordsMatch}
-                helperText={passwordsMatch ? "Passwords must match." : ""}
-              />
+              <FormControl variant="outlined" fullWidth margin="normal">
+                <TextField
+                  id="password"
+                  label="Password"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  type={showPassword ? 'text' : 'password'}
+                  error={passwordError}
+                  helperText={passwordError ? "Password cannot be empty." : ""}
+                  onChange={(e) => {
+                    setPasswordError(false);
+                    setPassword(e.target.value);
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
+              <FormControl variant="outlined" fullWidth margin="normal">
+                <TextField
+                  id="passwordAgain"
+                  label="Confirm Password"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  error={passwordsMatch}
+                  helperText={passwordsMatch ? "Passwords should match" : ""}
+                  onChange={(e) => {
+                    setPasswordsMatch(false);
+                    setPasswordAgain(e.target.value);
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowConfirmPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </FormControl>
               <Button
                 type="submit"
                 fullWidth

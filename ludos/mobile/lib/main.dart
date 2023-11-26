@@ -408,63 +408,15 @@ class Home extends StatelessWidget {
                   icon: const Icon(Icons.home)),
               IconButton(
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                  },
                   icon: const Icon(Icons.group)),
               IconButton(
                   color: Colors.white,
                   onPressed: () {
-/*
-                    Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const CreateGamePage(key: null,),
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
                   ));
-                 */
-                  if(userProvider.isLoggedIn){
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
-                    ));
-                  }
-                  else{
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(
-                      SnackBar(
-                        content: const Row(
-                          children: [
-                            Icon(
-                              Icons.check_circle_outline,
-                              color: MyColors.blue,
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                'Please log in to view games',
-                                style: TextStyle(
-                                  color: MyColors.blue,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        backgroundColor: MyColors.blue2,
-                        duration: const Duration(seconds: 5),
-                        action: SnackBarAction(
-                          label: 'Log In',
-                          textColor: MyColors.blue,
-                          onPressed: () {
-                            ScaffoldMessenger.of(context)
-                                .hideCurrentSnackBar();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()),
-                            );
-                          },
-                        ),
-                      ),
-                    )
-                        .closed
-                        .then((reason) => {});
-                  }
                   },
                   icon: const Icon(Icons.games)),
               IconButton(

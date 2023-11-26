@@ -6,6 +6,11 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
 
 function ChangePasswordPage() {
     const [oldPassword, setOldPassword] = useState("");
@@ -15,6 +20,9 @@ function ChangePasswordPage() {
     const [oldPasswordError, setOldPasswordError] = useState(false);
     const [passwordsMatch, setPasswordsMatch] = useState(false);
     const [window, setWindow] = useState(true);
+    const [showOldPassword, setShowOldPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const axiosInstance = axios.create({
         baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -24,6 +32,14 @@ function ChangePasswordPage() {
     });
 
     const navigate = useNavigate();
+
+    const handleClickShowOldPassword = () => setShowOldPassword((show) => !show);
+    const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
+    const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     const handleClose = () => {
         navigate("/");
@@ -73,58 +89,96 @@ function ChangePasswordPage() {
                     To change your password, please enter your old password and your new password.
                     If you do not remember your old password, you can reset your password.
                 </DialogContentText>
-                <TextField
-                    required
-                    autoFocus
-                    margin="dense"
-                    id="oldPassword"
-                    label="Old Password"
-                    type="password"
-                    fullWidth
-                    variant="outlined"
-                    onChange={(e) => {
-                        setOldPassword(e.target.value);
-                        setOldPasswordError(false);
-                    }}
-                    error={oldPasswordError}
-                    helperText={oldPasswordError ? "Old password cannot be empty." : ""}
-                />
-                <TextField
-                    required
-                    autoFocus
-                    margin="dense"
-                    id="newPassword"
-                    label="New Password"
-                    type="password"
-                    fullWidth
-                    variant="outlined"
-                    onChange={(e) => {
-                        setPasswordError(false);
-                        setNewPassword(e.target.value);
-                    }
-                    }
-                    error={passwordError}
-                    helperText={
-                        passwordError ? "Password must be at least 8 characters" : ""
-                    }
-                />
-                <TextField
-                    required
-                    autoFocus
-                    margin="dense"
-                    id="newPasswordAgain"
-                    label="Confirm New Password"
-                    type="password"
-                    fullWidth
-                    variant="outlined"
-                    onChange={(e) => {
-                        setPasswordsMatch(false);
-                        setNewPasswordAgain(e.target.value);
-                    }
-                    }
-                    error={passwordsMatch}
-                    helperText={passwordsMatch ? "Passwords must match." : ""}
-                />
+                <FormControl variant="outlined" fullWidth margin="normal">
+                    <TextField
+                        id="oldPassword"
+                        label="Old Password"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        type={showOldPassword ? 'text' : 'password'}
+                        error={oldPasswordError}
+                        helperText={oldPasswordError ? "Old password cannot be empty." : ""}
+                        onChange={(e) => {
+                            setOldPasswordError(false);
+                            setOldPassword(e.target.value);
+                        }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowOldPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showOldPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </FormControl>
+                <FormControl variant="outlined" fullWidth margin="normal">
+                    <TextField
+                        id="newPassword"
+                        label="New Password"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        type={showNewPassword ? 'text' : 'password'}
+                        error={passwordError}
+                        helperText={passwordError ? "New password should be eight character or longer" : ""}
+                        onChange={(e) => {
+                            setPasswordError(false);
+                            setNewPassword(e.target.value);
+                        }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowNewPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </FormControl>
+                <FormControl variant="outlined" fullWidth margin="normal">
+                    <TextField
+                        id="passwordAgain"
+                        label="Confirm New Password"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        error={passwordsMatch}
+                        helperText={passwordsMatch ? "Passwords should match" : ""}
+                        onChange={(e) => {
+                            setPasswordsMatch(false);
+                            setNewPasswordAgain(e.target.value);
+                        }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowConfirmPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </FormControl>
             </DialogContent>
             <DialogActions >
                 <Link href="/forgot-password" variant="body2" color="#F49A32" marginLeft={2}>
