@@ -142,8 +142,8 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> listGames(String? authToken) async {
-    var uri = Uri.parse("$baseURL/game?limit=20");
+  Future<http.Response> listGames(String? authToken, {String limit = "20"}) async {
+    var uri = Uri.parse("$baseURL/game?limit=$limit");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
@@ -313,6 +313,18 @@ class APIService {
     return response;
   }
 
+
+  Future<http.Response> listAllThreads(String? authToken, {String limit = "20"}) async {
+    var uri = Uri.parse("$baseURL/post?limit=$limit");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+
   Future<http.Response> editGame(
       String? authToken,
       String gameId,
@@ -357,4 +369,5 @@ class APIService {
     });
     return response;
   }
+
 }
