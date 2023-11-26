@@ -123,8 +123,9 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
     'Linux',
     'PlayStation',
     'Xbox',
-    'Nintendo',
-    'Board Game'
+    'Nintendo Switch',
+    'Board Game',
+    'VR'
   ];
 
   void _showDialog(Widget child) {
@@ -257,14 +258,16 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                   onOptionSelected: (options) {},
                   options: const <ValueItem>[
                     ValueItem(label: 'Android', value: 'Android'),
-                    ValueItem(label: 'iOS', value: 'IOS'),
+                    ValueItem(label: 'iOS', value: 'iOS'),
                     ValueItem(label: 'Windows', value: 'Windows'),
                     ValueItem(label: 'macOS', value: 'macOS'),
                     ValueItem(label: 'Linux', value: 'Linux'),
                     ValueItem(label: 'PlayStation', value: 'PlayStation'),
                     ValueItem(label: 'Xbox', value: 'Xbox'),
-                    ValueItem(label: 'Nintendo', value: 'Nintendo'),
+                    ValueItem(
+                        label: 'Nintendo Switch', value: 'Nintendo Switch'),
                     ValueItem(label: 'Board Game', value: 'Board Game'),
+                    ValueItem(label: 'VR', value: 'VR'),
                   ],
                   selectionType: SelectionType.multi,
                   chipConfig: const ChipConfig(
@@ -344,7 +347,9 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider)),
+                                        builder: (context) => GamesPage(
+                                            token: widget.token,
+                                            userProvider: widget.userProvider)),
                                   );
                                 },
                               ),
@@ -354,7 +359,9 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                           .then((reason) => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider)),
+                                    builder: (context) => GamesPage(
+                                        token: widget.token,
+                                        userProvider: widget.userProvider)),
                               ));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
