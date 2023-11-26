@@ -189,7 +189,7 @@ class _EditGamePageState extends State<EditGamePage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
-        title: const Text('Ludos'),
+        title: const Text('Edit Game'),
       ),
       backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(

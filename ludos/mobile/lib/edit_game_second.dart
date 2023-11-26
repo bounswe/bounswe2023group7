@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/game_page.dart';
 import 'package:ludos_mobile_app/games_page.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'helper/colors.dart';
@@ -176,7 +177,7 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
-        title: const Text('Ludos'),
+        title: const Text('Edit Game'),
       ),
       backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
@@ -361,7 +362,7 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                                   SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
-                                      'Your game is updated successfully. You will be redirected to the Games Page.',
+                                      'Your game is updated successfully. You will be redirected to the Game Page.',
                                       style: TextStyle(
                                         color: MyColors.blue,
                                         fontSize: 16,
@@ -381,7 +382,8 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => GamesPage(
+                                        builder: (context) => GamePage(
+                                              id: widget.id,
                                               token: widget.token,
                                               userProvider: widget.userProvider,
                                             )),
@@ -394,7 +396,8 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                           .then((reason) => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => GamesPage(
+                                    builder: (context) => GamePage(
+                                          id: widget.id,
                                           token: widget.token,
                                           userProvider: widget.userProvider,
                                         )),

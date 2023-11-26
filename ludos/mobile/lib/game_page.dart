@@ -156,13 +156,56 @@ class _GamePageState extends State<GamePage> {
                   style: TextStyle(color: MyColors.white),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EditGamePage(
-                      id: widget.id,
-                      token: widget.token,
-                      userProvider: widget.userProvider,
-                    ),
-                  ));
+                  if (widget.userProvider.isLoggedIn) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EditGamePage(
+                        id: widget.id,
+                        token: widget.token,
+                        userProvider: widget.userProvider,
+                      ),
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                          SnackBar(
+                            content: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  color: MyColors.blue,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Please log in to edit game',
+                                    style: TextStyle(
+                                      color: MyColors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: MyColors.blue2,
+                            duration: const Duration(seconds: 5),
+                            action: SnackBarAction(
+                              label: 'Log In',
+                              textColor: MyColors.blue,
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                        .closed
+                        .then((reason) => {});
+                  }
                 },
               ),
             ],
@@ -697,7 +740,8 @@ class _GamePageState extends State<GamePage> {
                 thickness: 5.0,
                 color: MyColors.lightBlue,
               ),
-              if (reviews.isNotEmpty) reviews[0],
+              if (reviews.isNotEmpty) 
+                 reviews[0],
             ])
           ],
         ),
