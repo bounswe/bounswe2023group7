@@ -39,8 +39,6 @@ function GamePage(id) {
       .then((response) => {
         setGame(response.data);
         setFollow(response.data.isFollowed);
-        console.log(response.data);
-        console.log(follow);
       })
       .catch((error) => {
         console.log(error);
@@ -254,7 +252,11 @@ function GamePage(id) {
           </Grid>
         </Grid>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
-          <img src={game.coverLink} alt={game.title} />
+          <img
+            src={game.coverLink}
+            alt={game.title}
+            style={{ height: 350, width: 250 }}
+          />
         </Grid>
         <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "2%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>

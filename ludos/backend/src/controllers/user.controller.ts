@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Post,
   Put,
   Req,
   UseGuards,
+  Param,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -29,6 +31,7 @@ import { EditUserInfoDto } from '../dtos/user/request/edit-info.dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../services/guards/auth.guard';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
+import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -136,5 +139,39 @@ export class UserController {
     @Body() input: EditUserInfoDto,
   ) {
     await this.userService.editInfo(req.user.id, input);
+  }
+
+  @HttpCode(200)
+  @ApiUnauthorizedResponse({
+    description: 'Invalid User',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get User Info Request Endpoint' })
+  @ApiOkResponse({
+    type: GetUserInfoResponseDto,
+  })
+  @Get('/info')
+  public async getUserInfoById(@Req() req: AuthorizedRequest) {
+    return await this.userService.getUserInfo(req.user.id);
+  }
+
+  @HttpCode(200)
+  @ApiUnauthorizedResponse({
+    description: 'Invalid User',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get Selected User Info Request Endpoint' })
+  @ApiOkResponse({
+    type: GetUserInfoResponseDto,
+  })
+  @Get('/byId/:userId')
+  public async getUserById(@Param('userId') userId: string) {
+    return await this.userService.getUserInfo(userId);
   }
 }

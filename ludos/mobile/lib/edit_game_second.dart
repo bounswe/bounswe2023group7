@@ -6,6 +6,7 @@ import 'package:ludos_mobile_app/games_page.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'helper/colors.dart';
 import 'helper/APIService.dart';
+import 'userProvider.dart';
 
 Widget getbox(String hintText, TextEditingController controller,
     bool isMandatory, bool multiLine, String oldValue) {
@@ -85,6 +86,10 @@ String formatDateTime(DateTime dateTime) {
 }
 
 class EditGamePageSecond extends StatefulWidget {
+  final UserProvider userProvider;
+  final String? token;
+  final String id;
+  final Map<String, dynamic> gameData;
   final String title;
   final String coverLink;
   final String gameBio;
@@ -93,16 +98,20 @@ class EditGamePageSecond extends StatefulWidget {
   final List<String> predecessors;
   final List<String> successors;
 
-  const EditGamePageSecond(
-      {Key? key,
-      required this.title,
-      required this.coverLink,
-      required this.gameBio,
-      required this.ageRestriction,
-      required this.tags,
-      required this.predecessors,
-      required this.successors})
-      : super(key: key);
+  const EditGamePageSecond({
+    Key? key,
+    required this.userProvider,
+    this.token,
+    required this.id,
+    required this.gameData,
+    required this.title,
+    required this.coverLink,
+    required this.gameBio,
+    required this.ageRestriction,
+    required this.tags,
+    required this.predecessors,
+    required this.successors,
+  }) : super(key: key);
 
   @override
   State<EditGamePageSecond> createState() => _EditGamePageStateSecond();
@@ -150,40 +159,15 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
   final TextEditingController triviaController = TextEditingController();
   final MultiSelectController platformsController = MultiSelectController();
 
-  Map<String, dynamic> game = {};
-
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
-
-  Future<Map<String, dynamic>> fetchData() async {
-    final response =
-        await APIService().getGame("0453db9b-7086-4228-9a8f-38db68ed4181");
-    try {
-      print(json.decode(response.body));
-      if (response.statusCode == 200) {
-        setState(() {
-          game = jsonDecode(response.body);
-          // 2004-10-24
-          date = DateTime.parse(game["releaseDate"]);
-        });
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        return responseData;
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
-        throw Exception('Failed to get game');
-      }
-    } catch (error) {
-      print("Error: $error");
-      throw Exception('Failed to get game');
-    }
+    date = DateTime.parse(widget.gameData["releaseDate"]);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (game == null || game.isEmpty) {
+    if (widget.gameData == null || widget.gameData.isEmpty) {
       // Show loading indicator or some placeholder
       return const CircularProgressIndicator();
     }
@@ -202,10 +186,10 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
               children: <Widget>[
                 const SizedBox(height: 20),
                 getbox("Game Story", gameStoryController, true, true,
-                    game["gameStory"]),
+                    widget.gameData["gameStory"]),
                 const SizedBox(height: 20),
                 getbox("Game Guide", gameGuideController, false, true,
-                    game["gameGuide"]),
+                    widget.gameData["gameGuide"]),
                 const SizedBox(height: 20),
                 const Row(
                   children: [
@@ -261,7 +245,7 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                 ]),
                 const SizedBox(height: 20),
                 getbox("System Requirements", systemRequirementsController,
-                    true, false, game["systemRequirements"]),
+                    true, false, widget.gameData["systemRequirements"]),
                 const SizedBox(height: 20),
                 const Row(
                   children: [
@@ -300,7 +284,8 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                     ValueItem(label: 'Board Game'),
                   ],
                   selectedOptions:
-                      (game["platforms"] as List<dynamic>).map((dynamic item) {
+                      (widget.gameData["platforms"] as List<dynamic>)
+                          .map((dynamic item) {
                     if (item is String) {
                       return ValueItem(label: item);
                     } else {
@@ -321,20 +306,22 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                 ),
                 const SizedBox(height: 20),
                 getbox("Developer", developerController, true, false,
-                    game["developer"]),
+                    widget.gameData["developer"]),
                 const SizedBox(height: 20),
                 getbox("Game Publisher", publisherController, true, false,
-                    game["publisher"]),
+                    widget.gameData["publisher"]),
                 const SizedBox(height: 20),
-                getbox(
-                    "Trivia", triviaController, false, false, game["trivia"]),
+                getbox("Trivia", triviaController, false, false,
+                    widget.gameData["trivia"]),
                 const SizedBox(height: 20),
                 TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: MyColors.lightBlue,
                   ),
                   onPressed: () async {
-                    http.Response token = await APIService().createGame(
+                    http.Response token = await APIService().editGame(
+                        widget.token,
+                        widget.id,
                         widget.title,
                         widget.coverLink,
                         systemRequirementsController.text,
@@ -367,7 +354,7 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                                   SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
-                                      'Your game is created successfully. You will be redirected to the Games Page.',
+                                      'Your game is updated successfully. You will be redirected to the Games Page.',
                                       style: TextStyle(
                                         color: MyColors.blue,
                                         fontSize: 16,
@@ -387,7 +374,10 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => GamesPage()),
+                                        builder: (context) => GamesPage(
+                                              token: widget.token,
+                                              userProvider: widget.userProvider,
+                                            )),
                                   );
                                 },
                               ),
@@ -397,7 +387,10 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                           .then((reason) => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => GamesPage()),
+                                    builder: (context) => GamesPage(
+                                          token: widget.token,
+                                          userProvider: widget.userProvider,
+                                        )),
                               ));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

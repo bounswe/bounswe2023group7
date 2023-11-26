@@ -4,6 +4,7 @@ import 'dart:convert';
 
 class APIService {
   var baseURL = "http://3.125.225.39:8080";
+  String? token = "";
   Future<(String?, int)> login(String username, String password) async {
     var uri = Uri.parse("$baseURL/user/login");
 
@@ -16,6 +17,10 @@ class APIService {
     Map<String, dynamic> responseBody = jsonDecode(response.body);
     String? authToken = responseBody['accessToken'];
     (String?, int) res = (authToken, response.statusCode);
+    token = authToken;
+    print("token");
+    print(token);
+    print("token");
     return res;
   }
 
@@ -47,6 +52,7 @@ class APIService {
   }
 
   Future<http.Response> createGame(
+      String? authToken,
       String title,
       String coverLink,
       String systemRequirements,
@@ -80,8 +86,34 @@ class APIService {
       'publisher': publisher,
       'trivia': trivia,
     });
-    final response = await http
-        .post(uri, body: body, headers: {'content-type': "application/json"});
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+  Future<http.Response> createThread(
+      String? authToken,
+      String title,
+      String content,
+      List<String> media,
+      List<String> tags,
+      String gameid) async {
+    var uri = Uri.parse("$baseURL/post");
+    final body = jsonEncode(<String, Object>{
+      'title': title,
+      'body': content,
+      'gameId': gameid,
+      'media': media,
+      'tags': tags,
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
     return response;
   }
 
@@ -110,19 +142,144 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> listGames() async {
-    var uri = Uri.parse("$baseURL/game?limit=10");
-    final response =
-        await http.get(uri, headers: {'content-type': "application/json"});
+  Future<http.Response> listGames(String? authToken) async {
+    var uri = Uri.parse("$baseURL/game?limit=20");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
 
     return response;
   }
 
-  Future<http.Response> getGame(String id) async {
-    var uri = Uri.parse("$baseURL/game/$id");
-    final response =
-        await http.get(uri, headers: {'content-type': "application/json"});
+  Future<http.Response> listPosts(String gameId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/post?gameId=$gameId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to load threads');
+    }
+  }
 
+  Future<http.Response> followGame(String? authToken, String gameID) async {
+    var uri = Uri.parse("$baseURL/game/follow/$gameID");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> unfollowGame(String? authToken, String gameID) async {
+    var uri = Uri.parse("$baseURL/game/unfollow/$gameID");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> userInfo(String? authToken) async {
+    var uri = Uri.parse("$baseURL/user/info");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<Map<String, dynamic>> getGame(String id, String? authToken) async {
+    var uri = Uri.parse("$baseURL/game/$id");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to load game data');
+    }
+  }
+
+  Future<Map<String, dynamic>> getThread(
+      String threadId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/post/$threadId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to load thread data');
+    }
+  }
+
+  Future<http.Response> likeThread(String? authToken, String threadId) async {
+    var uri = Uri.parse("$baseURL/post/like/$threadId");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> dislikeThread(
+      String? authToken, String threadId) async {
+    var uri = Uri.parse("$baseURL/post/dislike/$threadId");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> editGame(
+      String? authToken,
+      String gameId,
+      String title,
+      String coverLink,
+      String systemRequirements,
+      List<String> predecessors,
+      List<String> successors,
+      String gameGuide,
+      String gameStory,
+      List<String> platforms,
+      String ageRestriction,
+      String gameBio,
+      List<String> tags,
+      String releaseDate,
+      String developer,
+      String publisher,
+      String trivia) async {
+    var uri = Uri.parse("$baseURL/game/$gameId/edit");
+    final body = jsonEncode(<String, Object>{
+      'title': title,
+      'coverLink': coverLink,
+      'systemRequirements': systemRequirements,
+      'predecessors': predecessors,
+      'successors': successors,
+      'gameGuide': gameGuide,
+      'gameStory': gameStory,
+      'platforms': platforms,
+      'ageRestriction': ageRestriction,
+      'gameBio': gameBio,
+      'tags': tags,
+      'releaseDate': releaseDate,
+      'developer': developer,
+      'publisher': publisher,
+      'trivia': trivia,
+    });
+    print(body);
+    print(gameId);
+    final response = await http.put(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
     return response;
   }
 }

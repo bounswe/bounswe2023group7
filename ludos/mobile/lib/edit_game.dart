@@ -7,6 +7,7 @@ import 'helper/colors.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 import 'edit_game_second.dart';
 import 'helper/APIService.dart';
+import 'userProvider.dart';
 
 Widget getbox(String hintText, TextEditingController controller,
     bool isMandatory, bool multiLine, String oldValue) {
@@ -63,13 +64,23 @@ Widget getbox(String hintText, TextEditingController controller,
 }
 
 class EditGamePage extends StatefulWidget {
-  const EditGamePage({Key? key}) : super(key: key);
+  final UserProvider userProvider;
+  final String? token;
+  final String id;
+  const EditGamePage(
+      {required this.id,
+      required this.token,
+      Key? key,
+      required this.userProvider})
+      : super(key: key);
 
   @override
   State<EditGamePage> createState() => _EditGamePageState();
 }
 
 class _EditGamePageState extends State<EditGamePage> {
+  final APIService apiService = APIService();
+  Map<String, dynamic> gameData = {};
   List<String> predecessorValues = [];
   List<String> successorValues = [];
   List<String> tagValues = [];
@@ -83,6 +94,26 @@ class _EditGamePageState extends State<EditGamePage> {
     'Adults Only',
     'Rating Pending',
   ];
+
+  Future<void> loadGameData() async {
+    try {
+      gameData = await apiService.getGame(widget.id, widget.token);
+      print(gameData);
+      setState(() {
+        if (ageRestrictions.contains(gameData["ageRestriction"])) {
+          selectdAgeRestriction =
+              ageRestrictions.indexOf(gameData["ageRestriction"]);
+        } else {
+          selectdAgeRestriction = 0;
+        }
+        tagValues.addAll(gameData["tags"].cast<String>());
+        predecessorValues.addAll(gameData["predecessors"].cast<String>());
+        successorValues.addAll(gameData["successors"].cast<String>());
+      });
+    } catch (e) {
+      print('Error loading game data: $e');
+    }
+  }
 
   _onDeletepr(index) {
     setState(() {
@@ -127,52 +158,15 @@ class _EditGamePageState extends State<EditGamePage> {
   final TextEditingController gameBioController = TextEditingController();
   final TextEditingController tagsController = TextEditingController();
 
-  Map<String, dynamic> game = {};
-
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
-
-  Future<Map<String, dynamic>> fetchData() async {
-    final response =
-        await APIService().getGame("0453db9b-7086-4228-9a8f-38db68ed4181");
-    try {
-      //  print(json.decode(response.body));
-      if (response.statusCode == 200) {
-        setState(() {
-          game = jsonDecode(response.body);
-          selectdAgeRestriction =
-              ageRestrictions.indexOf(game["ageRestriction"]);
-          tagValues.addAll(game["tags"].cast<String>());
-          predecessorValues.addAll(game["predecessors"].cast<String>());
-          successorValues.addAll(game["successors"].cast<String>());
-        });
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        return responseData;
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
-        throw Exception('Failed to get game');
-      }
-    } catch (error) {
-      print("Error: $error");
-      throw Exception('Failed to get game');
-    }
-  }
-
-  void getData() async {
-    try {
-      Map<String, dynamic> data = await fetchData();
-      game = data;
-    } catch (e) {
-      print("Error fetching data: $e");
-    }
+    loadGameData();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (game == null || game.isEmpty) {
+    if (gameData == null || gameData.isEmpty) {
       // Show loading indicator or some placeholder
       return const CircularProgressIndicator();
     }
@@ -190,13 +184,13 @@ class _EditGamePageState extends State<EditGamePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const SizedBox(height: 20),
-              getbox("Title", titleController, true, false, game["title"]),
+              getbox("Title", titleController, true, false, gameData["title"]),
               const SizedBox(height: 20),
               getbox("Coverlink", coverLinkController, true, false,
-                  game["coverLink"]),
+                  gameData["coverLink"]),
               const SizedBox(height: 20),
-              getbox(
-                  "Game Bio", gameBioController, true, true, game["gameBio"]),
+              getbox("Game Bio", gameBioController, true, true,
+                  gameData["gameBio"]),
               const SizedBox(height: 20),
               const Row(
                 children: [
@@ -438,6 +432,10 @@ class _EditGamePageState extends State<EditGamePage> {
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => EditGamePageSecond(
+                            userProvider: widget.userProvider,
+                            token: widget.token,
+                            id: widget.id,
+                            gameData: gameData,
                             title: titleController.text,
                             coverLink: coverLinkController.text,
                             gameBio: gameBioController.text,

@@ -4,6 +4,12 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { User } from '../../entities/user.entity';
 import { ResetPassword } from '../../entities/reset-password.entity';
 import { Game } from '../../entities/game.entity';
+import { Comment } from '../../entities/comment.entity';
+import { Review } from '../../entities/review.entity';
+import { Post } from '../../entities/post.entity';
+import { Rating } from '../../entities/rating.entity';
+import { Entity } from '../../entities/entity.entity';
+import { CompletionDuration } from '../../entities/completion-duration.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -17,7 +23,17 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       password: this.configService.get<string>('DB_PASSWORD'),
       port: this.configService.get<number>('DB_PORT'),
       database: this.configService.get<string>('DB_NAME'),
-      entities: [User, ResetPassword, Game],
+      entities: [
+        User,
+        ResetPassword,
+        Game,
+        Review,
+        Rating,
+        Comment,
+        Post,
+        Entity,
+        CompletionDuration,
+      ],
       synchronize: true,
     };
   }

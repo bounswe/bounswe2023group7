@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/userProvider.dart';
+import '../game_page.dart';
 import '/helper/colors.dart';
 import '/reusable_widgets/single_rating_icon.dart';
 
@@ -12,6 +14,9 @@ class GameSummary extends StatefulWidget {
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
+  final String id;
+  final String? token;
+  final UserProvider userProvider;
 
   const GameSummary({
     Key? key,
@@ -24,6 +29,9 @@ class GameSummary extends StatefulWidget {
     required this.textColor,
     required this.backgroundColor,
     required this.fontSize,
+    required this.id,
+    required this.token,
+    required this.userProvider
   }) : super(key: key);
 
   @override
@@ -37,6 +45,9 @@ class GameSummary extends StatefulWidget {
         textColor: textColor,
         backgroundColor: backgroundColor,
         fontSize: fontSize,
+        id: id,
+        token: token,
+        userProvider: userProvider
       );
 }
 
@@ -50,6 +61,9 @@ class _GameSummaryState extends State<GameSummary> {
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
+  final String id;
+  final String? token;
+  final UserProvider userProvider;
 
   _GameSummaryState({
     required this.title,
@@ -61,6 +75,9 @@ class _GameSummaryState extends State<GameSummary> {
     required this.textColor,
     required this.backgroundColor,
     required this.fontSize,
+    required this.id,
+    required this.token,
+    required this.userProvider,
   });
 
   @override
@@ -74,6 +91,15 @@ class _GameSummaryState extends State<GameSummary> {
                 borderRadius: BorderRadius.circular(15.0),
               )),
           onPressed: () {
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GamePage(id: id, token: token, userProvider: userProvider),
+              ),
+            );
+
+
             // Handle button press for the specific game
             // Navigate to the game's profile page
           },
@@ -129,10 +155,10 @@ class _GameSummaryState extends State<GameSummary> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Icon(Icons.favorite,
-                                        size: 20, color: MyColors.lightBlue),
+                                        size: 20, color: MyColors.red),
                                     Text("+$numOfFollowers favorites",
                                         style: const TextStyle(
-                                          color: MyColors.lightBlue,
+                                          color: MyColors.red,
                                           fontSize: 16.0,
                                         ))
                                   ]),
@@ -146,14 +172,14 @@ class _GameSummaryState extends State<GameSummary> {
                                       return const SingleRatingIcon(
                                           icon: Icons.star,
                                           size: 20,
-                                          iconColor: MyColors.lightBlue,
+                                          iconColor: MyColors.red,
                                           rating: 10.0);
                                     } else if (diff >= 0.5) {
                                       // Floating star
                                       return SingleRatingIcon(
                                           icon: Icons.star,
                                           size: 20,
-                                          iconColor: MyColors.lightBlue,
+                                          iconColor: MyColors.red,
                                           rating: diff * 10.0);
                                     } else {
                                       // Empty star

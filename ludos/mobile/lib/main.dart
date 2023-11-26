@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
-import 'package:ludos_mobile_app/game_page.dart';
 import 'login_page.dart';
 import 'games_page.dart';
 import 'userProvider.dart';
 import 'package:provider/provider.dart';
 import 'helper/colors.dart';
-import 'create_game.dart';
 
 void main() => runApp(ChangeNotifierProvider(
       create: (context) => UserProvider(),
@@ -49,18 +47,6 @@ class Home extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const ChangePassword(),
-                    ));
-                  },
-                ),
-              if (userProvider.isLoggedIn)
-                ListTile(
-                  title: const Text(
-                    'God of War',
-                    style: TextStyle(color: MyColors.white),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const GamePage(),
                     ));
                   },
                 ),
@@ -422,20 +408,15 @@ class Home extends StatelessWidget {
                   icon: const Icon(Icons.home)),
               IconButton(
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                  },
                   icon: const Icon(Icons.group)),
               IconButton(
                   color: Colors.white,
                   onPressed: () {
-/*
-                    Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const CreateGamePage(key: null,),
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
                   ));
-                 */
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const GamesPage(),
-                    ));
-
                   },
                   icon: const Icon(Icons.games)),
               IconButton(

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 import 'create_game_second.dart';
@@ -59,7 +60,9 @@ Widget getbox(String hintText, TextEditingController controller,
 }
 
 class CreateGamePage extends StatefulWidget {
-  const CreateGamePage({Key? key}) : super(key: key);
+  final String? token;
+  final UserProvider userProvider;
+  const CreateGamePage({Key? key, required this.token, required this.userProvider}) : super(key: key);
 
   @override
   State<CreateGamePage> createState() => _CreateGamePageState();
@@ -129,7 +132,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
-        title: const Text('Ludos'),
+        title: const Text('Create Game'),
       ),
       backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
@@ -385,6 +388,8 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CreateGamePageSecond(
+                            userProvider: widget.userProvider,
+                            token: widget.token,
                             title: titleController.text,
                             coverLink: coverLinkController.text,
                             gameBio: gameBioController.text,
