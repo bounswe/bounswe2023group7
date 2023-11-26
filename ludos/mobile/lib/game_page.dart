@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/edit_game.dart';
 import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'forum_page.dart';
@@ -154,7 +155,58 @@ class _GamePageState extends State<GamePage> {
                   'Edit Game',
                   style: TextStyle(color: MyColors.white),
                 ),
-                onTap: () {},
+                onTap: () {
+                  if (widget.userProvider.isLoggedIn) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EditGamePage(
+                        id: widget.id,
+                        token: widget.token,
+                        userProvider: widget.userProvider,
+                      ),
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                          SnackBar(
+                            content: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  color: MyColors.blue,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Please log in to edit game',
+                                    style: TextStyle(
+                                      color: MyColors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: MyColors.blue2,
+                            duration: const Duration(seconds: 5),
+                            action: SnackBarAction(
+                              label: 'Log In',
+                              textColor: MyColors.blue,
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                        .closed
+                        .then((reason) => {});
+                  }
+                },
               ),
             ],
           ),
@@ -688,7 +740,8 @@ class _GamePageState extends State<GamePage> {
                 thickness: 5.0,
                 color: MyColors.lightBlue,
               ),
-              if (reviews.isNotEmpty) reviews[0],
+              if (reviews.isNotEmpty) 
+                 reviews[0],
             ])
           ],
         ),
