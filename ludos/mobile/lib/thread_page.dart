@@ -7,8 +7,10 @@ import 'package:ludos_mobile_app/reusable_widgets/forum_comment.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 
 import 'game_page.dart';
+import 'games_page.dart';
 import 'helper/APIService.dart';
 import 'login_page.dart';
+import 'main.dart';
 
 
 class ThreadPage extends StatefulWidget
@@ -575,7 +577,46 @@ class _ThreadPageState extends State<ThreadPage>
             );
             }
           }
+        ),
+
+        bottomNavigationBar: Container(
+        color: MyColors.orange,
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+                color: MyColors.white,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Home(),
+                  ));
+                },
+                icon: const Icon(Icons.home)),
+            IconButton(
+                color: MyColors.white,
+                onPressed: () {
+                },
+                icon: const Icon(Icons.group)),
+            IconButton(
+                color: MyColors.white,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider),
+                  ));
+                },
+                icon: const Icon(Icons.games)),
+            IconButton(
+                color: MyColors.white,
+                onPressed: () {},
+                icon: const Icon(Icons.favorite)),
+            IconButton(
+                color: MyColors.white,
+                onPressed: () {},
+                icon: const Icon(Icons.search_outlined)),
+          ],
         )
+    ),
 
 
     );

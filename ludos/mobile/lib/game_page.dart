@@ -6,10 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'forum_page.dart';
 import 'game_properties.dart';
+import 'games_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
 import 'login_page.dart';
+import 'main.dart';
 
 class GamePage extends StatefulWidget {
   final UserProvider userProvider;
@@ -505,6 +507,44 @@ class _GamePageState extends State<GamePage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: Container(
+          color: MyColors.orange,
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Home(),
+                    ));
+                  },
+                  icon: const Icon(Icons.home)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                  },
+                  icon: const Icon(Icons.group)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider),
+                    ));
+                  },
+                  icon: const Icon(Icons.games)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {},
+                  icon: const Icon(Icons.favorite)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {},
+                  icon: const Icon(Icons.search_outlined)),
+            ],
+          )
       ),
     );
   }
