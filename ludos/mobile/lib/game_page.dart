@@ -90,7 +90,7 @@ class _GamePageState extends State<GamePage> {
           ),
         ),
       ),
-      backgroundColor: const Color(0xFF101c2c),
+      backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
         title: Text('${gameData['title']}'),
