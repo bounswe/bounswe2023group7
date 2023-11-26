@@ -61,17 +61,24 @@ function ThreadComponent({imgsrc, contentImg, username, date, content}){
                             {date}
                         </Typography>
                         
-                        <Box
-                        component="img"
-                        sx={{
-                            maxHeight: "400px",
-                            maxWidth: "610px",
-                            borderRadius: "10px",
-                            alignSelf: "center",
-                            paddingBottom: "10px",
-                        }}
-                        src={contentImg}
-                            />
+                        {contentImg && contentImg.length > 0 && (
+                        <Grid container spacing={2} justifyContent="center">
+                            {contentImg.map((imgSrc, index) => (
+                            <Grid item key={index}>
+                                <img
+                                style={{
+                                    maxHeight: "400px",
+                                    maxWidth: "610px",
+                                    borderRadius: "10px",
+                                    marginBottom: "10px",
+                                }}
+                                src={imgSrc}
+                                alt={`Image ${index + 1}`}
+                                />
+                            </Grid>
+                            ))}
+                        </Grid>
+                        )}
 
                         <Typography variant= "body2" component= "div" style={{
                             color: "white",

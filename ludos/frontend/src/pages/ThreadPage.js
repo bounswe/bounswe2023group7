@@ -1,5 +1,5 @@
 import React , {useEffect, useState} from "react";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Grid, Box, Typography, TextField, Button} from "@mui/material";
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
@@ -7,9 +7,13 @@ import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
 import ThreadComponent from "../components/ThreadComponent";
 import Snackbar from '@mui/material/Snackbar';
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const ThreadPage = () => {
+ const navigate = useNavigate();
+  
   const options = {
     year: 'numeric',
     month: 'short',
@@ -55,13 +59,30 @@ const ThreadPage = () => {
     setCommentInput(event.target.value);
   };
 
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track the submission status
 
   // ... (previous code remains unchanged)
 
   const handleCommentSubmit = async () => {
     try {
-      setIsSubmitting(true); // Set submitting status to true
+    
+      if (!userAccessToken) {
+        // Redirect to the sign-up page if the user is not logged in
+        navigate('/signup'); // Change '/signup' to your sign-up route
+        return;
+      }
+
+      if (!commentInput.trim()) {
+        // Show an error toast or handle the case where the comment is empty
+        toast.error('Please enter a non-empty comment.', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        return; // Prevent submitting an empty comment
+      }
 
        axios.post(
         `http://${process.env.REACT_APP_API_URL}/comment/write-comment`,
@@ -82,11 +103,9 @@ const ThreadPage = () => {
       
       setSnackbarOpen(false); // Close Snackbar after successful submission
       setCommentInput(''); // Reset comment input after submission
-      setIsSubmitting(false); // Set submitting status to false after receiving the response
       setNumReplies(numReplies + 1);
     } catch (error) {
       console.error('Error submitting comment:', error);
-      setIsSubmitting(false); // Set submitting status to false in case of error
       setSnackbarOpen(false); // Close Snackbar in case of error
     }
   };
@@ -165,6 +184,8 @@ if (!threadDetails) {
     });
 
     return (
+      <>
+      <ToastContainer />
         <Grid item xs={12} sm={12} md={12} lg={12} style={{justifyContent: "center", display: "flex"}}>
         <Box p={5} style={boxStyle}>
         <Grid
@@ -238,10 +259,8 @@ if (!threadDetails) {
                 content={threadDetails.body}
                 contentImg={threadDetails.media}
                 />
-            {isSubmitting ? (
-          <div>Submitting comment...</div>
-        ) : (
-          <>
+          
+         
             {/* Display comments */}
             {sortedComments.map((comment, index) => (
               <ThreadComponent
@@ -254,10 +273,11 @@ if (!threadDetails) {
               />
             ))}
             {/* ... (existing code) */}
-          </>
-        )}
+          
+       
         <TextField
           multiline
+          required
           rows={4}
           variant="outlined"
           label="Write Your Reply..."
@@ -288,6 +308,7 @@ if (!threadDetails) {
             
         </Box>
         </Grid>
+        </>
     );
 
 }
