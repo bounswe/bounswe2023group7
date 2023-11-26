@@ -3,7 +3,7 @@ import TrendingGamesSlider from '../components/TrendingGamesSlider';
 import Game1 from "../assets/witcher3.jpg";
 import Game2 from "../assets/sims4.png";
 import Game3 from "../assets/Tekken5Cover.jpg";
-import { Typography , Container} from '@material-ui/core';
+import { Typography , Container} from '@mui/material';
 import ForumTopic from "../components/ForumTopic";
 import GroupTopic from '../components/GroupTopic';
 
@@ -40,27 +40,27 @@ const Homepage = () => {
   const groupTopics = [
     {
       title: "GameZone Guild",
-      numOfReplies: 150,
+      numOfMembers: 150,
       userOpened: "@loverGame",
       whenOpened: "2 days ago",
-      forumTags: ["Fantasy", "Adventure"],
-      forumGame: "Dota",
+      groupTags: ["Fantasy", "Adventure"],
+      groupGame: "Dota",
     },
     {
       title: "Gamer's Assembly",
-      numOfReplies: 240,
+      numOfMembers: 240,
       userOpened: "@minemine",
       whenOpened: "1 week ago",
-      forumTags: ["Action", "Adventure"],
-      forumGame: "Minecraft",
+      groupTags: ["Action", "Adventure"],
+      groupGame: "Minecraft",
     },
     {
       title: "RPG Masters Society",
-      numOfReplies: 167,
+      numOfMembers: 167,
       userOpened: "@witchPlay",
       whenOpened: "5 days ago",
-      forumTags: ["RPG"],
-      forumGame: "Witcher 3",
+      groupTags: ["RPG"],
+      groupGame: "Witcher 3",
     },
     // Add more topics as needed...
   ];

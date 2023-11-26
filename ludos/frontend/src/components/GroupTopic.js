@@ -3,9 +3,9 @@ import { Box, Typography, Grid } from "@mui/material";
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BadgeIcon from '@mui/icons-material/Badge';
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 
-function ForumTopic(data) {
+function GroupTopic(data) {
   const boxStyle = {
     backgroundColor: "rgba(200, 200, 200, 0.9)",
     borderRadius: "10px",
@@ -53,11 +53,11 @@ function ForumTopic(data) {
           style={{ display: "flex", justifyContent: "space-between" }}
         >
           <Typography variant="caption" component="div" style={gameStyle}>
-            {data.topic.forumGame}
+            {data.topic.groupGame}
           </Typography>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
             {data.topic &&
-              data.topic.forumTags.map((tag1, index1) => (
+              data.topic.groupTags.map((tag1, index1) => (
                 <Typography
                   variant="caption"
                   component="div"
@@ -105,7 +105,7 @@ function ForumTopic(data) {
             textAlign="right"
             style={forumStyle}
           >
-         {data.topic.numOfReplies.toString()}
+         {data.topic.numOfMembers.toString()}
           </Typography>
           </Grid>
           <Button 
@@ -131,4 +131,4 @@ function ForumTopic(data) {
   );
 }
 
-export default ForumTopic;
+export default GroupTopic;
