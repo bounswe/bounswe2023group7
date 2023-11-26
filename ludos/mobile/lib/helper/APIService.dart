@@ -205,7 +205,59 @@ class APIService {
     }
   }
 
-  Future<Map<String, dynamic>> getThread(String threadId, String? authToken) async {
+  Future<http.Response> createReview(
+      String? authToken, String gameId, String content, double rate) async {
+    var uri = Uri.parse("$baseURL/review/$gameId");
+    final body =
+        jsonEncode(<String, Object>{'content': content, 'rating': rate});
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+  Future<http.Response> likeReview(String? authToken, String reviewId) async {
+    var uri = Uri.parse("$baseURL/review/$reviewId/like");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> dislikeReview(
+      String? authToken, String reviewId) async {
+    var uri = Uri.parse("$baseURL/review/$reviewId/dislike");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> listReviews(String? authToken, String gameId) async {
+    var uri = Uri.parse("$baseURL/review/game/$gameId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+  Future<http.Response> userInfoById(String userId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/user/byId/$userId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<Map<String, dynamic>> getThread(
+      String threadId, String? authToken) async {
     var uri = Uri.parse("$baseURL/post/$threadId");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
@@ -227,7 +279,8 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> dislikeThread(String? authToken, String threadId) async {
+  Future<http.Response> dislikeThread(
+      String? authToken, String threadId) async {
     var uri = Uri.parse("$baseURL/post/dislike/$threadId");
     final response = await http.put(uri, headers: {
       'content-type': "application/json",
@@ -236,7 +289,8 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> createComment(String? authToken, String parentId, String text) async {
+  Future<http.Response> createComment(
+      String? authToken, String parentId, String text) async {
     var uri = Uri.parse("$baseURL/comment/write-comment");
     final body = jsonEncode(<String, Object>{
       'parentId': parentId,
@@ -258,6 +312,4 @@ class APIService {
 
     return response;
   }
-
-
 }
