@@ -369,6 +369,14 @@ function App() {
             }
           />
           <Route
+            path="/profile-page/:username"
+            element={
+              <Layout>
+                <ProfilePage />
+              </Layout>
+            }
+          />
+          <Route
             path="/create-game"
             element={
               <Layout>
@@ -456,7 +464,7 @@ function App() {
           />
         </Routes>
       </div>
-    </Router >
+    </Router>
   );
 }
 
