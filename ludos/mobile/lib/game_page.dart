@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'forum_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
@@ -93,6 +94,7 @@ class _GamePageState extends State<GamePage> {
       print('Error loading game data: $e');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,12 +110,18 @@ class _GamePageState extends State<GamePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (gameData['coverLink'] != null)
-              SizedBox(
-                width: 200.0,
-                height: 200.0,
-                  child: Image.network(gameData['coverLink']),
+            if(gameData['coverLink'] != null)
+              Image.network(
+                width: 200,
+                height: 200,
+                gameData['coverLink'].toString(),
+                errorBuilder:
+                    (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return const Text('');
+                },
+                fit: BoxFit.fill,
               ),
+
             const SizedBox(height: 10),
             if (gameData['releaseDate'] != null)
               Text('Release Date: ${gameData['releaseDate']}',style: const TextStyle(
@@ -123,35 +131,43 @@ class _GamePageState extends State<GamePage> {
               ),
               ),
             const SizedBox(height: 10),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (gameData['tags'] != null)
-                    for (var i = 0; i < gameData['tags'].length; i++)
-                          TextButton(
-                            style: TextButton.styleFrom(
-                                foregroundColor: MyColors.lightBlue),
-                            onPressed: () {},
-                            child: Text(gameData['tags'][i].toString()),
-                          ),
-                  ],
-              ),
-            ),
+                Center(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        if (gameData['tags'] != null)
+                          for (var i = 0; i < gameData['tags'].length; i++)
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                    foregroundColor: MyColors.lightBlue),
+                                onPressed: () {},
+                                  child: Text(gameData['tags'][i].toString()),
+                            ),
+                        ],
+                    ),
+                  ),
+                ),
             const SizedBox(height: 10),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (gameData['tags'] != null)
-                    for (var i = 0; i < gameData['platforms'].length; i++)
-                      TextButton(
-                        style: TextButton.styleFrom(
-                            foregroundColor: MyColors.lightBlue),
-                        onPressed: () {},
-                        child: Text(gameData['platforms'][i].toString()),
-                      ),
-                ],
+
+            Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (gameData['platforms'] != null)
+                      for (var i = 0; i < gameData['platforms'].length; i++)
+                        Text('${gameData['platforms'][i].toString()}   ',
+                          style: const TextStyle(
+                              color: MyColors.lightBlue,
+                              fontWeight: FontWeight.bold
+                          )),
+                  ],
+                ),
               ),
             ),
             Row(
@@ -190,7 +206,7 @@ class _GamePageState extends State<GamePage> {
               children: [
                 ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.red),
+                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.blue),
                     ),
                     onPressed: () {
                         if(!widget.userProvider.isLoggedIn){
@@ -296,6 +312,22 @@ class _GamePageState extends State<GamePage> {
                   fontSize: 16,
                 ),
               ),
+            const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.lightBlue),
+                    ),
+                    onPressed: ()
+                    {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ForumPage(gameid: widget.id, token: widget.token, userProvider: widget.userProvider),
+                      ));
+                    },
+                    child: const Text(
+                      'Explore the Forum',
+                      //style: TextStyle(color: Colors.black)
+                    ),
+                  ),
             const SizedBox(height: 20),
             if(gameData['averageUserCompilationDuration'] != null)
               Text('Average User Compilation Time: ${gameData['averageUserCompilationDuration']}',style: const TextStyle(

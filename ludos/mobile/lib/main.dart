@@ -408,7 +408,8 @@ class Home extends StatelessWidget {
                   icon: const Icon(Icons.home)),
               IconButton(
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                  },
                   icon: const Icon(Icons.group)),
               IconButton(
                   color: Colors.white,

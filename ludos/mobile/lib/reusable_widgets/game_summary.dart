@@ -155,10 +155,10 @@ class _GameSummaryState extends State<GameSummary> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Icon(Icons.favorite,
-                                        size: 20, color: MyColors.lightBlue),
+                                        size: 20, color: MyColors.red),
                                     Text("+$numOfFollowers favorites",
                                         style: const TextStyle(
-                                          color: MyColors.lightBlue,
+                                          color: MyColors.red,
                                           fontSize: 16.0,
                                         ))
                                   ]),
@@ -172,14 +172,14 @@ class _GameSummaryState extends State<GameSummary> {
                                       return const SingleRatingIcon(
                                           icon: Icons.star,
                                           size: 20,
-                                          iconColor: MyColors.lightBlue,
+                                          iconColor: MyColors.red,
                                           rating: 10.0);
                                     } else if (diff >= 0.5) {
                                       // Floating star
                                       return SingleRatingIcon(
                                           icon: Icons.star,
                                           size: 20,
-                                          iconColor: MyColors.lightBlue,
+                                          iconColor: MyColors.red,
                                           rating: diff * 10.0);
                                     } else {
                                       // Empty star
@@ -208,7 +208,9 @@ class _GameSummaryState extends State<GameSummary> {
                 ],
               ),
               const SizedBox(height: 10),
-              Row(
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: tags.map((tag) {
@@ -231,6 +233,7 @@ class _GameSummaryState extends State<GameSummary> {
                   );
                 }).toList(),
               ),
+          ),
               const SizedBox(height: 20),
             ],
           ),

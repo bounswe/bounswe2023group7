@@ -232,9 +232,9 @@ export class ReviewService {
     }
 
     const loggedUser = await this.userRepository.findUserById(userId);
-      if (!loggedUser) {
-        throw new NotFoundException('User Not Found!');
-      }
+    if (!loggedUser) {
+      throw new NotFoundException('User Not Found!');
+    }
 
     const likedUserCount = review.likedUsers.length;
     const dislikedUserCount = review.dislikedUsers.length;
@@ -264,9 +264,9 @@ export class ReviewService {
     }
 
     const loggedUser = await this.userRepository.findUserById(userId);
-      if (!loggedUser) {
-        throw new NotFoundException('User Not Found!');
-      }
+    if (!loggedUser) {
+      throw new NotFoundException('User Not Found!');
+    }
 
     const reviews = await this.reviewRepository.findReviewsByGame(game);
 
