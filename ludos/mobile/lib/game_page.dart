@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'game_reviews_page.dart';
 import 'helper/colors.dart';
@@ -20,15 +22,19 @@ class GamePage extends StatefulWidget {
 }
 class _GamePageState extends State<GamePage> {
   late bool followState;
-  late String buttonText;
+  late String buttonText = ".";
+  bool showForm = false;
+  double rating = 0.0;
+  late List<Review> reviews = [];
   final APIService apiService = APIService();
   Map<String, dynamic> gameData = {};
 
   @override
-  void initState() {
+  initState() {
     super.initState();
     loadGameData();
     initializeFollowState();
+    ToList(fetchReviewData(widget.token));
   }
 
   void initializeFollowState() async {
@@ -93,6 +99,55 @@ class _GamePageState extends State<GamePage> {
     } catch (e) {
       print('Error loading game data: $e');
     }
+  }
+
+  void toggleFormVisibility() {
+    setState(() {
+      showForm = !showForm;
+      print(showForm);
+      print(widget.id);
+    });
+  }
+
+  Future<List<Review>> fetchReviewData(String? token) async {
+    final response = await APIService().listReviews(widget.token, widget.id);
+    try {
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        return Future.wait(responseData.map<Future<Review>>((dynamic item) async {
+          final userResponse = await APIService().userInfoById(item['userId'], widget.token);
+
+          if (userResponse.statusCode == 200) {
+            return Review(
+              token: widget.token,
+              userProvider: widget.userProvider,
+              reviewId: item['reviewId'],
+              content: item['content'],
+              rating: item['rating'].toDouble(),
+              gameId: item['gameId'],
+              userId: item['userId'],
+              username: json.decode(userResponse.body)['username'],
+              thumbUps: item['likedUserCount'],
+              thumbDowns: item['dislikeUserCount'],
+              time: item['createdAt'],
+            );
+          } else {
+            print("Error fetching user info: ${userResponse.statusCode} - ${userResponse.body}");
+            throw Exception('Failed to load user info!');
+          }
+        }).toList());
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+        throw Exception('Failed to load reviews!');
+      }
+    } catch (error) {
+      print("Error: $error");
+      throw Exception('Failed to load reviews from API!');
+    }
+  }
+
+  Future<void> ToList(Future<List<Review>> reviewList) async {
+    reviews = await reviewList;
   }
 
   final TextEditingController contentController = TextEditingController();
@@ -188,7 +243,6 @@ class _GamePageState extends State<GamePage> {
                 ),
               ],
             ),
-
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -321,126 +375,8 @@ class _GamePageState extends State<GamePage> {
                       style: TextButton.styleFrom(backgroundColor: MyColors.orange),
                       onPressed: () {
                         if(widget.userProvider.isLoggedIn) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  scrollable: true,
-                                  title: Text('Add Review'),
-                                  content: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Form(
-                                      child: Column(
-                                        children: <Widget>[
-                                          TextField(
-                                            decoration: InputDecoration(
-                                              labelText: 'Review',
-                                              icon: Icon(Icons.reviews),
-                                            ),
-                                            controller: contentController,
-                                            maxLines: 5,
-                                            minLines: 2,
-                                          ),
-                                          TextField(
-                                            keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
-                                              labelText: 'Rate',
-                                              icon: Icon(Icons.star_rate),
-                                            ),
-                                            controller: rateController,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  actions: [
-                                    ElevatedButton(
-                                        onPressed: () async {
-                                          http.Response token = await APIService().createReview(
-                                              widget.token,
-                                              widget.id,
-                                              contentController.text,
-                                              double.parse(rateController.text) );
-                                          if (token.statusCode == 201) {
-                                            print("status is ok");
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: const Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.check_circle_outline,
-                                                      color: MyColors.blue,
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: Text(
-                                                        'Your review is added successfully. You will be redirected to the Game Page.',
-                                                        style: TextStyle(
-                                                          color: MyColors.blue,
-                                                          fontSize: 16,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                backgroundColor: MyColors.blue2,
-                                                duration: const Duration(seconds: 5),
-                                                action: SnackBarAction(
-                                                  label: 'OK',
-                                                  textColor: MyColors.blue,
-                                                  onPressed: () {
-                                                    ScaffoldMessenger.of(context)
-                                                        .hideCurrentSnackBar();
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) => GamePage(token: widget.token, userProvider: widget.userProvider, id: widget.id)),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                              )
-                                                .closed
-                                                .then((reason) => Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => GamePage(token: widget.token, userProvider: widget.userProvider, id: widget.id)),
-                                            ));
-                                          } else {
-                                            print("status is not ok");
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              SnackBar(
-                                                content: SizedBox(
-                                                  width: MediaQuery.of(context).size.width,
-                                                  child: Text(
-                                                    json.decode(token.body)["message"],
-                                                    style: const TextStyle(
-                                                      color: MyColors.blue,
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                ),
-                                                backgroundColor: MyColors.blue2,
-                                                duration: const Duration(seconds: 10),
-                                                action: SnackBarAction(
-                                                  label: 'OK',
-                                                  textColor: MyColors.blue,
-                                                  onPressed: () {
-                                                    ScaffoldMessenger.of(context)
-                                                        .hideCurrentSnackBar();
-                                                  },
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: const Text("Submit"),
-                                    )
-                                  ],
-                                );
-                              });
-                          } else {
+                          toggleFormVisibility();
+                        } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(
                             SnackBar(
@@ -487,6 +423,7 @@ class _GamePageState extends State<GamePage> {
                       ),
                     ),
                   ),
+
                   const SizedBox(width: 2.0),
                   Container(
                     child: TextButton(
@@ -504,119 +441,134 @@ class _GamePageState extends State<GamePage> {
                     ),
                   ),
                 ],
+              )
+            ),
+            if(showForm)
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  color : MyColors.blue,
+                  child: Column(
+                    children: [
+                      Slider(
+                        inactiveColor: MyColors.darkBlue,
+                        activeColor: MyColors.orange,
+                        value: rating.toDouble(),
+                        min: 0,
+                        max: 5,
+                        onChanged: (value) {
+                          setState(() {
+                            rating = value;
+                          });
+                        },
+                      ),
+                      Text('Rating: ${rating.round()}'),
+                      TextField(
+                        controller: contentController,
+                        decoration: InputDecoration(labelText: 'Enter your review'),
+                        maxLines: 3,
+                      ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        http.Response token = await APIService().createReview(
+                          widget.token,
+                          widget.id,
+                          contentController.text,
+                          rating);
+                        if (token.statusCode == 201) {
+                          print("status is ok");
+                          toggleFormVisibility();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  color: MyColors.blue,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Your review is added successfully. You will be redirected to the Game Page.',
+                                    style: TextStyle(
+                                      color: MyColors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: MyColors.blue2,
+                            duration: const Duration(seconds: 5),
+                            action: SnackBarAction(
+                              label: 'OK',
+                              textColor: MyColors.blue,
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => GamePage(token: widget.token, userProvider: widget.userProvider, id: widget.id)),
+                                );
+                              },
+                            ),
+                          ),
+                          ) //ScaffoldMessager
+                          .closed
+                          .then((reason) => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GamePage(token: widget.token, userProvider: widget.userProvider, id: widget.id)),
+                          ));
+                        } else {
+                          print("status is not ok");
+                          ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: Text(
+                                json.decode(token.body)["message"],
+                                style: const TextStyle(
+                                  color: MyColors.blue,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            backgroundColor: MyColors.blue2,
+                            duration: const Duration(seconds: 10),
+                            action: SnackBarAction(
+                              label: 'OK',
+                              textColor: MyColors.blue,
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                              },
+                            ),
+                          ),
+                          );
+                        }
+
+                      },
+                      child: const Text("Submit"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: MyColors.darkBlue,
+                      ),
+                    ),
+                  ]
+                ),
               ),
-            ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+              children:
+              [
                 const Divider(
-                  height: 3.0,
-                  thickness: 3.0,
-                  color: Color(0xFF589cb4),
+                  height: 5.0,
+                  thickness: 5.0,
+                  color: MyColors.lightBlue,
                 ),
-                Container(
-                  padding: const EdgeInsets.all(15.0),
-                  child: const Text(
-                      'A stunningly beautiful game with characters you grow to love. This is quite the adventure and I was all in within a few minutes of starting. In the midst of Norse mythology, it is a sweet and heartwarming story about a father and a son building a relationship.',
-                      softWrap: true,
-                      style: TextStyle(color: Colors.white)),
-                ),
-                Container(
+                reviews[0],
+              ]
+            )
 
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                          color: Colors.white,
-                          onPressed: () {},
-                          icon: const Icon(Icons.thumb_up_sharp)),
-                      IconButton(
-                          color: Colors.white,
-                          onPressed: () {},
-                          icon: const Icon(Icons.thumb_down_sharp)),
-                      IconButton(
-                          color: Colors.white,
-                          onPressed: () {},
-                          icon: const Icon(Icons.comment)),
-                      const Text(
-                        '10 hours ago',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Container(
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                              foregroundColor: Color(0xFFf89c34)),
-                          onPressed: () {},
-                          child: Text('@sena'),
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ),
-                const Divider(
-                  height: 3.0,
-                  thickness: 3.0,
-                  color: Color(0xFF589cb4),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Divider(
-                  height: 3.0,
-                  thickness: 3.0,
-                  color: Color(0xFF589cb4),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(15.0),
-                  child: const Text(
-                      'Great story, characters, voice acting, cinematics, etc. The game world is huge and diverse and you travel by foot, by boat and (ultimately) by fast travel through mystic gates. ',
-                      softWrap: true,
-                      style: TextStyle(color: Colors.white)),
-                ),
-                Container(
-
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                          color: Colors.white,
-                          onPressed: () {},
-                          icon: const Icon(Icons.thumb_up_sharp)),
-                      IconButton(
-                          color: Colors.white,
-                          onPressed: () {},
-                          icon: const Icon(Icons.thumb_down_sharp)),
-                      IconButton(
-                          color: Colors.white,
-                          onPressed: () {},
-                          icon: const Icon(Icons.comment)),
-                      const Text(
-                        '2 days ago',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Container(
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                              foregroundColor: Color(0xFFf89c34)),
-                          onPressed: () {},
-                          child: Text('@sena'),
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ),
-                const Divider(
-                  height: 3.0,
-                  thickness: 3.0,
-                  color: Color(0xFF589cb4),
-                ),
-              ],
-            ),
           ],
         ),
       ),

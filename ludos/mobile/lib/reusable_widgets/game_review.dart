@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:ludos_mobile_app/reusable_widgets/single_rating_icon.dart';
 import '../game_page.dart';
 import '../helper/APIService.dart';
 import '../userProvider.dart';
@@ -8,26 +9,24 @@ import '/helper/colors.dart';
 import 'package:intl/intl.dart';
 
 class Review extends StatefulWidget {
-  final String game;
   final String gameId;
+  final double rating;
   final String content;
+  final String userId;
   final String username;
   final int? thumbUps;
   final int? thumbDowns;
   final String time;
-  bool isLiked;
-  bool isDisliked;
   final UserProvider userProvider;
   final String? token;
   final String reviewId;
 
   Review({
     Key? key,
-    required this.isLiked,
-    required this.isDisliked,
-    required this.game,
     required this.gameId,
+    required this.rating,
     required this.content,
+    required this.userId,
     required this.username,
     required this.thumbUps,
     required this.thumbDowns,
@@ -39,15 +38,14 @@ class Review extends StatefulWidget {
 
   @override
   State<Review> createState() => _ReviewState(
-    game: game,
     gameId: gameId,
+    rating: rating,
     content: content,
+    userId: userId,
     username: username,
     thumbUps: thumbUps,
     thumbDowns: thumbDowns,
     time: time,
-    isLiked: isLiked,
-    isDisliked: isDisliked,
     userProvider: userProvider,
     token: token,
     reviewId: reviewId,
@@ -55,11 +53,10 @@ class Review extends StatefulWidget {
 }
 
 class _ReviewState extends State<Review> {
-  bool isLiked;
-  bool isDisliked;
-  final String game;
   final String gameId;
+  final double rating;
   final String content;
+  final String userId;
   final String username;
   final int? thumbUps;
   final int? thumbDowns;
@@ -69,11 +66,10 @@ class _ReviewState extends State<Review> {
   final String reviewId;
 
   _ReviewState({
-    required this.isLiked,
-    required this.isDisliked,
-    required this.game,
     required this.gameId,
+    required this.rating,
     required this.content,
+    required this.userId,
     required this.username,
     required this.thumbUps,
     required this.thumbDowns,
@@ -108,6 +104,7 @@ class _ReviewState extends State<Review> {
     }
   }
 
+  /*
   Future<void> userPressed(bool like) async {
     if (like && isDisliked) {
       try {
@@ -163,6 +160,7 @@ class _ReviewState extends State<Review> {
       isDisliked = true;
     }
   }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -187,60 +185,88 @@ class _ReviewState extends State<Review> {
                   ),
                 ]
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List<Widget>.generate(
+                5, // Total number of stars
+                    (index) {
+                  double diff = rating - index;
+                  if (diff >= 1.0) {
+                    // Full star
+                    return const SingleRatingIcon(
+                        icon: Icons.star,
+                        size: 20,
+                        iconColor: MyColors.orange,
+                        rating: 10.0);
+                  } else if (diff >= 0.5) {
+                    // Floating star
+                    return SingleRatingIcon(
+                        icon: Icons.star,
+                        size: 20,
+                        iconColor: MyColors.orange,
+                        rating: diff * 10.0);
+                  } else {
+                    // Empty star
+                    return const SingleRatingIcon(
+                        icon: Icons.star,
+                        size: 20,
+                        iconColor: MyColors.orange,
+                        rating: 0.0);
+                  }
+                },
+              ).toList(),
+            ),
             Container(
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 content,
                 softWrap: true,
                 style: const TextStyle(
-                  color: MyColors.darkBlue,
-                  fontSize: 10.0,
+                  color: MyColors.white,
+                  fontSize: 20.0,
                 ),
               ),
             ),
             const Divider(
               height: 3.0,
               thickness: 3.0,
-              color: MyColors.darkBlue,
+              color: MyColors.blue,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.darkBlue,
+                    backgroundColor: MyColors.orange,
                   ),
                   onPressed: () => setState(() {
-                    userPressed(true);
+                    //userPressed(true);
                   }),
                   child: Icon(
                     Icons.thumb_up,
-                    color: isLiked ? Colors.green : Colors.white,
+                    // color: isLiked ? Colors.green : Colors.white,
                   ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.darkBlue,
+                    backgroundColor: MyColors.orange,
                   ),
                   onPressed: () => setState(() {
-                    userPressed(false);
+                    //userPressed(false);
                   }),
                   child: Icon(
                     Icons.thumb_down,
-                    color: isDisliked ? Colors.red : Colors.white,
+                    //color: isDisliked ? Colors.red : Colors.white,
                   ),
                 ),
-                IconButton(
-                    color: Colors.white,
-                    onPressed: () {},
-                    icon: const Icon(Icons.comment)),
               ],
             ),
           ],
         ),
-        Container(
-          color: MyColors.blue,
-          child: const SizedBox(height: 20.0),
+        const Divider(
+          height: 5.0,
+          thickness: 5.0,
+          color: MyColors.lightBlue,
         ),
       ],
     );

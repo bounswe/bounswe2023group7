@@ -133,7 +133,7 @@ class APIService {
     var uri = Uri.parse("$baseURL/review/$gameId");
     final body = jsonEncode(<String, Object>{
       'content': content,
-      'rate': rate
+      'rating': rate
     });
     final response = await http.post(uri, body: body, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
 
@@ -162,6 +162,12 @@ class APIService {
     var uri = Uri.parse("$baseURL/review/game/$gameId");
     final response = await http.get(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
 
+    return response;
+  }
+
+  Future<http.Response> userInfoById(String userId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/user/byId/$userId");
+    final response = await http.get(uri, headers: {'content-type': "application/json", 'Authorization': 'Bearer $authToken'});
     return response;
   }
 }

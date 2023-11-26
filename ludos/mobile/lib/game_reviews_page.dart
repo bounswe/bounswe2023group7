@@ -16,45 +16,48 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
-  late Future<List<Review>> posts;
-  final TextEditingController searchInputController = TextEditingController();
-  String searchText = '';
+  late Future<List<Review>> reviews;
 
   @override
   void initState() {
     super.initState();
-    posts = fetchData(widget.token);
+    reviews = fetchData(widget.token);
   }
 
   Future<List<Review>> fetchData(String? token) async {
     final response = await APIService().listReviews(widget.token, widget.gameid);
     try {
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
+        final List<dynamic> responseData = json.decode(response.body);
+        return Future.wait(responseData.map<Future<Review>>((dynamic item) async {
+          final userResponse = await APIService().userInfoById(item['userId'], widget.token);
 
-        List<dynamic> postLists = responseData['items'];
-
-        return postLists.map((dynamic item) => Review(
-          token: widget.token,
-          userProvider: widget.userProvider,
-          reviewId: item['id'],
-          content: item['title'],
-          game: item['game']['title'],
-          gameId: item['game']['id'],
-          username: item['user']['username'],
-          thumbUps: item['numberOfLikes'],
-          thumbDowns: item['NumberOfDislikes'],
-          time: item['createdAt'],
-          isLiked: item['isLiked'],
-          isDisliked: item['isDisliked'],
-        )).toList();
+          if (userResponse.statusCode == 200) {
+            return Review(
+              token: widget.token,
+              userProvider: widget.userProvider,
+              reviewId: item['reviewId'],
+              content: item['content'],
+              rating: item['rating'].toDouble(),
+              gameId: item['gameId'],
+              userId: item['userId'],
+              username: json.decode(userResponse.body)['username'],
+              thumbUps: item['likedUserCount'],
+              thumbDowns: item['dislikeUserCount'],
+              time: item['createdAt'],
+            );
+          } else {
+            print("Error fetching user info: ${userResponse.statusCode} - ${userResponse.body}");
+            throw Exception('Failed to load user info!');
+          }
+        }).toList());
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
-        throw Exception('Failed to load reviews');
+        throw Exception('Failed to load reviews!');
       }
     } catch (error) {
       print("Error: $error");
-      throw Exception('Failed to load reviews');
+      throw Exception('Failed to load reviews from API!');
     }
   }
 
@@ -71,54 +74,10 @@ class _ReviewPageState extends State<ReviewPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const SizedBox(width: 10.0),
-                Expanded(
-                  child: TextFormField(
-                    controller: searchInputController,
-                    style: const TextStyle(color: MyColors.white),
-                    obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Search',
-                      labelStyle: TextStyle(
-                          color: MyColors.lightBlue,
-                          fontWeight: FontWeight.bold),
-                      border: UnderlineInputBorder(
-                          borderSide:
-                          BorderSide(color: MyColors.lightBlue, width: 2.0)),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide:
-                        BorderSide(color: MyColors.lightBlue, width: 2.0),
-                      ),
-                    ),
-                    cursorColor: MyColors.lightBlue,
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: MyColors.lightBlue, // Set the background color
-                    borderRadius: BorderRadius.circular(
-                        5.0), // Optional: Add border radius for rounded corners
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        searchText = searchInputController.text;
-                        //print(searchText);
-                      });
-                    },
-                    icon: const Icon(Icons.search, color: MyColors.white),
-                  ),
-                ),
-              ],
-            ),
-            //const SafeArea(child: SizedBox(height: 10)),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: FutureBuilder<List<Review>>(
-                future: posts,
+                future: reviews,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     // Show a loading indicator while fetching data
