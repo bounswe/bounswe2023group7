@@ -68,6 +68,7 @@ class _GamesPageState extends State<GamesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
