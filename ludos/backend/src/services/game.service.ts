@@ -132,7 +132,7 @@ export class GameService {
     const updated = Object.assign(game, gameEditDto);
     await this.gameRepository.save(updated);
   }
-  
+
   async addCompletionDuration(
     userId: string,
     gameId: string,

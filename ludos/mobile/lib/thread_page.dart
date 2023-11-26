@@ -1,6 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ludos_mobile_app/helper/colors.dart';
+import 'package:ludos_mobile_app/reusable_widgets/forum_comment.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 
 import 'game_page.dart';
@@ -30,13 +33,14 @@ class _ThreadPageState extends State<ThreadPage>
   bool isLiked = false;
   bool isDisliked = false;
   late Map<String, dynamic> threadData = {};
-
+  late Future<List<Comment>> comments;
 
   @override
   void initState()
   {
     super.initState();
-    fetchData();
+    fetchThreadData();
+    comments = fetchCommentData(widget.token);
 
     if (threadData['isLiked'] != null) {
       isLiked = threadData['isLiked'];
@@ -46,9 +50,7 @@ class _ThreadPageState extends State<ThreadPage>
     }
   }
 
-  Future<bool> fetchData() async
-  {
-
+  Future<bool> fetchThreadData() async {
     try
     {
       threadData = await APIService().getThread(
@@ -60,6 +62,38 @@ class _ThreadPageState extends State<ThreadPage>
     {
       print('Error loading thread data: $e');
       return false;
+    }
+  }
+
+  Future<List<Comment>> fetchCommentData(String? token) async {
+    final response = await APIService().listComments(widget.threadId, widget.token);
+    try {
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        print(responseData);
+
+        return responseData.map((dynamic item) => Comment(
+          token: widget.token,
+          userProvider: widget.userProvider,
+          threadId: widget.threadId,
+          parentId: widget.threadId,
+          commentId: item['id'],
+          content: item['text'],
+          username: item['author']['username'],
+          thumbUps: item['likeCount'],
+          thumbDowns: item['dislikeCount'],
+          time: item['timestamp'],
+          textColor: MyColors.white,
+          backgroundColor: MyColors.blue,
+          fontSize: 20,
+        )).toList();
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+        throw Exception('Failed to load comments!');
+      }
+    } catch (error) {
+      print("Error: $error");
+      throw Exception('Failed to load comments');
     }
   }
 
@@ -146,6 +180,8 @@ class _ThreadPageState extends State<ThreadPage>
     }
   }
 
+  final TextEditingController commentInputController = TextEditingController();
+
   @override
   Widget build(BuildContext context)
   {
@@ -157,7 +193,7 @@ class _ThreadPageState extends State<ThreadPage>
       ),
 
       body: FutureBuilder(
-          future: fetchData(),
+          future: fetchThreadData(),
           builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -167,6 +203,17 @@ class _ThreadPageState extends State<ThreadPage>
             return SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
+                  children: [
+                  Container(
+                    padding: const EdgeInsets.all(18.0),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: MyColors.blue,
+                          width: 5.0,
+                        ),
+                        borderRadius: const BorderRadius.all(Radius.circular(20))
+                    ),
+                    child: Column(
                     children: [
                       const SizedBox(height: 10),
                       Row(
@@ -211,7 +258,6 @@ class _ThreadPageState extends State<ThreadPage>
                           ),
                         ],
                       ),
-
                       Container(
                         padding: const EdgeInsets.all(15.0),
                         child: Text(
@@ -223,7 +269,6 @@ class _ThreadPageState extends State<ThreadPage>
                           ),
                         ),
                       ),
-
                       if(threadData['body'] != null)
                         Align(
                           alignment: Alignment.centerLeft,
@@ -240,7 +285,7 @@ class _ThreadPageState extends State<ThreadPage>
                       const SizedBox(height: 20.0),
                       const Divider(
                         height: 3.0,
-                        thickness: 3.0,
+                        thickness: 1.0,
                         color: MyColors.blue,
                       ),
                       Container(
@@ -260,10 +305,9 @@ class _ThreadPageState extends State<ThreadPage>
                       ),
                       const Divider(
                         height: 3.0,
-                        thickness: 3.0,
+                        thickness: 1.0,
                         color: MyColors.blue,
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -314,6 +358,10 @@ class _ThreadPageState extends State<ThreadPage>
                               Icons.thumb_up,
                               color: isLiked ? Colors.green : Colors.white,
                             ),
+                          ),
+                          Text(
+                            threadData['numberOfLikes'].toString(),
+                            style: const TextStyle(color: Colors.white),
                           ),
                           IconButton(
                             onPressed: () => setState(() {
@@ -373,12 +421,164 @@ class _ThreadPageState extends State<ThreadPage>
                           ),
                         ],
                       ),
+                      const Divider(
+                        height: 3.0,
+                        thickness: 3.0,
+                        color: MyColors.blue,
+                      ),
+                        if(widget.userProvider.isLoggedIn)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const SizedBox(width: 10.0),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: commentInputController,
+                                  obscureText: false,
+                                  style: const TextStyle(
+                                      height: 1.0,
+                                      color: MyColors.white
+                                  ),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Add a reply',
+                                    labelStyle: TextStyle(
+                                        color: MyColors.lightBlue,
+                                        fontWeight: FontWeight.bold),
+                                    border: UnderlineInputBorder(
+                                        borderSide:
+                                        BorderSide(color: MyColors.lightBlue, width: 2.0)),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                      BorderSide(color: MyColors.lightBlue, width: 2.0),
+                                    ),
+                                  ),
+                                  cursorColor: MyColors.lightBlue,
+                                ),
+                              ),
+                              Container(
+                                child: IconButton(
+                                  onPressed: () async {
+                                    http.Response token = await APIService().createComment(
+                                        widget.token,
+                                        widget.threadId,
+                                        commentInputController.text
+                                    );
+                                    if (token.statusCode == 200) {
+                                      print("status is ok");
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: const Row(
+                                            children: [
+                                              Icon(
+                                                Icons.check_circle_outline,
+                                                color: MyColors.blue,
+                                              ),
+                                              SizedBox(width: 8),
+                                              Expanded(
+                                                child: Text(
+                                                  'Your reply is added successfully.',
+                                                  style: TextStyle(
+                                                    color: MyColors.blue,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          backgroundColor: MyColors.blue2,
+                                          duration: const Duration(seconds: 5),
+                                          action: SnackBarAction(
+                                            label: 'OK',
+                                            textColor: MyColors.blue,
+                                            onPressed: () {
+                                              ScaffoldMessenger.of(context)
+                                                  .hideCurrentSnackBar();
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId)),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ) //ScaffoldMessager
+                                          .closed
+                                          .then((reason) => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId)),
+                                      ));
+                                    }
+                                    else {
+                                      print("status is not ok");
+                                      print(token.statusCode);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: SizedBox(
+                                            width: MediaQuery.of(context).size.width,
+                                            child: Text(
+                                              json.decode(token.body)["message"],
+                                              style: const TextStyle(
+                                                color: MyColors.blue,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                          backgroundColor: MyColors.blue2,
+                                          duration: const Duration(seconds: 10),
+                                          action: SnackBarAction(
+                                            label: 'OK',
+                                            textColor: MyColors.blue,
+                                            onPressed: () {
+                                              ScaffoldMessenger.of(context)
+                                                  .hideCurrentSnackBar();
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  icon: const Icon(Icons.reply, color: MyColors.white),
+                                ),
+                              ),
+                            ],
+                          ),
+
                     ]
-                  )
-                );
+                  ),
+                  ),
+                   Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0 ,10),
+                        child: FutureBuilder<List<Comment>>(
+                          future: comments,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              // Show a loading indicator while fetching data
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              // Handle errors
+                              return Center(child: Text('Error: ${snapshot.error}'));
+                            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              // Handle the case when there is no data
+                              return SizedBox(width: 0.1);
+                            } else {
+                              // Display the fetched data
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: snapshot.data!,
+                              );
+                            }
+                    },
+              ),
+            ),
+            ]
+                ),
+            );
             }
           }
         )
+
 
     );
   }

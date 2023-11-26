@@ -307,7 +307,8 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                         color: isLiked ? Colors.green : Colors.white,
                         ),
                   ),
-                  IconButton(
+                    Text(thumbUps.toString()),
+                    IconButton(
                     onPressed: () => setState(() {
                         if(!widget.userProvider.isLoggedIn){
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -355,10 +356,13 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                         color: isDisliked ? Colors.red : Colors.white,
                     ),
                   ),
-                  IconButton(
-                      color: Colors.white,
-                      onPressed: () {},
-                      icon: const Icon(Icons.comment)),
+                    /*
+                          Text(
+                            threadData['numberOfComments'].toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                           */
+                    Icon(Icons.comment),
                   Text(
                     timeAgo(time),
                     style: TextStyle(color: Colors.white),

@@ -157,7 +157,6 @@ export class UserController {
   public async getUserInfoById(@Req() req: AuthorizedRequest) {
     return await this.userService.getUserInfo(req.user.id);
   }
-
   @HttpCode(200)
   @ApiUnauthorizedResponse({
     description: 'Invalid User',

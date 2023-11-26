@@ -1,20 +1,19 @@
+import * as bcrypt from 'bcrypt';
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
   BeforeInsert,
   BeforeUpdate,
-  OneToMany,
+  Column,
+  Entity,
   Index,
   ManyToMany,
-  VirtualColumn
+  OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
-import { Game } from './game.entity';
 import { UserType } from '../enums/user-type.enum';
-import { Review } from './review.entity';
+import { Game } from './game.entity';
 import { Post } from './post.entity';
 import { Rating } from './rating.entity';
+import { Review } from './review.entity';
 
 @Entity('users')
 export class User {
@@ -34,11 +33,10 @@ export class User {
   @ManyToMany(() => Game, (game) => game.followerList)
   followedGames: Game[];
 
-  @VirtualColumn({
-    query: (alias) => `SELECT COUNT(*) FROM game_user_follows WHERE "usersId" = ${alias}.id `,
-  })
-  numberOfFollowedGames: number;
-
+  // @VirtualColumn({
+  //   query: (alias) => `SELECT COUNT(*) FROM game_user_follows WHERE "usersId" = ${alias}.id `,
+  // })
+  // numberOfFollowedGames: number;
 
   @Column({ default: false })
   isNotificationEnabled: boolean;
@@ -61,32 +59,31 @@ export class User {
   @OneToMany('Review', 'user')
   reviews: Review[];
 
-  @VirtualColumn({
-    query: (alias) => `SELECT COUNT(*) FROM reviews WHERE "userId" = ${alias}.id `,
-  })
-  numberOfReviews: number;
+  // @VirtualColumn({
+  //   query: (alias) => `SELECT COUNT(*) FROM reviews WHERE "userId" = ${alias}.id `,
+  // })
+  // numberOfReviews: number;
 
   @OneToMany('Post', 'user')
   posts: Post[];
 
-  @VirtualColumn({
-    query: (alias) => `SELECT COUNT(*) FROM posts WHERE "userId" = ${alias}.id `,
-  })
-  numberOfPosts: number;
+  // @VirtualColumn({
+  //   query: (alias) => `SELECT COUNT(*) FROM posts WHERE "userId" = ${alias}.id `,
+  // })
+  // numberOfPosts: number;
 
-
-  @VirtualColumn({
-    query: (alias) => `SELECT COUNT(*) FROM comments WHERE "authorId" = ${alias}.id `,
-  })
-  numberOfComments: number;
+  // @VirtualColumn({
+  //   query: (alias) => `SELECT COUNT(*) FROM comments WHERE "authorId" = ${alias}.id `,
+  // })
+  // numberOfComments: number;
 
   @OneToMany('Rating', 'user')
   ratingList: Rating[];
 
-  @VirtualColumn({
-    query: (alias) => `SELECT COUNT(*) FROM ratings WHERE "userId" = ${alias}.id `,
-  })
-  numberOfRatings: number;
+  // @VirtualColumn({
+  //   query: (alias) => `SELECT COUNT(*) FROM ratings WHERE "userId" = ${alias}.id `,
+  // })
+  // numberOfRatings: number;
 
   @ManyToMany('Review', 'likedUsers')
   likedReviews: Review[];
