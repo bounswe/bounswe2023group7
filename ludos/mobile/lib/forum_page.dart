@@ -19,24 +19,66 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage> {
-  late Future<List<ThreadSummary>> posts;
+  bool ifSearched = false;
+  late Future<List<ThreadSummary>> threads;
+  late Future<List<ThreadSummary>> threadsSearch;
   final TextEditingController searchInputController = TextEditingController();
   String searchText = '';
 
   @override
   void initState() {
     super.initState();
-    posts = fetchData(widget.token);
+    threads = fetchData(widget.token);
+  }
+
+  void searched(){
+    threadsSearch = fetchDataSearch(widget.token);
   }
 
   Future<List<ThreadSummary>> fetchData(String? token) async {
-    final response = await APIService().listPosts(widget.gameid, widget.token);
+    final response = await APIService().listThreads(widget.gameid, widget.token);
     try {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> postLists = responseData['items'];
 
+        return postLists.map((dynamic item) => ThreadSummary(
+          token: widget.token,
+          userProvider: widget.userProvider,
+          threadId: item['id'],
+          title: item['title'],
+          game: item['game']['title'],
+          gameId: item['game']['id'],
+          username: item['user']['username'],
+          thumbUps: item['numberOfLikes'],
+          thumbDowns: item['NumberOfDislikes'],
+          time: item['createdAt'],
+          isLiked: (item['isLiked'] ?? false),
+          isDisliked: (item['isDisliked'] ?? false),
+          textColor: MyColors.white,
+          backgroundColor: MyColors.blue,
+          fontSize: 20,
+        )).toList();
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+        throw Exception('Failed to load posts');
+      }
+    } catch (error) {
+      print("Error: $error");
+      throw Exception('Failed to load threads!');
+    }
+  }
+
+  Future<List<ThreadSummary>> fetchDataSearch(String? token) async {
+    final response = await APIService().listThreadsBySearch(searchText, widget.gameid, widget.token);
+    try {
+      print("here");
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        List<dynamic> postLists = responseData['items'];
+        print(postLists);
         return postLists.map((dynamic item) => ThreadSummary(
           token: widget.token,
           userProvider: widget.userProvider,
@@ -124,8 +166,9 @@ class _ForumPageState extends State<ForumPage> {
                   child: IconButton(
                     onPressed: () {
                       setState(() {
+                        ifSearched = true;
                         searchText = searchInputController.text;
-                        //print(searchText);
+                        searched();
                       });
                     },
                     icon: const Icon(Icons.search, color: MyColors.white),
@@ -134,31 +177,58 @@ class _ForumPageState extends State<ForumPage> {
               ],
             ),
             //const SafeArea(child: SizedBox(height: 10)),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FutureBuilder<List<ThreadSummary>>(
-                future: posts,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    // Show a loading indicator while fetching data
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    // Handle errors
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    // Handle the case when there is no data
-                    return const Center(child: Text('No post available.'));
-                  } else {
-                    // Display the fetched data
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: snapshot.data!,
-                    );
-                  }
-                },
+            if(!ifSearched)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: FutureBuilder<List<ThreadSummary>>(
+                  future: threads,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator while fetching data
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      // Handle errors
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      // Handle the case when there is no data
+                      return const Center(child: Text('No post available.'));
+                    } else {
+                      // Display the fetched data
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: snapshot.data!,
+                      );
+                    }
+                  },
+                ),
               ),
-            ),
+            if(ifSearched)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: FutureBuilder<List<ThreadSummary>>(
+                  future: threadsSearch,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator while fetching data
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      // Handle errors
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      // Handle the case when there is no data
+                      return const Center(child: Text('No post available.'));
+                    } else {
+                      // Display the fetched data
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: snapshot.data!,
+                      );
+                    }
+                  },
+                ),
+              ),
           ],
         ),
       ),

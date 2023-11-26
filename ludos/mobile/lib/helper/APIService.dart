@@ -152,7 +152,7 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> listPosts(String gameId, String? authToken) async {
+  Future<http.Response> listThreads(String gameId, String? authToken) async {
     var uri = Uri.parse("$baseURL/post?gameId=$gameId");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
@@ -368,6 +368,19 @@ class APIService {
       'Authorization': 'Bearer $authToken'
     });
     return response;
+  }
+
+  Future<http.Response> listThreadsBySearch(String searchKey, String gameId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/post?gameId=$gameId&searchKey=$searchKey");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to load threads');
+    }
   }
 
 }
