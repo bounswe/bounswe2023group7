@@ -130,10 +130,10 @@ class _GameSummaryState extends State<GameSummary> {
                         height: 160,
                         image: NetworkImage(coverLink),
                         placeholder: const AssetImage(
-                          'assets/images/default_game.jpg',
+                          'assets/images/ludos_transparent.png',
                         ),
                         imageErrorBuilder: (context, error, stackTrace) {
-                          return Image.asset('assets/images/default_game.jpg',
+                          return Image.asset('assets/images/ludos_transparent.png',
                               width: 100, height: 160, fit: BoxFit.fill);
                         },
                         fit: BoxFit.fill,
