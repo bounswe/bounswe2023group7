@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'forum_page.dart';
+import 'game_properties.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
@@ -20,7 +21,7 @@ class GamePage extends StatefulWidget {
 }
 class _GamePageState extends State<GamePage> {
   late bool followState;
-  late String buttonText;
+  late String buttonText = ".";
   final APIService apiService = APIService();
   Map<String, dynamic> gameData = {};
 
@@ -50,29 +51,6 @@ class _GamePageState extends State<GamePage> {
       print("Error initializing follow state: $error");
     }
   }
-/*
-  Future<void> updateFollowState() async {
-    var response = await apiService.userInfo(widget.token);
-    var bool = false;
-    for (var i = 0; i < json.decode(response.body)['followedGames'].length; i++) {
-      if ((json.decode(response.body)['followedGames'][i])['id'] == widget.id) {
-        bool = true;
-      }
-    }
-    setState((){
-      followState = bool;
-    });
-    setState(() {
-      if(followState){
-        buttonText = "Unfollow";
-      }
-      else{
-        buttonText = "Follow";
-      }
-    });
-  }
-*/
-
   Future<bool> getFollowState() async {
     var response = await APIService().userInfo(widget.token);
     var bool = false;
@@ -88,20 +66,43 @@ class _GamePageState extends State<GamePage> {
   Future<void> loadGameData() async {
     try {
       gameData = await apiService.getGame(widget.id, widget.token);
-
       setState(() {});
     } catch (e) {
       print('Error loading game data: $e');
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF101c2c),
+      endDrawer: Drawer(
+        child: Container(
+          color: MyColors.darkBlue, // Drawer background color
+          child: ListView(
+            children: <Widget>[
+                ListTile(
+                  title: const Text(
+                    'Edit Game',
+                    style: TextStyle(color: MyColors.white),
+                  ),
+                  onTap: () {},
+                ),
+            ],
+          ),
+        ),
+      ),
+      backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
         title: Text('${gameData['title']}'),
+        actions: [
+          Builder(
+              builder: (context) => IconButton(
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
+                  icon: Icon(Icons.more_horiz),
+                  tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              )
+          )
+        ],
       ),
       body:  SingleChildScrollView(
 
@@ -123,19 +124,54 @@ class _GamePageState extends State<GamePage> {
               ),
 
             const SizedBox(height: 10),
-            if (gameData['releaseDate'] != null)
-              Text('Release Date: ${gameData['releaseDate']}',style: const TextStyle(
-                color: MyColors.orange,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-              ),
+            Row(
+              children: [
+                ...[
+                  const Text('Average Rating:   ',
+                    style: TextStyle(
+                      color: MyColors.orange,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+                RatingBar.builder(
+                  initialRating: (gameData['averageRating'] == null
+                      ? 0 : gameData['averageRating'].toDouble()),
+                  minRating: 0,
+                  ignoreGestures: true,  //to make non clickable rating bar
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 20,
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: MyColors.orange,
+                  ),
+                  onRatingUpdate: (rating) {
+                  },
+                ),
+                Text('${(gameData['averageRating'] == null
+                    ? 0 : gameData['averageRating'].toDouble())}/5'.padLeft(5),style: const TextStyle(
+                  color: MyColors.orange,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                ),
+                ),
+              ],
+            ),
             const SizedBox(height: 10),
+            const Divider(
+              height: 3.0,
+              thickness: 2.0,
+              color: Color(0xFFFFFFFF),
+            ),
                 Center(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         if (gameData['tags'] != null)
@@ -144,7 +180,7 @@ class _GamePageState extends State<GamePage> {
                                 style: TextButton.styleFrom(
                                     foregroundColor: MyColors.lightBlue),
                                 onPressed: () {},
-                                  child: Text(gameData['tags'][i].toString()),
+                                  child: Text('#${gameData['tags'][i].toString()}'),
                             ),
                         ],
                     ),
@@ -170,11 +206,19 @@ class _GamePageState extends State<GamePage> {
                 ),
               ),
             ),
+            const SizedBox(height: 10),
+            const Divider(
+              height: 3.0,
+              thickness: 2.0,
+              color: Color(0xFFFFFFFF),
+            ),
+            const SizedBox(height: 10),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (gameData['userRating'] != null)
                 RatingBar.builder(
-                  initialRating: gameData['userRating'].toDouble(),
+                  initialRating: (gameData['userRating'] == null
+                  ? 0 : gameData['userRating'].toDouble()),
                   minRating: 0,
                   direction: Axis.horizontal,
                   allowHalfRating: true,
@@ -185,18 +229,58 @@ class _GamePageState extends State<GamePage> {
                     color: MyColors.orange,
                   ),
                   onRatingUpdate: (rating) {
-                    print(rating);
                   },
                 ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ...[
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.lightBlue),
+                    ),
+                    onPressed: ()
+                    {Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GamePropertiesPage(gameData: gameData),
+                      ),
+                    );
+                    },
+                    child: const Text(
+                      'Game Properties',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      //style: TextStyle(color: Colors.black)
+                    ),
+                  ),
+                  ],
+                  ...[
+                    const VerticalDivider(
+                      width: 10.0,
+                      thickness: 2.0,
+                      color: Color(0xFFFFFFFF),
+                    ),
+                  ],
 
-                const SizedBox(width: 8), // Add some spacing between RatingBar and Text
-                if (gameData['averageRating'] != null)
-                  Text('${gameData['averageRating']}/5'.padLeft(22),style: const TextStyle(
-                  color: MyColors.orange,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.lightBlue),
+                    ),
+                    onPressed: ()
+                    {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ForumPage(gameid: widget.id, token: widget.token, userProvider: widget.userProvider),
+                      ));
+                    },
+                    child: const Text(
+                      'Explore the Forum',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      //style: TextStyle(color: Colors.black)
+                    ),
+                  ),
               ],
             ),
 
@@ -313,30 +397,6 @@ class _GamePageState extends State<GamePage> {
                 ),
               ),
             const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.lightBlue),
-                    ),
-                    onPressed: ()
-                    {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ForumPage(gameid: widget.id, token: widget.token, userProvider: widget.userProvider),
-                      ));
-                    },
-                    child: const Text(
-                      'Explore the Forum',
-                      //style: TextStyle(color: Colors.black)
-                    ),
-                  ),
-            const SizedBox(height: 20),
-            if(gameData['averageUserCompilationDuration'] != null)
-              Text('Average User Compilation Time: ${gameData['averageUserCompilationDuration']}',style: const TextStyle(
-                color: MyColors.orange,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -387,8 +447,8 @@ class _GamePageState extends State<GamePage> {
                 ),
                 const Divider(
                   height: 3.0,
-                  thickness: 3.0,
-                  color: Color(0xFF589cb4),
+                  thickness: 1.0,
+                  color: Color(0xFFFFFFFF),
                 ),
               ],
             ),
@@ -396,11 +456,6 @@ class _GamePageState extends State<GamePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Divider(
-                  height: 3.0,
-                  thickness: 3.0,
-                  color: Color(0xFF589cb4),
-                ),
                 Container(
                   padding: const EdgeInsets.all(15.0),
                   child: const Text(
@@ -409,7 +464,6 @@ class _GamePageState extends State<GamePage> {
                       style: TextStyle(color: Colors.white)),
                 ),
                 Container(
-
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -446,6 +500,7 @@ class _GamePageState extends State<GamePage> {
                   thickness: 3.0,
                   color: Color(0xFF589cb4),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ],
