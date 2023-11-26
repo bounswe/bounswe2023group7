@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Typography, Card, CardContent } from '@material-ui/core';
+import { Typography, Card, CardContent } from '@mui/material';
 import './TrendingGamesSlider.css'; // Create this CSS file for custom styles
 
 const TrendingGamesSlider = ({ games }) => {
