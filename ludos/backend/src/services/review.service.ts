@@ -232,9 +232,9 @@ export class ReviewService {
     }
 
     const loggedUser = await this.userRepository.findUserById(userId);
-      if (!loggedUser) {
-        throw new NotFoundException('User Not Found!');
-      }
+    if (!loggedUser) {
+      throw new NotFoundException('User Not Found!');
+    }
 
     const likedUserCount = review.likedUsers.length;
     const dislikedUserCount = review.dislikedUsers.length;
@@ -247,7 +247,7 @@ export class ReviewService {
       gameId: review.game.id,
       likedUserCount: likedUserCount,
       dislikedUserCount: dislikedUserCount,
-      isBelongToUser: review.user.id == loggedUser.id
+      isBelongToUser: review.user.id == loggedUser.id,
     };
   }
 
@@ -261,9 +261,9 @@ export class ReviewService {
     }
 
     const loggedUser = await this.userRepository.findUserById(userId);
-      if (!loggedUser) {
-        throw new NotFoundException('User Not Found!');
-      }
+    if (!loggedUser) {
+      throw new NotFoundException('User Not Found!');
+    }
 
     const reviews = await this.reviewRepository.findReviewsByGame(game);
 
@@ -276,7 +276,7 @@ export class ReviewService {
       gameId: review.game.id,
       likedUserCount: review.likedUsers.length,
       dislikedUserCount: review.dislikedUsers.length,
-      isBelongToUser: review.user.id == loggedUser.id
+      isBelongToUser: review.user.id == loggedUser.id,
     }));
     return mappedReviews;
   }

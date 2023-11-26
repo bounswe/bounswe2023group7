@@ -1,20 +1,19 @@
+import * as bcrypt from 'bcrypt';
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
   BeforeInsert,
   BeforeUpdate,
-  OneToMany,
+  Column,
+  Entity,
   Index,
   ManyToMany,
-  VirtualColumn
+  OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
-import { Game } from './game.entity';
 import { UserType } from '../enums/user-type.enum';
-import { Review } from './review.entity';
+import { Game } from './game.entity';
 import { Post } from './post.entity';
 import { Rating } from './rating.entity';
+import { Review } from './review.entity';
 
 @Entity('users')
 export class User {
@@ -38,7 +37,6 @@ export class User {
   //   query: (alias) => `SELECT COUNT(*) FROM game_user_follows WHERE "usersId" = ${alias}.id `,
   // })
   // numberOfFollowedGames: number;
-
 
   @Column({ default: false })
   isNotificationEnabled: boolean;
@@ -73,7 +71,6 @@ export class User {
   //   query: (alias) => `SELECT COUNT(*) FROM posts WHERE "userId" = ${alias}.id `,
   // })
   // numberOfPosts: number;
-
 
   // @VirtualColumn({
   //   query: (alias) => `SELECT COUNT(*) FROM comments WHERE "authorId" = ${alias}.id `,
