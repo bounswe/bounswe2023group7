@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'helper/colors.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 import 'create_game_second.dart';
@@ -62,7 +63,9 @@ Widget getbox(String hintText, TextEditingController controller,
 class CreateGamePage extends StatefulWidget {
   final String? token;
   final UserProvider userProvider;
-  const CreateGamePage({Key? key, required this.token, required this.userProvider}) : super(key: key);
+  const CreateGamePage(
+      {Key? key, required this.token, required this.userProvider})
+      : super(key: key);
 
   @override
   State<CreateGamePage> createState() => _CreateGamePageState();
@@ -71,17 +74,8 @@ class CreateGamePage extends StatefulWidget {
 class _CreateGamePageState extends State<CreateGamePage> {
   List<String> predecessorValues = [];
   List<String> successorValues = [];
-  List<String> tagValues = [];
   int selectdAgeRestriction = 0;
-  List<String> ageRestrictions = [
-    'Early Childhood',
-    'Everyone',
-    'Everyone 10 and older',
-    'Teen',
-    'Mature',
-    'Adults Only',
-    'Rating Pending',
-  ];
+  List<String> ageRestrictions = ["3+", "7+", "12+", "16+", "18+"];
 
   _onDeletepr(index) {
     setState(() {
@@ -92,12 +86,6 @@ class _CreateGamePageState extends State<CreateGamePage> {
   _onDeletes(index) {
     setState(() {
       successorValues.removeAt(index);
-    });
-  }
-
-  _onDeletet(index) {
-    setState(() {
-      tagValues.removeAt(index);
     });
   }
 
@@ -124,7 +112,38 @@ class _CreateGamePageState extends State<CreateGamePage> {
   final TextEditingController predecessorsController = TextEditingController();
   final TextEditingController successorsController = TextEditingController();
   final TextEditingController gameBioController = TextEditingController();
-  final TextEditingController tagsController = TextEditingController();
+  final MultiSelectController tagsController = MultiSelectController();
+
+  List<String> tags = [
+    'Action',
+    'Adventure',
+    'RPG',
+    'Strategy',
+    'Simulation',
+    'Sports',
+    'Fighting',
+    'Horror',
+    'Puzzle',
+    'Multiplayer',
+    'Indie',
+    'RTS',
+    'Racing',
+    'Open World',
+    'Educational',
+    'VR',
+    'Survival',
+    'Story-Driven',
+    'Retro',
+    'Anime',
+    'Hack and Slash',
+    'Mystery',
+    'Historical',
+    'Sci-Fi',
+    'Fantasy',
+    'Comedy',
+    'Artistic',
+    'Puzzle-Platformer',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -208,61 +227,74 @@ class _CreateGamePageState extends State<CreateGamePage> {
                 ),
               ]),
               const SizedBox(height: 20),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text(
-                  "Tags",
-                  style: TextStyle(
-                    color: MyColors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8.0),
-                TagEditor(
-                  length: tagValues.length,
-                  controller: tagsController,
-                  delimiters: const [',', ' '],
-                  hasAddButton: true,
-                  resetTextOnSubmitted: true,
-                  textStyle: const TextStyle(
-                      color: MyColors.red, fontWeight: FontWeight.bold),
-                  onSubmitted: (outstandingValue) {
-                    setState(() {
-                      tagValues.add(outstandingValue);
-                    });
-                  },
-                  inputDecoration: InputDecoration(
-                    filled: true,
-                    fillColor: MyColors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: const BorderSide(
-                        color: Colors.white,
-                        width: 2.0,
-                      ),
-                    ),
-                    labelStyle: const TextStyle(
-                        color: MyColors.red, fontWeight: FontWeight.bold),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: MyColors.lightBlue, width: 2.0),
-                      borderRadius: BorderRadius.circular(25.0),
+              const Row(
+                children: [
+                  Text(
+                    '*',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  onTagChanged: (newValue) {
-                    setState(() {
-                      tagValues.add(newValue);
-                    });
-                  },
-                  tagBuilder: (context, index) => _Chip(
-                    index: index,
-                    label: tagValues[index],
-                    onDeleted: _onDeletet,
+                  Text(
+                    "Tags",
+                    style: TextStyle(
+                      color: MyColors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.deny(RegExp(r'[/\\]'))
-                  ],
+                ],
+              ),
+              const SizedBox(height: 10),
+              MultiSelectDropDown(
+                hint: "",
+                borderRadius: 25.0,
+                showClearIcon: true,
+                controller: tagsController,
+                onOptionSelected: (options) {},
+                options: const <ValueItem>[
+                  ValueItem(label: 'Action', value: 'Action'),
+                  ValueItem(label: 'Adventure', value: 'Adventure'),
+                  ValueItem(label: 'RPG', value: 'RPG'),
+                  ValueItem(label: 'Strategy', value: 'Strategy'),
+                  ValueItem(label: 'Simulation', value: 'Simulation'),
+                  ValueItem(label: 'Sports', value: 'Sports'),
+                  ValueItem(label: 'Fighting', value: 'Fighting'),
+                  ValueItem(label: 'Horror', value: 'Horror'),
+                  ValueItem(label: 'Puzzle', value: 'Puzzle'),
+                  ValueItem(label: 'Multiplayer', value: 'Multiplayer'),
+                  ValueItem(label: 'Indie', value: 'Indie'),
+                  ValueItem(label: 'RTS', value: 'RTS'),
+                  ValueItem(label: 'Racing', value: 'Racing'),
+                  ValueItem(label: 'Open World', value: 'Open World'),
+                  ValueItem(label: 'Educational', value: 'Educational'),
+                  ValueItem(label: 'VR', value: 'VR'),
+                  ValueItem(label: 'Survival', value: 'Survival'),
+                  ValueItem(label: 'Story-Driven', value: 'Story-Driven'),
+                  ValueItem(label: 'Retro', value: 'Retro'),
+                  ValueItem(label: 'Anime', value: 'Anime'),
+                  ValueItem(label: 'Hack and Slash', value: 'Hack and Slash'),
+                  ValueItem(label: 'Mystery', value: 'Mystery'),
+                  ValueItem(label: 'Historical', value: 'Historical'),
+                  ValueItem(label: 'Sci-Fi', value: 'Sci-Fi'),
+                  ValueItem(label: 'Fantasy', value: 'Fantasy'),
+                  ValueItem(label: 'Comedy', value: 'Comedy'),
+                  ValueItem(label: 'Artistic', value: 'Artistic'),
+                  ValueItem(
+                      label: 'Puzzle-Platformer', value: 'Puzzle-Platformer'),
+                ],
+                selectionType: SelectionType.multi,
+                chipConfig: const ChipConfig(
+                    wrapType: WrapType.wrap,
+                    backgroundColor: MyColors.lightBlue),
+                dropdownHeight: 200,
+                optionTextStyle: const TextStyle(fontSize: 16),
+                selectedOptionTextColor: MyColors.blue,
+                selectedOptionIcon: const Icon(
+                  Icons.check_circle,
+                  color: MyColors.lightBlue,
                 ),
-              ]),
+              ),
               const SizedBox(height: 20),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Text(
@@ -395,7 +427,11 @@ class _CreateGamePageState extends State<CreateGamePage> {
                             gameBio: gameBioController.text,
                             ageRestriction:
                                 ageRestrictions[selectdAgeRestriction],
-                            tags: tagValues,
+                            tags: tagsController.selectedOptions
+                                .map((item) => item.label)
+                                .where((element) => element != null)
+                                .map((e) => e!)
+                                .toList(),
                             predecessors: predecessorValues,
                             successors: successorValues),
                       ));
