@@ -11,10 +11,11 @@ import 'helper/APIService.dart';
 import 'login_page.dart';
 
 class GamePage extends StatefulWidget {
+  final VoidCallback onRefresh;
   final UserProvider userProvider;
   final String? token;
   final String id;
-  const GamePage({required this.id, required this.token, Key? key, required this.userProvider}) : super(key: key);
+  const GamePage({required this.id, required this.token, Key? key, required this.userProvider, required this.onRefresh}) : super(key: key);
   @override
   State<GamePage> createState() => _GamePageState();
 }
@@ -256,6 +257,7 @@ class _GamePageState extends State<GamePage> {
                                   .unfollowGame(widget.token, widget.id);
                               if (token.statusCode == 200) {
                                 state = false;
+                                widget.onRefresh();
                                 print("Unfollowed");
                               } else {
                                 print("Error: ${token.statusCode}");
@@ -265,6 +267,7 @@ class _GamePageState extends State<GamePage> {
                                   widget.token, widget.id);
                               if (token.statusCode == 200) {
                                 state = true;
+                                widget.onRefresh();
                                 print("Followed");
                               } else {
                                 print("Error: ${token.statusCode}");

@@ -219,7 +219,9 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                             builder: (context) => GamePage(
                                 id: gameId,
                                 token: widget.token,
-                                userProvider: widget.userProvider),
+                                userProvider: widget.userProvider,
+                                onRefresh: () {},
+                            ),
                           ),
                         );
                       },

@@ -191,6 +191,14 @@ class APIService {
     });
     return response;
   }
+  Future<http.Response> userById(String? authToken, String userID) async {
+    var uri = Uri.parse("$baseURL/user/byId/$userID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
 
   Future<Map<String, dynamic>> getGame(String id, String? authToken) async {
     var uri = Uri.parse("$baseURL/game/$id");
