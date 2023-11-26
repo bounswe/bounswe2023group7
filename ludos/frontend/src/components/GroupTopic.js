@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import { Box, Typography, Grid } from "@mui/material";
+import Diversity1Icon from '@mui/icons-material/Diversity1';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import BadgeIcon from '@mui/icons-material/Badge';
+import { Button } from "@mui/material";
 
-function ForumTopic(data) {
+function GroupTopic(data) {
   const boxStyle = {
     backgroundColor: "rgba(200, 200, 200, 0.9)",
     borderRadius: "10px",
@@ -49,11 +53,11 @@ function ForumTopic(data) {
           style={{ display: "flex", justifyContent: "space-between" }}
         >
           <Typography variant="caption" component="div" style={gameStyle}>
-            {data.topic.forumGame}
+            {data.topic.groupGame}
           </Typography>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
             {data.topic &&
-              data.topic.forumTags.map((tag1, index1) => (
+              data.topic.groupTags.map((tag1, index1) => (
                 <Typography
                   variant="caption"
                   component="div"
@@ -65,21 +69,27 @@ function ForumTopic(data) {
               ))}
           </Grid>
         </Grid>
+        <Grid style={{display: "flex", justifyContent: "space-between"}}>
         <Grid
           style={{
             display: "flex",
             justifyContent: "left",
             marginBottom: "10px",
+            marginTop: "5px",
+            width:" 100%",
           }}
         >
+            <BadgeIcon style={{fontSize: "18px", marginRight: "3px"}}/>
           <Typography
             variant="caption"
             component="div"
             textAlign="left"
             style={userStyle}
           >
-            {data.topic.userOpened}
+           {data.topic.userOpened}
           </Typography>
+          <AccessTimeIcon style={{fontSize: "18px", marginRight: "3px"}}
+          />
           <Typography
             variant="caption"
             component="div"
@@ -88,14 +98,24 @@ function ForumTopic(data) {
           >
             {data.topic.whenOpened}
           </Typography>
+          <Diversity1Icon style={{fontSize: "18px", marginRight: "3px"}}/>
           <Typography
             variant="caption"
             component="div"
             textAlign="right"
             style={forumStyle}
           >
-            replies: {data.topic.numOfReplies.toString()}
+         {data.topic.numOfMembers.toString()}
           </Typography>
+          </Grid>
+          <Button 
+            variant="contained"
+            color="primary"
+            type="button"
+            style={{display: "flex", justifyContent: "flex-end", borderRadius: "10px"}}>
+            Join
+        </Button>
+        
         </Grid>
 
         <Typography
@@ -111,4 +131,4 @@ function ForumTopic(data) {
   );
 }
 
-export default ForumTopic;
+export default GroupTopic;
