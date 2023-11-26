@@ -15,10 +15,17 @@ function Review(data, index1) {
   const [editReq, setEditReq] = useState(false);
   const [review, setReview] = useState("");
   const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [dislikeCount, setDislikeCount] = useState(0);
   const link = `http://${process.env.REACT_APP_API_URL}/user/byId/${data.review.userId}`;
-  console.log(data.review);
   useEffect(() => {
     setReview(data.review.content);
+    setLiked(data.review.isLikedByUser);
+    setDisliked(data.review.isDislikedByUser);
+    setLikeCount(data.review.likedUserCount);
+    setDislikeCount(data.review.dislikedUserCount);
+    console.log(data.review);
     axios
       .get(link, {
         headers: {
@@ -27,6 +34,7 @@ function Review(data, index1) {
       })
       .then((response) => {
         setUser(response.data);
+
         console.log(response.data);
       })
       .catch((error) => {
@@ -70,7 +78,42 @@ function Review(data, index1) {
         },
       )
       .then(() => {
-        setLiked(true);
+        if (disliked) {
+          setDisliked(false);
+          setDislikeCount(dislikeCount - 1);
+        } else {
+          if (!liked) {
+            setLikeCount(likeCount + 1);
+          }
+          setLiked(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleDislikeClick = () => {
+    const followLink = `http://${process.env.REACT_APP_API_URL}/review/${data.review.reviewId}/like`;
+    axios
+      .post(
+        followLink,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        },
+      )
+      .then(() => {
+        if (liked) {
+          setLiked(false);
+          setLikeCount(likeCount - 1);
+        } else {
+          setDisliked(true);
+          if (!disliked) {
+            setDislikeCount(dislikeCount + 1);
+          }
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -191,13 +234,44 @@ function Review(data, index1) {
                     onClick={handleLikeClick}
                   >
                     {liked ? (
-                      <FaThumbsUp style={{ color: "rgb(124, 252, 0)" }} />
-                    ) : (
                       <FaThumbsUp style={{ color: "rgb(255, 255, 255)" }} />
+                    ) : (
+                      <FaThumbsUp style={{ color: "rgb(124, 252, 0)" }} />
                     )}
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      textAlign="left"
+                      style={{
+                        color: "rgb(255, 255, 255)",
+                        marginLeft: "5px",
+                      }}
+                    >
+                      {likeCount}
+                    </Typography>
                   </Button>
-                  <Button variant="contained" style={downVoteButton}>
-                    <FaThumbsDown style={{ color: "rgb(222, 49, 99)" }} />
+
+                  <Button
+                    variant="contained"
+                    style={downVoteButton}
+                    onClick={handleDislikeClick}
+                  >
+                    {disliked ? (
+                      <FaThumbsDown style={{ color: "rgb(100, 100, 100)" }} />
+                    ) : (
+                      <FaThumbsDown style={{ color: "rgb(222, 49, 99)" }} />
+                    )}
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      textAlign="left"
+                      style={{
+                        color: "rgb(255, 255, 255)",
+                        marginLeft: "5px",
+                      }}
+                    >
+                      {dislikeCount}
+                    </Typography>
                   </Button>
                 </>
               )}
