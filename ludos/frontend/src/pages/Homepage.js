@@ -4,9 +4,67 @@ import Game1 from "../assets/witcher3.jpg";
 import Game2 from "../assets/sims4.png";
 import Game3 from "../assets/Tekken5Cover.jpg";
 import { Typography , Container} from '@material-ui/core';
+import ForumTopic from "../components/ForumTopic";
+import GroupTopic from '../components/GroupTopic';
 
 
 const Homepage = () => {
+  const trendTopics = [
+    {
+      title: "OMG! New Character for Dota",
+      numOfReplies: 150,
+      userOpened: "@loverGame",
+      whenOpened: "2 days ago",
+      forumTags: ["New Feature", "Dota"],
+      forumGame: "Dota",
+    },
+    {
+      title: "Tell your best memory of Minecraft",
+      numOfReplies: 240,
+      userOpened: "@minemine",
+      whenOpened: "1 week ago",
+      forumTags: ["Curious", "Minecraft"],
+      forumGame: "Minecraft",
+    },
+    {
+      title: "Who is your favorite character in Witcher 3",
+      numOfReplies: 167,
+      userOpened: "@witchPlay",
+      whenOpened: "5 days ago",
+      forumTags: ["favorites", "Witcher3"],
+      forumGame: "Witcher 3",
+    },
+    // Add more topics as needed...
+  ];
+
+  const groupTopics = [
+    {
+      title: "GameZone Guild",
+      numOfReplies: 150,
+      userOpened: "@loverGame",
+      whenOpened: "2 days ago",
+      forumTags: ["Fantasy", "Adventure"],
+      forumGame: "Dota",
+    },
+    {
+      title: "Gamer's Assembly",
+      numOfReplies: 240,
+      userOpened: "@minemine",
+      whenOpened: "1 week ago",
+      forumTags: ["Action", "Adventure"],
+      forumGame: "Minecraft",
+    },
+    {
+      title: "RPG Masters Society",
+      numOfReplies: 167,
+      userOpened: "@witchPlay",
+      whenOpened: "5 days ago",
+      forumTags: ["RPG"],
+      forumGame: "Witcher 3",
+    },
+    // Add more topics as needed...
+  ];
+
   // Replace this with your actual game data
   const games = [
     { title: 'The Witcher 3', image: Game1, content: "Embark on an epic adventure in Witcher 3, where every choice you make shapes your destiny. Immerse yourself in a rich, vast open world filled with monsters, mysteries, and morally complex decisions."},
@@ -42,7 +100,7 @@ const Homepage = () => {
           }}
         >
           <Typography
-            variant="h3"
+            variant="h4"
             gutterBottom
             style={{
               color: "white",
@@ -50,14 +108,16 @@ const Homepage = () => {
               fontWeight: "bold",
             }}
           >
-            Trend Topics
+            Trending
           </Typography>
           {/* Render your forum topics below */}
           {/* Replace this section with your actual forum topics */}
           <div
             style={{ gap: "16px", display: "flex", flexDirection: "column" }}
           >
-            Content
+            {trendTopics.map((topic, index) => (
+              <ForumTopic key={index} topic={topic} />
+            ))}
           </div>
         </Container>
         <Container
@@ -70,7 +130,7 @@ const Homepage = () => {
           }}
         >
           <Typography
-            variant="h3"
+            variant="h4"
             gutterBottom
             style={{
               color: "white",
@@ -83,11 +143,13 @@ const Homepage = () => {
           {/* Render your forum topics below */}
           {/* Replace this section with your actual forum topics */}
           <div>
-            <div
-              style={{ gap: "16px", display: "flex", flexDirection: "column", alignItems: "center", alignSelf: "center" }}
-            >
-             Content
-            </div>
+          <div
+            style={{ gap: "16px", display: "flex", flexDirection: "column" }}
+          >
+            {groupTopics.map((topic, index) => (
+              <GroupTopic key={index} topic={topic} />
+            ))}
+          </div>
           </div>
         </Container>
       </div>
