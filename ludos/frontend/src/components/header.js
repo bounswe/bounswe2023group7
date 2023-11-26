@@ -37,7 +37,9 @@ const Header = ({ userLoggedIn }) => {
           alignItems: "center",
         }}
       >
-        <img src={logo} alt="Logo" style={{ width: "100px", height: "auto" }} />
+        <a href="/">
+          <img src={logo} alt="Logo" style={{ width: "100px", height: "auto" }} />
+        </a>
         <div
           style={{
             display: "flex",
