@@ -46,8 +46,8 @@ class _ForumPageState extends State<ForumPage> {
           thumbUps: item['numberOfLikes'],
           thumbDowns: item['NumberOfDislikes'],
           time: item['createdAt'],
-          isLiked: item['isLiked'],
-          isDisliked: item['isDisliked'],
+          isLiked: (item['isLiked'] ?? false),
+          isDisliked: (item['isDisliked'] ?? false),
           textColor: MyColors.white,
           backgroundColor: MyColors.blue,
           fontSize: 20,
@@ -58,7 +58,7 @@ class _ForumPageState extends State<ForumPage> {
       }
     } catch (error) {
       print("Error: $error");
-      throw Exception('Failed to load posts');
+      throw Exception('Failed to load threads!');
     }
   }
 

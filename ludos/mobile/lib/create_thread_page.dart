@@ -111,7 +111,7 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
                 const SizedBox(height: 20),
                 getbox("Title", titleController, true, false),
                 const SizedBox(height: 20),
-                getbox("Body", bodyController, true, false),
+                getbox("Body", bodyController, true, true),
                 const SizedBox(height: 20),
                 getbox("Media", coverLinkController, false, false),
                 const SizedBox(height: 20),

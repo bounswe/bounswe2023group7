@@ -236,4 +236,28 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> createComment(String? authToken, String parentId, String text) async {
+    var uri = Uri.parse("$baseURL/comment/write-comment");
+    final body = jsonEncode(<String, Object>{
+      'parentId': parentId,
+      'text': text,
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> listComments(String parentId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/comment/$parentId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+
 }
