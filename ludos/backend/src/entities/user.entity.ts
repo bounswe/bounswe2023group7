@@ -34,10 +34,10 @@ export class User {
   @ManyToMany(() => Game, (game) => game.followerList)
   followedGames: Game[];
 
-  @VirtualColumn({
-    query: (alias) => `SELECT COUNT(*) FROM game_user_follows WHERE "usersId" = ${alias}.id `,
-  })
-  numberOfFollowedGames: number;
+  // @VirtualColumn({
+  //   query: (alias) => `SELECT COUNT(*) FROM game_user_follows WHERE "usersId" = ${alias}.id `,
+  // })
+  // numberOfFollowedGames: number;
 
 
   @Column({ default: false })
@@ -61,32 +61,32 @@ export class User {
   @OneToMany('Review', 'user')
   reviews: Review[];
 
-  @VirtualColumn({
-    query: (alias) => `SELECT COUNT(*) FROM reviews WHERE "userId" = ${alias}.id `,
-  })
-  numberOfReviews: number;
+  // @VirtualColumn({
+  //   query: (alias) => `SELECT COUNT(*) FROM reviews WHERE "userId" = ${alias}.id `,
+  // })
+  // numberOfReviews: number;
 
   @OneToMany('Post', 'user')
   posts: Post[];
 
-  @VirtualColumn({
-    query: (alias) => `SELECT COUNT(*) FROM posts WHERE "userId" = ${alias}.id `,
-  })
-  numberOfPosts: number;
+  // @VirtualColumn({
+  //   query: (alias) => `SELECT COUNT(*) FROM posts WHERE "userId" = ${alias}.id `,
+  // })
+  // numberOfPosts: number;
 
 
-  @VirtualColumn({
-    query: (alias) => `SELECT COUNT(*) FROM comments WHERE "authorId" = ${alias}.id `,
-  })
-  numberOfComments: number;
+  // @VirtualColumn({
+  //   query: (alias) => `SELECT COUNT(*) FROM comments WHERE "authorId" = ${alias}.id `,
+  // })
+  // numberOfComments: number;
 
   @OneToMany('Rating', 'user')
   ratingList: Rating[];
 
-  @VirtualColumn({
-    query: (alias) => `SELECT COUNT(*) FROM ratings WHERE "userId" = ${alias}.id `,
-  })
-  numberOfRatings: number;
+  // @VirtualColumn({
+  //   query: (alias) => `SELECT COUNT(*) FROM ratings WHERE "userId" = ${alias}.id `,
+  // })
+  // numberOfRatings: number;
 
   @ManyToMany('Review', 'likedUsers')
   likedReviews: Review[];
