@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Sidebar from "./components/sidebar"; // Import your Sidebar component
-import Header from "./components/header"; // Import your Header component
+import Header from "./components/Header"; // Import your Header component
 
 const Layout = ({ children }) => {
   const [auth, setAuth] = useState(false);

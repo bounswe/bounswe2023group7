@@ -79,7 +79,7 @@ function Sidebar({ userLoggedIn }) {
       navigate("/create-game");
     } else {
       // If the user is not logged in, redirect to the login page
-      navigate("/login");
+      navigate("/signup");
     }
   };
 
