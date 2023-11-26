@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Box, Typography, Button, Rating } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Typography,
+  Button,
+  Rating,
+  TextField,
+} from "@mui/material";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import axios from "axios";
 
 function Review(data, index1) {
   const [user, setUser] = useState({ username: "" });
+  const [editReq, setEditReq] = useState(false);
+  const [review, setReview] = useState("");
+  const [liked, setLiked] = useState(false);
   const link = `http://${process.env.REACT_APP_API_URL}/user/byId/${data.review.userId}`;
+  console.log(data.review);
   useEffect(() => {
+    setReview(data.review.content);
     axios
       .get(link, {
         headers: {
@@ -21,6 +33,53 @@ function Review(data, index1) {
         console.log(error);
       });
   }, []);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const link = `http://${process.env.REACT_APP_API_URL}/review/${data.review.reviewId}/`;
+    const formData = {
+      rating: 5,
+      content: review,
+    };
+    axios
+      .put(link, formData, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then(() => {
+        data.review.content = review;
+        setEditReq(false);
+      })
+      .catch((error, request) => {
+        console.log(request);
+        console.error("Error on making review:", error);
+      });
+  };
+
+  const handleLikeClick = () => {
+    const followLink = `http://${process.env.REACT_APP_API_URL}/review/${data.review.reviewId}/like`;
+    axios
+      .post(
+        followLink,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        },
+      )
+      .then(() => {
+        setLiked(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleChange = (event) => {
+    setReview(event.target.value);
+  };
 
   const boxStyle = {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
@@ -43,80 +102,156 @@ function Review(data, index1) {
     display: "flex",
     height: "auto",
   };
+  const editButton = {
+    backgroundColor: "rgb(60, 165, 0)",
+    color: "rgb(255, 255, 255)",
+    height: "20px",
+    width: "auto",
+    textTransform: "none",
+    fontFamily: "Trebuchet MS, sans-serif",
+    marginRight: "5px",
+  };
+  const deleteButton = {
+    backgroundColor: "rgb(222, 49, 99)",
+    color: "rgb(255, 255, 255)",
+    height: "20px",
+    width: "auto",
+    textTransform: "none",
+    fontFamily: "Trebuchet MS, sans-serif",
+  };
 
   return (
-    <Grid
-      item
-      xs={12}
-      sm={12}
-      md={12}
-      lg={12}
-      key={index1}
-      style={{ marginBottom: "1%" }}
-    >
-      <Box p={5} style={boxStyle}>
+    <>
+      {" "}
+      {!editReq ? (
         <Grid
-          style={{
-            display: "flex",
-            justifyContent: "left",
-            marginBottom: "10px",
-          }}
+          item
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          key={index1}
+          style={{ marginBottom: "1%" }}
         >
+          <Box p={5} style={boxStyle}>
+            <Grid
+              style={{
+                display: "flex",
+                justifyContent: "left",
+                marginBottom: "10px",
+              }}
+            >
+              <Typography
+                variant="caption"
+                component="div"
+                textAlign="left"
+                style={userStyle}
+              >
+                {user.username}
+              </Typography>
+              <Typography
+                variant="caption"
+                component="div"
+                textAlign="left"
+                style={userStyle}
+              >
+                {data.review.createdAt.slice(5, 7)}/
+                {data.review.createdAt.slice(8, 10)}/
+                {data.review.createdAt.slice(0, 4)}{" "}
+                {data.review.createdAt.slice(11, 19)}
+              </Typography>
+              <Rating
+                name="game-rating"
+                value={data.review.rating}
+                disabled={true}
+                precision={1}
+              />
+            </Grid>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              textAlign="left"
+              style={descriptionStyle}
+            >
+              {data.review.content}
+            </Typography>
+            <Grid
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                marginTop: "10px",
+              }}
+            >
+              {data.showButton && !data.review.isBelongToUser && (
+                <>
+                  <Button
+                    variant="contained"
+                    style={upVoteButton}
+                    onClick={handleLikeClick}
+                  >
+                    {liked ? (
+                      <FaThumbsUp style={{ color: "rgb(124, 252, 0)" }} />
+                    ) : (
+                      <FaThumbsUp style={{ color: "rgb(255, 255, 255)" }} />
+                    )}
+                  </Button>
+                  <Button variant="contained" style={downVoteButton}>
+                    <FaThumbsDown style={{ color: "rgb(222, 49, 99)" }} />
+                  </Button>
+                </>
+              )}
+              {data.showButton && data.review.isBelongToUser && (
+                <>
+                  <Button
+                    variant="contained"
+                    style={editButton}
+                    onClick={() => setEditReq(true)}
+                  >
+                    Edit Your Review
+                  </Button>
+                  <Button
+                    variant="contained"
+                    style={deleteButton}
+                    onClick={() => data.delete(true, data.review.reviewId)}
+                  >
+                    Delete Your Review
+                  </Button>
+                </>
+              )}
+            </Grid>
+          </Box>
+        </Grid>
+      ) : (
+        <Box p={5} style={boxStyle}>
           <Typography
             variant="caption"
             component="div"
             textAlign="left"
             style={userStyle}
           >
-            {user.username}
+            Share Your Review
           </Typography>
-          <Typography
-            variant="caption"
-            component="div"
-            textAlign="left"
-            style={userStyle}
-          >
-            {data.review.createdAt.slice(5, 7)}/
-            {data.review.createdAt.slice(8, 10)}/
-            {data.review.createdAt.slice(0, 4)}{" "}
-            {data.review.createdAt.slice(11, 19)}
-          </Typography>
-          <Rating
-            name="game-rating"
-            value={data.review.rating}
-            disabled={true}
-            precision={1}
+          <TextField
+            id="content"
+            multiline
+            rows={4}
+            value={review}
+            onChange={handleChange}
+            variant="outlined" // You can choose the variant you prefer
+            fullWidth
+            InputProps={{
+              style: { color: "white" }, // Apply custom styles to the input element
+            }}
           />
-        </Grid>
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          textAlign="left"
-          style={descriptionStyle}
-        >
-          {data.review.content}
-        </Typography>
-        <Grid
-          style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            marginTop: "10px",
-          }}
-        >
-          {data.showButton && (
-            <>
-              <Button variant="contained" style={upVoteButton}>
-                <FaThumbsUp style={{ color: "rgb(124, 252, 0)" }} />
-              </Button>
-              <Button variant="contained" style={downVoteButton}>
-                <FaThumbsDown style={{ color: "rgb(222, 49, 99)" }} />
-              </Button>
-            </>
-          )}
-        </Grid>
-      </Box>
-    </Grid>
+          <Grid style={{ display: "flex", justifyContent: "right" }}>
+            <Button onClick={handleSubmit} style={{ marginTop: "3%" }}>
+              Enter
+            </Button>
+          </Grid>
+        </Box>
+      )}
+    </>
   );
 }
 

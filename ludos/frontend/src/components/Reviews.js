@@ -7,6 +7,7 @@ function Reviews(reviews) {
   const [review, setReview] = useState("");
   const [submission, setSubmission] = useState(0);
   const [reviewsScreen, setReviewsScreen] = useState([]);
+  const [userReviewed, setUserReviewed] = useState(false);
   const boxStyle = {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
     borderRadius: "10px",
@@ -27,6 +28,12 @@ function Reviews(reviews) {
       })
       .then((response) => {
         setReviewsScreen(response.data);
+        for (let i = 0; i < response.data.length; i++) {
+          if (response.data[i].isBelongToUser) {
+            setUserReviewed(true);
+            break;
+          }
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -48,6 +55,27 @@ function Reviews(reviews) {
         },
       })
       .then(() => {
+        setUserReviewed(false);
+        setReview("");
+        setSubmission(submission + 1);
+      })
+      .catch((error, request) => {
+        console.log(request);
+        console.error("Error on making review:", error);
+      });
+  };
+
+  const handleDelete = (event, reviewId) => {
+    console.log(reviewId);
+    const link = `http://${process.env.REACT_APP_API_URL}/review/${reviewId}/`;
+    axios
+      .delete(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then(() => {
+        setUserReviewed(false);
         setSubmission(submission + 1);
         setReview("");
       })
@@ -62,9 +90,14 @@ function Reviews(reviews) {
   return (
     <Grid>
       {reviewsScreen.map((review, index1) => (
-        <Review review={review} key={index1} showButton={reviews.showButtons} />
+        <Review
+          review={review}
+          key={index1}
+          showButton={reviews.showButtons}
+          delete={handleDelete}
+        />
       ))}
-      {reviews.showButtons && (
+      {reviews.showButtons && !userReviewed && (
         <Box p={5} style={boxStyle}>
           <Typography
             variant="caption"
