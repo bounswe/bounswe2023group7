@@ -1,14 +1,17 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'helper/colors.dart';
 import 'package:material_tag_editor/tag_editor.dart';
-import 'create_game_second.dart';
+import 'edit_game_second.dart';
+import 'helper/APIService.dart';
+import 'userProvider.dart';
 
 Widget getbox(String hintText, TextEditingController controller,
-    bool isMandatory, bool multiLine) {
+    bool isMandatory, bool multiLine, String oldValue) {
+  controller.text = oldValue;
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -60,22 +63,47 @@ Widget getbox(String hintText, TextEditingController controller,
   );
 }
 
-class CreateGamePage extends StatefulWidget {
-  final String? token;
+class EditGamePage extends StatefulWidget {
   final UserProvider userProvider;
-  const CreateGamePage(
-      {Key? key, required this.token, required this.userProvider})
+  final String? token;
+  final String id;
+  const EditGamePage(
+      {required this.id,
+      required this.token,
+      Key? key,
+      required this.userProvider})
       : super(key: key);
 
   @override
-  State<CreateGamePage> createState() => _CreateGamePageState();
+  State<EditGamePage> createState() => _EditGamePageState();
 }
 
-class _CreateGamePageState extends State<CreateGamePage> {
+class _EditGamePageState extends State<EditGamePage> {
+  final APIService apiService = APIService();
+  Map<String, dynamic> gameData = {};
   List<String> predecessorValues = [];
   List<String> successorValues = [];
   int selectdAgeRestriction = 0;
   List<String> ageRestrictions = ["3+", "7+", "12+", "16+", "18+"];
+
+  Future<void> loadGameData() async {
+    try {
+      gameData = await apiService.getGame(widget.id, widget.token);
+      print(gameData);
+      setState(() {
+        if (ageRestrictions.contains(gameData["ageRestriction"])) {
+          selectdAgeRestriction =
+              ageRestrictions.indexOf(gameData["ageRestriction"]);
+        } else {
+          selectdAgeRestriction = 0;
+        }
+        predecessorValues.addAll(gameData["predecessors"].cast<String>());
+        successorValues.addAll(gameData["successors"].cast<String>());
+      });
+    } catch (e) {
+      print('Error loading game data: $e');
+    }
+  }
 
   _onDeletepr(index) {
     setState(() {
@@ -146,12 +174,22 @@ class _CreateGamePageState extends State<CreateGamePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    loadGameData();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (gameData == null || gameData.isEmpty) {
+      // Show loading indicator or some placeholder
+      return const CircularProgressIndicator();
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
-        title: const Text('Create Game'),
+        title: const Text('Edit Game'),
       ),
       backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
@@ -161,11 +199,13 @@ class _CreateGamePageState extends State<CreateGamePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const SizedBox(height: 20),
-              getbox("Title", titleController, true, false),
+              getbox("Title", titleController, true, false, gameData["title"]),
               const SizedBox(height: 20),
-              getbox("Coverlink", coverLinkController, true, false),
+              getbox("Coverlink", coverLinkController, true, false,
+                  gameData["coverLink"]),
               const SizedBox(height: 20),
-              getbox("Game Bio", gameBioController, true, true),
+              getbox("Game Bio", gameBioController, true, true,
+                  gameData["gameBio"]),
               const SizedBox(height: 20),
               const Row(
                 children: [
@@ -283,6 +323,11 @@ class _CreateGamePageState extends State<CreateGamePage> {
                   ValueItem(
                       label: 'Puzzle-Platformer', value: 'Puzzle-Platformer'),
                 ],
+                selectedOptions: (gameData["tags"] as List<dynamic>)
+                    .where(
+                        (dynamic item) => item is String && tags.contains(item))
+                    .map((dynamic item) => ValueItem(label: item, value: item))
+                    .toList(),
                 selectionType: SelectionType.multi,
                 chipConfig: const ChipConfig(
                     wrapType: WrapType.wrap,
@@ -419,9 +464,11 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     ),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CreateGamePageSecond(
+                        builder: (context) => EditGamePageSecond(
                             userProvider: widget.userProvider,
                             token: widget.token,
+                            id: widget.id,
+                            gameData: gameData,
                             title: titleController.text,
                             coverLink: coverLinkController.text,
                             gameBio: gameBioController.text,

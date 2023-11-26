@@ -13,7 +13,9 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ForumsPage from "./pages/ForumsPage.js";
 import ProfilePage from "./pages/ProfilePage";
 import CreateThreadPage from "./pages/CreateThreadPage.js";
+import ThreadPage from "./pages/ThreadPage.js"
 import axios from "axios";
+import SampleThreadPage from "./pages/SampleThreadPage.js";
 
 function App() {
   const [games, setGames] = useState([]);
@@ -367,6 +369,14 @@ function App() {
             }
           />
           <Route
+            path="/profile-page/:username"
+            element={
+              <Layout>
+                <ProfilePage />
+              </Layout>
+            }
+          />
+          <Route
             path="/create-game"
             element={
               <Layout>
@@ -436,9 +446,25 @@ function App() {
               </Layout>
             }
           />
+           <Route
+            path="/thread/:threadId"
+            element={
+              <Layout>
+                <ThreadPage />
+              </Layout>
+            }
+          />
+           <Route
+            path="/thread/"
+            element={
+              <Layout>
+                <SampleThreadPage />
+              </Layout>
+            }
+          />
         </Routes>
       </div>
-    </Router >
+    </Router>
   );
 }
 

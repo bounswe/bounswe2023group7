@@ -13,26 +13,29 @@ const Homepage = () => {
     {
       title: "OMG! New Character for Dota",
       numOfReplies: 150,
-      userOpened: "@loverGame",
+      userOpened: "loverGame",
       whenOpened: "2 days ago",
       forumTags: ["New Feature", "Dota"],
       forumGame: "Dota",
+      imgsrc: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_oAlf6eD-4mrGrbTaWeg2Ec17AhQLgfuYBQ&usqp=CAU",
     },
     {
       title: "Tell your best memory of Minecraft",
       numOfReplies: 240,
-      userOpened: "@minemine",
+      userOpened: "minemine",
       whenOpened: "1 week ago",
       forumTags: ["Curious", "Minecraft"],
       forumGame: "Minecraft",
+      imgsrc: "https://cdn-www.bluestacks.com/bs-images/54ea74e2f2d10d2ad3a957260f564bea.png",
     },
     {
       title: "Who is your favorite character in Witcher 3",
       numOfReplies: 167,
-      userOpened: "@witchPlay",
+      userOpened: "witchPlay",
       whenOpened: "5 days ago",
       forumTags: ["favorites", "Witcher3"],
       forumGame: "Witcher 3",
+      imgsrc: "https://assets-prd.ignimgs.com/2022/04/15/zuko-alone-1650039877625.jpg",
     },
     // Add more topics as needed...
   ];
@@ -68,7 +71,7 @@ const Homepage = () => {
   // Replace this with your actual game data
   const games = [
     { title: 'The Witcher 3', image: Game1, content: "Embark on an epic adventure in Witcher 3, where every choice you make shapes your destiny. Immerse yourself in a rich, vast open world filled with monsters, mysteries, and morally complex decisions."},
-    { title: 'Sims 4', image: Game2, content: "Dive into the captivating world of life simulation with Sims 4 – create, build, and explore endless possibilities! Get lost in the ultimate virtual reality where your imagination knows no bounds." },
+    { title: 'The Sims 4', image: Game2, content: "Dive into the captivating world of life simulation with Sims 4 – create, build, and explore endless possibilities! Get lost in the ultimate virtual reality where your imagination knows no bounds." },
     { title: 'Tekken 5', image: Game3, content: "Experience the thrill of the fight in Tekken 5! Engage in heart-pounding battles, master martial arts skills, and challenge opponents in this legendary fighting game. Are you ready to claim victory?" },
     // Add more game objects as needed
   ];
@@ -92,7 +95,7 @@ const Homepage = () => {
       >
         <Container
           style={{
-            backgroundColor: "rgb(255, 255, 255, 0.6)",
+            backgroundColor: "rgb(30, 30, 30, 0.9)",
             flex: "1",
             borderRadius: "10px",
             textAlign: "center",
@@ -122,7 +125,7 @@ const Homepage = () => {
         </Container>
         <Container
           style={{
-            backgroundColor: "rgb(255, 255, 255, 0.6)",
+            backgroundColor: "rgb(30, 30, 30, 0.9)",
             flex: "1",
             borderRadius: "10px",
             textAlign: "center",
