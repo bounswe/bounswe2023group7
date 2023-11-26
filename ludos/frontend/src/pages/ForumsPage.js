@@ -167,7 +167,7 @@ const ForumsPage = () => {
       </div>
       <Container
           style={{
-            backgroundColor: "#68A849",
+            backgroundColor: "rgb(30,30,30,0.9)",
             maxWidth: "960px",
             borderRadius: "10px",
             textAlign: "center",
@@ -191,7 +191,7 @@ const ForumsPage = () => {
                   variant="contained"
                   type="regular"
                   size="large"
-                  style={{ marginTop: "10px", backgroundColor: "rgb(9,63,83, 0.6)" }}
+                  style={{ marginTop: "10px", backgroundColor: "rgb(254,8,8, 0.6)" }}
                   sx={{ marginLeft: "10px" }}
                   onClick={handleButtonClickLogged}
                 >
@@ -203,7 +203,7 @@ const ForumsPage = () => {
                   variant="contained"
                   type="regular"
                   size="large"
-                  style={{ marginTop: "10px", backgroundColor: "rgb(9,63,83, 0.9)" }}
+                  style={{ marginTop: "10px", backgroundColor: "rgb(254,8,8, 0.9)" }}
                   sx={{ marginLeft: "10px" }}
                   onClick={handleButtonClickUnlogged}
                 >
@@ -226,7 +226,7 @@ const ForumsPage = () => {
       >
         <Container
           style={{
-            backgroundColor: "rgb(200,200,200,0.6)",
+            backgroundColor: "rgb(30,30,30,0.9)",
             width: "100%",
             borderRadius: "10px",
             textAlign: "center",
@@ -258,7 +258,7 @@ const ForumsPage = () => {
         </Container>
         <Container
           style={{
-            backgroundColor: "rgb(200,200,200,0.6)",
+            backgroundColor: "rgb(30,30,30,0.9)",
             width: "100%",
             borderRadius: "10px",
             textAlign: "center",

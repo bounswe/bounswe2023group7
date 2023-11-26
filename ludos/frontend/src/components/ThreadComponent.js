@@ -5,7 +5,7 @@ import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import ReplyIcon from '@mui/icons-material/Reply';
 
 
-function ThreadComponent({imgsrc, username, date, content}){
+function ThreadComponent({imgsrc, contentImg, username, date, content}){
 
     return(
         <Grid style={{display: "flex", flexDirection: "row"}}>
@@ -29,7 +29,7 @@ function ThreadComponent({imgsrc, username, date, content}){
                             alignSelf: "center",
                             paddingBottom: "10px",
                         }}
-                        src={imgsrc}
+                        src={imgsrc || "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"}
                             />
                         <Typography variant="subtitle1" component="div" style={{
                             color: "white",
@@ -41,7 +41,7 @@ function ThreadComponent({imgsrc, username, date, content}){
                 </Grid>
                 <Grid style={{ 
                     display: "flex", 
-                    justifyContent: "flex-start",
+                    justifyContent: "space-between",
                     flexDirection: "column", 
                     backgroundColor: "rgb(255,255,255,0.6)",
                     padding: "5px",
@@ -60,6 +60,18 @@ function ThreadComponent({imgsrc, username, date, content}){
                             }}>
                             {date}
                         </Typography>
+                        
+                        <Box
+                        component="img"
+                        sx={{
+                            maxHeight: "400px",
+                            maxWidth: "610px",
+                            borderRadius: "10px",
+                            alignSelf: "center",
+                            paddingBottom: "10px",
+                        }}
+                        src={contentImg}
+                            />
 
                         <Typography variant= "body2" component= "div" style={{
                             color: "white",
