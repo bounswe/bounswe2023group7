@@ -375,6 +375,7 @@ function App() {
               </Layout>
             }
           />
+
           <Route
             path="/create-thread"
             element={

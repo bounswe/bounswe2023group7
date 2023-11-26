@@ -15,6 +15,11 @@ import axios from "axios";
 import MuiAlert from "@mui/material/Alert";
 import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate } from "react-router-dom";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -35,8 +40,15 @@ export default function Login() {
   const [dialogMessage, setDialogMessage] = useState("");
   const [usernameEmpty, setUsernameEmpty] = useState(false);
   const [passwordEmpty, setPasswordEmpty] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const axiosInstance = axios.create({
     baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -185,21 +197,36 @@ export default function Login() {
                   error={usernameEmpty}
                   helperText={usernameEmpty ? "Username cannot be empty." : ""}
                 />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  label="Password"
-                  type="password"
-                  value={password}
-                  autoComplete="current-password"
-                  onChange={(e) => {
-                    setPasswordEmpty(false);
-                    setPassword(e.target.value);
-                  }}
-                  error={passwordEmpty}
-                  helperText={passwordEmpty ? "Password cannot be empty." : ""}
-                />
+                <FormControl variant="outlined" fullWidth margin="normal">
+                  <TextField
+                    id="password"
+                    label="Password"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    type={showPassword ? 'text' : 'password'}
+                    error={passwordEmpty}
+                    helperText={passwordEmpty ? "Password cannot be empty." : ""}
+                    onChange={(e) => {
+                      setPasswordEmpty(false);
+                      setPassword(e.target.value);
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </FormControl>
                 <Button
                   type="submit"
                   fullWidth
