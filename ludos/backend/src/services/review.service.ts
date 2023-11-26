@@ -238,6 +238,7 @@ export class ReviewService {
 
     const likedUserCount = review.likedUsers.length;
     const dislikedUserCount = review.dislikedUsers.length;
+
     return {
       reviewId: review.id,
       content: review.content,
@@ -247,7 +248,9 @@ export class ReviewService {
       gameId: review.game.id,
       likedUserCount: likedUserCount,
       dislikedUserCount: dislikedUserCount,
-      isBelongToUser: review.user.id == loggedUser.id
+      isBelongToUser: review.user.id == loggedUser.id,
+      isLikedByUser: review.likedUsers.some(user => user.id === userId),
+      isDislikedByUser: review.dislikedUsers.some(user => user.id === userId)
     };
   }
 
@@ -276,7 +279,9 @@ export class ReviewService {
       gameId: review.game.id,
       likedUserCount: review.likedUsers.length,
       dislikedUserCount: review.dislikedUsers.length,
-      isBelongToUser: review.user.id == loggedUser.id
+      isBelongToUser: review.user.id == loggedUser.id,
+      isLikedByUser: review.likedUsers.some(user => user.id === userId),
+      isDislikedByUser: review.dislikedUsers.some(user => user.id === userId)
     }));
     return mappedReviews;
   }

@@ -27,4 +27,10 @@ export class ReviewGetInfoResponseDto {
 
   @ApiProperty()
   isBelongToUser: boolean;
+
+  @ApiProperty()
+  isLikedByUser: boolean;
+
+  @ApiProperty()
+  isDislikedByUser: boolean;
 }
