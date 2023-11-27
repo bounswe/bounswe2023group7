@@ -75,7 +75,7 @@ function ForumTopic(data) {
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        minHeight: "50px",
+        minHeight: "90px",
         marginBottom: "10px",
       }}
     >
@@ -173,7 +173,12 @@ function ForumTopic(data) {
             fontSize: "20px",
           }}
         >
-          {data.topic.title}
+          <Link
+            to={`http://localhost:3000/thread/${data.topic.id}`}
+            style={userStyle}
+          >
+            {data.topic.title}
+          </Link>
         </Typography>
         <Grid
           style={{
