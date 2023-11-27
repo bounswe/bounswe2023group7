@@ -13,6 +13,7 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ForumsPage from "./pages/ForumsPage.js";
 import ProfilePage from "./pages/ProfilePage";
 import CreateThreadPage from "./pages/CreateThreadPage.js";
+import GamesPage from "./pages/GamesPage.js";
 import ThreadPage from "./pages/ThreadPage.js"
 import axios from "axios";
 import SampleThreadPage from "./pages/SampleThreadPage.js";
@@ -369,6 +370,14 @@ function App() {
             }
           />
           <Route
+            path="/games"
+            element={
+              <Layout>
+                <GamesPage />
+              </Layout>
+            }
+          />
+          <Route
             path="/profile-page/:username"
             element={
               <Layout>
@@ -446,7 +455,7 @@ function App() {
               </Layout>
             }
           />
-           <Route
+          <Route
             path="/thread/:threadId"
             element={
               <Layout>
@@ -454,7 +463,7 @@ function App() {
               </Layout>
             }
           />
-           <Route
+          <Route
             path="/thread/"
             element={
               <Layout>

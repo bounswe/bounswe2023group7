@@ -1,25 +1,25 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'edit_profile_page.dart';
 import 'game_page.dart';
 import 'helper/APIService.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 
-class UserProfilePage extends StatefulWidget {
+class VisitUserPage extends StatefulWidget {
+  final String? username;
   final UserProvider userProvider;
   final String? id;
-  const UserProfilePage({this.id, Key? key, required this.userProvider}) : super(key: key);
+  const VisitUserPage({this.username, this.id, Key? key, required this.userProvider}) : super(key: key);
 
   @override
-  State<UserProfilePage> createState() => _UserProfilePageState();
+  State<VisitUserPage> createState() => _VisitUserPageState();
 }
 
-class _UserProfilePageState extends State<UserProfilePage> {
+class _VisitUserPageState extends State<VisitUserPage> {
   final APIService apiService = APIService();
   late Map<String, dynamic> userData = {};
-  @override
 
+  @override
   void initState() {
     super.initState();
     loadUserData();
@@ -27,7 +27,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Future<void> loadUserData() async {
     try {
-      var response = await apiService.userInfo(widget.userProvider.token!);
+      var response = await apiService.userInfoById(widget.id, widget.userProvider.token!);
       setState(() {
         if(response.statusCode == 200){
           userData = json.decode(response.body);
@@ -46,23 +46,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return Scaffold(
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
-        title: Text('${widget.id}'),
+        title: Text('${widget.username}'),
         backgroundColor: MyColors.lightBlue,
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => EditProfilePage(userData: userData),
-              ));
-            },
-            child: const Text('Edit',
-              style: TextStyle(color: MyColors.white),
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
-      child: Column(
+      child:Column(
         children: [
           const SizedBox(height: 20),
           Row(
@@ -71,19 +59,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
               Container(
                 padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                 child: CircleAvatar(
-                    backgroundColor: MyColors.lightBlue,
-                  radius: 50,
-                  child: ClipOval(
-                    child: (userData['avatar'] != null) ?
-                      Image.network(
-                      userData['avatar'].toString(),
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                      )
-                     :
-                      const Icon(Icons.person)
-                  )
+                  backgroundColor: MyColors.lightBlue,
+                    radius: 50,
+                    child: ClipOval(
+                        child: (userData['avatar'] != null) ?
+                        Image.network(
+                          userData['avatar'].toString(),
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        )
+                            :
+                        const Icon(Icons.person)
+                    )
                 ),
               ),
               Container(
@@ -201,8 +189,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
           ),
           const SizedBox(height: 5),
           Container(
-            padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-            child: (userData['aboutMe'] != null) ?
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+              child: (userData['aboutMe'] != null) ?
               Text(
                 userData['aboutMe'].toString(),
                 style: const TextStyle(
@@ -211,7 +199,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   color: MyColors.blue2,
                 ),
               )
-              :
+                  :
               const Text(
                 'No about me provided.',
                 style: TextStyle(
@@ -272,7 +260,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: MyColors.darkBlue,
                   ),
-                    onPressed: () {},
+                  onPressed: () {},
                   child: ClipOval(// Set your desired height
 
                     child: Image.asset(
@@ -348,14 +336,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => GamePage(
-                                        id: game['id'].toString(),
-                                        token: widget.userProvider.token,
-                                        userProvider: widget.userProvider,
-                                        onRefresh: (){
-                                          setState(() {
-                                            loadUserData();
-                                          });
-                                        },
+                                      id: game['id'].toString(),
+                                      token: widget.userProvider.token,
+                                      userProvider: widget.userProvider,
+                                      onRefresh: (){
+                                        setState(() {
+                                          loadUserData();
+                                        });
+                                      },
                                     ),
                                   ),
                                 );
@@ -415,7 +403,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
         ],
       ),
-    ),
+      ),
     );
   }
 }

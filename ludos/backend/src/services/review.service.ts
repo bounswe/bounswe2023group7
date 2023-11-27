@@ -249,8 +249,8 @@ export class ReviewService {
       likedUserCount: likedUserCount,
       dislikedUserCount: dislikedUserCount,
       isBelongToUser: review.user.id == loggedUser.id,
-      isLikedByUser: review.likedUsers.some(user => user.id === userId),
-      isDislikedByUser: review.dislikedUsers.some(user => user.id === userId)
+      isLikedByUser: review.likedUsers.some((user) => user.id === userId),
+      isDislikedByUser: review.dislikedUsers.some((user) => user.id === userId),
     };
   }
 
@@ -280,8 +280,8 @@ export class ReviewService {
       likedUserCount: review.likedUsers.length,
       dislikedUserCount: review.dislikedUsers.length,
       isBelongToUser: review.user.id == loggedUser.id,
-      isLikedByUser: review.likedUsers.some(user => user.id === userId),
-      isDislikedByUser: review.dislikedUsers.some(user => user.id === userId)
+      isLikedByUser: review.likedUsers.some((user) => user.id === userId),
+      isDislikedByUser: review.dislikedUsers.some((user) => user.id === userId),
     }));
     return mappedReviews;
   }

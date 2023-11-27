@@ -152,6 +152,16 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> listSearchedGames(String? authToken, String? searchKey, {String limit = "20"}) async {
+    String searchQueryParam = searchKey != null ? "searchKey=$searchKey" : "";
+    var uri = Uri.parse("$baseURL/game?$searchQueryParam");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
   Future<http.Response> listThreads(String gameId, String? authToken) async {
     var uri = Uri.parse("$baseURL/post?gameId=$gameId");
     final response = await http.get(uri, headers: {
@@ -255,7 +265,7 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> userInfoById(String userId, String? authToken) async {
+  Future<http.Response> userInfoById(String? userId, String? authToken) async {
     var uri = Uri.parse("$baseURL/user/byId/$userId");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
@@ -391,7 +401,6 @@ class APIService {
     }
   }
 
-
   Future<http.Response> editProfile(
       String? authToken,
       String fullName,
@@ -413,4 +422,18 @@ class APIService {
     });
     return response;
   }
+  
+  Future<http.Response> createRate(
+      String? authToken, String gameId, double rate) async {
+    var uri = Uri.parse("$baseURL/rating/$gameId");
+    final body =
+    jsonEncode(<String, Object>{'rating': rate});
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
 }

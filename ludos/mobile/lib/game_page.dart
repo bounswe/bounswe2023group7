@@ -104,6 +104,7 @@ class _GamePageState extends State<GamePage> {
               await APIService().userInfoById(item['userId'], widget.token);
 
           if (userResponse.statusCode == 200) {
+            setState(() {});
             return Review(
               token: widget.token,
               userProvider: widget.userProvider,
@@ -616,134 +617,136 @@ class _GamePageState extends State<GamePage> {
                     ),
                   ],
                 )),
-            if (showForm)
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                color: MyColors.blue,
-                child: Column(children: [
-                  Slider(
-                    inactiveColor: MyColors.darkBlue,
-                    activeColor: MyColors.orange,
-                    value: rating.toDouble(),
-                    min: 0,
-                    max: 5,
-                    onChanged: (value) {
-                      setState(() {
-                        rating = value;
-                      });
-                    },
-                  ),
-                  Text('Rating: ${rating.round()}'),
-                  TextField(
-                    controller: contentController,
-                    decoration: InputDecoration(labelText: 'Enter your review'),
-                    maxLines: 3,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      http.Response token = await APIService().createReview(
-                          widget.token,
-                          widget.id,
-                          contentController.text,
-                          rating);
-                      if (token.statusCode == 201) {
-                        print("status is ok");
-                        toggleFormVisibility();
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                              SnackBar(
-                                content: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.check_circle_outline,
-                                      color: MyColors.blue,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        'Your review is added successfully. You will be redirected to the Game Page.',
-                                        style: TextStyle(
-                                          color: MyColors.blue,
-                                          fontSize: 16,
+                if (showForm)
+                  Container(
+                  padding: const EdgeInsets.all(16.0),
+                  color: MyColors.blue,
+                  child: Column(children: [
+                    Slider(
+                      inactiveColor: MyColors.darkBlue,
+                      activeColor: MyColors.orange,
+                      value: rating.toDouble(),
+                      min: 0,
+                      max: 5,
+                      onChanged: (value) {
+                        setState(() {
+                          rating = value;
+                        });
+                      },
+                    ),
+                    Text('Rating: ${rating.round()}'),
+                    TextField(
+                      controller: contentController,
+                      decoration: InputDecoration(labelText: 'Enter your review'),
+                      maxLines: 3,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        http.Response token = await APIService().createReview(
+                            widget.token,
+                            widget.id,
+                            contentController.text,
+                            rating.round().toDouble());
+                        http.Response token1 = await APIService().createRate(
+                            widget.token, widget.id, rating.round().toDouble());
+                        if (token.statusCode == 201 && token1.statusCode == 201) {
+                          print("status is ok");
+                          toggleFormVisibility();
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
+                                SnackBar(
+                                  content: const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle_outline,
+                                        color: MyColors.blue,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          'Your review is added successfully. You will be redirected to the Game Page.',
+                                          style: TextStyle(
+                                            color: MyColors.blue,
+                                            fontSize: 16,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
+                                  backgroundColor: MyColors.blue2,
+                                  duration: const Duration(seconds: 5),
+                                  action: SnackBarAction(
+                                    label: 'OK',
+                                    textColor: MyColors.blue,
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context)
+                                          .hideCurrentSnackBar();
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => GamePage(
+                                                onRefresh: widget.onRefresh,
+                                                token: widget.token,
+                                                userProvider: widget.userProvider,
+                                                id: widget.id)),
+                                      );
+                                    },
+                                  ),
                                 ),
-                                backgroundColor: MyColors.blue2,
-                                duration: const Duration(seconds: 5),
-                                action: SnackBarAction(
-                                  label: 'OK',
-                                  textColor: MyColors.blue,
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => GamePage(
-                                              onRefresh: widget.onRefresh,
-                                              token: widget.token,
-                                              userProvider: widget.userProvider,
-                                              id: widget.id)),
-                                    );
-                                  },
+                              ) //ScaffoldMessager
+                              .closed
+                              .then((reason) => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GamePage(
+                                            onRefresh: widget.onRefresh,
+                                            token: widget.token,
+                                            userProvider: widget.userProvider,
+                                            id: widget.id)),
+                                  ));
+                        } else {
+                          print("status is not ok");
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  json.decode(token.body)["message"],
+                                  style: const TextStyle(
+                                    color: MyColors.blue,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
-                            ) //ScaffoldMessager
-                            .closed
-                            .then((reason) => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => GamePage(
-                                          onRefresh: widget.onRefresh,
-                                          token: widget.token,
-                                          userProvider: widget.userProvider,
-                                          id: widget.id)),
-                                ));
-                      } else {
-                        print("status is not ok");
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Text(
-                                json.decode(token.body)["message"],
-                                style: const TextStyle(
-                                  color: MyColors.blue,
-                                  fontSize: 16,
-                                ),
+                              backgroundColor: MyColors.blue2,
+                              duration: const Duration(seconds: 10),
+                              action: SnackBarAction(
+                                label: 'OK',
+                                textColor: MyColors.blue,
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                },
                               ),
                             ),
-                            backgroundColor: MyColors.blue2,
-                            duration: const Duration(seconds: 10),
-                            action: SnackBarAction(
-                              label: 'OK',
-                              textColor: MyColors.blue,
-                              onPressed: () {
-                                ScaffoldMessenger.of(context)
-                                    .hideCurrentSnackBar();
-                              },
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text("Submit"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: MyColors.darkBlue,
+                          );
+                        }
+                      },
+                      child: const Text("Submit"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: MyColors.darkBlue,
+                      ),
                     ),
-                  ),
-                ]),
-              ),
+                  ]),
+                ),
             Column(children: [
               const Divider(
-                height: 5.0,
-                thickness: 5.0,
+                height: 4.0,
+                thickness: 4.0,
                 color: MyColors.lightBlue,
               ),
-              if (reviews.isNotEmpty) 
-                 reviews[0],
+              if(reviews.isNotEmpty)
+                reviews[0],
             ])
           ],
         ),

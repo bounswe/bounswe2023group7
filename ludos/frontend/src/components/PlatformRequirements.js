@@ -48,7 +48,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        Operating System: {data.requirements.minimum.OS}
+        Operating System: {data?.requirements?.minimum?.OS}
       </Typography>
 
       <Typography
@@ -57,7 +57,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        CPU: {data.requirements.minimum.CPU}
+        CPU: {data?.requirements?.minimum?.CPU}
       </Typography>
       <Typography
         variant="body1"
@@ -65,7 +65,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        GPU: {data.requirements.minimum.GPU}
+        GPU: {data?.requirements?.minimum?.GPU}
       </Typography>
       <Typography
         variant="body1"
@@ -73,7 +73,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        Memory: {data.requirements.minimum.RAM}
+        Memory: {data?.requirements?.minimum?.RAM}
       </Typography>
       <Typography
         variant="body1"
@@ -81,7 +81,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        DirectX: {data.requirements.minimum.DirectX}
+        DirectX: {data?.requirements?.minimum?.DirectX}
       </Typography>
       <Typography
         variant="body1"
@@ -89,7 +89,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        Storage: {data.requirements.minimum.Storage}
+        Storage: {data?.requirements?.minimum?.Storage}
       </Typography>
       <Typography
         variant="body1"
@@ -97,7 +97,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        Network: {data.requirements.minimum.Network}
+        Network: {data?.requirements?.minimum?.Network}
       </Typography>
       <Typography variant="h5" color="gray" align="left" style={headerStyle}>
         RECOMMENDED SYSTEM REQUIREMENTS
@@ -108,7 +108,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        Operating System: {data.requirements.recommended.OS}
+        Operating System: {data?.requirements?.recommended?.OS}
       </Typography>
 
       <Typography
@@ -117,7 +117,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        CPU: {data.requirements.recommended.CPU}
+        CPU: {data?.requirements?.recommended?.CPU}
       </Typography>
       <Typography
         variant="body1"
@@ -125,7 +125,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        GPU: {data.requirements.recommended.GPU}
+        GPU: {data?.requirements?.recommended?.GPU}
       </Typography>
       <Typography
         variant="body1"
@@ -133,7 +133,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        Memory: {data.requirements.recommended.RAM}
+        Memory: {data?.requirements?.recommended?.RAM}
       </Typography>
       <Typography
         variant="body1"
@@ -141,7 +141,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        DirectX: {data.requirements.recommended.DirectX}
+        DirectX: {data?.requirements?.recommended?.DirectX}
       </Typography>
       <Typography
         variant="body1"
@@ -149,7 +149,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        Storage: {data.requirements.recommended.Storage}
+        Storage: {data?.requirements?.recommended?.Storage}
       </Typography>
       <Typography
         variant="body1"
@@ -157,7 +157,7 @@ function Description(data) {
         align="center"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}
       >
-        Network: {data.requirements.recommended.Network}
+        Network: {data?.requirements?.recommended?.Network}
       </Typography>
     </Grid>
   );

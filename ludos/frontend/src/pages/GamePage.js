@@ -18,11 +18,16 @@ import Reviews from "../components/Reviews.js";
 import DescriptionTab from "../components/DescriptionTab.js";
 import RelatedGames from "../components/RelatedGamesTab.js";
 import EntityTab from "../components/EntityTab.js";
+import GameForum from "../components/GameForums.js";
 
 function GamePage(id) {
   const [auth, setAuth] = useState(false);
   const [game, setGame] = useState(false);
   const [follow, setFollow] = useState(false);
+  const [rate, setRate] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+  const [submission, setSubmission] = useState(0);
+  const [duration, setDuration] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
@@ -39,15 +44,68 @@ function GamePage(id) {
       .then((response) => {
         setGame(response.data);
         setFollow(response.data.isFollowed);
+        setRate(response.data.userRating);
+        setAverageRating(response.data.averageRating);
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [submission]);
   const [value, setValue] = useState("1");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleDuration = (event) => {
+    const link = `http://${process.env.REACT_APP_API_URL}/game/${id.gameId}`;
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        const formData = { duration: parseInt(duration) };
+        console.log(response);
+        if (response.data.userCompilationDuration) {
+          const followLink = `http://${process.env.REACT_APP_API_URL}/game/completionDuration/${id.gameId}`;
+          axios
+            .put(followLink, formData, {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              },
+            })
+            .then(() => {
+              setSubmission(submission + 1);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          const followLink = `http://${process.env.REACT_APP_API_URL}/game/completionDuration/${id.gameId}`;
+          console.log(event.target.value);
+          axios
+            .post(followLink, formData, {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              },
+            })
+            .then(() => {
+              setSubmission(submission + 1);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleChangeDuration = (event) => {
+    setDuration(event.target.value);
   };
 
   const tagBox = {
@@ -195,7 +253,53 @@ function GamePage(id) {
         console.log(error);
       });
   };
-
+  const handleRateClick = (event) => {
+    const link = `http://${process.env.REACT_APP_API_URL}/game/${id.gameId}`;
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        const formData = { rating: parseInt(event.target.value) };
+        console.log(event.target.value);
+        if (response.data.userRating !== null) {
+          const followLink = `http://${process.env.REACT_APP_API_URL}/rating/${id.gameId}`;
+          axios
+            .put(followLink, formData, {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              },
+            })
+            .then(() => {
+              setRate(event.target.value);
+              console.log("yee");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          const followLink = `http://${process.env.REACT_APP_API_URL}/rating/${id.gameId}`;
+          console.log(event.target.value);
+          axios
+            .post(followLink, formData, {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              },
+            })
+            .then(() => {
+              setRate(event.target.value);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <Container
       style={{ backgroundColor: "rgb(0, 150, 255)", maxWidth: "1200px" }}
@@ -266,7 +370,12 @@ function GamePage(id) {
             >
               Rate:
             </Typography>
-            <Rating name="game-rating" value={0} precision={1} />
+            <Rating
+              name="game-rating"
+              value={rate}
+              precision={1}
+              onClick={handleRateClick}
+            />
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
             <Typography
@@ -278,7 +387,7 @@ function GamePage(id) {
             </Typography>
             <Rating
               name="user-rating"
-              value={game.averageRating}
+              value={averageRating}
               precision={0.1}
               disabled={true}
             />
@@ -317,7 +426,7 @@ function GamePage(id) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {game.averageUserCompilationDuration}
+              {game.averageCompletionDuration}
             </Typography>
           </Grid>
         </Grid>
@@ -404,9 +513,21 @@ function GamePage(id) {
                 >
                   Share Your Duration
                 </Typography>
-                <TextField id="outlined-basic" style={inputStyle} />
+                <TextField
+                  id="outlined-basic"
+                  style={inputStyle}
+                  onChange={handleChangeDuration}
+                />
               </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4} style={submitStyle}>
+              <Grid
+                item
+                xs={12}
+                sm={4}
+                md={4}
+                lg={4}
+                style={submitStyle}
+                onClick={handleDuration}
+              >
                 <Button
                   style={{
                     color: "black",
@@ -534,14 +655,10 @@ function GamePage(id) {
                 ></Typography>
               </TabPanel>
               <TabPanel value="6">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <Reviews data={game.reviews} showButtons={auth} />
-                </Typography>
+                <Reviews data={[]} id={game.id} showButtons={auth} />
               </TabPanel>
               <TabPanel value="7">
-                <Typography
-                  style={{ fontSize: "15px", color: "white" }}
-                ></Typography>
+                <GameForum id={game.id} showButtons={auth} />
               </TabPanel>
             </TabContext>
           </Box>
