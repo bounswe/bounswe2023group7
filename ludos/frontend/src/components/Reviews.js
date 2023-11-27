@@ -75,8 +75,8 @@ function Reviews(reviews) {
         },
       })
       .then(() => {
-        setUserReviewed(false);
         setSubmission(submission + 1);
+        setUserReviewed(false);
         setReview("");
       })
       .catch((error, request) => {

@@ -4,7 +4,7 @@ import {
   Box,
   Typography,
   Button,
-  Rating,
+  //Rating,
   TextField,
 } from "@mui/material";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
@@ -43,7 +43,7 @@ function Review(data, index1) {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [user]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -208,12 +208,14 @@ function Review(data, index1) {
                 {data.review.createdAt.slice(0, 4)}{" "}
                 {data.review.createdAt.slice(11, 19)}
               </Typography>
-              <Rating
-                name="game-rating"
-                value={data.review.rating}
-                disabled={true}
-                precision={1}
-              />
+              {/*
+                <Rating
+                  name="game-rating"
+                  value={data.review.rating}
+                  disabled={true}
+                  precision={1}
+                />
+            */}
             </Grid>
             <Typography
               variant="body2"
