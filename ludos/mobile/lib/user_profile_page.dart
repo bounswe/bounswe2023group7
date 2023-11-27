@@ -16,7 +16,7 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePageState extends State<UserProfilePage> {
   final APIService apiService = APIService();
-  Map<String, dynamic> userData = {};
+  late Map<String, dynamic> userData = {};
   @override
 
   void initState() {
@@ -317,7 +317,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: userData['followedGames'].map<Widget>((game) {
+              children: (userData['followedGames'] == null) ? [const Column()] : userData['followedGames'].map<Widget>((game) {
                 return Column(
                   children: [
                     Row(

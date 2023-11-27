@@ -4,15 +4,18 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/edit_game.dart';
 import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'forum_page.dart';
 import 'game_properties.dart';
+import 'games_page.dart';
 import 'game_reviews_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
 import 'login_page.dart';
+import 'main.dart';
 
 class GamePage extends StatefulWidget {
   final VoidCallback onRefresh;
@@ -34,7 +37,7 @@ class _GamePageState extends State<GamePage> {
   Map<String, dynamic> gameData = {};
 
   @override
-  void initState() {
+  initState() {
     super.initState();
     loadGameData();
     initializeFollowState();
@@ -44,50 +47,29 @@ class _GamePageState extends State<GamePage> {
 
   void initializeFollowState() async {
     try {
-      if(widget.userProvider.isLoggedIn){
+      if (widget.userProvider.isLoggedIn) {
         bool value = await getFollowState();
         setState(() {
           followState = value;
           buttonText = followState ? "Unfollow" : "Follow";
         });
-      }else{
+      } else {
         setState(() {
           followState = false;
           buttonText = "Follow";
         });
       }
-
     } catch (error) {
       print("Error initializing follow state: $error");
     }
   }
-/*
-  Future<void> updateFollowState() async {
-    var response = await apiService.userInfo(widget.token);
-    var bool = false;
-    for (var i = 0; i < json.decode(response.body)['followedGames'].length; i++) {
-      if ((json.decode(response.body)['followedGames'][i])['id'] == widget.id) {
-        bool = true;
-      }
-    }
-    setState((){
-      followState = bool;
-    });
-    setState(() {
-      if(followState){
-        buttonText = "Unfollow";
-      }
-      else{
-        buttonText = "Follow";
-      }
-    });
-  }
-*/
 
   Future<bool> getFollowState() async {
     var response = await APIService().userInfo(widget.token);
     var bool = false;
-    for (var i = 0; i < json.decode(response.body)['followedGames'].length; i++) {
+    for (var i = 0;
+        i < json.decode(response.body)['followedGames'].length;
+        i++) {
       if (json.decode(response.body)['followedGames'][i]['id'] == widget.id) {
         bool = true;
         break;
@@ -99,7 +81,6 @@ class _GamePageState extends State<GamePage> {
   Future<void> loadGameData() async {
     try {
       gameData = await apiService.getGame(widget.id, widget.token);
-
       setState(() {});
     } catch (e) {
       print('Error loading game data: $e');
@@ -172,7 +153,58 @@ class _GamePageState extends State<GamePage> {
                   'Edit Game',
                   style: TextStyle(color: MyColors.white),
                 ),
-                onTap: () {},
+                onTap: () {
+                  if (widget.userProvider.isLoggedIn) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EditGamePage(
+                        id: widget.id,
+                        token: widget.token,
+                        userProvider: widget.userProvider,
+                      ),
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                          SnackBar(
+                            content: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  color: MyColors.blue,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Please log in to edit game',
+                                    style: TextStyle(
+                                      color: MyColors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: MyColors.blue2,
+                            duration: const Duration(seconds: 5),
+                            action: SnackBarAction(
+                              label: 'Log In',
+                              textColor: MyColors.blue,
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                        .closed
+                        .then((reason) => {});
+                  }
+                },
               ),
             ],
           ),
@@ -192,25 +224,23 @@ class _GamePageState extends State<GamePage> {
                   ))
         ],
       ),
-      body:  SingleChildScrollView(
-
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if(gameData['coverLink'] != null)
+            if (gameData['coverLink'] != null)
               Image.network(
                 width: 200,
                 height: 200,
                 gameData['coverLink'].toString(),
-                errorBuilder:
-                    (BuildContext context, Object exception, StackTrace? stackTrace) {
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
                   return const Text('');
                 },
                 fit: BoxFit.fill,
               ),
-
             const SizedBox(height: 10),
             Row(
               children: [
@@ -277,7 +307,6 @@ class _GamePageState extends State<GamePage> {
               ),
             ),
             const SizedBox(height: 10),
-
             Center(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -288,10 +317,9 @@ class _GamePageState extends State<GamePage> {
                     if (gameData['platforms'] != null)
                       for (var i = 0; i < gameData['platforms'].length; i++)
                         Text('${gameData['platforms'][i].toString()}   ',
-                          style: const TextStyle(
-                              color: MyColors.lightBlue,
-                              fontWeight: FontWeight.bold
-                          )),
+                            style: const TextStyle(
+                                color: MyColors.lightBlue,
+                                fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -377,7 +405,6 @@ class _GamePageState extends State<GamePage> {
                 ),
               ],
             ),
-
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -424,32 +451,34 @@ class _GamePageState extends State<GamePage> {
                               ),
                             ),
                           )
-                          .closed
-                          .then((reason) => {});
-                    } else {
-                      bool state = false;
-                      Future<bool> executeAsyncActions() async {
-                        bool state = false;
-                        try {
-                          if (followState) {
-                            http.Response token = await APIService()
-                                .unfollowGame(widget.token, widget.id);
-                            if (token.statusCode == 200) {
-                              state = false;
-                              print("Unfollowed");
+                              .closed
+                              .then((reason) => {});
+                        }else{
+                          bool state = false;
+                          Future<bool> executeAsyncActions() async {
+                            bool state = false;
+                          try {
+                            if (followState) {
+                              http.Response token = await APIService()
+                                  .unfollowGame(widget.token, widget.id);
+                              if (token.statusCode == 200) {
+                                state = false;
+                                widget.onRefresh();
+                                print("Unfollowed");
+                              } else {
+                                print("Error: ${token.statusCode}");
+                              }
                             } else {
-                              print("Error: ${token.statusCode}");
+                              http.Response token = await APIService().followGame(
+                                  widget.token, widget.id);
+                              if (token.statusCode == 200) {
+                                state = true;
+                                widget.onRefresh();
+                                print("Followed");
+                              } else {
+                                print("Error: ${token.statusCode}");
+                              }
                             }
-                          } else {
-                            http.Response token = await APIService()
-                                .followGame(widget.token, widget.id);
-                            if (token.statusCode == 200) {
-                              state = true;
-                              print("Followed");
-                            } else {
-                              print("Error: ${token.statusCode}");
-                            }
-                          }
                         } catch (error) {
                           print("Error: $error");
                         }
@@ -653,6 +682,7 @@ class _GamePageState extends State<GamePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => GamePage(
+                                              onRefresh: widget.onRefresh,
                                               token: widget.token,
                                               userProvider: widget.userProvider,
                                               id: widget.id)),
@@ -666,6 +696,7 @@ class _GamePageState extends State<GamePage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => GamePage(
+                                          onRefresh: widget.onRefresh,
                                           token: widget.token,
                                           userProvider: widget.userProvider,
                                           id: widget.id)),
@@ -711,10 +742,49 @@ class _GamePageState extends State<GamePage> {
                 thickness: 5.0,
                 color: MyColors.lightBlue,
               ),
-              if (reviews.isNotEmpty) reviews[0],
+              if (reviews.isNotEmpty) 
+                 reviews[0],
             ])
           ],
         ),
+      ),
+      bottomNavigationBar: Container(
+          color: MyColors.orange,
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Home(),
+                    ));
+                  },
+                  icon: const Icon(Icons.home)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                  },
+                  icon: const Icon(Icons.group)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider),
+                    ));
+                  },
+                  icon: const Icon(Icons.games)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {},
+                  icon: const Icon(Icons.favorite)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {},
+                  icon: const Icon(Icons.search_outlined)),
+            ],
+          )
       ),
     );
   }
