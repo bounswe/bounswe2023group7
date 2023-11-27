@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
+import 'package:ludos_mobile_app/user_profile_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_thread.dart';
 import 'package:ludos_mobile_app/reusable_widgets/home_game_sum.dart';
 import 'helper/APIService.dart';
@@ -113,9 +114,63 @@ class _HomeState extends State<Home> {
                       const TextStyle(color: MyColors.darkBlue), // Text color
                 ),
                 accountEmail: null,
-                currentAccountPicture: const CircleAvatar(
-                  backgroundColor: MyColors.white,
-                  child: Icon(Icons.person),
+                currentAccountPicture: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 15.0,
+                    backgroundColor: MyColors.white,
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(0.0),
+                  ),
+                  child: const CircleAvatar(
+                    backgroundColor: MyColors.white,
+                    child: Icon(Icons.person),
+                  ),
+                  onPressed: () {
+                    if(userProvider.isLoggedIn){
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => UserProfilePage(userProvider: userProvider, id: userProvider.username),
+                      ));
+                    }
+                    else{
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Row(
+                            children: [
+                              Icon(Icons.error, color: MyColors.blue),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Please log in to view profile page',
+                                  style: TextStyle(
+                                    color: MyColors.blue,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          backgroundColor: MyColors.blue2,
+                          duration: const Duration(seconds: 5),
+                          action: SnackBarAction(
+                            label: 'Log In',
+                            textColor: MyColors.blue,
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()),
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                          .closed
+                          .then((reason) => {});
+                    }
+                  },
                 ),
                 decoration: const BoxDecoration(
                   color: MyColors.blue, // Header background color

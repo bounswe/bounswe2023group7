@@ -36,6 +36,7 @@ dependencies:
   material_tag_editor: 0.1.2
   multi_dropdown: ^2.1.0
   intl: ^0.17.0
+  url_launcher: ^6.0.13
 
 
   # The following adds the Cupertino Icons font to your application.

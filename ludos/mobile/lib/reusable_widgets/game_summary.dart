@@ -95,7 +95,12 @@ class _GameSummaryState extends State<GameSummary> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => GamePage(id: id, token: token, userProvider: userProvider),
+                builder: (context) => GamePage(
+                    id: id,
+                    token: token,
+                    userProvider: userProvider,
+                    onRefresh: () {},
+                ),
               ),
             );
 

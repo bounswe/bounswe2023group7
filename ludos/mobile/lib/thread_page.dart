@@ -234,7 +234,9 @@ class _ThreadPageState extends State<ThreadPage>
                                       builder: (context) => GamePage(
                                           id: threadData['game']['id'],
                                           token: widget.token,
-                                          userProvider: widget.userProvider),
+                                          userProvider: widget.userProvider,
+                                          onRefresh: (){},
+                                      ),
                                     ),
                                   );
                                 },

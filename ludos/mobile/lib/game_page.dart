@@ -18,15 +18,11 @@ import 'login_page.dart';
 import 'main.dart';
 
 class GamePage extends StatefulWidget {
+  final VoidCallback onRefresh;
   final UserProvider userProvider;
   final String? token;
   final String id;
-  const GamePage(
-      {required this.id,
-      required this.token,
-      Key? key,
-      required this.userProvider})
-      : super(key: key);
+  const GamePage({required this.id, required this.token, Key? key, required this.userProvider, required this.onRefresh}) : super(key: key);
   @override
   State<GamePage> createState() => _GamePageState();
 }
@@ -455,32 +451,34 @@ class _GamePageState extends State<GamePage> {
                               ),
                             ),
                           )
-                          .closed
-                          .then((reason) => {});
-                    } else {
-                      bool state = false;
-                      Future<bool> executeAsyncActions() async {
-                        bool state = false;
-                        try {
-                          if (followState) {
-                            http.Response token = await APIService()
-                                .unfollowGame(widget.token, widget.id);
-                            if (token.statusCode == 200) {
-                              state = false;
-                              print("Unfollowed");
+                              .closed
+                              .then((reason) => {});
+                        }else{
+                          bool state = false;
+                          Future<bool> executeAsyncActions() async {
+                            bool state = false;
+                          try {
+                            if (followState) {
+                              http.Response token = await APIService()
+                                  .unfollowGame(widget.token, widget.id);
+                              if (token.statusCode == 200) {
+                                state = false;
+                                widget.onRefresh();
+                                print("Unfollowed");
+                              } else {
+                                print("Error: ${token.statusCode}");
+                              }
                             } else {
-                              print("Error: ${token.statusCode}");
+                              http.Response token = await APIService().followGame(
+                                  widget.token, widget.id);
+                              if (token.statusCode == 200) {
+                                state = true;
+                                widget.onRefresh();
+                                print("Followed");
+                              } else {
+                                print("Error: ${token.statusCode}");
+                              }
                             }
-                          } else {
-                            http.Response token = await APIService()
-                                .followGame(widget.token, widget.id);
-                            if (token.statusCode == 200) {
-                              state = true;
-                              print("Followed");
-                            } else {
-                              print("Error: ${token.statusCode}");
-                            }
-                          }
                         } catch (error) {
                           print("Error: $error");
                         }
@@ -684,6 +682,7 @@ class _GamePageState extends State<GamePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => GamePage(
+                                              onRefresh: widget.onRefresh,
                                               token: widget.token,
                                               userProvider: widget.userProvider,
                                               id: widget.id)),
@@ -697,6 +696,7 @@ class _GamePageState extends State<GamePage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => GamePage(
+                                          onRefresh: widget.onRefresh,
                                           token: widget.token,
                                           userProvider: widget.userProvider,
                                           id: widget.id)),
