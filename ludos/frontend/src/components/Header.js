@@ -37,7 +37,9 @@ const Header = ({ userLoggedIn }) => {
           alignItems: "center",
         }}
       >
-        <img src={logo} alt="Logo" style={{ width: "100px", height: "auto" }} />
+        <a href="/">
+          <img src={logo} alt="Logo" style={{ width: "100px", height: "auto" }} />
+        </a>
         <div
           style={{
             display: "flex",
@@ -72,8 +74,7 @@ const Header = ({ userLoggedIn }) => {
                   marginLeft: "160px", // Adjust the left margin as needed
                 }}
               >
-                <Link
-                  to="/myGames"
+                <a href="/profile-page/#favGamesSection"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div>
@@ -93,7 +94,7 @@ const Header = ({ userLoggedIn }) => {
                       My Games
                     </p>
                   </div>
-                </Link>
+                </a>
                 <Link
                   to="/myGroups"
                   style={{ textDecoration: "none", color: "inherit" }}

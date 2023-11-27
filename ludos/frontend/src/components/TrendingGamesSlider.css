@@ -1,0 +1,41 @@
+.trending-games-slider {
+    max-width: 1152px; /* Adjust width as needed */
+    margin: 0 auto;
+    width: 100%;
+    height: 400px;
+  }
+  
+  .slider-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%; /* Adjust height as needed */
+  }
+  
+  .slider {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .slide {
+    min-width: 100%;
+  }
+  
+  .game-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  /* Add additional styling as needed */
+
+  /* Customize the color of dots */
+.slick-dots li button:before {
+    color: white; /* Change to your desired color */
+  }
+  
+  /* Change active dot color */
+  .slick-dots li.slick-active button:before {
+    color: rgb(189, 174, 174); /* Change to your desired active color */
+  }
+  

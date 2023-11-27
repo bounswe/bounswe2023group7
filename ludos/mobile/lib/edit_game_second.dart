@@ -2,14 +2,16 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/game_page.dart';
 import 'package:ludos_mobile_app/games_page.dart';
-import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'helper/colors.dart';
 import 'helper/APIService.dart';
+import 'userProvider.dart';
 
 Widget getbox(String hintText, TextEditingController controller,
-    bool isMandatory, bool multiLine) {
+    bool isMandatory, bool multiLine, String oldValue) {
+  controller.text = oldValue;
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -84,9 +86,11 @@ String formatDateTime(DateTime dateTime) {
   return '$month $day, $year';
 }
 
-class CreateGamePageSecond extends StatefulWidget {
+class EditGamePageSecond extends StatefulWidget {
   final UserProvider userProvider;
   final String? token;
+  final String id;
+  final Map<String, dynamic> gameData;
   final String title;
   final String coverLink;
   final String gameBio;
@@ -95,24 +99,26 @@ class CreateGamePageSecond extends StatefulWidget {
   final List<String> predecessors;
   final List<String> successors;
 
-  const CreateGamePageSecond(
-      {Key? key,
-      required this.userProvider,
-      required this.token,
-      required this.title,
-      required this.coverLink,
-      required this.gameBio,
-      required this.ageRestriction,
-      required this.tags,
-      required this.predecessors,
-      required this.successors})
-      : super(key: key);
+  const EditGamePageSecond({
+    Key? key,
+    required this.userProvider,
+    this.token,
+    required this.id,
+    required this.gameData,
+    required this.title,
+    required this.coverLink,
+    required this.gameBio,
+    required this.ageRestriction,
+    required this.tags,
+    required this.predecessors,
+    required this.successors,
+  }) : super(key: key);
 
   @override
-  State<CreateGamePageSecond> createState() => _CreateGamePageStateSecond();
+  State<EditGamePageSecond> createState() => _EditGamePageStateSecond();
 }
 
-class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
+class _EditGamePageStateSecond extends State<EditGamePageSecond> {
   DateTime date = DateTime(2016, 10, 24);
   List<String> selectedOptions = [];
   List<String> platforms = [
@@ -156,12 +162,22 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
   final MultiSelectController platformsController = MultiSelectController();
 
   @override
+  void initState() {
+    super.initState();
+    date = DateTime.parse(widget.gameData["releaseDate"]);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (widget.gameData == null || widget.gameData.isEmpty) {
+      // Show loading indicator or some placeholder
+      return const CircularProgressIndicator();
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
         centerTitle: true,
-        title: const Text('Create Game'),
+        title: const Text('Edit Game'),
       ),
       backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
@@ -171,9 +187,11 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 20),
-                getbox("Game Story", gameStoryController, true, true),
+                getbox("Game Story", gameStoryController, true, true,
+                    widget.gameData["gameStory"]),
                 const SizedBox(height: 20),
-                getbox("Game Guide", gameGuideController, false, true),
+                getbox("Game Guide", gameGuideController, false, true,
+                    widget.gameData["gameGuide"]),
                 const SizedBox(height: 20),
                 const Row(
                   children: [
@@ -228,8 +246,14 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                   ),
                 ]),
                 const SizedBox(height: 20),
-                getbox("System Requirements", systemRequirementsController,
-                    true, false),
+                getbox(
+                    "System Requirements",
+                    systemRequirementsController,
+                    true,
+                    false,
+                    widget.gameData["systemRequirements"] is String
+                        ? widget.gameData["systemRequirements"]
+                        : widget.gameData["systemRequirements"].toString()),
                 const SizedBox(height: 20),
                 const Row(
                   children: [
@@ -269,6 +293,13 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                     ValueItem(label: 'Board Game', value: 'Board Game'),
                     ValueItem(label: 'VR', value: 'VR'),
                   ],
+                  selectedOptions: (widget.gameData["platforms"]
+                          as List<dynamic>)
+                      .where((dynamic item) =>
+                          item is String && platforms.contains(item))
+                      .map(
+                          (dynamic item) => ValueItem(label: item, value: item))
+                      .toList(),
                   selectionType: SelectionType.multi,
                   chipConfig: const ChipConfig(
                       wrapType: WrapType.wrap,
@@ -282,19 +313,23 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                getbox("Developer", developerController, true, false),
+                getbox("Developer", developerController, true, false,
+                    widget.gameData["developer"]),
                 const SizedBox(height: 20),
-                getbox("Game Publisher", publisherController, true, false),
+                getbox("Game Publisher", publisherController, true, false,
+                    widget.gameData["publisher"]),
                 const SizedBox(height: 20),
-                getbox("Trivia", triviaController, false, false),
+                getbox("Trivia", triviaController, false, false,
+                    widget.gameData["trivia"]),
                 const SizedBox(height: 20),
                 TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: MyColors.lightBlue,
                   ),
                   onPressed: () async {
-                    http.Response token = await APIService().createGame(
+                    http.Response token = await APIService().editGame(
                         widget.token,
+                        widget.id,
                         widget.title,
                         widget.coverLink,
                         systemRequirementsController.text,
@@ -327,7 +362,7 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                                   SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
-                                      'Your game is created successfully. You will be redirected to the Games Page.',
+                                      'Your game is updated successfully. You will be redirected to the Game Page.',
                                       style: TextStyle(
                                         color: MyColors.blue,
                                         fontSize: 16,
@@ -347,9 +382,11 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => GamesPage(
-                                            token: widget.token,
-                                            userProvider: widget.userProvider)),
+                                        builder: (context) => GamePage(
+                                              id: widget.id,
+                                              token: widget.token,
+                                              userProvider: widget.userProvider,
+                                            )),
                                   );
                                 },
                               ),
@@ -359,9 +396,11 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                           .then((reason) => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => GamesPage(
-                                        token: widget.token,
-                                        userProvider: widget.userProvider)),
+                                    builder: (context) => GamePage(
+                                          id: widget.id,
+                                          token: widget.token,
+                                          userProvider: widget.userProvider,
+                                        )),
                               ));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -391,7 +430,7 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                     }
                   },
                   child: const Text(
-                    'Save Game',
+                    'Update Game',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
