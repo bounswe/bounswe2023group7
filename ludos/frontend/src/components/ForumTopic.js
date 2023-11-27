@@ -180,7 +180,7 @@ function ForumTopic(data) {
           }}
         >
           <Link
-            to={`http://localhost:3000/thread/${data.topic.id}`}
+            to={`/thread/${data.topic.id}`}
             style={{ textDecoration: "none", color: "inherit" }}
           >
             {data.topic.title}
