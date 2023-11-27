@@ -69,7 +69,7 @@ function Review(data, index1) {
   };
 
   const handleLikeClick = () => {
-    if (!liked) {
+    if (!data.review.isBelongToUser) {
       const followLink = `http://${process.env.REACT_APP_API_URL}/review/${data.review.reviewId}/like`;
       axios
         .post(
@@ -87,11 +87,12 @@ function Review(data, index1) {
             setLiked(true);
             setDislikeCount(dislikeCount - 1);
             setLikeCount(likeCount + 1);
+          } else if (liked) {
+            setLiked(false);
+            setLikeCount(likeCount - 1);
           } else {
-            if (!liked) {
-              setLikeCount(likeCount + 1);
-              setLiked(true);
-            }
+            setLikeCount(likeCount + 1);
+            setLiked(true);
           }
         })
         .catch((error) => {
@@ -100,7 +101,7 @@ function Review(data, index1) {
     }
   };
   const handleDislikeClick = () => {
-    if (!disliked) {
+    if (!data.review.isBelongToUser) {
       const followLink = `http://${process.env.REACT_APP_API_URL}/review/${data.review.reviewId}/dislike`;
       axios
         .post(
@@ -118,11 +119,12 @@ function Review(data, index1) {
             setDisliked(true);
             setLikeCount(likeCount - 1);
             setDislikeCount(dislikeCount + 1);
+          } else if (disliked) {
+            setDisliked(false);
+            setDislikeCount(dislikeCount - 1);
           } else {
-            if (!disliked) {
-              setDislikeCount(dislikeCount + 1);
-              setDisliked(true);
-            }
+            setDislikeCount(dislikeCount + 1);
+            setDisliked(true);
           }
         })
         .catch((error) => {
@@ -241,7 +243,7 @@ function Review(data, index1) {
                 marginTop: "10px",
               }}
             >
-              {data.showButton && !data.review.isBelongToUser && (
+              {data.showButton && !data?.review?.isBelongToUser && (
                 <>
                   <Button
                     variant="contained"
