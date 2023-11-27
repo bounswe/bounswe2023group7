@@ -116,7 +116,9 @@ function ProfilePage() {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          console.log("BUGCHECK");
+          console.log(username);
+          console.log(response.data.id);
           if (response.data.id === username || username === undefined) {
             setMyProfile(true);
             setProfile(response.data);
@@ -169,7 +171,7 @@ function ProfilePage() {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [username]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -686,7 +688,7 @@ function ProfilePage() {
                   fontFamily: "Trebuchet MS, sans-serif",
                 }}
               >
-                Some Favorite Games of the User
+                Favorite Games of the User
               </Typography>
             </Grid>
             {favGames.map((game, index1) => (
@@ -699,6 +701,7 @@ function ProfilePage() {
                   width: 220,
                   borderRadius: "5%",
                   marginTop: "2%",
+                  marginBottom: "1%",
                 }}
               >
                 <Box
@@ -964,7 +967,7 @@ function ProfilePage() {
             </Grid>
           </Grid>
           <Grid container spacing={1} style={gameBoxStyle}>
-            <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Grid id="favGamesSection" item xs={12} sm={12} md={12} lg={12}>
               <Typography
                 style={{
                   fontSize: "25px",
@@ -972,7 +975,7 @@ function ProfilePage() {
                   fontFamily: "Trebuchet MS, sans-serif",
                 }}
               >
-                Some Favorite Games of the User
+                Favorite Games of the User
               </Typography>
             </Grid>
             {favGames.map((game, index1) => (
@@ -981,9 +984,11 @@ function ProfilePage() {
                 style={{
                   marginLeft: "5%",
                   backgroundColor: "rgba(255, 255, 255, 0.06)",
-                  height: 240,
-                  width: 180,
+                  height: "auto",
+                  width: 220,
                   borderRadius: "5%",
+                  marginTop: "2%",
+                  marginBottom: "1%",
                 }}
               >
                 <Box
@@ -1003,7 +1008,14 @@ function ProfilePage() {
                   style={{ fontFamily: "Trebuchet MS, sans-serif" }}
                   color="white"
                 >
-                  {game.title}
+                  <Link
+                    to={`http://localhost:3000/game/${convertToSlug(
+                      game.title,
+                    )}`}
+                    style={gameTitleStyle}
+                  >
+                    {game.title}
+                  </Link>
                 </Typography>
               </Grid>
             ))}
