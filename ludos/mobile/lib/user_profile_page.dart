@@ -48,7 +48,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
         title: Text('${widget.id}'),
         backgroundColor: MyColors.lightBlue,
       ),
-      body: Column(
+      body: SingleChildScrollView(
+      child: Column(
         children: [
           const SizedBox(height: 20),
           Row(
@@ -401,6 +402,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
         ],
       ),
+    ),
     );
   }
 }

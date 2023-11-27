@@ -49,7 +49,8 @@ class _VisitUserPageState extends State<VisitUserPage> {
         title: Text('${widget.username}'),
         backgroundColor: MyColors.lightBlue,
       ),
-      body: Column(
+      body: SingleChildScrollView(
+      child:Column(
         children: [
           const SizedBox(height: 20),
           Row(
@@ -401,6 +402,7 @@ class _VisitUserPageState extends State<VisitUserPage> {
           ),
 
         ],
+      ),
       ),
     );
   }
