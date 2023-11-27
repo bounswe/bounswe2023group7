@@ -12,7 +12,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 function Review(data, index1) {
-  const [user, setUser] = useState({ username: "" });
+  const [username, setUsername] = useState("");
   const [editReq, setEditReq] = useState(false);
   const [review, setReview] = useState("");
   const [liked, setLiked] = useState(false);
@@ -36,14 +36,14 @@ function Review(data, index1) {
         },
       })
       .then((response) => {
-        setUser(response.data);
+        setUsername(response.data.username);
 
         console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [user]);
+  }, [username]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -69,58 +69,66 @@ function Review(data, index1) {
   };
 
   const handleLikeClick = () => {
-    const followLink = `http://${process.env.REACT_APP_API_URL}/review/${data.review.reviewId}/like`;
-    axios
-      .post(
-        followLink,
-        {},
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    if (!liked) {
+      const followLink = `http://${process.env.REACT_APP_API_URL}/review/${data.review.reviewId}/like`;
+      axios
+        .post(
+          followLink,
+          {},
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
           },
-        },
-      )
-      .then(() => {
-        if (disliked) {
-          setDisliked(false);
-          setDislikeCount(dislikeCount - 1);
-        } else {
-          if (!liked) {
+        )
+        .then(() => {
+          if (disliked) {
+            setDisliked(false);
+            setLiked(true);
+            setDislikeCount(dislikeCount - 1);
             setLikeCount(likeCount + 1);
+          } else {
+            if (!liked) {
+              setLikeCount(likeCount + 1);
+              setLiked(true);
+            }
           }
-          setLiked(true);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
   const handleDislikeClick = () => {
-    const followLink = `http://${process.env.REACT_APP_API_URL}/review/${data.review.reviewId}/like`;
-    axios
-      .post(
-        followLink,
-        {},
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    if (!disliked) {
+      const followLink = `http://${process.env.REACT_APP_API_URL}/review/${data.review.reviewId}/dislike`;
+      axios
+        .post(
+          followLink,
+          {},
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
           },
-        },
-      )
-      .then(() => {
-        if (liked) {
-          setLiked(false);
-          setLikeCount(likeCount - 1);
-        } else {
-          setDisliked(true);
-          if (!disliked) {
+        )
+        .then(() => {
+          if (liked) {
+            setLiked(false);
+            setDisliked(true);
+            setLikeCount(likeCount - 1);
             setDislikeCount(dislikeCount + 1);
+          } else {
+            if (!disliked) {
+              setDislikeCount(dislikeCount + 1);
+              setDisliked(true);
+            }
           }
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const handleChange = (event) => {
@@ -194,7 +202,7 @@ function Review(data, index1) {
                 style={userStyle}
               >
                 <Link style={userStyle} to={directLink}>
-                  {user.username}
+                  {username}
                 </Link>
               </Typography>
               <Typography
