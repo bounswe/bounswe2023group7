@@ -42,10 +42,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
                 style: const TextStyle(color: MyColors.white),
                 controller: fullNameController,
-                decoration:  InputDecoration(
+
+                decoration:   InputDecoration(
                   fillColor: MyColors.white,
                   prefixIcon: const Icon(Icons.text_format_outlined),
-                  labelText: userData['fullName'],
+                  labelText: 'Full Name',
                   labelStyle: const TextStyle(
                       color: MyColors.lightBlue, fontWeight: FontWeight.bold),
                   prefixIconColor: MyColors.lightBlue,
@@ -56,6 +57,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     borderSide:
                     BorderSide(color: MyColors.lightBlue, width: 2.0),
                   ),
+                  hintText: userData['fullName'],
+                  hintStyle: TextStyle(color: MyColors.lightBlue.withOpacity(0.7)),
                 ),
                 cursorColor: MyColors.lightBlue,
               ),
@@ -63,9 +66,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               TextField(
                 style: const TextStyle(color: MyColors.white),
                 controller: avatarController,
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.account_circle),
-                  labelText: userData['avatar'],
+                  labelText: 'Avatar',
                   labelStyle: const TextStyle(
                       color: MyColors.lightBlue, fontWeight: FontWeight.bold),
                   prefixIconColor: MyColors.lightBlue,
@@ -76,6 +79,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     borderSide:
                     BorderSide(color: MyColors.lightBlue, width: 2.0),
                   ),
+                  hintText: userData['avatar'],
+                  hintStyle: TextStyle(color: MyColors.lightBlue.withOpacity(0.7)),
                 ),
                 cursorColor: MyColors.lightBlue,
               ),
@@ -83,9 +88,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               TextField(
                 style: const TextStyle(color: MyColors.white),
                 controller: aboutMeController,
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.comment),
-                  labelText: userData['aboutMe'],
+                  labelText: 'About Me',
                   labelStyle: const TextStyle(
                       color: MyColors.lightBlue, fontWeight: FontWeight.bold),
                   prefixIconColor: MyColors.lightBlue,
@@ -96,6 +101,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     borderSide:
                     BorderSide(color: MyColors.lightBlue, width: 2.0),
                   ),
+                  hintText: userData['aboutMe'],
+                  hintStyle: TextStyle(color: MyColors.lightBlue.withOpacity(0.7)),
                 ),
                 cursorColor: MyColors.lightBlue,
               ),
@@ -105,7 +112,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 controller: steamUrlController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.videogame_asset),
-                  labelText: userData['steamUrl'],
+                  labelText: 'Steam Url',
                   labelStyle: const TextStyle(
                       color: MyColors.lightBlue, fontWeight: FontWeight.bold),
                   prefixIconColor: MyColors.lightBlue,
@@ -116,6 +123,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     borderSide:
                     BorderSide(color: MyColors.lightBlue, width: 2.0),
                   ),
+                  hintText: userData['steamUrl'],
+                  hintStyle: TextStyle(color: MyColors.lightBlue.withOpacity(0.7)),
                 ),
                 cursorColor: MyColors.lightBlue,
               ),
@@ -157,7 +166,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         aboutMeController.text = userData['fullName'];
                       }
                       if(steamUrlController.text == ""){
-                        steamUrlController.text = userData['fullName'];
+                        steamUrlController.text = userData['steamUrl'];
                       }
                       http.Response token = await APIService()
                           .editProfile(
@@ -167,20 +176,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text(
-                                  'The profile page successfully edited!')),
+                                  'The profile page successfully edited!')
+                          ),
                         );
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => (Home()),
+                          builder: (context) => (const Home()),
                         ));
                       }
                       if (status == 400 || status == 401) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text(
-                                  'Something went wrong!')),
+                                  'Something went wrong!')
+                          ),
                         );
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => (Home()),
+                          builder: (context) => (const Home()),
                         ));
                       }
                     },
