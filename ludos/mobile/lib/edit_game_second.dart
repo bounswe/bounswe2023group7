@@ -383,6 +383,7 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => GamePage(
+                                              onRefresh: () {},
                                               id: widget.id,
                                               token: widget.token,
                                               userProvider: widget.userProvider,
@@ -397,6 +398,7 @@ class _EditGamePageStateSecond extends State<EditGamePageSecond> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => GamePage(
+                                          onRefresh: () {},
                                           id: widget.id,
                                           token: widget.token,
                                           userProvider: widget.userProvider,

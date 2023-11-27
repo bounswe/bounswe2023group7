@@ -682,6 +682,7 @@ class _GamePageState extends State<GamePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => GamePage(
+                                              onRefresh: widget.onRefresh,
                                               token: widget.token,
                                               userProvider: widget.userProvider,
                                               id: widget.id)),
@@ -695,6 +696,7 @@ class _GamePageState extends State<GamePage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => GamePage(
+                                          onRefresh: widget.onRefresh,
                                           token: widget.token,
                                           userProvider: widget.userProvider,
                                           id: widget.id)),

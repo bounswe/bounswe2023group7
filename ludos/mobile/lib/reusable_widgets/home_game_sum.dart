@@ -73,7 +73,7 @@ class _HomeGameSumState extends State<HomeGameSum> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => GamePage(id: id, token: token, userProvider: userProvider),
+                builder: (context) => GamePage(id: id, token: token, userProvider: userProvider,  onRefresh: () {}),
               ),
             );
             // Handle button press for the specific game
