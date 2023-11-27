@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { Box, Typography, Grid } from "@mui/material";
-import Diversity1Icon from '@mui/icons-material/Diversity1';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import BadgeIcon from '@mui/icons-material/Badge';
+import Diversity1Icon from "@mui/icons-material/Diversity1";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import BadgeIcon from "@mui/icons-material/Badge";
 import { Button } from "@mui/material";
 
 function GroupTopic(data) {
   const boxStyle = {
-    backgroundColor: "rgba(200, 200, 200, 0.9)",
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
     borderRadius: "10px",
-    paddingTop: "15px",
+    paddingTop: "8px",
   };
   const headerStyle = {
     color: "black",
@@ -19,12 +19,12 @@ function GroupTopic(data) {
   const forumStyle = { color: "rgb(100, 70, 144)", fontWeight: "bold" };
   const gameStyle = {
     backgroundColor: "rgb(9 ,63 ,83)",
-    color: "white", 
+    color: "white",
     borderRadius: "10px",
     padding: "2px",
     fontWeight: "bold",
     fontSize: "13px",
-  }
+  };
   const userStyle = { color: "rgb(100, 80, 90)", marginRight: "2%" };
 
   const tagBox = {
@@ -42,7 +42,18 @@ function GroupTopic(data) {
   useEffect(() => {}, []);
 
   return (
-    <Grid item xs={12} sm={12} md={12} lg={12}>
+    <Grid
+      item
+      xs={12}
+      sm={12}
+      md={12}
+      lg={12}
+      style={{
+        gap: "16px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Box p={5} style={boxStyle}>
         <Grid
           item
@@ -64,68 +75,79 @@ function GroupTopic(data) {
                   style={tagBox}
                   key={index1}
                 >
-                  {tag1.toString()}
+                  {tag1?.toString()}
                 </Typography>
               ))}
           </Grid>
         </Grid>
-        <Grid style={{display: "flex", justifyContent: "space-between"}}>
+        <Grid style={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid
+            style={{
+              display: "flex",
+              justifyContent: "left",
+              marginBottom: "10px",
+              marginTop: "5px",
+              width: " 100%",
+            }}
+          >
+            <BadgeIcon style={{ fontSize: "18px", marginRight: "3px" }} />
+            <Typography
+              variant="caption"
+              component="div"
+              textAlign="left"
+              style={userStyle}
+            >
+              {data.topic.userOpened}
+            </Typography>
+            <AccessTimeIcon style={{ fontSize: "18px", marginRight: "3px" }} />
+            <Typography
+              variant="caption"
+              component="div"
+              textAlign="left"
+              style={userStyle}
+            >
+              {data.topic.whenOpened}
+            </Typography>
+            <Diversity1Icon style={{ fontSize: "18px", marginRight: "3px" }} />
+            <Typography
+              variant="caption"
+              component="div"
+              textAlign="right"
+              style={forumStyle}
+            >
+              {data.topic.numOfMembers?.toString()}
+            </Typography>
+          </Grid>
+        </Grid>
         <Grid
           style={{
             display: "flex",
-            justifyContent: "left",
-            marginBottom: "10px",
-            marginTop: "5px",
-            width:" 100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-            <BadgeIcon style={{fontSize: "18px", marginRight: "3px"}}/>
           <Typography
-            variant="caption"
+            variant="h7"
             component="div"
             textAlign="left"
-            style={userStyle}
+            style={headerStyle}
           >
-           {data.topic.userOpened}
+            {data.topic.title?.toString()}
           </Typography>
-          <AccessTimeIcon style={{fontSize: "18px", marginRight: "3px"}}
-          />
-          <Typography
-            variant="caption"
-            component="div"
-            textAlign="left"
-            style={userStyle}
-          >
-            {data.topic.whenOpened}
-          </Typography>
-          <Diversity1Icon style={{fontSize: "18px", marginRight: "3px"}}/>
-          <Typography
-            variant="caption"
-            component="div"
-            textAlign="right"
-            style={forumStyle}
-          >
-         {data.topic.numOfMembers.toString()}
-          </Typography>
-          </Grid>
-          <Button 
+          <Button
             variant="contained"
             color="primary"
             type="button"
-            style={{display: "flex", justifyContent: "flex-end", borderRadius: "10px"}}>
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              borderRadius: "10px",
+            }}
+          >
             Join
-        </Button>
-        
+          </Button>
         </Grid>
-
-        <Typography
-          variant="h7"
-          component="div"
-          textAlign="left"
-          style={headerStyle}
-        >
-          {data.topic.title.toString()}
-        </Typography>
       </Box>
     </Grid>
   );

@@ -14,10 +14,15 @@ import steamLogo from "../assets/steam.png";
 //import epicLogo from "../assets/epic.png";
 //import itchioLogo from "../assets/itchio.png";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
 function ProfilePage() {
+  const navigate = useNavigate();
+
+  const handleClick = (gameTitle) => {
+    navigate(`/game/${convertToSlug(gameTitle)}`);
+  };
   const convertToSlug = (text) => {
     return text
       .toString()
@@ -29,7 +34,6 @@ function ProfilePage() {
   };
   let { username } = useParams();
   console.log(username);
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
     steamUrl: "",
@@ -252,7 +256,7 @@ function ProfilePage() {
     height: "400px",
   };
 
-  const gameTitleStyle = { color: "rgb(255, 255, 255)", marginRight: "2%" };
+  //const gameTitleStyle = { color: "rgb(255, 255, 255)", marginRight: "2%" };
 
   const gameBoxStyle = {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
@@ -717,18 +721,15 @@ function ProfilePage() {
                   src={game.coverLink}
                 />
                 <Typography
+                  onClick={() => handleClick(game.title)}
                   component="legend"
-                  style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+                  style={{
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    cursor: "pointer",
+                  }}
                   color="white"
                 >
-                  <Link
-                    to={`http://localhost:3000/game/${convertToSlug(
-                      game.title,
-                    )}`}
-                    style={gameTitleStyle}
-                  >
-                    {game.title}
-                  </Link>
+                  {game.title}
                 </Typography>
               </Grid>
             ))}
@@ -1005,17 +1006,11 @@ function ProfilePage() {
                 />
                 <Typography
                   component="legend"
+                  onClick={() => handleClick(game.title)}
                   style={{ fontFamily: "Trebuchet MS, sans-serif" }}
                   color="white"
                 >
-                  <Link
-                    to={`http://localhost:3000/game/${convertToSlug(
-                      game.title,
-                    )}`}
-                    style={gameTitleStyle}
-                  >
-                    {game.title}
-                  </Link>
+                  {game.title}
                 </Typography>
               </Grid>
             ))}

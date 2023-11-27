@@ -14,7 +14,7 @@ const Homepage = () => {
       numOfReplies: 150,
       userOpened: "loverGame",
       whenOpened: "2 days ago",
-      forumTags: ["New Feature", "Dota"],
+      forumTags: ["Dota", "New Character"],
       forumGame: "Dota",
       imgsrc:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_oAlf6eD-4mrGrbTaWeg2Ec17AhQLgfuYBQ&usqp=CAU",
@@ -24,7 +24,7 @@ const Homepage = () => {
       numOfReplies: 240,
       userOpened: "minemine",
       whenOpened: "1 week ago",
-      forumTags: ["Curious", "Minecraft"],
+      forumTags: ["Minecraft", "Discussion"],
       forumGame: "Minecraft",
       imgsrc:
         "https://cdn-www.bluestacks.com/bs-images/54ea74e2f2d10d2ad3a957260f564bea.png",
@@ -34,7 +34,7 @@ const Homepage = () => {
       numOfReplies: 167,
       userOpened: "witchPlay",
       whenOpened: "5 days ago",
-      forumTags: ["favorites", "Witcher3"],
+      forumTags: ["Witcher 3", "Question"],
       forumGame: "Witcher 3",
       imgsrc:
         "https://assets-prd.ignimgs.com/2022/04/15/zuko-alone-1650039877625.jpg",
@@ -79,7 +79,7 @@ const Homepage = () => {
         "Embark on an epic adventure in Witcher 3, where every choice you make shapes your destiny. Immerse yourself in a rich, vast open world filled with monsters, mysteries, and morally complex decisions.",
     },
     {
-      title: "The Sims 4",
+      title: "Sims 4",
       image: Game2,
       content:
         "Dive into the captivating world of life simulation with Sims 4 – create, build, and explore endless possibilities! Get lost in the ultimate virtual reality where your imagination knows no bounds.",

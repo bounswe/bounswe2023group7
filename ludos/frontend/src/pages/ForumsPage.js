@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ForumsBackground from "../assets/forumBackground.png";
 import { Typography, Button, TextField, Container } from "@mui/material";
 import ForumTopic from "../components/ForumTopic";
@@ -8,7 +8,7 @@ const ForumsPage = () => {
   const navigate = useNavigate();
 
   const handleButtonClickUnlogged = () => {
-    navigate("/login");
+    navigate("/signup");
   };
 
   const handleButtonClickLogged = () => {
@@ -21,14 +21,14 @@ const ForumsPage = () => {
       setUserLoggedIn(true);
     }
   }, []);
- 
+
   const latestTopics = [
     {
       title: "Are League of Legends players smart?",
       numOfReplies: 10,
       userOpened: "ClementKachepa",
       whenOpened: "2 hours ago",
-      forumTags: ["question", "leagueOfLegends"],
+      forumTags: ["League of Legends", "Question"],
       forumGame: "League of Legends",
     },
     {
@@ -36,7 +36,7 @@ const ForumsPage = () => {
       numOfReplies: 8,
       userOpened: "wannaPlayWithLife",
       whenOpened: "4 hours ago",
-      forumTags: ["question", "Sims3"],
+      forumTags: ["Question", "Sims 3"],
       forumGame: "Sims 3",
     },
     {
@@ -44,7 +44,7 @@ const ForumsPage = () => {
       numOfReplies: 16,
       userOpened: "GtaLoveeer",
       whenOpened: "10 hours ago",
-      forumTags: ["help", "GTA5"],
+      forumTags: ["Gta 5", "Help Wanted"],
       forumGame: "GTA 5",
     },
     // Add more topics as needed...
@@ -56,24 +56,30 @@ const ForumsPage = () => {
       numOfReplies: 150,
       userOpened: "loverGame",
       whenOpened: "2 days ago",
-      forumTags: ["New Feature", "Dota"],
+      forumTags: ["Dota", "New Character"],
       forumGame: "Dota",
+      imgsrc:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_oAlf6eD-4mrGrbTaWeg2Ec17AhQLgfuYBQ&usqp=CAU",
     },
     {
       title: "Tell your best memory of Minecraft",
       numOfReplies: 240,
       userOpened: "minemine",
       whenOpened: "1 week ago",
-      forumTags: ["Curious", "Minecraft"],
+      forumTags: ["Minecraft", "Discussion"],
       forumGame: "Minecraft",
+      imgsrc:
+        "https://cdn-www.bluestacks.com/bs-images/54ea74e2f2d10d2ad3a957260f564bea.png",
     },
     {
       title: "Who is your favorite character in Witcher 3",
       numOfReplies: 167,
       userOpened: "witchPlay",
       whenOpened: "5 days ago",
-      forumTags: ["favorites", "Witcher3"],
+      forumTags: ["Witcher 3", "Question"],
       forumGame: "Witcher 3",
+      imgsrc:
+        "https://assets-prd.ignimgs.com/2022/04/15/zuko-alone-1650039877625.jpg",
     },
     // Add more topics as needed...
   ];
@@ -140,7 +146,6 @@ const ForumsPage = () => {
               justifyContent: "center" /* Center items horizontally */,
               width: "600px" /* Enlarged search bar width */,
               margin: "0 auto" /* Center the form */,
-              gap: "16px",
             }}
           >
             <TextField
@@ -149,7 +154,11 @@ const ForumsPage = () => {
               fullWidth
               size="large"
               InputProps={{
-                style: { backgroundColor: "white" }, // Set background color to white
+                style: {
+                  backgroundColor: "white",
+                  borderTopLeftRadius: "10px",
+                  borderBottomLeftRadius: "10px",
+                }, // Set background color to white
                 inputProps: { style: { color: "black" } }, // Set text color to black
               }}
             />
@@ -157,8 +166,12 @@ const ForumsPage = () => {
               variant="contained"
               type="submit"
               size="large"
-              style={{ marginTop: "10px" }}
-              sx={{ backgroundColor: "#68A849", marginLeft: "10px" }}
+              sx={{
+                backgroundColor: "#68A849",
+                borderBottomRightRadius: "10px",
+                borderTopRightRadius: "10px",
+                height: "56px",
+              }}
             >
               Search
             </Button>
@@ -166,52 +179,49 @@ const ForumsPage = () => {
         </div>
       </div>
       <Container
+        style={{
+          backgroundColor: "rgb(30,30,30,0.9)",
+          maxWidth: "960px",
+          borderRadius: "10px",
+          textAlign: "center",
+          padding: "20px",
+        }}
+      >
+        <Typography
+          variant="h5"
+          gutterBottom
           style={{
-            backgroundColor: "rgb(30,30,30,0.9)",
-            maxWidth: "960px",
-            borderRadius: "10px",
-            textAlign: "center",
-            padding: "20px",
+            color: "white",
+            fontFamily: "Trebuchet MS, sans-serif",
+            fontWeight: "bold",
           }}
         >
-          <Typography
-            variant="h5"
-            gutterBottom
-            style={{
-              color: "white",
-              fontFamily: "Trebuchet MS, sans-serif",
-              fontWeight: "bold",
-            }}
+          Join the discussion! Create your forum thread now.
+        </Typography>
+        {userLoggedIn ? (
+          <Button
+            variant="contained"
+            type="regular"
+            size="large"
+            style={{ marginTop: "10px", backgroundColor: "rgb(254,8,8, 0.6)" }}
+            sx={{ marginLeft: "10px" }}
+            onClick={handleButtonClickLogged}
           >
-            Join the discussion! Create your forum thread now.
-          </Typography>
-          {userLoggedIn ? (
-              
-                <Button
-                  variant="contained"
-                  type="regular"
-                  size="large"
-                  style={{ marginTop: "10px", backgroundColor: "rgb(254,8,8, 0.6)" }}
-                  sx={{ marginLeft: "10px" }}
-                  onClick={handleButtonClickLogged}
-                >
-                  Create a Thread
-              </Button>
-            )
-            : (
-                <Button
-                  variant="contained"
-                  type="regular"
-                  size="large"
-                  style={{ marginTop: "10px", backgroundColor: "rgb(254,8,8, 0.9)" }}
-                  sx={{ marginLeft: "10px" }}
-                  onClick={handleButtonClickUnlogged}
-                >
-                  Create a Thread
-              </Button>
-            )}
-          
-        </Container>
+            Create a Thread
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            type="regular"
+            size="large"
+            style={{ marginTop: "10px", backgroundColor: "rgb(254,8,8, 0.9)" }}
+            sx={{ marginLeft: "10px" }}
+            onClick={handleButtonClickUnlogged}
+          >
+            Create a Thread
+          </Button>
+        )}
+      </Container>
       <div
         style={{
           display: "flex",
