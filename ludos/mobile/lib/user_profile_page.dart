@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'edit_profile_page.dart';
 import 'game_page.dart';
 import 'helper/APIService.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
@@ -47,6 +48,18 @@ class _UserProfilePageState extends State<UserProfilePage> {
       appBar: AppBar(
         title: Text('${widget.id}'),
         backgroundColor: MyColors.lightBlue,
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => EditProfilePage(userData: userData),
+              ));
+            },
+            child: const Text('Edit',
+              style: TextStyle(color: MyColors.white),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
       child: Column(
