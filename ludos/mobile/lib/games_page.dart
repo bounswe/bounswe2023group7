@@ -47,7 +47,7 @@ class _GamesPageState extends State<GamesPage> {
                     : item['averageRating'].toDouble()),
                 coverLink: item['coverLink'],
                 numOfFollowers: item['followers'],
-                gameStory: 'gameStory',
+                gameStory: item['gameStory'],
                 tags: item['tags'],
                 textColor: MyColors.white,
                 backgroundColor: MyColors.blue,

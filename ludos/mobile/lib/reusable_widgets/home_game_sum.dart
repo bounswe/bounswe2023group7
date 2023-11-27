@@ -122,7 +122,7 @@ class _HomeGameSumState extends State<HomeGameSum> {
                     children: List<Widget>.generate(
                       5, // Total number of stars
                           (index) {
-                        double diff = 4.5 - index;
+                        double diff = averageRating - index;
                         if (diff >= 1.0) {
                           // Full star
                           return const SingleRatingIcon(

@@ -80,6 +80,11 @@ class _GameSummaryState extends State<GameSummary> {
     required this.userProvider,
   });
 
+  String truncateString(String input) {
+  const maxLength = 80;
+  return input.length <= maxLength ? input : '${input.substring(0, maxLength)}...';
+}
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -171,7 +176,7 @@ class _GameSummaryState extends State<GameSummary> {
                                 children: List<Widget>.generate(
                                   5, // Total number of stars
                                   (index) {
-                                    double diff = 4.5 - index;
+                                    double diff = averageRating - index;
                                     if (diff >= 1.0) {
                                       // Full star
                                       return const SingleRatingIcon(
@@ -200,7 +205,7 @@ class _GameSummaryState extends State<GameSummary> {
                             ]),
                         const SizedBox(height: 10),
                         Text(
-                          "Here will be brief game story.",
+                          truncateString(gameStory),
                           softWrap: true,
                           style: TextStyle(
                             color: MyColors.darkBlue,
