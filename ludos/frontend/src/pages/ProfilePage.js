@@ -14,10 +14,19 @@ import steamLogo from "../assets/steam.png";
 //import epicLogo from "../assets/epic.png";
 //import itchioLogo from "../assets/itchio.png";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
 function ProfilePage() {
+  const convertToSlug = (text) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+      .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+      .replace(/--+/g, "-"); // Replace multiple dashes with single dash
+  };
   let { username } = useParams();
   console.log(username);
   const navigate = useNavigate();
@@ -107,7 +116,9 @@ function ProfilePage() {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          console.log("BUGCHECK");
+          console.log(username);
+          console.log(response.data.id);
           if (response.data.id === username || username === undefined) {
             setMyProfile(true);
             setProfile(response.data);
@@ -150,7 +161,7 @@ function ProfilePage() {
               })
               .catch((error) => {
                 console.log(error);
-                navigate("/homepage");
+                navigate("/");
               });
           }
         })
@@ -160,7 +171,7 @@ function ProfilePage() {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [username]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -241,11 +252,13 @@ function ProfilePage() {
     height: "400px",
   };
 
+  const gameTitleStyle = { color: "rgb(255, 255, 255)", marginRight: "2%" };
+
   const gameBoxStyle = {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
     borderRadius: "10px",
     paddingTop: "15px",
-    height: "320px",
+    height: "auto",
     marginTop: "7px",
   };
 
@@ -675,7 +688,7 @@ function ProfilePage() {
                   fontFamily: "Trebuchet MS, sans-serif",
                 }}
               >
-                Some Favorite Games of the User
+                Favorite Games of the User
               </Typography>
             </Grid>
             {favGames.map((game, index1) => (
@@ -684,9 +697,11 @@ function ProfilePage() {
                 style={{
                   marginLeft: "5%",
                   backgroundColor: "rgba(255, 255, 255, 0.06)",
-                  height: 240,
-                  width: 180,
+                  height: "auto",
+                  width: 220,
                   borderRadius: "5%",
+                  marginTop: "2%",
+                  marginBottom: "1%",
                 }}
               >
                 <Box
@@ -706,7 +721,14 @@ function ProfilePage() {
                   style={{ fontFamily: "Trebuchet MS, sans-serif" }}
                   color="white"
                 >
-                  {game.title}
+                  <Link
+                    to={`http://localhost:3000/game/${convertToSlug(
+                      game.title,
+                    )}`}
+                    style={gameTitleStyle}
+                  >
+                    {game.title}
+                  </Link>
                 </Typography>
               </Grid>
             ))}
@@ -945,7 +967,7 @@ function ProfilePage() {
             </Grid>
           </Grid>
           <Grid container spacing={1} style={gameBoxStyle}>
-            <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Grid id="favGamesSection" item xs={12} sm={12} md={12} lg={12}>
               <Typography
                 style={{
                   fontSize: "25px",
@@ -953,7 +975,7 @@ function ProfilePage() {
                   fontFamily: "Trebuchet MS, sans-serif",
                 }}
               >
-                Some Favorite Games of the User
+                Favorite Games of the User
               </Typography>
             </Grid>
             {favGames.map((game, index1) => (
@@ -962,9 +984,11 @@ function ProfilePage() {
                 style={{
                   marginLeft: "5%",
                   backgroundColor: "rgba(255, 255, 255, 0.06)",
-                  height: 240,
-                  width: 180,
+                  height: "auto",
+                  width: 220,
                   borderRadius: "5%",
+                  marginTop: "2%",
+                  marginBottom: "1%",
                 }}
               >
                 <Box
@@ -984,7 +1008,14 @@ function ProfilePage() {
                   style={{ fontFamily: "Trebuchet MS, sans-serif" }}
                   color="white"
                 >
-                  {game.title}
+                  <Link
+                    to={`http://localhost:3000/game/${convertToSlug(
+                      game.title,
+                    )}`}
+                    style={gameTitleStyle}
+                  >
+                    {game.title}
+                  </Link>
                 </Typography>
               </Grid>
             ))}

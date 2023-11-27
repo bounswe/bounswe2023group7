@@ -3,8 +3,10 @@ import { Box, Typography, Grid } from "@mui/material";
 import Person2Icon from "@mui/icons-material/Person2";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import MapsUgcIcon from "@mui/icons-material/MapsUgc";
+import { Link } from "react-router-dom";
 
 function ForumTopic(data) {
+  const directLink = `http://localhost:3000/profile-page/${data.topic.user.id}`;
   const tagBox = {
     display: "flex",
     justifyContent: "center",
@@ -24,6 +26,7 @@ function ForumTopic(data) {
     marginBottom: "8px",
     fontWeight: "bold",
   };
+  const userStyle = { color: "rgb(255, 255, 255)", marginRight: "2%" };
 
   /*
   const boxStyle = {
@@ -72,7 +75,8 @@ function ForumTopic(data) {
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        maxHeight: "150px",
+        minHeight: "90px",
+        marginBottom: "10px",
       }}
     >
       <Grid
@@ -99,7 +103,7 @@ function ForumTopic(data) {
             paddingBottom: "10px",
           }}
           src={
-            data.topic.imgsrc ||
+            data.topic.user.avatar ||
             "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"
           }
         />
@@ -112,7 +116,10 @@ function ForumTopic(data) {
             textAlign: "center",
           }}
         >
-          @{data.topic.userOpened}
+          @
+          <Link to={directLink} style={userStyle}>
+            {data.topic.user.username}
+          </Link>
         </Typography>
       </Grid>
       <Grid
@@ -136,11 +143,11 @@ function ForumTopic(data) {
           style={{ display: "flex", justifyContent: "space-between" }}
         >
           <Typography variant="caption" component="div" style={forumStyle}>
-            {data.topic.forumGame}
+            {data.topic.game.title}
           </Typography>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
             {data.topic &&
-              data.topic.forumTags.map((tag1, index1) => (
+              data.topic.tags.map((tag1, index1) => (
                 <Typography
                   variant="caption"
                   component="div"
@@ -163,9 +170,15 @@ function ForumTopic(data) {
             marginLeft: "10px",
             textAlign: "center",
             lineHeight: "1.7",
+            fontSize: "20px",
           }}
         >
-          {data.topic.title}
+          <Link
+            to={`http://localhost:3000/thread/${data.topic.id}`}
+            style={userStyle}
+          >
+            {data.topic.title}
+          </Link>
         </Typography>
         <Grid
           style={{
@@ -181,7 +194,7 @@ function ForumTopic(data) {
               height: "1px",
               color: "rgb(180, 180, 180)",
               backgroundColor: "rgb(200, 200, 200)",
-              margin: "5% 5% 3% 5%",
+              margin: "5% 5% 1% 5%",
               alignSelf: "center",
             }}
           ></div>
@@ -204,7 +217,7 @@ function ForumTopic(data) {
                 marginRight: "3px",
               }}
             >
-              @{data.topic.userOpened}
+              @{data.topic.user.username}
             </Typography>
             <AccessTimeIcon />
             <Typography
@@ -219,7 +232,8 @@ function ForumTopic(data) {
                 marginBottom: "10px",
               }}
             >
-              {data.topic.whenOpened}
+              {data.topic.createdAt.split("T")[0]}{" "}
+              {data.topic.createdAt.split("T")[1].split(".")[0]}
             </Typography>
             <MapsUgcIcon />
             <Typography
