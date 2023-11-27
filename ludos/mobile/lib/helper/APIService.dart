@@ -391,4 +391,26 @@ class APIService {
     }
   }
 
+
+  Future<http.Response> editProfile(
+      String? authToken,
+      String fullName,
+      bool isNotificationEnabled,
+      String avatar,
+      String aboutMe,
+      String steamUrl) async {
+    var uri = Uri.parse("$baseURL/user/edit-info");
+    final body = jsonEncode(<String, Object>{
+      'fullName': fullName,
+      'isNotificationEnabled': isNotificationEnabled,
+      'avatar': avatar,
+      'aboutMe': aboutMe,
+      'steamUrl': steamUrl,
+    });
+    final response = await http.put(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
 }

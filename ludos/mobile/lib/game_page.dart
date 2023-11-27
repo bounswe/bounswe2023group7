@@ -512,9 +512,9 @@ class _GamePageState extends State<GamePage> {
               ],
             ),
             const SizedBox(height: 20),
-            if (gameData['gameStory'] != null)
+            if (gameData['gameBio'] != null)
               Text(
-                gameData['gameStory'].toString(),
+                gameData['gameBio'].toString(),
                 style: const TextStyle(
                   color: MyColors.white,
                   fontWeight: FontWeight.bold,
