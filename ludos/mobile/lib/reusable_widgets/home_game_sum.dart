@@ -64,22 +64,23 @@ class _HomeGameSumState extends State<HomeGameSum> {
 
             borderRadius: const BorderRadius.all(Radius.circular(20)),),
             child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            backgroundColor: MyColors.darkBlue,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            )),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => GamePage(id: id, token: token, userProvider: userProvider,  onRefresh: () {}),
-              ),
-            );
-            // Handle button press for the specific game
-            // Navigate to the game's profile page
-          },
-          child: Column(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: MyColors.blue.withOpacity(0.20),
+
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  )),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GamePage(id: id, token: token, userProvider: userProvider,  onRefresh: () {}),
+                    ),
+                  );
+                  // Handle button press for the specific game
+                  // Navigate to the game's profile page
+                },
+                child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

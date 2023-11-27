@@ -9,8 +9,10 @@ import '../helper/colors.dart';
 import '../login_page.dart';
 import '../thread_page.dart';
 import '../userProvider.dart';
+import '../visit_user_page.dart';
 
 class Comment extends StatefulWidget {
+  final String userId;
   final String threadId;
   final String parentId;
   final String username;
@@ -27,6 +29,7 @@ class Comment extends StatefulWidget {
 
   Comment({
     Key? key,
+    required this.userId,
     required this.threadId,
     required this.parentId,
     required this.username,
@@ -44,6 +47,7 @@ class Comment extends StatefulWidget {
 
   @override
   State<Comment> createState() => _CommentState(
+    userId: userId,
     threadId: threadId,
     parentId: parentId,
     username: username,
@@ -63,6 +67,7 @@ class Comment extends StatefulWidget {
 class _CommentState extends State<Comment> {
   late Future<List<Comment>> comments;
   bool showForm = false;
+  final String userId;
   final String threadId;
   final String parentId;
   final String content;
@@ -78,6 +83,7 @@ class _CommentState extends State<Comment> {
   final String commentId;
 
   _CommentState({
+    required this.userId,
     required this.threadId,
     required this.parentId,
     required this.content,
@@ -94,10 +100,11 @@ class _CommentState extends State<Comment> {
   });
 
   @override
-  void initState() {
+  initState() {
     super.initState();
     comments = fetchData(widget.token);
   }
+
 
   Future<List<Comment>> fetchData(String? token) async {
     final response = await APIService().listComments(widget.commentId, widget.token);
@@ -112,6 +119,7 @@ class _CommentState extends State<Comment> {
           parentId: widget.commentId,
           commentId: item['id'],
           content: item['text'],
+          userId: item['author']['id'],
           username: item['author']['username'],
           thumbUps: item['likeCount'],
           thumbDowns: item['dislikeCount'],
@@ -172,6 +180,7 @@ class _CommentState extends State<Comment> {
               Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
+                      color: MyColors.blue.withOpacity(0.15),
                       border: Border.all(
                       color: MyColors.blue,
                       width: 5.0,
@@ -183,12 +192,21 @@ class _CommentState extends State<Comment> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '@$username', //may need to navigate also the user
-                            style: const TextStyle(
-                              color: MyColors.blue,
-                              fontSize: 15.0,
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  MyColors.darkBlue),
                             ),
+                            child: Text(
+                              '@$username', //may need to navigate also the user
+                              style: const TextStyle(
+                                color: MyColors.orange,
+                                fontSize: 15.0,
+                              ),
+                          ),
+                            onPressed: () { Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => VisitUserPage(userProvider: userProvider, username: widget.username, id: widget.userId ),
+                          )); },
                           ),
                         ],
                       ),
@@ -199,7 +217,7 @@ class _CommentState extends State<Comment> {
                           softWrap: true,
                           style: const TextStyle(
                             color: MyColors.white,
-                            fontSize: 20.0,
+                            fontSize: 15.0,
                           ),
                         ),
                       ),
@@ -314,12 +332,6 @@ class _CommentState extends State<Comment> {
 //color: isDisliked ? Colors.red : Colors.white,
                             ),
                           ),
-/*
-                  Text(
-                     threadData['numberOfComments'].toString(),
-                     style: const TextStyle(color: Colors.white),
-                  ),
-                  */
                           IconButton(
                             icon: const Icon(Icons.comment, color: Colors.white,),
                             onPressed: () {
@@ -365,6 +377,7 @@ class _CommentState extends State<Comment> {
                               }
                             },
                           ),
+                          const SizedBox(width: 10.0),
                           Text(
                             timeAgo(time),
                             style: TextStyle(color: Colors.white),
