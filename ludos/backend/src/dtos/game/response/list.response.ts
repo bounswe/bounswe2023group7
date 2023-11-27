@@ -47,4 +47,12 @@ export class GameListResponseDto {
   @Expose()
   @ApiProperty()
   averageCompletionDuration?: number;
+
+  @Expose()
+  @ApiProperty()
+  gameStory: string;
+
+  @Expose()
+  @ApiProperty()
+  gameBio: string;
 }
