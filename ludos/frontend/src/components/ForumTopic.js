@@ -1,10 +1,18 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Typography, Grid } from "@mui/material";
 import Person2Icon from "@mui/icons-material/Person2";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import MapsUgcIcon from "@mui/icons-material/MapsUgc";
+import { Link } from "react-router-dom";
 
 function ForumTopic(data) {
+  const navigate = useNavigate();
+
+  const handleClick = (userId) => {
+    navigate(`/profile-page/${userId}`);
+  };
+
   const tagBox = {
     display: "flex",
     justifyContent: "center",
@@ -90,6 +98,8 @@ function ForumTopic(data) {
         }}
       >
         <Box
+          onClick={() => handleClick(data.topic.user_id)}
+          style={{ cursor: "pointer" }}
           component="img"
           sx={{
             height: 48,
@@ -104,17 +114,20 @@ function ForumTopic(data) {
           }
         />
         <Typography
+          onClick={() => handleClick(data.topic.user_id)}
           variant="caption"
           component="div"
           style={{
             color: "white",
             marginTop: "3px",
             textAlign: "center",
+            cursor: "pointer",
           }}
         >
           @{data.topic.userOpened}
         </Typography>
       </Grid>
+
       <Grid
         style={{
           display: "flex",
@@ -147,11 +160,12 @@ function ForumTopic(data) {
                   style={tagBox}
                   key={index1}
                 >
-                  {tag1.toString()}
+                  {tag1?.toString()}
                 </Typography>
               ))}
           </Grid>
         </Grid>
+
         <Typography
           variant="body2"
           component="div"
@@ -165,8 +179,14 @@ function ForumTopic(data) {
             lineHeight: "1.7",
           }}
         >
-          {data.topic.title}
+          <Link
+            to={`http://localhost:3000/thread/${data.topic.id}`}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            {data.topic.title}
+          </Link>
         </Typography>
+
         <Grid
           style={{
             display: "flex",
