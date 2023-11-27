@@ -142,8 +142,8 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> listGames(String? authToken) async {
-    var uri = Uri.parse("$baseURL/game?limit=20");
+  Future<http.Response> listGames(String? authToken, {String limit = "20"}) async {
+    var uri = Uri.parse("$baseURL/game?limit=$limit");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
@@ -152,7 +152,7 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> listPosts(String gameId, String? authToken) async {
+  Future<http.Response> listThreads(String gameId, String? authToken) async {
     var uri = Uri.parse("$baseURL/post?gameId=$gameId");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
@@ -312,4 +312,75 @@ class APIService {
 
     return response;
   }
+
+
+  Future<http.Response> listAllThreads(String? authToken, {String limit = "20"}) async {
+    var uri = Uri.parse("$baseURL/post?limit=$limit");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+
+  Future<http.Response> editGame(
+      String? authToken,
+      String gameId,
+      String title,
+      String coverLink,
+      String systemRequirements,
+      List<String> predecessors,
+      List<String> successors,
+      String gameGuide,
+      String gameStory,
+      List<String> platforms,
+      String ageRestriction,
+      String gameBio,
+      List<String> tags,
+      String releaseDate,
+      String developer,
+      String publisher,
+      String trivia) async {
+    var uri = Uri.parse("$baseURL/game/$gameId/edit");
+    final body = jsonEncode(<String, Object>{
+      'title': title,
+      'coverLink': coverLink,
+      'systemRequirements': systemRequirements,
+      'predecessors': predecessors,
+      'successors': successors,
+      'gameGuide': gameGuide,
+      'gameStory': gameStory,
+      'platforms': platforms,
+      'ageRestriction': ageRestriction,
+      'gameBio': gameBio,
+      'tags': tags,
+      'releaseDate': releaseDate,
+      'developer': developer,
+      'publisher': publisher,
+      'trivia': trivia,
+    });
+    print(body);
+    print(gameId);
+    final response = await http.put(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> listThreadsBySearch(String searchKey, String gameId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/post?gameId=$gameId&searchKey=$searchKey");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to load threads');
+    }
+  }
+
 }

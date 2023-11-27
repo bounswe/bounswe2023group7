@@ -4,15 +4,18 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/edit_game.dart';
 import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'forum_page.dart';
 import 'game_properties.dart';
+import 'games_page.dart';
 import 'game_reviews_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
 import 'login_page.dart';
+import 'main.dart';
 
 class GamePage extends StatefulWidget {
   final UserProvider userProvider;
@@ -154,7 +157,58 @@ class _GamePageState extends State<GamePage> {
                   'Edit Game',
                   style: TextStyle(color: MyColors.white),
                 ),
-                onTap: () {},
+                onTap: () {
+                  if (widget.userProvider.isLoggedIn) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EditGamePage(
+                        id: widget.id,
+                        token: widget.token,
+                        userProvider: widget.userProvider,
+                      ),
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                          SnackBar(
+                            content: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  color: MyColors.blue,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Please log in to edit game',
+                                    style: TextStyle(
+                                      color: MyColors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: MyColors.blue2,
+                            duration: const Duration(seconds: 5),
+                            action: SnackBarAction(
+                              label: 'Log In',
+                              textColor: MyColors.blue,
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                        .closed
+                        .then((reason) => {});
+                  }
+                },
               ),
             ],
           ),
@@ -688,10 +742,49 @@ class _GamePageState extends State<GamePage> {
                 thickness: 5.0,
                 color: MyColors.lightBlue,
               ),
-              if (reviews.isNotEmpty) reviews[0],
+              if (reviews.isNotEmpty) 
+                 reviews[0],
             ])
           ],
         ),
+      ),
+      bottomNavigationBar: Container(
+          color: MyColors.orange,
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Home(),
+                    ));
+                  },
+                  icon: const Icon(Icons.home)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                  },
+                  icon: const Icon(Icons.group)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider),
+                    ));
+                  },
+                  icon: const Icon(Icons.games)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {},
+                  icon: const Icon(Icons.favorite)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {},
+                  icon: const Icon(Icons.search_outlined)),
+            ],
+          )
       ),
     );
   }
