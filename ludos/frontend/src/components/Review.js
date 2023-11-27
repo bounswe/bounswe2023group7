@@ -20,7 +20,7 @@ function Review(data, index1) {
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
   const link = `http://${process.env.REACT_APP_API_URL}/user/byId/${data.review.userId}`;
-  const directLink = `http://localhost:3000/profile-page/${data.review.userId}`;
+  const directLink = `/profile-page/${data.review.userId}`;
 
   useEffect(() => {
     setReview(data.review.content);
