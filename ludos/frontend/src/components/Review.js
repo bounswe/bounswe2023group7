@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function Review(data, index1) {
   const [user, setUser] = useState({ username: "" });
@@ -19,6 +20,8 @@ function Review(data, index1) {
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
   const link = `http://${process.env.REACT_APP_API_URL}/user/byId/${data.review.userId}`;
+  const directLink = `http://localhost:3000/profile-page/${data.review.userId}`;
+
   useEffect(() => {
     setReview(data.review.content);
     setLiked(data.review.isLikedByUser);
@@ -190,7 +193,9 @@ function Review(data, index1) {
                 textAlign="left"
                 style={userStyle}
               >
-                {user.username}
+                <Link style={userStyle} to={directLink}>
+                  {user.username}
+                </Link>
               </Typography>
               <Typography
                 variant="caption"
@@ -290,6 +295,43 @@ function Review(data, index1) {
                     onClick={() => data.delete(true, data.review.reviewId)}
                   >
                     Delete Your Review
+                  </Button>
+                  <Button
+                    variant="contained"
+                    style={upVoteButton}
+                    onClick={handleLikeClick}
+                  >
+                    <FaThumbsUp style={{ color: "rgb(255, 255, 255)" }} />
+
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      textAlign="left"
+                      style={{
+                        color: "rgb(255, 255, 255)",
+                        marginLeft: "5px",
+                      }}
+                    >
+                      {data.review?.likedUserCount}
+                    </Typography>
+                  </Button>
+                  <Button
+                    variant="contained"
+                    style={downVoteButton}
+                    onClick={handleDislikeClick}
+                  >
+                    <FaThumbsDown style={{ color: "rgb(100, 100, 100)" }} />
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      textAlign="left"
+                      style={{
+                        color: "rgb(255, 255, 255)",
+                        marginLeft: "5px",
+                      }}
+                    >
+                      {data.review?.dislikedUserCount}
+                    </Typography>
                   </Button>
                 </>
               )}

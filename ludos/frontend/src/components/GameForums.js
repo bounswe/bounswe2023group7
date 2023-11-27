@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
-//import ForumTopic from "./ForumTopic";
+import ForumTopic from "./ForumTopicForGame";
 
 function GameForum(data) {
   const [forum, setForum] = useState([]);
@@ -25,9 +25,9 @@ function GameForum(data) {
 
   return (
     <Grid>
-      {/*forum &&
+      {forum &&
         forum.length > 0 &&
-  forum.map((topic, key) => <ForumTopic topic={topic} key={key} />)*/}
+        forum.map((topic, key) => <ForumTopic topic={topic} key={key} />)}
     </Grid>
   );
 }
