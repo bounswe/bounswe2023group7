@@ -173,10 +173,7 @@ function ForumTopic(data) {
             fontSize: "20px",
           }}
         >
-          <Link
-            to={`http://localhost:3000/thread/${data.topic.id}`}
-            style={userStyle}
-          >
+          <Link to={`/thread/${data.topic.id}`} style={userStyle}>
             {data.topic.title}
           </Link>
         </Typography>
