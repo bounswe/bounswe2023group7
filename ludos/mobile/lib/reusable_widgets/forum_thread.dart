@@ -17,8 +17,8 @@ class ThreadSummary extends StatefulWidget {
   final String title;
   final String userId;
   final String username;
-  final int? thumbUps;
-  final int? thumbDowns;
+   int? thumbUps;
+   int? thumbDowns;
   final String time;
   bool isLiked;
   bool isDisliked;
@@ -71,6 +71,8 @@ class ThreadSummary extends StatefulWidget {
 }
 
 class _ThreadSummaryState extends State<ThreadSummary> {
+  bool isLikedIn = false;
+  bool isDislikedIn = false;
   bool isLiked;
   bool isDisliked;
   final String game;
@@ -78,8 +80,8 @@ class _ThreadSummaryState extends State<ThreadSummary> {
   final String title;
   final String userId;
   final String username;
-  final int? thumbUps;
-  final int? thumbDowns;
+   int? thumbUps;
+   int? thumbDowns;
   final String time;
   final Color textColor;
   final Color backgroundColor;
@@ -107,6 +109,15 @@ class _ThreadSummaryState extends State<ThreadSummary> {
     required this.threadId,
   });
 
+  @override
+  void initState()
+  {
+    super.initState();
+      isLikedIn = isLiked;
+      isDislikedIn = isDisliked;
+      setState(() { });
+  }
+
   String timeAgo(String timestamp) {
     DateTime currentTime = DateTime.now();
     DateTime previousTime = DateTime.parse(timestamp);
@@ -133,42 +144,42 @@ class _ThreadSummaryState extends State<ThreadSummary> {
   }
 
   Future<void> userPressed(bool like) async {
-    if (like && isDisliked) {
+    if (like && isDislikedIn) {
       try {
         await APIService().likeThread(
             widget.token, widget.threadId);
       } catch (e) {
         throw Exception('Failed to like thread');
       }
-      isDisliked = false;
-      isLiked = true;
-    } else if (!like && isDisliked) {
+      isDislikedIn = false;
+      isLikedIn = true;
+    } else if (!like && isDislikedIn) {
       try {
         await APIService().dislikeThread(
             widget.token, widget.threadId);
       } catch(e) {
         throw Exception('Failed to dislike thread');
       }
-      isLiked = false;
-      isDisliked = false;
-    } else if (!like && isLiked) {
+      isLikedIn = false;
+      isDislikedIn = false;
+    } else if (!like && isLikedIn) {
       try {
         await APIService().dislikeThread(
             widget.token, widget.threadId);
       } catch(e) {
         throw Exception('Failed to dislike thread');
       }
-      isLiked = false;
-      isDisliked = true;
-    } else if (like && isLiked) {
+      isLikedIn = false;
+      isDislikedIn = true;
+    } else if (like && isLikedIn) {
       try {
-        var responseDislike = await APIService().likeThread(
+         await APIService().likeThread(
             widget.token, widget.threadId);
       } catch(e) {
         throw Exception('Failed to like thread');
       }
-      isLiked = false;
-      isDisliked = false;
+      isLikedIn = false;
+      isDislikedIn = false;
     } else if (like) {
       try {
         await APIService().likeThread(
@@ -176,7 +187,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
       } catch(e) {
         throw Exception('Failed to like thread');
       }
-      isLiked = true;
+      isLikedIn = true;
     } else {
       try {
           await APIService().dislikeThread(
@@ -184,8 +195,10 @@ class _ThreadSummaryState extends State<ThreadSummary> {
       } catch(e) {
         throw Exception('Failed to dislike thread');
       }
-      isDisliked = true;
+      isDislikedIn = true;
     }
+    setState(() {
+    });
   }
 
   @override
@@ -275,7 +288,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                   IconButton(
-                    onPressed: () => setState(() {
+                      onPressed: () => setState(() {
                       if(!widget.userProvider.isLoggedIn){
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -310,21 +323,22 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                               },
                             ),
                           ),
-                        )
-                            .closed
-                            .then((reason) => {});
+                        ).closed.then((reason) => {});
                       } else {
                         userPressed(true);
+
                       }
                       }),
                       icon: Icon(
                         Icons.thumb_up,
-                        color: isLiked ? Colors.green : Colors.white,
+                        color: isLikedIn ? Colors.green : Colors.white,
                         ),
                   ),
-                    Text(thumbUps.toString()),
+                    Text(
+                        thumbUps.toString()
+                    ),
                     IconButton(
-                    onPressed: () => setState(() {
+                      onPressed: () => setState(() {
                         if(!widget.userProvider.isLoggedIn){
                           ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -363,20 +377,14 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                               .closed
                               .then((reason) => {});
                           } else {
-                          userPressed(false);
+                            userPressed(false);
                           }
                           }),
                       icon: Icon(
                         Icons.thumb_down,
-                        color: isDisliked ? Colors.red : Colors.white,
+                        color: isDislikedIn ? Colors.red : Colors.white,
                     ),
                   ),
-                    /*
-                          Text(
-                            threadData['numberOfComments'].toString(),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                           */
                     Icon(Icons.comment),
                   Text(
                     timeAgo(time),

@@ -50,8 +50,9 @@ class _ThreadPageState extends State<ThreadPage>
       isLiked = threadData['isLiked'];
     }
     if (threadData['isDisliked'] != null) {
-      isLiked = threadData['isDisliked'];
+      isDisliked = threadData['isDisliked'];
     }
+    setState(() { });
   }
 
   Future<bool> fetchThreadData() async {
@@ -75,7 +76,7 @@ class _ThreadPageState extends State<ThreadPage>
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         numberOfComment = responseData.length;
-
+        print(responseData);
         return responseData.map((dynamic item) => Comment(
           token: widget.token,
           userProvider: widget.userProvider,
@@ -85,6 +86,8 @@ class _ThreadPageState extends State<ThreadPage>
           content: item['text'],
           userId: item['author']['id'],
           username: item['author']['username'],
+          isDisliked: false,
+          isLiked: false,
           thumbUps: item['likeCount'],
           thumbDowns: item['dislikeCount'],
           time: item['timestamp'],
@@ -363,7 +366,7 @@ class _ThreadPageState extends State<ThreadPage>
                             }),
                             icon: Icon(
                               Icons.thumb_up,
-                              color: isLiked ? Colors.green : Colors.white,
+                              color: threadData['isLiked'] ? Colors.green : Colors.white,
                             ),
                           ),
                           Text(
@@ -406,16 +409,14 @@ class _ThreadPageState extends State<ThreadPage>
                                       },
                                     ),
                                   ),
-                                )
-                                    .closed
-                                    .then((reason) => {});
+                                ).closed.then((reason) => {});
                               } else {
                                 userPressed(false);
                               }
                             }),
                             icon: Icon(
                               Icons.thumb_down,
-                              color: isDisliked ? Colors.red : Colors.white,
+                              color: threadData['isDisliked'] ? Colors.red : Colors.white,
                             ),
                           ),
                           IconButton(
