@@ -187,6 +187,8 @@ export default function GamesPage() {
                     flexDirection: "column",
                     alignSelf: "center",
                     borderRadius: "40px",
+                    backgroundImage: `url(https://i.pinimg.com/736x/02/ba/86/02ba867e545f953631148c89629412b1.jpg)`,
+                    backgroundSize: "cover",
                 }}
             >
                 <Typography
