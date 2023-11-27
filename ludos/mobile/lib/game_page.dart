@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/create_entity.dart';
 import 'package:ludos_mobile_app/edit_game.dart';
 import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
@@ -205,6 +206,21 @@ class _GamePageState extends State<GamePage> {
                         .closed
                         .then((reason) => {});
                   }
+                },
+              ),
+              ListTile(
+                title: const Text(
+                  'Add an Entity',
+                  style: TextStyle(color: MyColors.white),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CreateEntityPage(
+                        gameID: widget.id,
+                        token: widget.token,
+                        userProvider: widget.userProvider,
+                      ),
+                    ));
                 },
               ),
             ],

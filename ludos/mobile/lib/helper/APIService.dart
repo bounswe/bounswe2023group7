@@ -2,6 +2,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:ludos_mobile_app/helper/EntityContent.dart';
+
 class APIService {
   var baseURL = "http://3.125.225.39:8080";
   String? token = "";
@@ -428,6 +430,25 @@ class APIService {
     var uri = Uri.parse("$baseURL/rating/$gameId");
     final body =
     jsonEncode(<String, Object>{'rating': rate});
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+  Future<http.Response> createEntity(
+      String? authToken, String gameId, String type, String name, String image, String content) async {
+    var uri = Uri.parse("$baseURL/entity/$gameId");
+    final content = EntityContent(image: image, role: name);
+    final body =
+    jsonEncode(<String, Object>{
+      'type': type,
+      'name': name,
+      'content': content,
+      });
+      print(body);
     final response = await http.post(uri, body: body, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
