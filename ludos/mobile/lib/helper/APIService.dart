@@ -152,6 +152,16 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> listSearchedGames(String? authToken, String? searchKey, {String limit = "20"}) async {
+    String searchQueryParam = searchKey != null ? "searchKey=$searchKey" : "";
+    var uri = Uri.parse("$baseURL/game?$searchQueryParam");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
   Future<http.Response> listThreads(String gameId, String? authToken) async {
     var uri = Uri.parse("$baseURL/post?gameId=$gameId");
     final response = await http.get(uri, headers: {
