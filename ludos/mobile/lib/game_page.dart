@@ -4,26 +4,25 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/edit_game.dart';
 import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'forum_page.dart';
 import 'game_properties.dart';
+import 'games_page.dart';
 import 'game_reviews_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
 import 'login_page.dart';
+import 'main.dart';
 
 class GamePage extends StatefulWidget {
+  final VoidCallback onRefresh;
   final UserProvider userProvider;
   final String? token;
   final String id;
-  const GamePage(
-      {required this.id,
-      required this.token,
-      Key? key,
-      required this.userProvider})
-      : super(key: key);
+  const GamePage({required this.id, required this.token, Key? key, required this.userProvider, required this.onRefresh}) : super(key: key);
   @override
   State<GamePage> createState() => _GamePageState();
 }
@@ -105,6 +104,7 @@ class _GamePageState extends State<GamePage> {
               await APIService().userInfoById(item['userId'], widget.token);
 
           if (userResponse.statusCode == 200) {
+            setState(() {});
             return Review(
               token: widget.token,
               userProvider: widget.userProvider,
@@ -154,7 +154,58 @@ class _GamePageState extends State<GamePage> {
                   'Edit Game',
                   style: TextStyle(color: MyColors.white),
                 ),
-                onTap: () {},
+                onTap: () {
+                  if (widget.userProvider.isLoggedIn) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EditGamePage(
+                        id: widget.id,
+                        token: widget.token,
+                        userProvider: widget.userProvider,
+                      ),
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                          SnackBar(
+                            content: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  color: MyColors.blue,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Please log in to edit game',
+                                    style: TextStyle(
+                                      color: MyColors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: MyColors.blue2,
+                            duration: const Duration(seconds: 5),
+                            action: SnackBarAction(
+                              label: 'Log In',
+                              textColor: MyColors.blue,
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                        .closed
+                        .then((reason) => {});
+                  }
+                },
               ),
             ],
           ),
@@ -401,32 +452,34 @@ class _GamePageState extends State<GamePage> {
                               ),
                             ),
                           )
-                          .closed
-                          .then((reason) => {});
-                    } else {
-                      bool state = false;
-                      Future<bool> executeAsyncActions() async {
-                        bool state = false;
-                        try {
-                          if (followState) {
-                            http.Response token = await APIService()
-                                .unfollowGame(widget.token, widget.id);
-                            if (token.statusCode == 200) {
-                              state = false;
-                              print("Unfollowed");
+                              .closed
+                              .then((reason) => {});
+                        }else{
+                          bool state = false;
+                          Future<bool> executeAsyncActions() async {
+                            bool state = false;
+                          try {
+                            if (followState) {
+                              http.Response token = await APIService()
+                                  .unfollowGame(widget.token, widget.id);
+                              if (token.statusCode == 200) {
+                                state = false;
+                                widget.onRefresh();
+                                print("Unfollowed");
+                              } else {
+                                print("Error: ${token.statusCode}");
+                              }
                             } else {
-                              print("Error: ${token.statusCode}");
+                              http.Response token = await APIService().followGame(
+                                  widget.token, widget.id);
+                              if (token.statusCode == 200) {
+                                state = true;
+                                widget.onRefresh();
+                                print("Followed");
+                              } else {
+                                print("Error: ${token.statusCode}");
+                              }
                             }
-                          } else {
-                            http.Response token = await APIService()
-                                .followGame(widget.token, widget.id);
-                            if (token.statusCode == 200) {
-                              state = true;
-                              print("Followed");
-                            } else {
-                              print("Error: ${token.statusCode}");
-                            }
-                          }
                         } catch (error) {
                           print("Error: $error");
                         }
@@ -564,134 +617,177 @@ class _GamePageState extends State<GamePage> {
                     ),
                   ],
                 )),
-            if (showForm)
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                color: MyColors.blue,
-                child: Column(children: [
-                  Slider(
-                    inactiveColor: MyColors.darkBlue,
-                    activeColor: MyColors.orange,
-                    value: rating.toDouble(),
-                    min: 0,
-                    max: 5,
-                    onChanged: (value) {
-                      setState(() {
-                        rating = value;
-                      });
-                    },
-                  ),
-                  Text('Rating: ${rating.round()}'),
-                  TextField(
-                    controller: contentController,
-                    decoration: InputDecoration(labelText: 'Enter your review'),
-                    maxLines: 3,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      http.Response token = await APIService().createReview(
-                          widget.token,
-                          widget.id,
-                          contentController.text,
-                          rating);
-                      if (token.statusCode == 201) {
-                        print("status is ok");
-                        toggleFormVisibility();
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                              SnackBar(
-                                content: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.check_circle_outline,
-                                      color: MyColors.blue,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        'Your review is added successfully. You will be redirected to the Game Page.',
-                                        style: TextStyle(
-                                          color: MyColors.blue,
-                                          fontSize: 16,
+                if (showForm)
+                  Container(
+                  padding: const EdgeInsets.all(16.0),
+                  color: MyColors.blue,
+                  child: Column(children: [
+                    Slider(
+                      inactiveColor: MyColors.darkBlue,
+                      activeColor: MyColors.orange,
+                      value: rating.toDouble(),
+                      min: 0,
+                      max: 5,
+                      onChanged: (value) {
+                        setState(() {
+                          rating = value;
+                        });
+                      },
+                    ),
+                    Text('Rating: ${rating.round()}'),
+                    TextField(
+                      controller: contentController,
+                      decoration: InputDecoration(labelText: 'Enter your review'),
+                      maxLines: 3,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        http.Response token = await APIService().createReview(
+                            widget.token,
+                            widget.id,
+                            contentController.text,
+                            rating.round().toDouble());
+                        http.Response token1 = await APIService().createRate(
+                            widget.token, widget.id, rating.round().toDouble());
+                        if (token.statusCode == 201 && token1.statusCode == 201) {
+                          print("status is ok");
+                          toggleFormVisibility();
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
+                                SnackBar(
+                                  content: const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle_outline,
+                                        color: MyColors.blue,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          'Your review is added successfully. You will be redirected to the Game Page.',
+                                          style: TextStyle(
+                                            color: MyColors.blue,
+                                            fontSize: 16,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
+                                  backgroundColor: MyColors.blue2,
+                                  duration: const Duration(seconds: 5),
+                                  action: SnackBarAction(
+                                    label: 'OK',
+                                    textColor: MyColors.blue,
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context)
+                                          .hideCurrentSnackBar();
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => GamePage(
+                                                onRefresh: widget.onRefresh,
+                                                token: widget.token,
+                                                userProvider: widget.userProvider,
+                                                id: widget.id)),
+                                      );
+                                    },
+                                  ),
                                 ),
-                                backgroundColor: MyColors.blue2,
-                                duration: const Duration(seconds: 5),
-                                action: SnackBarAction(
-                                  label: 'OK',
-                                  textColor: MyColors.blue,
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => GamePage(
-                                              token: widget.token,
-                                              userProvider: widget.userProvider,
-                                              id: widget.id)),
-                                    );
-                                  },
+                              ) //ScaffoldMessager
+                              .closed
+                              .then((reason) => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GamePage(
+                                            onRefresh: widget.onRefresh,
+                                            token: widget.token,
+                                            userProvider: widget.userProvider,
+                                            id: widget.id)),
+                                  ));
+                        } else {
+                          print("status is not ok");
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  json.decode(token.body)["message"],
+                                  style: const TextStyle(
+                                    color: MyColors.blue,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
-                            ) //ScaffoldMessager
-                            .closed
-                            .then((reason) => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => GamePage(
-                                          token: widget.token,
-                                          userProvider: widget.userProvider,
-                                          id: widget.id)),
-                                ));
-                      } else {
-                        print("status is not ok");
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Text(
-                                json.decode(token.body)["message"],
-                                style: const TextStyle(
-                                  color: MyColors.blue,
-                                  fontSize: 16,
-                                ),
+                              backgroundColor: MyColors.blue2,
+                              duration: const Duration(seconds: 10),
+                              action: SnackBarAction(
+                                label: 'OK',
+                                textColor: MyColors.blue,
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                },
                               ),
                             ),
-                            backgroundColor: MyColors.blue2,
-                            duration: const Duration(seconds: 10),
-                            action: SnackBarAction(
-                              label: 'OK',
-                              textColor: MyColors.blue,
-                              onPressed: () {
-                                ScaffoldMessenger.of(context)
-                                    .hideCurrentSnackBar();
-                              },
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text("Submit"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: MyColors.darkBlue,
+                          );
+                        }
+                      },
+                      child: const Text("Submit"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: MyColors.darkBlue,
+                      ),
                     ),
-                  ),
-                ]),
-              ),
+                  ]),
+                ),
             Column(children: [
               const Divider(
-                height: 5.0,
-                thickness: 5.0,
+                height: 4.0,
+                thickness: 4.0,
                 color: MyColors.lightBlue,
               ),
-              if (reviews.isNotEmpty) reviews[0],
+              if(reviews.isNotEmpty)
+                reviews[0],
             ])
           ],
         ),
+      ),
+      bottomNavigationBar: Container(
+          color: MyColors.orange,
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Home(),
+                    ));
+                  },
+                  icon: const Icon(Icons.home)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                  },
+                  icon: const Icon(Icons.group)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider),
+                    ));
+                  },
+                  icon: const Icon(Icons.games)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {},
+                  icon: const Icon(Icons.favorite)),
+              IconButton(
+                  color: MyColors.white,
+                  onPressed: () {},
+                  icon: const Icon(Icons.search_outlined)),
+            ],
+          )
       ),
     );
   }

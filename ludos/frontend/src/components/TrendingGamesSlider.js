@@ -51,7 +51,7 @@ const TrendingGamesSlider = ({ games }) => {
         {games.map((game, index) => (
           <div key={index}>
             <Link to={`/game/${convertToSlug(game.title)}`} style={{ textDecoration: 'none' }}>
-              <Card style={{ margin: '0 10px', width: "auto", height:"100%", backgroundColor: "rgb(255, 255, 255, 0.6)" }}>
+              <Card style={{ margin: '0 10px', width: "auto", height:"100%", backgroundColor: "rgb(30, 30, 30, 0.9)" }}>
                 <CardContent style={{
                   color: "white",
                   fontFamily: "Trebuchet MS, sans-serif",
@@ -73,7 +73,7 @@ const TrendingGamesSlider = ({ games }) => {
                     flexDirection: "column", 
                     gap: "20px", 
                     justifyContent: "center",
-                    backgroundColor: "rgb(0,0,0, 0.6)",
+                    backgroundColor: "rgb(255,255,255, 0.6)",
                     borderRadius: "10px",
                     padding: "1rem",
                     }}>

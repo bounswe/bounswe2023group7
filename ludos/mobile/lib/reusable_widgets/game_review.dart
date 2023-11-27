@@ -5,6 +5,7 @@ import 'package:ludos_mobile_app/reusable_widgets/single_rating_icon.dart';
 import '../game_page.dart';
 import '../helper/APIService.dart';
 import '../userProvider.dart';
+import '../visit_user_page.dart';
 import '/helper/colors.dart';
 import 'package:intl/intl.dart';
 
@@ -172,13 +173,22 @@ class _ReviewState extends State<Review> {
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '@$username', //may need to navigate also the user
-                    style: const TextStyle(
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        MyColors.darkBlue),
+                  ),
+                  child: Text(
+                      '@$username', //may need to navigate also the user
+                      style: const TextStyle(
                       color: MyColors.orange,
                       fontSize: 15.0,
-                    ),
                   ),
+                  ),
+                  onPressed: () { Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => VisitUserPage(userProvider: userProvider, username: widget.username, id: widget.userId ),
+                  )); },
+                ),
                   Text(
                     timeAgo(time),
                     style: TextStyle(color: Colors.white),

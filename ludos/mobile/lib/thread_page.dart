@@ -5,10 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:ludos_mobile_app/helper/colors.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_comment.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'package:ludos_mobile_app/visit_user_page.dart';
 
 import 'game_page.dart';
+import 'games_page.dart';
 import 'helper/APIService.dart';
 import 'login_page.dart';
+import 'main.dart';
 
 
 class ThreadPage extends StatefulWidget
@@ -32,6 +35,7 @@ class _ThreadPageState extends State<ThreadPage>
 {
   bool isLiked = false;
   bool isDisliked = false;
+  int numberOfComment = 0;
   late Map<String, dynamic> threadData = {};
   late Future<List<Comment>> comments;
 
@@ -70,7 +74,7 @@ class _ThreadPageState extends State<ThreadPage>
     try {
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
-        print(responseData);
+        numberOfComment = responseData.length;
 
         return responseData.map((dynamic item) => Comment(
           token: widget.token,
@@ -79,6 +83,7 @@ class _ThreadPageState extends State<ThreadPage>
           parentId: widget.threadId,
           commentId: item['id'],
           content: item['text'],
+          userId: item['author']['id'],
           username: item['author']['username'],
           thumbUps: item['likeCount'],
           thumbDowns: item['dislikeCount'],
@@ -207,6 +212,7 @@ class _ThreadPageState extends State<ThreadPage>
                   Container(
                     padding: const EdgeInsets.all(18.0),
                     decoration: BoxDecoration(
+                        color: MyColors.blue.withOpacity(0.3),
                         border: Border.all(
                           color: MyColors.blue,
                           width: 5.0,
@@ -232,7 +238,9 @@ class _ThreadPageState extends State<ThreadPage>
                                       builder: (context) => GamePage(
                                           id: threadData['game']['id'],
                                           token: widget.token,
-                                          userProvider: widget.userProvider),
+                                          userProvider: widget.userProvider,
+                                          onRefresh: (){},
+                                      ),
                                     ),
                                   );
                                 },
@@ -247,7 +255,9 @@ class _ThreadPageState extends State<ThreadPage>
                               backgroundColor: MaterialStateProperty.all<Color>(MyColors.darkBlue),
                             ),
                             onPressed: () {
-                              //Fill the user profile ready
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => VisitUserPage(userProvider: widget.userProvider, username: threadData['user']['username'], id: threadData['user']['id']),
+                              ));
                             },
                             child: Text(
                                 '@${threadData['user']['username']}',
@@ -274,9 +284,8 @@ class _ThreadPageState extends State<ThreadPage>
                               threadData['body'].toString(),
                               textAlign: TextAlign.left,
                               style: const TextStyle(
-                                color: MyColors.lightBlue,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                                color: MyColors.white,
+                                fontSize: 15,
                               ),
                           ),
                         ),
@@ -413,6 +422,11 @@ class _ThreadPageState extends State<ThreadPage>
                               color: Colors.white,
                               onPressed: () {},
                               icon: const Icon(Icons.comment)),
+                          Text(
+                            numberOfComment.toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          const SizedBox(width: 10.0),
                           Text(
                             timeAgo(threadData['createdAt']),
                             style: const TextStyle(color: Colors.white),
@@ -575,7 +589,46 @@ class _ThreadPageState extends State<ThreadPage>
             );
             }
           }
+        ),
+
+        bottomNavigationBar: Container(
+        color: MyColors.orange,
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+                color: MyColors.white,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Home(),
+                  ));
+                },
+                icon: const Icon(Icons.home)),
+            IconButton(
+                color: MyColors.white,
+                onPressed: () {
+                },
+                icon: const Icon(Icons.group)),
+            IconButton(
+                color: MyColors.white,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider),
+                  ));
+                },
+                icon: const Icon(Icons.games)),
+            IconButton(
+                color: MyColors.white,
+                onPressed: () {},
+                icon: const Icon(Icons.favorite)),
+            IconButton(
+                color: MyColors.white,
+                onPressed: () {},
+                icon: const Icon(Icons.search_outlined)),
+          ],
         )
+    ),
 
 
     );

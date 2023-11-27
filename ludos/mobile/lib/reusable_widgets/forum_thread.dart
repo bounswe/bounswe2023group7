@@ -7,6 +7,7 @@ import '../helper/APIService.dart';
 import '../login_page.dart';
 import '../thread_page.dart';
 import '../userProvider.dart';
+import '../visit_user_page.dart';
 import '/helper/colors.dart';
 import 'package:intl/intl.dart';
 
@@ -14,6 +15,7 @@ class ThreadSummary extends StatefulWidget {
   final String game;
   final String gameId;
   final String title;
+  final String userId;
   final String username;
   final int? thumbUps;
   final int? thumbDowns;
@@ -33,6 +35,7 @@ class ThreadSummary extends StatefulWidget {
     required this.isDisliked,
     required this.game,
     required this.gameId,
+    required this.userId,
     required this.title,
     required this.username,
     required this.thumbUps,
@@ -51,6 +54,7 @@ class ThreadSummary extends StatefulWidget {
     game: game,
     gameId: gameId,
     title: title,
+    userId: userId,
     username: username,
     thumbUps: thumbUps,
     thumbDowns: thumbDowns,
@@ -72,6 +76,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
   final String game;
   final String gameId;
   final String title;
+  final String userId;
   final String username;
   final int? thumbUps;
   final int? thumbDowns;
@@ -89,6 +94,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
     required this.game,
     required this.gameId,
     required this.title,
+    required this.userId,
     required this.username,
     required this.thumbUps,
     required this.thumbDowns,
@@ -219,22 +225,33 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                             builder: (context) => GamePage(
                                 id: gameId,
                                 token: widget.token,
-                                userProvider: widget.userProvider),
+                                userProvider: widget.userProvider,
+                                onRefresh: () {},
+                            ),
                           ),
                         );
                       },
                       child: Text(
                           game,
-                          style: TextStyle(color: MyColors.white)
+                          style: TextStyle(color: MyColors.white, fontSize: 15.0,)
                       ),
                     ),
                     SizedBox(width: 5.0),
-                    Text(
-                      '@$username', //may need to navigate also the user
-                      style: const TextStyle(
-                        color: MyColors.darkBlue,
-                        fontSize: 15.0,
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            MyColors.darkBlue),
                       ),
+                      child: Text(
+                        '@$username', //may need to navigate also the user
+                        style: const TextStyle(
+                          color: MyColors.orange,
+                          fontSize: 15.0,
+                        ),
+                      ),
+                      onPressed: () { Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => VisitUserPage(userProvider: userProvider, username: widget.username, id: widget.userId ),
+                      )); },
                     ),
                   ],
                 ),
