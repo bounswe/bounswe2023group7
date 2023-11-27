@@ -48,7 +48,7 @@ Go to our website link which is http://51.20.170.143:3000/. User can [register](
 * For home page, the link is [/](http://51.20.170.143:3000/)
 
 ## How to run mobile app?
-- You can download APK version of the app from [here](https://drive.google.com/file/d/1Ieu20D_CrqKhxDXEw02KYTmpz7JwTCRt/view?usp=drive_link ) and directly run it in your Android device.
+- You can download APK version of the app from [here](https://drive.google.com/file/d/1h2x1MLO_yyUC1Tq7dmDcOutZYBKyXXKt/view?usp=sharing) and directly run it in your Android device.
 - If you want to use an emulator to open the application:
   - You can download an Android emulator with Android Studio through [this link](https://developer.android.com/studio?hl=tr).
   - Then you can easily run the application on Android Studio following [this guide](https://www.geeksforgeeks.org/how-to-import-existing-flutter-project-in-android-studio/).
