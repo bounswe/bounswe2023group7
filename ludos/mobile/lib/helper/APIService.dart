@@ -255,7 +255,7 @@ class APIService {
     return response;
   }
 
-  Future<http.Response> userInfoById(String userId, String? authToken) async {
+  Future<http.Response> userInfoById(String? userId, String? authToken) async {
     var uri = Uri.parse("$baseURL/user/byId/$userId");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
@@ -389,6 +389,19 @@ class APIService {
     } else {
       throw Exception('Failed to load threads');
     }
+  }
+
+  Future<http.Response> createRate(
+      String? authToken, String gameId, double rate) async {
+    var uri = Uri.parse("$baseURL/rating/$gameId");
+    final body =
+    jsonEncode(<String, Object>{'rating': rate});
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
   }
 
 }
