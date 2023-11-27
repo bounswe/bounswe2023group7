@@ -12,13 +12,15 @@ import '../userProvider.dart';
 import '../visit_user_page.dart';
 
 class Comment extends StatefulWidget {
+  bool isLiked;
+  bool isDisliked;
   final String userId;
   final String threadId;
   final String parentId;
   final String username;
   final String content;
-  final int? thumbUps;
-  final int? thumbDowns;
+   int? thumbUps;
+   int? thumbDowns;
   final String time;
   final Color textColor;
   final Color backgroundColor;
@@ -36,6 +38,8 @@ class Comment extends StatefulWidget {
     required this.content,
     required this.thumbUps,
     required this.thumbDowns,
+    required this.isLiked,
+    required this.isDisliked,
     required this.time,
     required this.textColor,
     required this.backgroundColor,
@@ -54,6 +58,8 @@ class Comment extends StatefulWidget {
     content: content,
     thumbUps: thumbUps,
     thumbDowns: thumbDowns,
+    isLiked: isLiked,
+    isDisliked: isDisliked,
     time: time,
     textColor: textColor,
     backgroundColor: backgroundColor,
@@ -65,6 +71,8 @@ class Comment extends StatefulWidget {
 }
 
 class _CommentState extends State<Comment> {
+  bool isLiked;
+  bool isDisliked;
   late Future<List<Comment>> comments;
   bool showForm = false;
   final String userId;
@@ -72,8 +80,8 @@ class _CommentState extends State<Comment> {
   final String parentId;
   final String content;
   final String username;
-  final int? thumbUps;
-  final int? thumbDowns;
+   int? thumbUps;
+   int? thumbDowns;
   final String time;
   final Color textColor;
   final Color backgroundColor;
@@ -83,6 +91,8 @@ class _CommentState extends State<Comment> {
   final String commentId;
 
   _CommentState({
+    required this.isLiked,
+    required this.isDisliked,
     required this.userId,
     required this.threadId,
     required this.parentId,
@@ -103,6 +113,7 @@ class _CommentState extends State<Comment> {
   initState() {
     super.initState();
     comments = fetchData(widget.token);
+    setState(() {});
   }
 
 
@@ -111,7 +122,6 @@ class _CommentState extends State<Comment> {
     try {
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
-
         return responseData.map((dynamic item) => Comment(
           token: widget.token,
           userProvider: widget.userProvider,
@@ -119,6 +129,8 @@ class _CommentState extends State<Comment> {
           parentId: widget.commentId,
           commentId: item['id'],
           content: item['text'],
+          isDisliked: false,
+          isLiked: false,
           userId: item['author']['id'],
           username: item['author']['username'],
           thumbUps: item['likeCount'],
@@ -144,6 +156,65 @@ class _CommentState extends State<Comment> {
     });
   }
 
+  /*
+  Future<void> userPressed(bool like) async {
+    if (like && isDisliked) {
+      try {
+        await APIService().likeThread(
+            widget.token, widget.threadId);
+      } catch (e) {
+        throw Exception('Failed to like thread');
+      }
+      isDisliked = false;
+      isLiked = true;
+    } else if (!like && isDisliked) {
+      try {
+        await APIService().dislikeThread(
+            widget.token, widget.threadId);
+      } catch(e) {
+        throw Exception('Failed to dislike thread');
+      }
+      isLiked = false;
+      isDisliked = false;
+    } else if (!like && isLiked) {
+      try {
+        await APIService().dislikeThread(
+            widget.token, widget.threadId);
+      } catch(e) {
+        throw Exception('Failed to dislike thread');
+      }
+      isLiked = false;
+      isDisliked = true;
+    } else if (like && isLiked) {
+      try {
+        await APIService().likeThread(
+            widget.token, widget.threadId);
+      } catch(e) {
+        throw Exception('Failed to like thread');
+      }
+      isLiked = false;
+      isDisliked = false;
+    } else if (like) {
+      try {
+        await APIService().likeThread(
+            widget.token, widget.threadId);
+      } catch(e) {
+        throw Exception('Failed to like thread');
+      }
+      isLiked = true;
+      isDisliked = false;
+    } else if (!like) {
+      try {
+        await APIService().dislikeThread(
+            widget.token, widget.threadId);
+      } catch(e) {
+        throw Exception('Failed to dislike thread');
+      }
+      isDisliked = true;
+      isLiked = false;
+    }
+  }
+  */
   String timeAgo(String timestamp) {
     DateTime currentTime = DateTime.now();
     DateTime previousTime = DateTime.parse(timestamp);
@@ -269,13 +340,12 @@ class _CommentState extends State<Comment> {
                                     .closed
                                     .then((reason) => {});
                               } else {
-//userPressed(true);
+                                //userPressed(true);
                               }
                             }),
                             icon: Icon(
                               Icons.thumb_up,
-                              color: Colors.white,
-//color: isLiked ? Colors.green : Colors.white,
+                              color: isLiked ? Colors.green : Colors.white,
                             ),
                           ),
                           Text(thumbUps.toString(),
@@ -323,13 +393,12 @@ class _CommentState extends State<Comment> {
                                     .closed
                                     .then((reason) => {});
                               } else {
-//userPressed(false);
+                                //userPressed(false);
                               }
                             }),
                             icon: Icon(
                               Icons.thumb_down,
-                              color: Colors.white,
-//color: isDisliked ? Colors.red : Colors.white,
+                              color: isDisliked ? Colors.red : Colors.white,
                             ),
                           ),
                           IconButton(
