@@ -86,7 +86,7 @@ You can access our communication plan using this [link](https://github.com/bouns
         * [5.1.4. ProjectLibre](#projectlibre)
         * [5.1.5. Figma ](#figma)
         * [5.1.6. Tools for Mobile Team](#mobile)
-            * [5.1.6.1. Flutter & Dart](#Flutter&Dar)
+            * [5.1.6.1. Flutter & Dart](#Flutter&Dart)
             * [5.1.6.2. VS Code](#VSCode)
             * [5.1.6.3. Android Studio](#AndroidStudio)
         * [5.1.7 Tools for Frontend Team](#frontend)
@@ -103,10 +103,10 @@ You can access our communication plan using this [link](https://github.com/bouns
             * [5.1.8.2. Docker](#backend-docker)
             * [5.1.8.3. AWS EC2](#backend-aws-ec2)
             * [5.1.8.4. NestJS](#backend-nestjs)
-            * [5.1.8.5. PostgreSQL](#backend-portgresql)
-    * [5.2. Evaluation of Processes](#evalution-of-processes)
+            * [5.1.8.5. PostgreSQL](#backend-postgresql)
+    * [5.2. Evaluation of Processes](#evaluation-of-processes)
         * [5.2.1. Team Meetings](#team-meetings)
-        * [5.2.2. PS  Customer Meetings](#ps-customer-meeting)
+        * [5.2.2. PS  Customer Meetings](#ps-customer-meetings)
         * [5.2.3. Issue Management](#issue-management)
         
 
@@ -539,7 +539,7 @@ To sum up, the approach to issue management in GitHub appears to be well-organiz
 - **Code related significant issues**: [#271](https://github.com/bounswe/bounswe2023group7/issues/271), [#274](https://github.com/bounswe/bounswe2023group7/issues/274), [#287](https://github.com/bounswe/bounswe2023group7/issues/287), [#314](https://github.com/bounswe/bounswe2023group7/issues/314), [#315](https://github.com/bounswe/bounswe2023group7/issues/315), [#356](https://github.com/bounswe/bounswe2023group7/issues/356), [#365](https://github.com/bounswe/bounswe2023group7/issues/365), [#282](https://github.com/bounswe/bounswe2023group7/issues/282)
 - **Management related significant issues**: [#234](https://github.com/bounswe/bounswe2023group7/issues/234), [#240](https://github.com/bounswe/bounswe2023group7/issues/240), [#241](https://github.com/bounswe/bounswe2023group7/issues/241), [#252](https://github.com/bounswe/bounswe2023group7/issues/252), [#269](https://github.com/bounswe/bounswe2023group7/issues/269), [#253](https://github.com/bounswe/bounswe2023group7/issues/253), [#276](https://github.com/bounswe/bounswe2023group7/issues/276), [#305](https://github.com/bounswe/bounswe2023group7/issues/305)
 - **Pull requests**: [#325](https://github.com/bounswe/bounswe2023group7/pull/325), [#342](https://github.com/bounswe/bounswe2023group7/pull/342), [#357](https://github.com/bounswe/bounswe2023group7/pull/357), [#368](https://github.com/bounswe/bounswe2023group7/pull/368)
-- **Reviewed Issues and PRs**: [#358](https://github.com/bounswe/bounswe2023group7/pull/358), [#346](https://github.com/bounswe/bounswe2023group7/pull/346), [#345](https://github.com/bounswe/bounswe2023group7/pull/345), [#327](https://github.com/bounswe/bounswe2023group7/pull/327), [#324](https://github.com/bounswe/bounswe2023group7/pull/324), [#295](https://github.com/bounswe/bounswe2023group7/pull/295), 
+- **Reviewed PRs**: [#358](https://github.com/bounswe/bounswe2023group7/pull/358), [#346](https://github.com/bounswe/bounswe2023group7/pull/346), [#345](https://github.com/bounswe/bounswe2023group7/pull/345), [#327](https://github.com/bounswe/bounswe2023group7/pull/327), [#324](https://github.com/bounswe/bounswe2023group7/pull/324), [#295](https://github.com/bounswe/bounswe2023group7/pull/295)
 - **Additional information**: I took notes and wrote Meeting #1 and #5 Notes. I have written Lab Report #3. I conducted research on Flutter and Dart to use in our development. I reviewed and tested the tasks done by the mobile team. I attended all lectures, labs, mobile and general team meetings.
 
 --------------------------  
@@ -611,6 +611,19 @@ To sum up, the approach to issue management in GitHub appears to be well-organiz
 
 ### <ins>Hakan Karakuş</ins><a name="hakan-karakus" />
 
+-  **Member**: Hakan Karakuş - 2019400126 - Group 7 - Backend Team
+- **Responsibilities**: I was responsible in the backend team. My tasks included creating the folder structure, connecting the database, setting up Docker, managing deployment processes, creating the unit tests pipeline, and overseeing structural planning. I developed an endpoint for a feature in the backend.
+
+- **Code related significant issues**: 
+[319](https://github.com/bounswe/bounswe2023group7/issues/319), [285](https://github.com/bounswe/bounswe2023group7/issues/285), [284](https://github.com/bounswe/bounswe2023group7/issues/284), [283](https://github.com/bounswe/bounswe2023group7/issues/283), [280](https://github.com/bounswe/bounswe2023group7/issues/280), [270](https://github.com/bounswe/bounswe2023group7/issues/270), [266](https://github.com/bounswe/bounswe2023group7/issues/266), [262](https://github.com/bounswe/bounswe2023group7/issues/262)
+
+
+- **Management related significant issues**: 
+  [248](https://github.com/bounswe/bounswe2023group7/issues/248), [251](https://github.com/bounswe/bounswe2023group7/issues/251)
+
+- **Pull requests**: 
+  [364](https://github.com/bounswe/bounswe2023group7/pull/364)
+
 --------------------------  
 
 ### <ins>Elif Kızılkaya</ins><a name="elif-kizilkaya" />
@@ -679,5 +692,3 @@ To sum up, the approach to issue management in GitHub appears to be well-organiz
 [#402](https://github.com/bounsw/bounswe2023group7/issues/402), [#310](https://github.com/bounswe/bounswe2023group7/issues/310), [#245](https://github.com/bounswe/bounswe2023group7/issues/245)
 - **Pull requests**: [#349](https://github.com/bounswe/bounswe2023group7/pull/349)
 - **Additional information**: Additionally, Before lab sections, I reviewed our project plan and also asked many questions to my teammates during the lab.I have tried to attribute the backend team.
-
-
