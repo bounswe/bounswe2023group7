@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'package:ludos_mobile_app/helper/colors.dart';
+import 'package:ludos_mobile_app/login_page.dart';
 import 'helper/APIService.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-import 'userProvider.dart';
 
+class SignUpPage extends StatefulWidget {
+  @override
+  SignUpPageState createState() => SignUpPageState();
+}
 
-class SignUpPage extends StatelessWidget {
+class SignUpPageState extends State<SignUpPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFF101c2c),
+        backgroundColor: MyColors.darkBlue,
         appBar: AppBar(
-          backgroundColor: const Color(0xFFf89c34),
+          backgroundColor: MyColors.orange,
           title: const Text('Create An Account'),
         ),
         body: Padding(
@@ -29,107 +33,112 @@ class SignUpPage extends StatelessWidget {
                 height: 100.0,
                 child: Image.asset('assets/images/ludos_transparent.png'),
               ),
-               TextFormField(
-                 style: const TextStyle(color: Color(0xFFFDFDFF)),
-                 controller: usernameController,
-                 decoration: const InputDecoration(
+              TextFormField(
+                style: const TextStyle(color: MyColors.white),
+                controller: usernameController,
+                decoration: const InputDecoration(
                   icon: Icon(
                     Icons.person_2_sharp,
-                    color: Color(0xFF40749c),
+                    color: MyColors.lightBlue,
                   ),
                   labelText: 'Username',
                   labelStyle: TextStyle(
-                      color: Color(0xFF40749c),
-                      fontWeight: FontWeight.bold),
+                      color: MyColors.lightBlue, fontWeight: FontWeight.bold),
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
-                    BorderSide(color: Color(0xFF40749c), width: 2.0),
+                        BorderSide(color: MyColors.lightBlue, width: 2.0),
                   ),
                 ),
               ),
               const SizedBox(height: 20),
               TextFormField(
-                style: const TextStyle(color: Color(0xFFFDFDFF)),
+                style: const TextStyle(color: MyColors.white),
                 controller: emailController,
                 decoration: const InputDecoration(
                   icon: Icon(
                     Icons.email,
-                    color: Color(0xFF40749c),
+                    color: MyColors.lightBlue,
                   ),
                   labelText: 'Email',
                   labelStyle: TextStyle(
-                      color: Color(0xFF40749c),
-                      fontWeight: FontWeight.bold),
+                      color: MyColors.lightBlue, fontWeight: FontWeight.bold),
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
-                    BorderSide(color: Color(0xFF40749c), width: 2.0),
+                        BorderSide(color: MyColors.lightBlue, width: 2.0),
                   ),
                 ),
               ),
               const SizedBox(height: 20),
               TextFormField(
-                style: const TextStyle(color: Color(0xFFFDFDFF)),
+                style: const TextStyle(color: MyColors.white),
                 controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  icon: Icon(
+                obscureText: _isObscure,
+                decoration: InputDecoration(
+                  icon: const Icon(
                     Icons.lock,
-                    color: Color(0xFF40749c),
+                    color: MyColors.lightBlue,
                   ),
                   labelText: 'Password',
-                  labelStyle: TextStyle(
-                      color: Color(0xFF40749c),
-                      fontWeight: FontWeight.bold),
-                  focusedBorder: UnderlineInputBorder(
+                  labelStyle: const TextStyle(
+                    color: MyColors.lightBlue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  focusedBorder: const UnderlineInputBorder(
                     borderSide:
-                    BorderSide(color: Color(0xFF40749c), width: 2.0),
+                        BorderSide(color: MyColors.lightBlue, width: 2.0),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isObscure ? Icons.visibility_off : Icons.visibility,
+                      color: MyColors.lightBlue,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isObscure = !_isObscure;
+                      });
+                    },
                   ),
                 ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFf89c34),
-                      shape: const StadiumBorder()),
-                  onPressed: () async {
-                    http.Response token = await APIService()
-                        .signUp(usernameController.text, emailController.text, passwordController.text);
-                    int status = token.statusCode;
-                    if (status == 200) {
-                      // If logged-in successfully, go to the Home page
-                      Provider.of<UserProvider>(context, listen: false)
-                        .setLoggedIn(true, usernameController.text);
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => (Home()),
-                      ));
-                    }
-                    if (status == 409) {
-                      if(token.body.contains("email")){
-                        ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text(
-                                'The email address has an account!')),
-                        );
-                      }
-                      else{
-                        ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text(
-                                'The username already taken!')),
-                      );}
-
-                    }
-                    if (status == 400) {
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: MyColors.orange,
+                    shape: const StadiumBorder()),
+                onPressed: () async {
+                  http.Response token = await APIService().signUp(
+                      usernameController.text,
+                      emailController.text,
+                      passwordController.text);
+                  int status = token.statusCode;
+                  if (status == 200) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => (LoginPage()),
+                    ));
+                  }
+                  if (status == 409) {
+                    if (token.body.contains("email")) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text(
-                                'Could not sign-up. Check your information.')),
+                            content: Text('The email address has an account!')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('The username already taken!')),
                       );
                     }
-                  },
-                  child: const Text("Sign Up",
-                      style: TextStyle(
-                          color: Color(0xFF101c2c))),
+                  }
+                  if (status == 400) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text(
+                              'Could not sign-up. Check your information.')),
+                    );
+                  }
+                },
+                child: const Text("Sign Up",
+                    style: TextStyle(color: MyColors.darkBlue)),
               )
             ],
           ),

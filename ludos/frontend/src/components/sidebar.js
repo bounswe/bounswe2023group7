@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Drawer,
   List,
@@ -17,6 +18,7 @@ import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import GroupIcon from "@mui/icons-material/Groups";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ForumIcon from "@mui/icons-material/Forum";
 import { Link } from "react-router-dom";
 
 const drawerWidth = 90;
@@ -61,6 +63,7 @@ const circleIcon = {
 
 function Sidebar({ userLoggedIn }) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -68,6 +71,16 @@ function Sidebar({ userLoggedIn }) {
 
   const handleProfileClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleCreateGameClick = () => {
+    if (userLoggedIn) {
+      // If the user is logged in, redirect to the create game page
+      navigate("/create-game");
+    } else {
+      // If the user is not logged in, redirect to the login page
+      navigate("/signup");
+    }
   };
 
   function handleLogout() {
@@ -142,7 +155,28 @@ function Sidebar({ userLoggedIn }) {
                 </ListItemIcon>
               </div>
             </ListItem>
-            <ListItem button component={Link} to="/create-game">
+            <ListItem button component={Link} to="/forums">
+              <div>
+                <ListItemIcon style={listItem}>
+                  <div style={circleIcon}>
+                    <ForumIcon />
+                  </div>
+                  <Stack direction="column" alignItems="center">
+                    <ListItemText
+                      primary="Forums"
+                      primaryTypographyProps={{
+                        style: {
+                          fontSize: "15px",
+                          fontFamily: "OCR A Std, monospace",
+                          fontWeight: "bold",
+                        },
+                      }}
+                    />
+                  </Stack>
+                </ListItemIcon>
+              </div>
+            </ListItem>
+            <ListItem button onClick={handleCreateGameClick}>
               <div>
                 <ListItemIcon style={listItem}>
                   <div style={circleIcon}>

@@ -8,6 +8,9 @@ import { User } from '../src/entities/user.entity';
 import { GameRepository } from '../src/repositories/game.repository';
 import { UserRepository } from '../src/repositories/user.repository';
 import { GameService } from '../src/services/game.service';
+import { AuthorizedRequest } from '../src/interfaces/common/authorized-request.interface';
+import { RatingRepository } from '../src/repositories/rating.repository';
+import { CompletionDurationRepository } from '../src/repositories/completion-duration.repository';
 describe('GameController', () => {
   let gameController: GameController;
   let gameRepository: GameRepository;
@@ -28,6 +31,8 @@ describe('GameController', () => {
         GameService,
         GameRepository,
         UserRepository,
+        RatingRepository,
+        CompletionDurationRepository,
         {
           provide: DataSource,
           useValue: dataSource,
@@ -165,6 +170,44 @@ describe('GameController', () => {
         gameController.unfollowGame(req as any, game.id),
       ).rejects.toStrictEqual(new NotFoundException('Game Not Found!'));
       expect(gameSpy).toHaveBeenCalledWith(game.id);
+    });
+  });
+  describe('list games', () => {
+    it('should return list of games', async () => {
+      const game = new Game();
+      game.followerList = [];
+      game.id = '1';
+      const user = new User();
+      user.id = '1';
+      const listResponse = {
+        items: [game],
+        meta: {
+          currentPage: 1,
+          itemCount: 1,
+          itemsPerPage: 1,
+          totalItems: 1,
+          totalPages: 1,
+        },
+      };
+      const listSpy = jest
+        .spyOn(gameRepository, 'findGames')
+        .mockResolvedValue(listResponse);
+      const req = {};
+      const response = await gameController.listGames(req as AuthorizedRequest);
+      expect(response).toBe(listResponse);
+      expect(listSpy).toHaveBeenCalledWith(
+        1,
+        10,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+      );
     });
   });
 });
