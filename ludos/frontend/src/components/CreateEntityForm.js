@@ -24,7 +24,7 @@ const CreateEntityForm = () => {
     const [games, setGames] = useState([]);
     const [game, setGame] = useState("");
     const [type, setType] = useState("");
-    const [content, setContent] = useState([]);
+    const [content, setContent] = useState([{ name: '', value: '' }]);
     const [snackbar, setSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [serverError, setServerError] = useState(false);
@@ -123,7 +123,7 @@ const CreateEntityForm = () => {
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Grid container spacing={1} xs={8} sx={{ backgroundColor: 'white', padding: '15px', borderRadius: '25px' }}>
-                <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Create Thread</h1>
+                <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Create Entity</h1>
                 <Grid item xs={12} spacing={1} >
                     <h3 style={{ display: 'flex', alignItems: 'flex-start' }}>Name:</h3>
                     <TextField
