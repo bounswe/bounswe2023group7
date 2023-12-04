@@ -6,7 +6,7 @@ import MapsUgcIcon from "@mui/icons-material/MapsUgc";
 import { Link } from "react-router-dom";
 
 function ForumTopic(data) {
-  const directLink = `http://localhost:3000/profile-page/${data.topic.user.id}`;
+  const directLink = `/profile-page/${data.topic.user.id}`;
   const tagBox = {
     display: "flex",
     justifyContent: "center",
@@ -173,10 +173,7 @@ function ForumTopic(data) {
             fontSize: "20px",
           }}
         >
-          <Link
-            to={`http://localhost:3000/thread/${data.topic.id}`}
-            style={userStyle}
-          >
+          <Link to={`/thread/${data.topic.id}`} style={userStyle}>
             {data.topic.title}
           </Link>
         </Typography>

@@ -10,7 +10,7 @@ Ludos stands as a dynamic gaming community platform, serving as the hub for deve
 Elevate your gaming journey with Ludos – where community, collaboration, and fellowship converge.
 
 ## How to run?
-- You can download APK version of the app from [here](https://drive.google.com/file/d/1Ieu20D_CrqKhxDXEw02KYTmpz7JwTCRt/view?usp=drive_link ) and directly run it in your Android device.
+- You can download APK version of the app from [here](https://drive.google.com/file/d/1h2x1MLO_yyUC1Tq7dmDcOutZYBKyXXKt/view?usp=sharing) and directly run it in your Android device.
 - If you want to use an emulator to open the application:
   
   - You can download an Android emulator with Android Studio through [this link](https://developer.android.com/studio?hl=tr).

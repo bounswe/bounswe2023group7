@@ -38,17 +38,10 @@ Before you begin, ensure you have the following installed:
 
 
 ### Deployed Version of frontend
-Go to our website link which is http://51.20.170.143:3000/. User can [register](http://51.20.170.143:3000/signup) to the platform and then [login](http://51.20.170.143:3000/login). In addition to that, for milestone 1, we provided mock pages for:
-* Forum page about *Video Games*: [/forum](http://51.20.170.143:3000/forum)
-*    Game Pages for:
-
-      * *Red Dead Redemption 2* : [/game/Red-Dead-Redemption-2](http://51.20.170.143:3000/game/Red-Dead-Redemption-2)
-      * *Witcher 3* : [/game/Witcher-3](http://51.20.170.143:3000/game/Witcher-3)
-      * *God of War 2018*: [/game/God-of-War-2018](http://51.20.170.143:3000/game/God-of-War-2018)
-* For home page, the link is [/](http://51.20.170.143:3000/)
+Go to our website link which is http://51.20.170.143:3000/.
 
 ## How to run mobile app?
-- You can download APK version of the app from [here](https://drive.google.com/file/d/1Ieu20D_CrqKhxDXEw02KYTmpz7JwTCRt/view?usp=drive_link ) and directly run it in your Android device.
+- You can download APK version of the app from [here](https://drive.google.com/file/d/1h2x1MLO_yyUC1Tq7dmDcOutZYBKyXXKt/view?usp=sharing) and directly run it in your Android device.
 - If you want to use an emulator to open the application:
   - You can download an Android emulator with Android Studio through [this link](https://developer.android.com/studio?hl=tr).
   - Then you can easily run the application on Android Studio following [this guide](https://www.geeksforgeeks.org/how-to-import-existing-flutter-project-in-android-studio/).

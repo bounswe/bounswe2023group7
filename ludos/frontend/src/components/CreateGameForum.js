@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Chip from "@mui/material/Chip";
 import {
@@ -15,6 +16,17 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CreateGameForm = () => {
+  const convertToSlug = (text) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+      .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+      .replace(/--+/g, "-"); // Replace multiple dashes with single dash
+  };
+
+  const navigate = useNavigate();
   const [isTagSelected, setIsTagSelected] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -53,47 +65,47 @@ const CreateGameForm = () => {
     gameGuide: "",
   });
   const predefinedTags = [
-    'Action',
-    'Adventure',
-    'RPG',
-    'Strategy',
-    'Simulation',
-    'Sports',
-    'Fighting',
-    'Horror',
-    'Puzzle',
-    'Multiplayer',
-    'Indie',
-    'RTS',
-    'Racing',
-    'Open World',
-    'Educational',
-    'VR',
-    'Survival',
-    'Story-Driven',
-    'Retro',
-    'Anime',
-    'Hack and Slash',
-    'Mystery',
-    'Historical',
-    'Sci-Fi',
-    'Fantasy',
-    'Comedy',
-    'Artistic',
-    'Puzzle-Platformer',
+    "Action",
+    "Adventure",
+    "RPG",
+    "Strategy",
+    "Simulation",
+    "Sports",
+    "Fighting",
+    "Horror",
+    "Puzzle",
+    "Multiplayer",
+    "Indie",
+    "RTS",
+    "Racing",
+    "Open World",
+    "Educational",
+    "VR",
+    "Survival",
+    "Story-Driven",
+    "Retro",
+    "Anime",
+    "Hack and Slash",
+    "Mystery",
+    "Historical",
+    "Sci-Fi",
+    "Fantasy",
+    "Comedy",
+    "Artistic",
+    "Puzzle-Platformer",
   ];
 
   const predefinedPlatforms = [
-    'Android',
-    'iOS',
-    'Windows',
-    'macOS',
-    'Linux',
-    'PlayStation',
-    'Xbox',
-    'Nintendo Switch',
-    'Board Game',
-    'VR',
+    "Android",
+    "iOS",
+    "Windows",
+    "macOS",
+    "Linux",
+    "PlayStation",
+    "Xbox",
+    "Nintendo Switch",
+    "Board Game",
+    "VR",
   ];
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
@@ -165,8 +177,8 @@ const CreateGameForm = () => {
     e.preventDefault();
 
     if (!isTagSelected) {
-      toast.error('Please select at least one tag!', {
-        position: 'top-right',
+      toast.error("Please select at least one tag!", {
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -196,6 +208,7 @@ const CreateGameForm = () => {
           draggable: true,
         });
         console.log("Game created successfully:", response.data);
+        navigate(`/game/${convertToSlug(formData.title)}`);
       })
       .catch((error) => {
         // Error creating game
