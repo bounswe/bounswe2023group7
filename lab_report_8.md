@@ -30,10 +30,10 @@ Looking ahead to the next week, our focus will be on finalizing the entity featu
 | Create the entity related pages | [#522](https://github.com/bounswe/bounswe2023group7/issues/522) | Kardelen Erdal | 27.11.2023 | 5 hrs | 3 hrs | [#606](https://github.com/bounswe/bounswe2023group7/pull/606)|
 | Finalize the edit game page| [#523](https://github.com/bounswe/bounswe2023group7/issues/523) | Kardelen Erdal | 27.11.2023 | 1 hr | 1 hr | [#581](https://github.com/bounswe/bounswe2023group7/pull/581)|
 | Make the fields of the game static | [#524](https://github.com/bounswe/bounswe2023group7/issues/524) | Kardelen Erdal | 27.11.2023 | 2 hrs | 2 hrs | [#580](https://github.com/bounswe/bounswe2023group7/pull/580)|
-| Add scroll to the tags of game |[#535](https://github.com/bounswe/bounswe2023group7/issues/535)  | Fatma Sena Alçı | 27.11.2023 | 2 hrs |
-| Update the game without photos |[#536](https://github.com/bounswe/bounswe2023group7/issues/536)  | Fatma Sena Alçı | 27.11.2023 | 1 hr |
-| Drawer for the game page | [#537](https://github.com/bounswe/bounswe2023group7/issues/537) | Fatma Sena Alçı | 27.11.2023 | 4 hrs |
-| Edit user profile page |[#538](https://github.com/bounswe/bounswe2023group7/issues/538)| Fatma Sena Alçı | 27.11.2023 | 3 hrs |
+| Add scroll to the tags of game |[#535](https://github.com/bounswe/bounswe2023group7/issues/535)  | Fatma Sena Alçı | 27.11.2023 | 2 hrs | 2 hrs | [#567](https://github.com/bounswe/bounswe2023group7/pull/567)
+| Update the game without photos |[#536](https://github.com/bounswe/bounswe2023group7/issues/536)  | Fatma Sena Alçı | 27.11.2023 | 1 hr | 2 hrs | [#563](https://github.com/bounswe/bounswe2023group7/pull/563)
+| Drawer for the game page | [#537](https://github.com/bounswe/bounswe2023group7/issues/537) | Fatma Sena Alçı | 27.11.2023 | 4 hrs | 5 hrs | [#576](https://github.com/bounswe/bounswe2023group7/pull/576)
+| Edit user profile page |[#538](https://github.com/bounswe/bounswe2023group7/issues/538)| Fatma Sena Alçı | 27.11.2023 | 3 hrs | 3 hrs | [#599](https://github.com/bounswe/bounswe2023group7/pull/599)
 | User profile page | [#469](https://github.com/bounswe/bounswe2023group7/issues/469) | Furkan Ülke | 27.11.2023 | 6 hrs | 6 hrs | [#578](https://github.com/bounswe/bounswe2023group7/pull/578) |
 | Get Review By Review Id | [#517](https://github.com/bounswe/bounswe2023group7/issues/517)| Melih Gezer | 25.11.2023 | 2 hrs |
 | Get Review List By Game Id | [#518](https://github.com/bounswe/bounswe2023group7/issues/518)| Melih Gezer | 25.11.2023 | 2 hrs |
@@ -94,10 +94,10 @@ Game names should be larger at forum topics and posts | [#548 ](https://github.c
 | Edit/Delete Review, Thread and Comment | [#647](https://github.com/bounswe/bounswe2023group7/issues/647) | Hatice Erk | 12.12.2023 | 5 hrs | 
 | Refactoring | [#648](https://github.com/bounswe/bounswe2023group7/issues/648) | Hatice Erk | 12.12.2023 | 2 hrs | 
 | Like/Dislike Bug | [#605](https://github.com/bounswe/bounswe2023group7/issues/605) | Hatice Erk | 12.12.2023 | 5 hrs |
-| Go Back Buttons Navigation | | Fatma Sena Alçı | 12.12.2023 | 2 hrs |
-| Profile Photo in Navigation of Home Page | | Fatma Sena Alçı | 12.12.2023 | 2 hrs |
-| File Upload on Mobile App | | Fatma Sena Alçı | 12.12.2023 | 2 hrs |
-| Rating Feature in Game Page | | Fatma Sena Alçı | 12.12.2023 | 2 hrs |
+| Go Back Buttons Navigation |[#658](https://github.com/bounswe/bounswe2023group7/issues/658) | Fatma Sena Alçı | 12.12.2023 | 2 hrs |
+| Profile Photo in Navigation of Home Page | [#659](https://github.com/bounswe/bounswe2023group7/issues/659)| Fatma Sena Alçı | 12.12.2023 | 2 hrs |
+| File Upload on Mobile App |[#660](https://github.com/bounswe/bounswe2023group7/issues/660) | Fatma Sena Alçı | 12.12.2023 | 2 hrs |
+| Rating Feature in Game Page |[#661](https://github.com/bounswe/bounswe2023group7/issues/661) | Fatma Sena Alçı | 12.12.2023 | 2 hrs |
 | Main Search Page for the Mobile App | [#643](https://github.com/bounswe/bounswe2023group7/issues/643) | Furkan Ülke | 12.12.2023 | 6 hrs |
 | Group Endpoints | [#636](https://github.com/bounswe/bounswe2023group7/issues/636) | Ömer Şafak Bebek | 09.12.2023 | 5 hrs |
 | Game Related Games Endpoint |[#641](https://github.com/bounswe/bounswe2023group7/issues/641) | Melih Gezer | 09.12.2023 | 4 hrs |
