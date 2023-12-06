@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
+import 'package:ludos_mobile_app/reusable_widgets/need_login_message.dart';
 import 'package:ludos_mobile_app/user_profile_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_thread.dart';
 import 'package:ludos_mobile_app/reusable_widgets/home_game_sum.dart';
@@ -134,42 +135,7 @@ class _HomeState extends State<Home> {
                     }
                     else{
                       Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Row(
-                            children: [
-                              Icon(Icons.error, color: MyColors.blue),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  'Please log in to view profile page',
-                                  style: TextStyle(
-                                    color: MyColors.blue,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          backgroundColor: MyColors.blue2,
-                          duration: const Duration(seconds: 5),
-                          action: SnackBarAction(
-                            label: 'Log In',
-                            textColor: MyColors.blue,
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()),
-                              );
-                            },
-                          ),
-                        ),
-                      )
-                          .closed
-                          .then((reason) => {});
+                      CustomWidgets.needLoginSnackbar(context, "Please log in to visit the profile page! ");
                     }
                   },
                 ),
