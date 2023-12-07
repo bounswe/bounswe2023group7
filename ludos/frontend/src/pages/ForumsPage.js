@@ -3,9 +3,129 @@ import { useNavigate } from "react-router-dom";
 import ForumsBackground from "../assets/forumBackground.png";
 import { Typography, Button, TextField, Container } from "@mui/material";
 import ForumTopic from "../components/ForumTopic";
+import Autocomplete from "@mui/material/Autocomplete";
+import axios from "axios";
 
 const ForumsPage = () => {
   const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState("");
+  const [searchKey, setSearchKey] = useState("");
+  const [threads, setThreads] = useState([]);
+  const [games, setGames] = useState([]);
+  const [gameThreads, setGameThreads] = useState([]);
+  const mergedThreads = [...threads, ...gameThreads];
+  const uniqueOptions = Array.from(
+    new Set(mergedThreads.map((item) => item.title)),
+  );
+
+  const handleThreadSearch = (threadId) => {
+    //value should be the id of the thread
+    navigate(`/thread/${threadId}`);
+  };
+
+  const axiosInstance = axios.create({
+    baseURL: `http://${process.env.REACT_APP_API_URL}`,
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  });
+
+  /*
+  useEffect(() => {
+    const fetchGames = async () => {
+      if (searchKey) {
+        axiosInstance
+          .get(`/game?searchKey=${searchKey}`)
+          .then((response) => {
+            console.log(response);
+            const gamesData = response.data.items;
+            setGames(gamesData);
+
+            // Fetch threads for each game
+            gamesData.forEach((game) => {
+              axiosInstance
+                .get(`/post?gameId=${game.id}`)
+                .then((threadsResponse) => {
+                  // Update gameThreads with fetched threads
+                  setGameThreads((prevGameThreads) => [
+                    ...prevGameThreads,
+                    ...threadsResponse.data.items,
+                  ]);
+                })
+                .catch((error) => {
+                  console.log(
+                    `Error fetching threads for game ${game.title}: `,
+                    error,
+                  );
+                });
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      console.log(
+        Array.from(
+          new Set([...threads, ...gameThreads].map((item) => item.title)),
+        ),
+      );
+    };
+
+    fetchGames();
+  }, [searchKey]);
+*/
+
+  // This function will be executed every time `searchKey` changes
+
+  const fetchData = async () => {
+    try {
+      if (searchKey) {
+        // Fetch games
+        const gamesResponse = await axiosInstance.get(
+          `/game?searchKey=${searchKey}`,
+        );
+        const gamesData = gamesResponse.data.items;
+        setGames(gamesData);
+
+        // Fetch threads for each game
+        const threadsPromises = gamesData.map((game) => {
+          return axiosInstance.get(`/post?gameId=${game.id}`);
+        });
+
+        const threadsResponses = await Promise.all(threadsPromises);
+        const combinedThreads = threadsResponses.reduce((acc, response) => {
+          return acc.concat(response.data.items);
+        }, []);
+
+        // Fetch threads based on searchKey
+        const searchThreadsResponse = await axiosInstance.get(
+          `/post?searchKey=${searchKey}`,
+        );
+        const searchThreadsData = searchThreadsResponse.data.items;
+        console.log("**");
+        console.log(combinedThreads);
+
+        // Combine and filter unique threads based on their titles
+        const allThreads = [...combinedThreads, ...searchThreadsData];
+        const uniqueThreads = allThreads.filter((thread, index, self) => {
+          return index === self.findIndex((t) => t.title === thread.title);
+        });
+
+        setThreads(uniqueThreads);
+        console.log(threads);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (searchKey) {
+      fetchData();
+    }
+  }, [searchKey]);
+
+  // Check if `searchKey` exists (truthy value), then trigger the fetchGames function
 
   const handleButtonClickUnlogged = () => {
     navigate("/signup");
@@ -138,7 +258,7 @@ const ForumsPage = () => {
             width: "80%" /* Adjust width as needed */,
           }}
         >
-          <form
+          <div
             style={{
               marginTop: "20px",
               display: "flex",
@@ -148,34 +268,67 @@ const ForumsPage = () => {
               margin: "0 auto" /* Center the form */,
             }}
           >
-            <TextField
-              variant="outlined"
-              placeholder="Search..."
-              fullWidth
-              size="large"
-              InputProps={{
-                style: {
-                  backgroundColor: "white",
-                  borderTopLeftRadius: "10px",
-                  borderBottomLeftRadius: "10px",
-                }, // Set background color to white
-                inputProps: { style: { color: "black" } }, // Set text color to black
+            <Autocomplete
+              value={searchValue}
+              onChange={(event, newValue) => {
+                setSearchValue(newValue);
+                if (newValue) {
+                  const selectedThread = threads.find(
+                    (thread) => thread.title === newValue,
+                  );
+                  if (selectedThread) {
+                    handleThreadSearch(selectedThread.id); // Navigate to thread page using the selected thread's ID
+                  }
+                }
+              }}
+              options={threads.map((thread) => thread.title)}
+              filterOptions={(options) => options} //to select all the options
+              clearOnBlur={true}
+              clearOnEscape={true}
+              onInputChange={(event, newInputValue) => {
+                setSearchKey(newInputValue);
+
+                console.log(threads.map((thread) => thread.title));
+              }}
+              //getOptionLabel={(option) => option.threadTitle} // Replace 'threadTitle' with the actual property name
+              required
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Search Threads..."
+                  width="90%"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "50px",
+
+                      legend: {
+                        marginLeft: "30px",
+                      },
+                    },
+                    "& .MuiAutocomplete-inputRoot": {
+                      paddingLeft: "20px !important",
+                      borderRadius: "50px",
+                    },
+                    "& .MuiInputLabel-outlined": {
+                      paddingLeft: "20px",
+                    },
+                    "& .MuiInputLabel-shrink": {
+                      marginLeft: "20px",
+                      paddingLeft: "10px",
+                      paddingRight: 0,
+                      background: "white",
+                    },
+                  }}
+                />
+              )}
+              style={{
+                margin: "10px",
+                backgroundColor: "white",
+                borderRadius: "40px",
+                width: "100%",
               }}
             />
-            <Button
-              variant="contained"
-              type="submit"
-              size="large"
-              sx={{
-                backgroundColor: "#68A849",
-                borderBottomRightRadius: "10px",
-                borderTopRightRadius: "10px",
-                height: "56px",
-              }}
-            >
-              Search
-            </Button>
-          </form>
+          </div>
         </div>
       </div>
       <Container
