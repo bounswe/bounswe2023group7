@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Chip from "@mui/material/Chip";
 import {
@@ -15,6 +16,18 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CreateGameForm = () => {
+  const convertToSlug = (text) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+      .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+      .replace(/--+/g, "-"); // Replace multiple dashes with single dash
+  };
+
+  const navigate = useNavigate();
+  const [isTagSelected, setIsTagSelected] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     gameBio: "",
@@ -57,16 +70,42 @@ const CreateGameForm = () => {
     "RPG",
     "Strategy",
     "Simulation",
+    "Sports",
+    "Fighting",
+    "Horror",
+    "Puzzle",
+    "Multiplayer",
+    "Indie",
+    "RTS",
+    "Racing",
+    "Open World",
+    "Educational",
+    "VR",
+    "Survival",
+    "Story-Driven",
+    "Retro",
+    "Anime",
+    "Hack and Slash",
+    "Mystery",
+    "Historical",
+    "Sci-Fi",
+    "Fantasy",
+    "Comedy",
+    "Artistic",
+    "Puzzle-Platformer",
   ];
 
   const predefinedPlatforms = [
-    "PC",
+    "Android",
+    "iOS",
+    "Windows",
+    "macOS",
+    "Linux",
     "PlayStation",
     "Xbox",
     "Nintendo Switch",
-    "Mobile",
+    "Board Game",
     "VR",
-    "Web Browser",
   ];
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
@@ -126,6 +165,7 @@ const CreateGameForm = () => {
   };
 
   const handleTagSelect = (selectedTags) => {
+    setIsTagSelected(selectedTags.length > 0);
     setFormData((prevData) => ({
       ...prevData,
       tags: selectedTags,
@@ -135,6 +175,18 @@ const CreateGameForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!isTagSelected) {
+      toast.error("Please select at least one tag!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return; // Prevent form submission
+    }
 
     // Replace 'your-api-endpoint' with the actual endpoint
     const apiUrl = `http://${process.env.REACT_APP_API_URL}/game`;
@@ -156,6 +208,7 @@ const CreateGameForm = () => {
           draggable: true,
         });
         console.log("Game created successfully:", response.data);
+        navigate(`/game/${convertToSlug(formData.title)}`);
       })
       .catch((error) => {
         // Error creating game

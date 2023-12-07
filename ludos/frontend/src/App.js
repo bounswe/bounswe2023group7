@@ -1,5 +1,5 @@
 import ForumPage from "./pages/forumPage.js";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./layout.js";
@@ -9,9 +9,62 @@ import LoginPage from "./pages/LoginPage.js";
 import SignUpPage from "./pages/SignupPage.js";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.js";
 import CreateGamePage from "./pages/CreateGamePage";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
+import ForumsPage from "./pages/ForumsPage.js";
+import ProfilePage from "./pages/ProfilePage";
+import CreateThreadPage from "./pages/CreateThreadPage.js";
+import GamesPage from "./pages/GamesPage.js";
+import ThreadPage from "./pages/ThreadPage.js";
+import EntityPage from "./pages/EntityPage.js";
+import axios from "axios";
+import SampleThreadPage from "./pages/SampleThreadPage.js";
+import CreateEntityPage from "./pages/CreateEntityPage.js";
 
 function App() {
-  const game = {
+  const [games, setGames] = useState([]);
+  const limit = 50; // Set the desired limit (number of games per request)
+  const link = `http://${process.env.REACT_APP_API_URL}/game/?limit=${limit}`;
+
+  const convertToSlug = (text) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+      .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+      .replace(/--+/g, "-"); // Replace multiple dashes with single dash
+  };
+
+  const generateGameRoutes = () => {
+    return games.map((game) => {
+      const slug = convertToSlug(game.title); // Convert the title to a slug
+
+      return (
+        <Route
+          key={game.id}
+          path={`/game/${slug}`} // Use the slug in the route path
+          element={
+            <Layout>
+              {/* Render the GamePage component for each game */}
+              <GamePage gameId={game.id} />
+            </Layout>
+          }
+        />
+      );
+    });
+  };
+  useEffect(() => {
+    axios
+      .get(link)
+      .then((response) => {
+        setGames(response.data.items); // Set the games in state
+      })
+      .catch((error) => {
+        console.error("Error fetching games:", error);
+      });
+  }, []);
+  const id = "a8a3c090-cc6c-4944-b203-13919c1d2aed";
+  /*const game = {
     title: "God of War (2018)",
     coverLink:
       "https://upload.wikimedia.org/wikipedia/en/a/a7/God_of_War_4_cover.jpg",
@@ -296,7 +349,7 @@ function App() {
     ],
     trivia:
       "Did you know? The Witcher 3: Wild Hunt is based on a series of books by Polish author Andrzej Sapkowski.",
-  };
+  };*/
 
   return (
     <Router>
@@ -311,6 +364,30 @@ function App() {
             }
           />
           <Route
+            path="/forums"
+            element={
+              <Layout>
+                <ForumsPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/games"
+            element={
+              <Layout>
+                <GamesPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/profile-page/:username"
+            element={
+              <Layout>
+                <ProfilePage />
+              </Layout>
+            }
+          />
+          <Route
             path="/create-game"
             element={
               <Layout>
@@ -318,30 +395,41 @@ function App() {
               </Layout>
             }
           />
+
           <Route
-            path="/game/God-of-War-2018"
+            path="/create-thread"
             element={
               <Layout>
-                <GamePage game={game} />
+                <CreateThreadPage />
               </Layout>
             }
           />
           <Route
+            path="/game/Tekken-5"
+            element={
+              <Layout>
+                <GamePage gameId={id} />
+              </Layout>
+            }
+          />
+
+          {generateGameRoutes()}
+          {/*<Route
             path="/game/Red-Dead-Redemption-2"
             element={
               <Layout>
                 <GamePage game={game2} />
               </Layout>
             }
-          />
-          <Route
+          />*/}
+          {/*<Route
             path="/game/Witcher-3"
             element={
               <Layout>
                 <GamePage game={game3} />
               </Layout>
             }
-          />
+          />*/}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route
@@ -353,6 +441,54 @@ function App() {
             }
           />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route
+            path="/change-password"
+            element={
+              <Layout>
+                <ChangePasswordPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/profile-page"
+            element={
+              <Layout>
+                <ProfilePage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/thread/:threadId"
+            element={
+              <Layout>
+                <ThreadPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/thread/"
+            element={
+              <Layout>
+                <SampleThreadPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/entity/:entityId"
+            element={
+              <Layout>
+                <EntityPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/create-entity"
+            element={
+              <Layout>
+                <CreateEntityPage />
+              </Layout>
+            }
+          />
         </Routes>
       </div>
     </Router>

@@ -32,4 +32,27 @@ export class GameListResponseDto {
   @Expose()
   @ApiProperty()
   ageRestriction: string;
+  @Expose()
+  @ApiProperty()
+  isFollowed?: boolean;
+
+  @Expose()
+  @ApiProperty()
+  userRating?: number;
+
+  @Expose()
+  @ApiProperty()
+  userCompletionDuration?: number;
+
+  @Expose()
+  @ApiProperty()
+  averageCompletionDuration?: number;
+
+  @Expose()
+  @ApiProperty()
+  gameStory: string;
+
+  @Expose()
+  @ApiProperty()
+  gameBio: string;
 }

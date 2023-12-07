@@ -9,25 +9,103 @@ import {
   Tab,
   TextField,
 } from "@mui/material";
+import axios from "axios";
 
 import { TabContext, TabList, TabPanel } from "@mui/lab/";
 
-import ListObject from "../components/ListObject.js";
-import Requirements from "../components/Requirements.js";
+import PlatformRequirements from "../components/PlatformRequirements.js";
 import Reviews from "../components/Reviews.js";
+import DescriptionTab from "../components/DescriptionTab.js";
+import RelatedGames from "../components/RelatedGamesTab.js";
+import EntityTab from "../components/EntityTab.js";
+import GameForum from "../components/GameForums.js";
 
-function GamePage(data) {
+function GamePage(id) {
   const [auth, setAuth] = useState(false);
+  const [game, setGame] = useState(false);
+  const [follow, setFollow] = useState(false);
+  const [rate, setRate] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+  const [submission, setSubmission] = useState(0);
+  const [duration, setDuration] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
       setAuth(true);
     }
-  }, []);
+    const link = `http://${process.env.REACT_APP_API_URL}/game/${id.gameId}`;
+
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        setGame(response.data);
+        setFollow(response.data.isFollowed);
+        setRate(response.data.userRating);
+        setAverageRating(response.data.averageRating);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [submission]);
   const [value, setValue] = useState("1");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleDuration = (event) => {
+    const link = `http://${process.env.REACT_APP_API_URL}/game/${id.gameId}`;
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        const formData = { duration: parseInt(duration) };
+        console.log(response);
+        if (response.data.userCompilationDuration) {
+          const followLink = `http://${process.env.REACT_APP_API_URL}/game/completionDuration/${id.gameId}`;
+          axios
+            .put(followLink, formData, {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              },
+            })
+            .then(() => {
+              setSubmission(submission + 1);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          const followLink = `http://${process.env.REACT_APP_API_URL}/game/completionDuration/${id.gameId}`;
+          console.log(event.target.value);
+          axios
+            .post(followLink, formData, {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              },
+            })
+            .then(() => {
+              setSubmission(submission + 1);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleChangeDuration = (event) => {
+    setDuration(event.target.value);
   };
 
   const tagBox = {
@@ -43,35 +121,20 @@ function GamePage(data) {
   };
 
   const followButton = {
-    backgroundColor: "rgb(255, 165, 0)",
+    backgroundColor: "rgb(125, 165, 0)",
     color: "rgb(0, 0, 0)",
     height: "20px",
+    width: "8%",
     textTransform: "none",
+    fontFamily: "Trebuchet MS, sans-serif",
   };
-
-  const smallBoxStyle = {
-    backgroundColor: "rgb(0, 250, 255)",
-    borderRadius: "100px",
-    width: "auto",
-    height: "auto",
-    marginTop: "10px",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "column",
-    display: "flex",
-  };
-
-  const bioBoxStyle = {
-    backgroundColor: "rgb(0, 150, 255, 0)",
-    borderRadius: "100px",
-    flexDirection: "column",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "90%",
-    marginTop: "10px",
-    padding: "10px",
-    color: "white",
+  const unFollowButton = {
+    backgroundColor: "rgb(222, 49, 99)",
+    color: "rgb(255, 255, 255)",
+    height: "20px",
+    width: "8%",
+    textTransform: "none",
+    fontFamily: "Trebuchet MS, sans-serif",
   };
   const imageBoxStyle = {
     height: "auto",
@@ -83,37 +146,174 @@ function GamePage(data) {
     marginBottom: "2%",
   };
 
+  const smallBoxStyle = {
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    color: "rgb(0, 150, 255)",
+    borderRadius: "15px",
+    width: "auto",
+    height: "20%",
+    marginTop: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    display: "flex",
+    padding: "10px", // Add padding to give some space between the content and the border
+  };
+
+  const bioBoxStyle = {
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    color: "rgb(0, 150, 255)",
+    borderRadius: "15px",
+    flexDirection: "column",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "66%",
+    marginTop: "10px",
+    padding: "10px",
+  };
+  const inputBoxStyle = {
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    color: "rgb(0, 150, 255)",
+    borderRadius: "15px",
+    flexDirection: "row",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    marginTop: "10px",
+    marginRight: "5px",
+    padding: "10px",
+  };
+
+  const submitStyle = {
+    backgroundColor: "rgb(255, 165, 0)",
+    borderRadius: "10px",
+    flexDirection: "column",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "90%",
+    marginTop: "14px",
+    padding: "10px",
+  };
+
   const boxStyle = {
     backgroundColor: "rgba(30, 30, 30, 0.9)",
     borderRadius: "10px",
     paddingTop: "15px",
   };
   const inputStyle = {
-    backgroundColor: "rgba(255, 250, 255, 0.9)",
-    borderRadius: "20px",
-    width: "auto",
+    backgroundColor: "rgba(255, 250, 255, 0.6)",
+    borderRadius: "5px",
+    width: "50%",
     height: "auto",
-    marginTop: "10px",
-    marginLeft: "1px",
-    marginRight: "1px",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
     display: "flex",
-  }
+  };
 
-  
-  useEffect(() => {}, []);
-  
-
+  const handleFollowClick = () => {
+    const followLink = `http://${process.env.REACT_APP_API_URL}/game/follow/${id.gameId}`;
+    axios
+      .put(
+        followLink,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        },
+      )
+      .then(() => {
+        setFollow(true);
+        console.log(follow);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleUnFollowClick = () => {
+    const followLink = `http://${process.env.REACT_APP_API_URL}/game/unfollow/${id.gameId}`;
+    axios
+      .put(
+        followLink,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        },
+      )
+      .then(() => {
+        setFollow(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleRateClick = (event) => {
+    const link = `http://${process.env.REACT_APP_API_URL}/game/${id.gameId}`;
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        const formData = { rating: parseInt(event.target.value) };
+        console.log(event.target.value);
+        if (response.data.userRating !== null) {
+          const followLink = `http://${process.env.REACT_APP_API_URL}/rating/${id.gameId}`;
+          axios
+            .put(followLink, formData, {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              },
+            })
+            .then(() => {
+              setRate(event.target.value);
+              console.log("yee");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          const followLink = `http://${process.env.REACT_APP_API_URL}/rating/${id.gameId}`;
+          console.log(event.target.value);
+          axios
+            .post(followLink, formData, {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              },
+            })
+            .then(() => {
+              setRate(event.target.value);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <Container
       style={{ backgroundColor: "rgb(0, 150, 255)", maxWidth: "1200px" }}
     >
       <Grid container spacing={1} style={boxStyle}>
         <Box p={0} style={{ width: "100%", marginTop: "3%" }}>
-          <Typography style={{ fontSize: "25px", color: "white" }}>
-            {data.game.title}
+          <Typography
+            style={{
+              fontSize: "25px",
+              color: "white",
+              fontFamily: "Trebuchet MS, sans-serif",
+            }}
+          >
+            {game.title}
           </Typography>
         </Box>
         <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -124,113 +324,225 @@ function GamePage(data) {
               marginRight: "3%",
             }}
           >
-            {data.game.tags.map((data1, index1) => (
-              <Typography
-                variant="caption"
-                component="div"
-                style={tagBox}
-                key={index1}
+            {game.tags &&
+              game.tags.map((tag, index1) => (
+                <Typography
+                  variant="caption"
+                  component="div"
+                  style={tagBox}
+                  key={index1}
+                >
+                  {tag}
+                </Typography>
+              ))}
+            {auth && follow && (
+              <Button
+                variant="contained"
+                style={unFollowButton}
+                onClick={handleUnFollowClick}
               >
-                {data1}
-              </Typography>
-            ))}
-            {auth && (
-              <Button variant="contained" style={followButton}>
+                Unfollow
+              </Button>
+            )}
+            {auth && !follow && (
+              <Button
+                variant="contained"
+                style={followButton}
+                onClick={handleFollowClick}
+              >
                 Follow
               </Button>
             )}
           </Grid>
         </Grid>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
-          <img src={data.game.coverLink} alt="God of War" />
+          <img
+            src={game.coverLink}
+            alt={game.title}
+            style={{ height: 350, width: 250 }}
+          />
         </Grid>
-        <Grid item xs={12} sm={3} md={3} lg={3} style={{ marginLeft: "2%" }}>
+        <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "2%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Rate:</Typography>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Rate:
+            </Typography>
             <Rating
               name="game-rating"
-              value={data.game.userRating}
+              value={rate}
               precision={1}
+              onClick={handleRateClick}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Rate:</Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Ludos Rate:
+            </Typography>
             <Rating
               name="user-rating"
-              value={data.game.averageRating}
+              value={averageRating}
               precision={0.1}
               disabled={true}
             />
-            <Typography component="caption">
-              {data.game.averageRating}/5
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {game.averageRating}/5
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Followers:</Typography>
-            <Typography component="caption">{data.game.followers}</Typography>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Followers:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {game.followers}
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Average Duration:</Typography>
-            <Typography component="caption">
-              {data.game.averageUserCompilationDuration}
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Average Duration:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {game.averageCompletionDuration}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid item xs={6} sm={2} md={2} lg={2} style={{ marginLeft: "1%" }}>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Release Date:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {game.releaseDate}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Age Restriction:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {game.ageRestriction}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Publisher:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {game.publisher}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Developer:
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {game.developer}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} sm={4} md={4} lg={4} style={{ marginLeft: "1%" }}>
+          <Grid item xs={12} sm={12} md={12} lg={12} style={bioBoxStyle}>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              {game.gameBio}
             </Typography>
           </Grid>
           {auth && (
-            <Grid style={{ display: "flex" }}>
-              {" "}
-              <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
-                <Typography component="caption" style={{ fontSize: "10px" }}>
+            <Grid style={{ display: "flex", height: "20%" }}>
+              <Grid item xs={12} sm={8} md={8} lg={8} style={inputBoxStyle}>
+                <Typography
+                  component="caption"
+                  style={{
+                    fontSize: "15px",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                  }}
+                >
                   Share Your Duration
                 </Typography>
+                <TextField
+                  id="outlined-basic"
+                  style={inputStyle}
+                  onChange={handleChangeDuration}
+                />
               </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4} style={inputStyle}>
-                <TextField id="outlined-basic" />
-              </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4} style={smallBoxStyle}>
-                <Button>Submit</Button>
+              <Grid
+                item
+                xs={12}
+                sm={4}
+                md={4}
+                lg={4}
+                style={submitStyle}
+                onClick={handleDuration}
+              >
+                <Button
+                  style={{
+                    color: "black",
+                    textTransform: "none",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                  }}
+                >
+                  Submit Your Duration
+                </Button>
               </Grid>
             </Grid>
           )}
         </Grid>
-        <Grid item xs={12} sm={2} md={2} lg={2} style={{ marginLeft: "1%" }}>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Release Date:</Typography>
-            <Typography component="caption">{data.game.releaseDate}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Platforms:</Typography>
-            {data.game.platforms.map((data1, index1) => (
-              <Typography variant="caption" component="div" key={index1}>
-                {data1}
-              </Typography>
-            ))}
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Age Restriction:</Typography>
-            <Typography variant="caption" component="div">
-              {data.game.ageRestriction}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Publisher:</Typography>
-            <Typography variant="caption" component="div">
-              {data.game.publisher}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
-            <Typography component="legend">Developer:</Typography>
-            <Typography variant="caption" component="div">
-              {data.game.developer}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} sm={3} md={3} lg={3} style={{ marginLeft: "1%" }}>
-          <Grid item xs={12} sm={12} md={12} lg={12} style={bioBoxStyle}>
-            <Typography component="legend">{data.game.gameBio}</Typography>
-          </Grid>
-        </Grid>
-        <Grid>
-          <Box sx={{ width: "100%", typography: "body1" }}>
+        <Grid sx={{ width: "100%" }}>
+          <Box>
             <TabContext value={value}>
               <Box sx={{ borderBottom: 2, borderColor: "divider" }}>
                 <TabList
@@ -238,131 +550,115 @@ function GamePage(data) {
                   aria-label="lab API tabs example"
                 >
                   <Tab
-                    style={{ color: "orange", width: "2%" }}
-                    label="Story"
+                    style={{
+                      color: "orange",
+                      width: "14%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Description"
                     value="1"
                   />
                   <Tab
-                    style={{ color: "orange", width: "2%" }}
-                    label="Guide"
+                    style={{
+                      color: "orange",
+                      width: "15%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Available Platforms"
                     value="2"
                   />
                   <Tab
-                    style={{ color: "orange", width: "5%" }}
-                    label="Trivia"
+                    style={{
+                      color: "orange",
+                      width: "15%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Related Games"
                     value="3"
                   />
                   <Tab
-                    style={{ color: "orange", width: "15%" }}
-                    label="System Requirements"
+                    style={{
+                      color: "orange",
+                      width: "14%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Entities"
                     value="4"
                   />
                   <Tab
-                    style={{ color: "orange", width: "12%" }}
-                    label="Predecessors"
+                    style={{
+                      color: "orange",
+                      width: "14%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Groups"
                     value="5"
                   />
                   <Tab
-                    style={{ color: "orange", width: "12%" }}
-                    label="Successors"
+                    style={{
+                      color: "orange",
+                      width: "14%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Reviews"
                     value="6"
                   />
                   <Tab
-                    style={{ color: "orange", width: "12%" }}
-                    label="Characters"
+                    style={{
+                      color: "orange",
+                      width: "14%",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                    }}
+                    label="Forum"
                     value="7"
-                  />
-                  <Tab
-                    style={{ color: "orange", width: "5%" }}
-                    label="Areas"
-                    value="8"
-                  />
-                  <Tab
-                    style={{ color: "orange", width: "5%" }}
-                    label="Packages"
-                    value="9"
-                  />
-                  <Tab
-                    style={{ color: "orange", width: "5%" }}
-                    label="Items"
-                    value="10"
-                  />
-                </TabList>
-                <TabList
-                  onChange={handleChange}
-                  aria-label="lab API tabs example"
-                >
-                  <Tab
-                    style={{ color: "orange", width: "2%" }}
-                    label="Groups"
-                    value="11"
-                  />
-                  <Tab
-                    style={{ color: "orange", width: "2%" }}
-                    label="Reviews"
-                    value="12"
                   />
                 </TabList>
               </Box>
               <TabPanel value="1">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  {data.game.gameStory}
+                  <DescriptionTab
+                    story={game.gameStory}
+                    guide={game.gameGuide}
+                    trivia={game.trivia}
+                  />
                 </Typography>
               </TabPanel>
               <TabPanel value="2">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  {data.game.gameGuide}
+                  <PlatformRequirements
+                    requirements={game.systemRequirements}
+                    platforms={game.platforms}
+                  />
                 </Typography>
               </TabPanel>
               <TabPanel value="3">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  {data.game.trivia}
+                  <RelatedGames
+                    predecessors={game.predecessors}
+                    successors={game.successors}
+                  />
                 </Typography>
               </TabPanel>
               <TabPanel value="4">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <Requirements data={data.game.systemRequirements} />
+                  <EntityTab
+                    characters={game.characters}
+                    areas={game.areas}
+                    items={game.items}
+                    packages={game.packages}
+                  />
                 </Typography>
               </TabPanel>
               <TabPanel value="5">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.predecessors} />
-                </Typography>
+                <Typography
+                  style={{ fontSize: "15px", color: "white" }}
+                ></Typography>
               </TabPanel>
               <TabPanel value="6">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.successors} />
-                </Typography>
+                <Reviews data={[]} id={game.id} showButtons={auth} />
               </TabPanel>
               <TabPanel value="7">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.characters} />
-                </Typography>
-              </TabPanel>
-              <TabPanel value="8">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.areas} />
-                </Typography>
-              </TabPanel>
-              <TabPanel value="9">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.packages} />
-                </Typography>
-              </TabPanel>
-              <TabPanel value="10">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.items} />
-                </Typography>
-              </TabPanel>
-              <TabPanel value="11">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <ListObject data={data.game.groups} />
-                </Typography>
-              </TabPanel>
-              <TabPanel value="12">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <Reviews data={data.game.reviews} showButtons={auth} />
-                </Typography>
+                <GameForum id={game.id} showButtons={auth} />
               </TabPanel>
             </TabContext>
           </Box>
