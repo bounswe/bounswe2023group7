@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'activation_for_password_reset.dart';
 import 'helper/colors.dart';
 import 'helper/APIService.dart';
@@ -90,29 +91,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               email: emailController.text,
                             ))));
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: const Text(
-                            "No user found with this email",
-                            style: TextStyle(
-                              color: MyColors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        backgroundColor: MyColors.blue,
-                        duration: const Duration(seconds: 10),
-                        action: SnackBarAction(
-                          label: 'OK',
-                          textColor: MyColors.white,
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          },
-                        ),
-                      ),
-                    );
+                    CustomWidgets.statusNotOkay(context, "No user found with this email");
                   }
                   print(token.body);
                   // Logic to set responseForEmail variable to the response from the API

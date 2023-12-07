@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 import 'helper/colors.dart';
@@ -228,30 +229,7 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
                                 builder: (context) => ForumPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider)),
                           ));
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: Text(
-                                  json.decode(token.body)["message"],
-                                  style: const TextStyle(
-                                    color: MyColors.blue,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              backgroundColor: MyColors.blue2,
-                              duration: const Duration(seconds: 10),
-                              action: SnackBarAction(
-                                label: 'OK',
-                                textColor: MyColors.blue,
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                },
-                              ),
-                            ),
-                          );
+                          CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
                         }
                       },
                     child: const Text(

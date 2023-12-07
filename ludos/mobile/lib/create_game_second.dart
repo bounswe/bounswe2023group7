@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/games_page.dart';
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'helper/colors.dart';
@@ -364,30 +365,7 @@ class _CreateGamePageStateSecond extends State<CreateGamePageSecond> {
                                         userProvider: widget.userProvider)),
                               ));
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Text(
-                              json.decode(token.body)["message"],
-                              style: const TextStyle(
-                                color: MyColors.blue,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          backgroundColor: MyColors.blue2,
-                          duration: const Duration(seconds: 10),
-                          action: SnackBarAction(
-                            label: 'OK',
-                            textColor: MyColors.blue,
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                          ),
-                        ),
-                      );
+                      CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
                     }
                   },
                   child: const Text(

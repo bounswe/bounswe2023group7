@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ludos_mobile_app/helper/colors.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_comment.dart';
-import 'package:ludos_mobile_app/reusable_widgets/need_login_message.dart';
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:ludos_mobile_app/visit_user_page.dart';
 
@@ -456,32 +456,7 @@ class _ThreadPageState extends State<ThreadPage>
                                       ));
                                     }
                                     else {
-                                      print("status is not ok");
-                                      print(token.statusCode);
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: SizedBox(
-                                            width: MediaQuery.of(context).size.width,
-                                            child: Text(
-                                              json.decode(token.body)["message"],
-                                              style: const TextStyle(
-                                                color: MyColors.blue,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                          backgroundColor: MyColors.blue2,
-                                          duration: const Duration(seconds: 10),
-                                          action: SnackBarAction(
-                                            label: 'OK',
-                                            textColor: MyColors.blue,
-                                            onPressed: () {
-                                              ScaffoldMessenger.of(context)
-                                                  .hideCurrentSnackBar();
-                                            },
-                                          ),
-                                        ),
-                                      );
+                                      CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
                                     }
                                   },
                                   icon: const Icon(Icons.reply, color: MyColors.white),

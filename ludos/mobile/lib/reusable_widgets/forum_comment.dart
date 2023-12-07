@@ -10,7 +10,7 @@ import '../login_page.dart';
 import '../thread_page.dart';
 import '../userProvider.dart';
 import '../visit_user_page.dart';
-import 'need_login_message.dart';
+import 'custom_widgets.dart';
 
 class Comment extends StatefulWidget {
   bool isLiked;
@@ -434,32 +434,7 @@ class _CommentState extends State<Comment> {
                             ));
                           }
                           else {
-                            print("status is not ok");
-                            print(token.statusCode);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Text(
-                                    json.decode(token.body)["message"],
-                                    style: const TextStyle(
-                                      color: MyColors.blue,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                backgroundColor: MyColors.blue2,
-                                duration: const Duration(seconds: 10),
-                                action: SnackBarAction(
-                                  label: 'OK',
-                                  textColor: MyColors.blue,
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                  },
-                                ),
-                              ),
-                            );
+                            CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
                           }
                         },
                         icon: const Icon(Icons.reply, color: MyColors.white),

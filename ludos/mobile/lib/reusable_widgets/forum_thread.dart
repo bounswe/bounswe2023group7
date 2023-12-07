@@ -11,7 +11,7 @@ import '../visit_user_page.dart';
 import '/helper/colors.dart';
 import 'package:intl/intl.dart';
 
-import 'need_login_message.dart';
+import 'custom_widgets.dart';
 
 class ThreadSummary extends StatefulWidget {
   final String game;
@@ -289,7 +289,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                  IconButton(
+                    IconButton(
                       onPressed: () => setState(() {
                       if(!widget.userProvider.isLoggedIn){
                         CustomWidgets.needLoginSnackbar(context, "Please log in to like a thread! ");

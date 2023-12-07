@@ -43,4 +43,31 @@ class CustomWidgets{
         ),
     );
   }
+
+  static statusNotOkay(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Text(
+            message,
+            style: const TextStyle(
+              color: MyColors.blue,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        backgroundColor: MyColors.blue2,
+        duration: const Duration(seconds: 10),
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: MyColors.blue,
+          onPressed: () {
+            ScaffoldMessenger.of(context)
+                .hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
+  }
 }
