@@ -14,9 +14,11 @@ import ForumsPage from "./pages/ForumsPage.js";
 import ProfilePage from "./pages/ProfilePage";
 import CreateThreadPage from "./pages/CreateThreadPage.js";
 import GamesPage from "./pages/GamesPage.js";
-import ThreadPage from "./pages/ThreadPage.js"
+import ThreadPage from "./pages/ThreadPage.js";
+import EntityPage from "./pages/EntityPage.js";
 import axios from "axios";
 import SampleThreadPage from "./pages/SampleThreadPage.js";
+import CreateEntityPage from "./pages/CreateEntityPage.js";
 
 function App() {
   const [games, setGames] = useState([]);
@@ -468,6 +470,22 @@ function App() {
             element={
               <Layout>
                 <SampleThreadPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/entity/:entityId"
+            element={
+              <Layout>
+                <EntityPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/create-entity"
+            element={
+              <Layout>
+                <CreateEntityPage />
               </Layout>
             }
           />

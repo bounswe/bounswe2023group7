@@ -28,7 +28,6 @@ function Review(data, index1) {
     setDisliked(data.review.isDislikedByUser);
     setLikeCount(data.review.likedUserCount);
     setDislikeCount(data.review.dislikedUserCount);
-    console.log(data.review);
     axios
       .get(link, {
         headers: {
@@ -37,13 +36,11 @@ function Review(data, index1) {
       })
       .then((response) => {
         setUsername(response.data.username);
-
-        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [username]);
+  }, [username, data]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -62,8 +59,7 @@ function Review(data, index1) {
         data.review.content = review;
         setEditReq(false);
       })
-      .catch((error, request) => {
-        console.log(request);
+      .catch((error) => {
         console.error("Error on making review:", error);
       });
   };
