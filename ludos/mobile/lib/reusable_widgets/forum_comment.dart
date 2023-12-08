@@ -10,6 +10,7 @@ import '../login_page.dart';
 import '../thread_page.dart';
 import '../userProvider.dart';
 import '../visit_user_page.dart';
+import 'custom_widgets.dart';
 
 class Comment extends StatefulWidget {
   bool isLiked;
@@ -303,42 +304,7 @@ class _CommentState extends State<Comment> {
                           IconButton(
                             onPressed: () => setState(() {
                               if(!widget.userProvider.isLoggedIn){
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Row(
-                                      children: [
-                                        Icon(Icons.error, color: MyColors.blue),
-                                        SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            'Please log in to like the thread',
-                                            style: TextStyle(
-                                              color: MyColors.blue,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    backgroundColor: MyColors.blue2,
-                                    duration: const Duration(seconds: 5),
-                                    action: SnackBarAction(
-                                      label: 'Log In',
-                                      textColor: MyColors.blue,
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .hideCurrentSnackBar();
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => LoginPage()),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                )
-                                    .closed
-                                    .then((reason) => {});
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to like a comment! ");
                               } else {
                                 //userPressed(true);
                               }
@@ -356,42 +322,7 @@ class _CommentState extends State<Comment> {
                           IconButton(
                             onPressed: () => setState(() {
                               if(!widget.userProvider.isLoggedIn){
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Row(
-                                      children: [
-                                        Icon(Icons.error, color: MyColors.blue),
-                                        SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            'Please log in to dislike the thread',
-                                            style: TextStyle(
-                                              color: MyColors.blue,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    backgroundColor: MyColors.blue2,
-                                    duration: const Duration(seconds: 5),
-                                    action: SnackBarAction(
-                                      label: 'Log In',
-                                      textColor: MyColors.blue,
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .hideCurrentSnackBar();
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => LoginPage()),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                )
-                                    .closed
-                                    .then((reason) => {});
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a comment! ");
                               } else {
                                 //userPressed(false);
                               }
@@ -405,42 +336,7 @@ class _CommentState extends State<Comment> {
                             icon: const Icon(Icons.comment, color: Colors.white,),
                             onPressed: () {
                               if(!widget.userProvider.isLoggedIn){
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Row(
-                                      children: [
-                                        Icon(Icons.error, color: MyColors.blue),
-                                        SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            'Please log in to reply',
-                                            style: TextStyle(
-                                              color: MyColors.blue,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    backgroundColor: MyColors.blue2,
-                                    duration: const Duration(seconds: 5),
-                                    action: SnackBarAction(
-                                      label: 'Log In',
-                                      textColor: MyColors.blue,
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .hideCurrentSnackBar();
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => LoginPage()),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                )
-                                    .closed
-                                    .then((reason) => {});
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to reply a comment! ");
                               } else {
                                 toggleFormVisibility();
                               }
@@ -538,32 +434,7 @@ class _CommentState extends State<Comment> {
                             ));
                           }
                           else {
-                            print("status is not ok");
-                            print(token.statusCode);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Text(
-                                    json.decode(token.body)["message"],
-                                    style: const TextStyle(
-                                      color: MyColors.blue,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                backgroundColor: MyColors.blue2,
-                                duration: const Duration(seconds: 10),
-                                action: SnackBarAction(
-                                  label: 'OK',
-                                  textColor: MyColors.blue,
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                  },
-                                ),
-                              ),
-                            );
+                            CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
                           }
                         },
                         icon: const Icon(Icons.reply, color: MyColors.white),

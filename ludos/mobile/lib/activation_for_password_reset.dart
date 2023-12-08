@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'helper/colors.dart';
 import 'dart:async';
 import 'login_page.dart';
@@ -227,30 +228,7 @@ class _EnterActivationState extends State<EnterActivation> {
                     if (token.statusCode == 200) {
                       startCountdown();
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Text(
-                              json.decode(token.body)["message"][0],
-                              style: const TextStyle(
-                                color: MyColors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          backgroundColor: MyColors.blue,
-                          duration: const Duration(seconds: 10),
-                          action: SnackBarAction(
-                            label: 'OK',
-                            textColor: MyColors.white,
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                          ),
-                        ),
-                      );
+                      CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
                     }
 
                     /*setState(() {
@@ -259,29 +237,7 @@ class _EnterActivationState extends State<EnterActivation> {
                   });
                   */
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: const Text(
-                            "Passwords do not match!",
-                            style: TextStyle(
-                              color: MyColors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        backgroundColor: MyColors.blue,
-                        duration: const Duration(seconds: 10),
-                        action: SnackBarAction(
-                          label: 'OK',
-                          textColor: MyColors.white,
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          },
-                        ),
-                      ),
-                    );
+                    CustomWidgets.statusNotOkay(context,  "Passwords do not match!");
                   }
                 },
                 child: const Text(
