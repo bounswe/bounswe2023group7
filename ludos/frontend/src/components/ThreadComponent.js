@@ -1,8 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Grid, Box, Typography, Button } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,
+  IconButton,
+} from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 //import ReplyIcon from "@mui/icons-material/Reply";
 
 function ThreadComponent({
@@ -17,12 +26,23 @@ function ThreadComponent({
   threadId,
   isLiked,
   isDisliked,
+  ownerId,
 }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick2 = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const navigate = useNavigate();
   const [likes, setLikes] = useState(numLikes);
   const [dislikes, setDislikes] = useState(numDislikes);
   const [liked, setLiked] = useState(isLiked);
   const [disliked, setDisliked] = useState(isDisliked);
+  const [showMenu, setShowMenu] = useState(false);
   const upVoteButton = {
     backgroundColor: "transparent",
     marginRight: "5px",
@@ -131,6 +151,44 @@ function ThreadComponent({
     }
   };
 
+  const handleMoreHorizClick = () => {
+    setShowMenu(!showMenu);
+  };
+
+  const handleDeleteThread = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        // Handle case where access token is not available
+        // You might want to redirect the user to login or handle this case as needed
+        return;
+      }
+
+      const response = await fetch(
+        `http://${process.env.REACT_APP_API_URL}/post/${threadId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      if (response.ok) {
+        navigate("/forums");
+      } else {
+        // Handle other status codes, e.g., unauthorized access or error in deletion
+        console.error("Failed to delete the post:", response.status);
+      }
+    } catch (error) {
+      // Handle error if the request fails
+      console.error("Error deleting the post:", error);
+    }
+  };
+
+  const isOwner = true;
+
   return (
     <Grid style={{ display: "flex", flexDirection: "row" }}>
       <Grid
@@ -188,21 +246,48 @@ function ThreadComponent({
           borderTopRightRadius: "10px",
         }}
       >
-        <Typography
-          variant="caption"
-          component="div"
+        <Grid
           style={{
-            color: "white",
-            marginTop: "3px",
-            marginRight: "10px",
             display: "flex",
-            marginLeft: "10px",
-            marginBottom: "10px",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginRight: "20px",
           }}
         >
-          {date}
-        </Typography>
-
+          <Typography
+            variant="caption"
+            component="div"
+            style={{
+              color: "white",
+              marginTop: "3px",
+              marginRight: "10px",
+              display: "flex",
+              marginLeft: "10px",
+              marginBottom: "10px",
+            }}
+          >
+            {date}
+          </Typography>
+          {isOwner && (
+            <>
+              <IconButton
+                style={{ color: "rgb(255, 255, 255)", cursor: "pointer" }}
+                onClick={handleClick2}
+              >
+                <MoreHorizIcon />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleDeleteThread}>Delete Thread</MenuItem>
+                {/* <MenuItem onClick={handleUpdateThread}>Update Thread</MenuItem>*/}
+                {/* You can add more options here as needed */}
+              </Menu>
+            </>
+          )}
+        </Grid>
         {contentImg && contentImg.length > 0 && (
           <Grid container spacing={2} justifyContent="center">
             {contentImg.map((imgSrc, index) => (

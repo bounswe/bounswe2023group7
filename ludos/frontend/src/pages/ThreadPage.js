@@ -35,6 +35,7 @@ const ThreadPage = () => {
   const [numDislikes, setNumDislikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
+  const [ownerId, setOwnerId] = useState("");
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -135,6 +136,7 @@ const ThreadPage = () => {
         setNumDislikes(response.data.numberOfDislikes);
         setIsDisliked(response.data.isDisliked);
         setIsLiked(response.data.isLiked);
+        setOwnerId(response.data.user.id);
         setLoading(false); // Set loading to false when data is fetched
         console.log(response.data);
       } catch (error) {
@@ -144,7 +146,7 @@ const ThreadPage = () => {
     };
 
     fetchThread();
-  }, [threadId]);
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>; // Display a loading message while fetching data
