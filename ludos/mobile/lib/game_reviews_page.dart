@@ -4,6 +4,7 @@ import 'helper/APIService.dart';
 import 'helper/colors.dart';
 import 'dart:convert';
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'package:ludos_mobile_app/reusable_widgets/custom_navigation_bar.dart';
 
 class ReviewPage extends StatefulWidget {
   final String? token;
@@ -102,6 +103,7 @@ class _ReviewPageState extends State<ReviewPage> {
           ],
         ),
       ),
+      bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
     );
   }
 }
