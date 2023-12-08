@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, Grid } from "@mui/material";
 import Person2Icon from "@mui/icons-material/Person2";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import MapsUgcIcon from "@mui/icons-material/MapsUgc";
+//import MapsUgcIcon from "@mui/icons-material/MapsUgc";
 import { Link } from "react-router-dom";
 
 function ForumTopic(data) {
@@ -11,6 +11,16 @@ function ForumTopic(data) {
 
   const handleClick = (userId) => {
     navigate(`/profile-page/${userId}`);
+  };
+
+  const convertToSlug = (text) => {
+    return text
+      ?.toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+      .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+      .replace(/--+/g, "-"); // Replace multiple dashes with single dash
   };
 
   const tagBox = {
@@ -98,7 +108,7 @@ function ForumTopic(data) {
         }}
       >
         <Box
-          onClick={() => handleClick(data.topic.user_id)}
+          onClick={() => handleClick(data.topic.userid)}
           style={{ cursor: "pointer" }}
           component="img"
           sx={{
@@ -114,7 +124,7 @@ function ForumTopic(data) {
           }
         />
         <Typography
-          onClick={() => handleClick(data.topic.user_id)}
+          onClick={() => handleClick(data.topic.userId)}
           variant="caption"
           component="div"
           style={{
@@ -148,12 +158,17 @@ function ForumTopic(data) {
           lg={12}
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Typography variant="caption" component="div" style={forumStyle}>
-            {data.topic.forumGame}
-          </Typography>
+          <a
+            href={`/game/${convertToSlug(data.topic.forumGame)}`}
+            style={{ textDecoration: "none" }}
+          >
+            <Typography variant="caption" component="div" style={forumStyle}>
+              {data.topic.forumGame}
+            </Typography>
+          </a>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
-            {data.topic &&
-              data.topic.forumTags.map((tag1, index1) => (
+            {data?.topic &&
+              data.topic?.forumTags?.map((tag1, index1) => (
                 <Typography
                   variant="caption"
                   component="div"
@@ -220,6 +235,7 @@ function ForumTopic(data) {
               style={{
                 color: "white",
                 marginTop: "3px",
+                marginRight: "5px",
               }}
             >
               @{data.topic.userOpened}
@@ -238,7 +254,7 @@ function ForumTopic(data) {
             >
               {data.topic.whenOpened}
             </Typography>
-            <MapsUgcIcon />
+            {/** <MapsUgcIcon />
             <Typography
               variant="caption"
               component="div"
@@ -249,7 +265,7 @@ function ForumTopic(data) {
               }}
             >
               {data.topic.numOfReplies}
-            </Typography>
+            </Typography>*/}
           </Grid>
         </Grid>
       </Grid>

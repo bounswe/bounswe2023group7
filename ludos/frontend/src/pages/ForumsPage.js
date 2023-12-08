@@ -3,14 +3,55 @@ import { useNavigate } from "react-router-dom";
 import ForumsBackground from "../assets/forumBackground.png";
 import { Typography, Button, TextField, Container } from "@mui/material";
 import ForumTopic from "../components/ForumTopic";
+import axios from "axios";
 
 const ForumsPage = () => {
   const navigate = useNavigate();
-
+  const [latestTopics, setLatestTopics] = useState([]);
   const handleButtonClickUnlogged = () => {
     navigate("/signup");
   };
+  const getLatestTopics = async () => {
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
+    };
+    try {
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_API_URL}/post?limit=3&order=DESC&orderByKey=createdAt`,
+      );
 
+      // Handle the response data and create a new formatted list
+      const formattedTopics = response.data.items.map((topic) => ({
+        title: topic.title,
+        numOfReplies: topic.numOfReplies,
+        userOpened: topic.user.username,
+        whenOpened: new Date(topic.createdAt).toLocaleDateString(
+          "en-US",
+          options,
+        ),
+        forumTags: topic.tags,
+        forumGame: topic.game.title,
+        id: topic.id,
+        userId: topic.user.id,
+      }));
+      console.log(formattedTopics);
+
+      // Set the state with the formatted list
+      setLatestTopics(formattedTopics);
+    } catch (error) {
+      console.error("Error fetching latest topics:", error);
+    }
+  };
+
+  useEffect(() => {
+    getLatestTopics();
+  }, []);
   const handleButtonClickLogged = () => {
     navigate("/create-thread");
   };
@@ -22,6 +63,7 @@ const ForumsPage = () => {
     }
   }, []);
 
+  /*
   const latestTopics = [
     {
       title: "Are League of Legends players smart?",
@@ -49,7 +91,7 @@ const ForumsPage = () => {
     },
     // Add more topics as needed...
   ];
-
+*/
   const trendTopics = [
     {
       title: "OMG! New Character for Dota",
