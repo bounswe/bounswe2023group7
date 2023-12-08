@@ -5,6 +5,7 @@ import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import MapsUgcOutlinedIcon from "@mui/icons-material/MapsUgcOutlined";
 import ThreadComponent from "../components/ThreadComponent";
+import CommentComponent from "../components/CommentComponent";
 import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -317,7 +318,7 @@ const ThreadPage = () => {
 
             {/* Display comments */}
             {sortedComments.map((comment, index) => (
-              <ThreadComponent
+              <CommentComponent
                 key={index}
                 imgsrc={comment?.author?.avatar}
                 username={comment?.author?.username}
@@ -327,6 +328,9 @@ const ThreadPage = () => {
                 )}
                 content={comment?.text}
                 userId={comment?.author?.id}
+                likeCount={comment.likeCount}
+                dislikeCount={comment.dislikeCount}
+                //commentId?
 
                 // Add any other necessary props for the ThreadComponent
               />

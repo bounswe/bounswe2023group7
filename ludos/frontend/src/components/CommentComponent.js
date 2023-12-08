@@ -14,18 +14,18 @@ import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 //import ReplyIcon from "@mui/icons-material/Reply";
 
-function ThreadComponent({
+function CommentComponent({
   imgsrc,
   contentImg,
   username,
   date,
   content,
   userId,
-  numLikes,
-  numDislikes,
-  threadId,
+  commentId,
   isLiked,
   isDisliked,
+  likeCount,
+  dislikeCount,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -37,8 +37,8 @@ function ThreadComponent({
     setAnchorEl(null);
   };
   const navigate = useNavigate();
-  const [likes, setLikes] = useState(numLikes);
-  const [dislikes, setDislikes] = useState(numDislikes);
+  const [likes, setLikes] = useState(likeCount);
+  const [dislikes, setDislikes] = useState(dislikeCount);
   const [liked, setLiked] = useState(isLiked);
   const [disliked, setDisliked] = useState(isDisliked);
   const [showMenu, setShowMenu] = useState(false);
@@ -69,9 +69,9 @@ function ThreadComponent({
       }
 
       const response = await fetch(
-        `http://${process.env.REACT_APP_API_URL}/post/like/${threadId}`,
+        `http://${process.env.REACT_APP_API_URL}/comment/${commentId}/like-comment`,
         {
-          method: "PUT",
+          method: "POST",
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json", // You might need to adjust this based on your API requirements
@@ -115,9 +115,9 @@ function ThreadComponent({
       }
 
       const response = await fetch(
-        `http://${process.env.REACT_APP_API_URL}/post/dislike/${threadId}`,
+        `http://${process.env.REACT_APP_API_URL}/comment/${commentId}/dislike-comment`,
         {
-          method: "PUT",
+          method: "POST",
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json", // You might need to adjust this based on your API requirements
@@ -154,7 +154,7 @@ function ThreadComponent({
     setShowMenu(!showMenu);
   };
 
-  const handleDeleteThread = async () => {
+  const handleDeleteComment = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
 
@@ -165,7 +165,7 @@ function ThreadComponent({
       }
 
       const response = await fetch(
-        `http://${process.env.REACT_APP_API_URL}/post/${threadId}`,
+        `http://${process.env.REACT_APP_API_URL}/comment/${commentId}/delete-comment`,
         {
           method: "DELETE",
           headers: {
@@ -280,8 +280,10 @@ function ThreadComponent({
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleDeleteThread}>Delete Thread</MenuItem>
-                {/* <MenuItem onClick={handleUpdateThread}>Update Thread</MenuItem>*/}
+                <MenuItem onClick={handleDeleteComment}>
+                  Delete Comment
+                </MenuItem>
+                {/* <MenuItem onClick={handleUpdateThread}>Update Comment</MenuItem>*/}
                 {/* You can add more options here as needed */}
               </Menu>
             </>
@@ -396,4 +398,4 @@ function ThreadComponent({
   );
 }
 
-export default ThreadComponent;
+export default CommentComponent;
