@@ -11,6 +11,8 @@ import 'games_page.dart';
 import 'userProvider.dart';
 import 'package:provider/provider.dart';
 import 'helper/colors.dart';
+import 'search_page.dart';
+import 'reusable_widgets/custom_navigation_bar.dart';
 
 void main() => runApp(ChangeNotifierProvider(
       create: (context) => UserProvider(),
@@ -237,7 +239,7 @@ class _HomeState extends State<Home> {
           Column(
             children: [
               const SizedBox(height: 10),
-              Text(
+              const Text(
               "Favorite Games",
               style: TextStyle(
                   color: MyColors.orange,
@@ -278,7 +280,7 @@ class _HomeState extends State<Home> {
           Column(
             children: [
               const SizedBox(height: 10),
-              Text(
+              const Text(
                 "Trending Topics",
                 style: TextStyle(
                   color: MyColors.orange,
@@ -317,6 +319,7 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
+      /*
       bottomNavigationBar: Container(
           color: MyColors.orange,
           padding: const EdgeInsets.all(10.0),
@@ -346,11 +349,18 @@ class _HomeState extends State<Home> {
                   icon: const Icon(Icons.favorite)),
               IconButton(
                   color: MyColors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        //builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
+                      builder: (context) => SearchPage(),
+                    ));
+                  },
                   icon: const Icon(Icons.search_outlined)),
             ],
           )
       ),
+      */
+      bottomNavigationBar: CustomNavigationBar(userProvider: userProvider),
     );
   }
 }

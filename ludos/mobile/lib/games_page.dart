@@ -8,6 +8,7 @@ import 'main.dart';
 import 'reusable_widgets/game_summary.dart';
 import 'helper/APIService.dart';
 import 'create_game.dart';
+import 'reusable_widgets/custom_navigation_bar.dart';
 
 class GamesPage extends StatefulWidget {
   final String? token;
@@ -218,41 +219,7 @@ class _GamesPageState extends State<GamesPage> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-          color: MyColors.orange,
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Home(),
-                    ));
-                  },
-                  icon: const Icon(Icons.home)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                  },
-                  icon: const Icon(Icons.group)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                  },
-                  icon: const Icon(Icons.games)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {},
-                  icon: const Icon(Icons.search_outlined)),
-            ],
-          )
-      ),
+      bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
     );
   }
 }

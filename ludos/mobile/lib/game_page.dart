@@ -17,6 +17,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
 import 'login_page.dart';
 import 'main.dart';
+import 'reusable_widgets/custom_navigation_bar.dart';
 
 class GamePage extends StatefulWidget {
   final VoidCallback onRefresh;
@@ -767,44 +768,7 @@ class _GamePageState extends State<GamePage> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-          color: MyColors.orange,
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Home(),
-                    ));
-                  },
-                  icon: const Icon(Icons.home)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                  },
-                  icon: const Icon(Icons.group)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider),
-                    ));
-                  },
-                  icon: const Icon(Icons.games)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {},
-                  icon: const Icon(Icons.search_outlined)),
-            ],
-          )
-      ),
+      bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
     );
   }
 }
