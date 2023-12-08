@@ -220,8 +220,6 @@ function ForumTopic(data) {
               style={{
                 color: "white",
                 marginTop: "3px",
-                marginLeft: "3px",
-                marginRight: "3px",
               }}
             >
               @{data.topic.userOpened}
@@ -233,9 +231,8 @@ function ForumTopic(data) {
               style={{
                 color: "white",
                 marginTop: "3px",
-                marginRight: "3px",
+
                 display: "flex",
-                marginLeft: "3px",
                 marginBottom: "10px",
               }}
             >
