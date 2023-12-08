@@ -21,6 +21,7 @@ module.exports = {
   },
   plugins: ["react", "simple-import-sort", "unused-imports", "import"],
   rules: {
+    "no-unused-vars": "warn",
     "comma-dangle": [2, "always-multiline"],
     "object-shorthand": [
       2,

@@ -31,6 +31,10 @@ const ThreadPage = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [submission, setSubmission] = useState(1);
   const [numReplies, setNumReplies] = useState(1);
+  const [numLikes, setNumLikes] = useState(0);
+  const [numDislikes, setNumDislikes] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -113,7 +117,7 @@ const ThreadPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  console.log(threadId);
+  //console.log(threadId);
   const link = `http://${process.env.REACT_APP_API_URL}/post/${threadId}`;
 
   useEffect(() => {
@@ -121,12 +125,18 @@ const ThreadPage = () => {
       try {
         const response = await axios.get(link, {
           headers: {
+            Authorization: `Bearer ${userAccessToken}`,
             "Content-Type": "application/json",
           },
         });
 
         setThreadDetails(response.data);
+        setNumLikes(response.data.numberOfLikes);
+        setNumDislikes(response.data.numberOfDislikes);
+        setIsDisliked(response.data.isDisliked);
+        setIsLiked(response.data.isLiked);
         setLoading(false); // Set loading to false when data is fetched
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching thread details:", error);
         setLoading(false); // In case of error, also set loading to false
@@ -296,6 +306,11 @@ const ThreadPage = () => {
               content={threadDetails?.body}
               contentImg={threadDetails?.media}
               userId={threadDetails?.user?.id}
+              numLikes={numLikes}
+              numDislikes={numDislikes}
+              threadId={threadId}
+              isLiked={isLiked}
+              isDisliked={isDisliked}
             />
 
             {/* Display comments */}
@@ -310,6 +325,7 @@ const ThreadPage = () => {
                 )}
                 content={comment?.text}
                 userId={comment?.author?.id}
+
                 // Add any other necessary props for the ThreadComponent
               />
             ))}
