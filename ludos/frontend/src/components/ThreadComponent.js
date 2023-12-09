@@ -176,6 +176,10 @@ function ThreadComponent({
     setShowMenu(!showMenu);
   };
 
+  const handleEditThread = () => {
+    navigate(`/edit-thread/${threadId}`);
+  };
+
   const handleDeleteThread = async () => {
     try {
       if (!accessToken) {
@@ -301,7 +305,7 @@ function ThreadComponent({
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleDeleteThread}>Delete Thread</MenuItem>
-                {/* <MenuItem onClick={handleUpdateThread}>Update Thread</MenuItem>*/}
+                <MenuItem onClick={handleEditThread}>Edit Thread</MenuItem>
                 {/* You can add more options here as needed */}
               </Menu>
             </>
@@ -318,7 +322,7 @@ function ThreadComponent({
                     borderRadius: "10px",
                     marginBottom: "10px",
                   }}
-                  src={imgSrc}
+                  src={JSON.parse(imgSrc).url}
                   alt={`Image ${index + 1}`}
                 />
               </Grid>
