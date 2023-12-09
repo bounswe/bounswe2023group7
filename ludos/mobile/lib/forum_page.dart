@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'games_page.dart';
 import 'helper/APIService.dart';
 import 'helper/colors.dart';
@@ -119,9 +120,13 @@ class _ForumPageState extends State<ForumPage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CreateThreadPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider),
-              ));
+              if (widget.userProvider.isLoggedIn) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CreateThreadPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider),
+                ));
+              } else {
+                CustomWidgets.needLoginSnackbar(context, "Please log in to add the thread! ");
+              }
             },
             child: const Icon(
               Icons.add,

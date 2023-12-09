@@ -491,5 +491,39 @@ class APIService {
     }
   }
 
+  Future<http.Response> deleteThread(String id, String? authToken) async {
+    var uri = Uri.parse("$baseURL/post/$id");
+    final response = await http.delete(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+  Future<http.Response> editThread(
+      String? authToken,
+      String threadId,
+      String title,
+      String content,
+      List<String> media,
+      List<String> tags,
+      String gameid) async {
+    var uri = Uri.parse("$baseURL/post/$threadId");
+    final body = jsonEncode(<String, Object>{
+      'title': title,
+      'body': content,
+      'gameId': gameid,
+      'media': media,
+      'tags': tags,
+    });
+    final response = await http.put(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
 
 }

@@ -8,11 +8,9 @@ import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:ludos_mobile_app/visit_user_page.dart';
 
+import 'edit_thread_page.dart';
 import 'game_page.dart';
-import 'games_page.dart';
 import 'helper/APIService.dart';
-import 'login_page.dart';
-import 'main.dart';
 import 'reusable_widgets/custom_navigation_bar.dart';
 
 
@@ -190,6 +188,14 @@ class _ThreadPageState extends State<ThreadPage>
     }
   }
 
+  bool isBelongtoUser() {
+    if (widget.userProvider.username ==  threadData['user']['username']){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   final TextEditingController commentInputController = TextEditingController();
 
   @override
@@ -226,7 +232,7 @@ class _ThreadPageState extends State<ThreadPage>
                     ),
                     child: Column(
                     children: [
-                      const SizedBox(height: 10),
+                      //const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:
@@ -271,6 +277,32 @@ class _ThreadPageState extends State<ThreadPage>
                           ),
                         ],
                       ),
+                      if(isBelongtoUser())
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children:[
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => EditThreadPage(
+                                      gameid: threadData['game']['id'],
+                                      token: widget.token,
+                                      userProvider: widget.userProvider,
+                                      threadid:  widget.threadId,
+                                      threadData: threadData,
+                                    ),
+                                  ));
+                                },
+                                icon: const Icon(Icons.edit, color: MyColors.orange),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  CustomWidgets.deleteConfirmDialog(widget.userProvider, context, threadData['game']['id'] ,"thread",  widget.threadId);
+                                },
+                                icon: const Icon(Icons.delete, color: MyColors.orange),
+                              ),
+                            ]
+                        ),
                       Container(
                         padding: const EdgeInsets.all(15.0),
                         child: Text(
@@ -294,6 +326,25 @@ class _ThreadPageState extends State<ThreadPage>
                               ),
                           ),
                         ),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            if (threadData['media'] != null)
+                              for (var i = 0; i < threadData['media'].length; i++)
+                                Image.network(
+                                  width: 200,
+                                  height: 200,
+                                  threadData['media'][i].toString(),
+                                  errorBuilder: (BuildContext context, Object exception,
+                                      StackTrace? stackTrace) {
+                                    return const Text('');
+                                  },
+                                  fit: BoxFit.fill,
+                                ),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: 20.0),
                       const Divider(
                         height: 3.0,
