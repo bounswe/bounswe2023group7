@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ludos_mobile_app/helper/colors.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_comment.dart';
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:ludos_mobile_app/visit_user_page.dart';
 
@@ -12,6 +13,7 @@ import 'games_page.dart';
 import 'helper/APIService.dart';
 import 'login_page.dart';
 import 'main.dart';
+import 'reusable_widgets/custom_navigation_bar.dart';
 
 
 class ThreadPage extends StatefulWidget
@@ -324,42 +326,7 @@ class _ThreadPageState extends State<ThreadPage>
                           IconButton(
                             onPressed: () => setState(() {
                               if(!widget.userProvider.isLoggedIn){
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Row(
-                                      children: [
-                                        Icon(Icons.error, color: MyColors.blue),
-                                        SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            'Please log in to like the thread',
-                                            style: TextStyle(
-                                              color: MyColors.blue,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    backgroundColor: MyColors.blue2,
-                                    duration: const Duration(seconds: 5),
-                                    action: SnackBarAction(
-                                      label: 'Log In',
-                                      textColor: MyColors.blue,
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .hideCurrentSnackBar();
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => LoginPage()),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                )
-                                    .closed
-                                    .then((reason) => {});
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to like a thread! ");
                               } else {
                                 userPressed(true);
                               }
@@ -376,40 +343,7 @@ class _ThreadPageState extends State<ThreadPage>
                           IconButton(
                             onPressed: () => setState(() {
                               if(!widget.userProvider.isLoggedIn){
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Row(
-                                      children: [
-                                        Icon(Icons.error, color: MyColors.blue),
-                                        SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            'Please log in to dislike the thread',
-                                            style: TextStyle(
-                                              color: MyColors.blue,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    backgroundColor: MyColors.blue2,
-                                    duration: const Duration(seconds: 5),
-                                    action: SnackBarAction(
-                                      label: 'Log In',
-                                      textColor: MyColors.blue,
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .hideCurrentSnackBar();
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => LoginPage()),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ).closed.then((reason) => {});
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a thread! ");
                               } else {
                                 userPressed(false);
                               }
@@ -523,32 +457,7 @@ class _ThreadPageState extends State<ThreadPage>
                                       ));
                                     }
                                     else {
-                                      print("status is not ok");
-                                      print(token.statusCode);
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: SizedBox(
-                                            width: MediaQuery.of(context).size.width,
-                                            child: Text(
-                                              json.decode(token.body)["message"],
-                                              style: const TextStyle(
-                                                color: MyColors.blue,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                          backgroundColor: MyColors.blue2,
-                                          duration: const Duration(seconds: 10),
-                                          action: SnackBarAction(
-                                            label: 'OK',
-                                            textColor: MyColors.blue,
-                                            onPressed: () {
-                                              ScaffoldMessenger.of(context)
-                                                  .hideCurrentSnackBar();
-                                            },
-                                          ),
-                                        ),
-                                      );
+                                      CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
                                     }
                                   },
                                   icon: const Icon(Icons.reply, color: MyColors.white),
@@ -592,46 +501,7 @@ class _ThreadPageState extends State<ThreadPage>
           }
         ),
 
-        bottomNavigationBar: Container(
-        color: MyColors.orange,
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-                color: MyColors.white,
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Home(),
-                  ));
-                },
-                icon: const Icon(Icons.home)),
-            IconButton(
-                color: MyColors.white,
-                onPressed: () {
-                },
-                icon: const Icon(Icons.group)),
-            IconButton(
-                color: MyColors.white,
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider),
-                  ));
-                },
-                icon: const Icon(Icons.games)),
-            IconButton(
-                color: MyColors.white,
-                onPressed: () {},
-                icon: const Icon(Icons.favorite)),
-            IconButton(
-                color: MyColors.white,
-                onPressed: () {},
-                icon: const Icon(Icons.search_outlined)),
-          ],
-        )
-    ),
-
-
+        bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
     );
   }
 }

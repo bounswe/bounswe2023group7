@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'login_page.dart';
@@ -7,6 +8,7 @@ import 'main.dart';
 import 'reusable_widgets/game_summary.dart';
 import 'helper/APIService.dart';
 import 'create_game.dart';
+import 'reusable_widgets/custom_navigation_bar.dart';
 
 class SearchGame extends StatefulWidget {
   final String? searchKey;
@@ -52,7 +54,7 @@ class _SearchGameState extends State<SearchGame> {
                 : item['averageRating'].toDouble()),
             coverLink: item['coverLink'],
             numOfFollowers: item['followers'],
-            gameStory: 'gameStory',
+            gameStory: item['gameStory'],
             tags: item['tags'],
             textColor: MyColors.white,
             backgroundColor: MyColors.blue,
@@ -88,45 +90,7 @@ class _SearchGameState extends State<SearchGame> {
                       token: widget.token, userProvider: widget.userProvider),
                 ));
               } else {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(
-                  SnackBar(
-                    content: const Row(
-                      children: [
-                        Icon(
-                          Icons.check_circle_outline,
-                          color: MyColors.blue,
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'Please log in to create game',
-                            style: TextStyle(
-                              color: MyColors.blue,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    backgroundColor: MyColors.blue2,
-                    duration: const Duration(seconds: 5),
-                    action: SnackBarAction(
-                      label: 'Log In',
-                      textColor: MyColors.blue,
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginPage()),
-                        );
-                      },
-                    ),
-                  ),
-                )
-                    .closed
-                    .then((reason) => {});
+                CustomWidgets.needLoginSnackbar(context, "Please log in to create a game! ");
               }
             },
             child: const Icon(
@@ -182,41 +146,7 @@ class _SearchGameState extends State<SearchGame> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-          color: MyColors.orange,
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Home(),
-                    ));
-                  },
-                  icon: const Icon(Icons.home)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                  },
-                  icon: const Icon(Icons.group)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                  },
-                  icon: const Icon(Icons.games)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {},
-                  icon: const Icon(Icons.search_outlined)),
-            ],
-          )
-      ),
+      bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
     );
   }
 }

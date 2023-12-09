@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/user_profile_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_thread.dart';
 import 'package:ludos_mobile_app/reusable_widgets/home_game_sum.dart';
@@ -11,6 +12,8 @@ import 'games_page.dart';
 import 'userProvider.dart';
 import 'package:provider/provider.dart';
 import 'helper/colors.dart';
+import 'search_page.dart';
+import 'reusable_widgets/custom_navigation_bar.dart';
 
 void main() => runApp(ChangeNotifierProvider(
       create: (context) => UserProvider(),
@@ -134,42 +137,7 @@ class _HomeState extends State<Home> {
                     }
                     else{
                       Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Row(
-                            children: [
-                              Icon(Icons.error, color: MyColors.blue),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  'Please log in to view profile page',
-                                  style: TextStyle(
-                                    color: MyColors.blue,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          backgroundColor: MyColors.blue2,
-                          duration: const Duration(seconds: 5),
-                          action: SnackBarAction(
-                            label: 'Log In',
-                            textColor: MyColors.blue,
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()),
-                              );
-                            },
-                          ),
-                        ),
-                      )
-                          .closed
-                          .then((reason) => {});
+                      CustomWidgets.needLoginSnackbar(context, "Please log in to visit the profile page! ");
                     }
                   },
                 ),
@@ -237,7 +205,7 @@ class _HomeState extends State<Home> {
           Column(
             children: [
               const SizedBox(height: 10),
-              Text(
+              const Text(
               "Favorite Games",
               style: TextStyle(
                   color: MyColors.orange,
@@ -278,7 +246,7 @@ class _HomeState extends State<Home> {
           Column(
             children: [
               const SizedBox(height: 10),
-              Text(
+              const Text(
                 "Trending Topics",
                 style: TextStyle(
                   color: MyColors.orange,
@@ -317,6 +285,7 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
+      /*
       bottomNavigationBar: Container(
           color: MyColors.orange,
           padding: const EdgeInsets.all(10.0),
@@ -346,11 +315,18 @@ class _HomeState extends State<Home> {
                   icon: const Icon(Icons.favorite)),
               IconButton(
                   color: MyColors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        //builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
+                      builder: (context) => SearchPage(),
+                    ));
+                  },
                   icon: const Icon(Icons.search_outlined)),
             ],
           )
       ),
+      */
+      bottomNavigationBar: CustomNavigationBar(userProvider: userProvider),
     );
   }
 }
