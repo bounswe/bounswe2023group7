@@ -525,5 +525,30 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> deleteComment(String id, String? authToken) async {
+    var uri = Uri.parse("$baseURL/comment/$id/delete-comment");
+    final response = await http.delete(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+  Future<http.Response> editComment(
+      String? authToken,
+      String commentId,
+      String content) async {
+    var uri = Uri.parse("$baseURL/comment/$commentId/edit-comment");
+    final body = jsonEncode(<String, Object>{
+      'newText': content,
+    });
+    final response = await http.put(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
 
 }
