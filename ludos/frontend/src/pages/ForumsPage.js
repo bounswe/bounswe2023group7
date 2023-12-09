@@ -30,53 +30,6 @@ const ForumsPage = () => {
     },
   });
 
-  /*
-  useEffect(() => {
-    const fetchGames = async () => {
-      if (searchKey) {
-        axiosInstance
-          .get(`/game?searchKey=${searchKey}`)
-          .then((response) => {
-            console.log(response);
-            const gamesData = response.data.items;
-            setGames(gamesData);
-
-            // Fetch threads for each game
-            gamesData.forEach((game) => {
-              axiosInstance
-                .get(`/post?gameId=${game.id}`)
-                .then((threadsResponse) => {
-                  // Update gameThreads with fetched threads
-                  setGameThreads((prevGameThreads) => [
-                    ...prevGameThreads,
-                    ...threadsResponse.data.items,
-                  ]);
-                })
-                .catch((error) => {
-                  console.log(
-                    `Error fetching threads for game ${game.title}: `,
-                    error,
-                  );
-                });
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-      console.log(
-        Array.from(
-          new Set([...threads, ...gameThreads].map((item) => item.title)),
-        ),
-      );
-    };
-
-    fetchGames();
-  }, [searchKey]);
-*/
-
-  // This function will be executed every time `searchKey` changes
-
   const fetchData = async () => {
     try {
       if (searchKey) {
@@ -290,7 +243,7 @@ const ForumsPage = () => {
 
                 console.log(threads.map((thread) => thread.title));
               }}
-              //getOptionLabel={(option) => option.threadTitle} // Replace 'threadTitle' with the actual property name
+              //getOptionLabel={(option) => option.threadTitle}
               required
               renderInput={(params) => (
                 <TextField
@@ -409,8 +362,7 @@ const ForumsPage = () => {
           >
             Trending
           </Typography>
-          {/* Render your forum topics below */}
-          {/* Replace this section with your actual forum topics */}
+
           <div
             style={{ gap: "16px", display: "flex", flexDirection: "column" }}
           >
@@ -441,8 +393,7 @@ const ForumsPage = () => {
           >
             Latest
           </Typography>
-          {/* Render your forum topics below */}
-          {/* Replace this section with your actual forum topics */}
+
           <div>
             <div
               style={{ gap: "16px", display: "flex", flexDirection: "column" }}
