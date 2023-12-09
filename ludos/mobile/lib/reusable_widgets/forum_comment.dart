@@ -74,6 +74,7 @@ class Comment extends StatefulWidget {
 class _CommentState extends State<Comment> {
   bool isLiked;
   bool isDisliked;
+  bool editMode = false;
   late Future<List<Comment>> comments;
   bool showForm = false;
   final String userId;
@@ -155,6 +156,21 @@ class _CommentState extends State<Comment> {
     setState(() {
       showForm = !showForm;
     });
+  }
+
+  void editModeOpen() {
+    setState(() {
+      editMode = !editMode;
+      contentController.text = widget.content;
+    });
+  }
+
+  bool isBelongtoUser() {
+    if (widget.userProvider.username ==  widget.username){
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /*
@@ -241,6 +257,7 @@ class _CommentState extends State<Comment> {
     }
   }
 
+  final TextEditingController contentController = TextEditingController();
   final TextEditingController commentInputController = TextEditingController();
 
   @override
@@ -280,19 +297,119 @@ class _CommentState extends State<Comment> {
                             builder: (context) => VisitUserPage(userProvider: userProvider, username: widget.username, id: widget.userId ),
                           )); },
                           ),
+                          if(isBelongtoUser())
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children : [
+                                IconButton(
+                                  onPressed: () {
+                                    editModeOpen();
+                                  },
+                                  icon: const Icon(Icons.edit, color: MyColors.orange),
+                                ),
+
+                                IconButton(
+                                  onPressed: () {
+                                    CustomWidgets.deleteConfirmDialogComment(widget.userProvider, context, widget.threadId, widget.commentId);
+                                  },
+                                  icon: const Icon(Icons.delete, color: MyColors.orange),
+                                ),
+                              ]
+                            )
                         ],
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Text(
-                          content,
-                          softWrap: true,
-                          style: const TextStyle(
-                            color: MyColors.white,
-                            fontSize: 15.0,
+                      if(!editMode)
+                        Container(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            content,
+                            softWrap: true,
+                            style: const TextStyle(
+                              color: MyColors.white,
+                              fontSize: 15.0,
+                            ),
                           ),
                         ),
-                      ),
+                      if(editMode)
+                        Row(
+                          children: [
+                            const SizedBox(width: 10.0),
+                            Expanded(
+                              child: TextFormField(
+                                controller: contentController,
+                                obscureText: false,
+                                style: const TextStyle(
+                                    height: 1.0,
+                                    color: MyColors.white
+                                ),
+                                cursorColor: MyColors.lightBlue,
+                              ),
+                            ),
+                            IconButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: MyColors.lightBlue,
+                              ),
+                              onPressed: () async {
+                                http.Response token = await APIService().editComment(
+                                    widget.token,
+                                    widget.commentId,
+                                    contentController.text,);
+                                if (token.statusCode == 200) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    SnackBar(
+                                      content: const Row(
+                                        children: [
+                                          Icon(
+                                            Icons.check_circle_outline,
+                                            color: MyColors.blue,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              'Your commnent is updated successfully. You will be redirected to the Thread.',
+                                              style: TextStyle(
+                                                color: MyColors.blue,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      backgroundColor: MyColors.blue2,
+                                      duration: const Duration(seconds: 5),
+                                      action: SnackBarAction(
+                                        label: 'OK',
+                                        textColor: MyColors.blue,
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar();
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId),
+                                              ));
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                      .closed
+                                      .then((reason) => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId))
+                                  ));
+                                } else {
+                                  CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.save,
+                                color: MyColors.orange,
+                              ),
+                            ),
+                          ],
+                        ),
                       const Divider(
                         height: 3.0,
                         thickness: 3.0,
@@ -379,67 +496,67 @@ class _CommentState extends State<Comment> {
                               ),
                             ),
 
-                    Container(
-                      child: IconButton(
-                        onPressed: () async {
-                          http.Response token = await APIService().createComment(
-                              widget.token,
-                              widget.commentId,
-                              commentInputController.text
-                          );
-                          if (token.statusCode == 200) {
-                            print("status is ok");
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.check_circle_outline,
-                                      color: MyColors.blue,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        'Your reply is added successfully.',
-                                        style: TextStyle(
-                                          color: MyColors.blue,
-                                          fontSize: 16,
+                            Container(
+                              child: IconButton(
+                                onPressed: () async {
+                                  http.Response token = await APIService().createComment(
+                                      widget.token,
+                                      widget.commentId,
+                                      commentInputController.text
+                                  );
+                                  if (token.statusCode == 200) {
+                                    print("status is ok");
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: const Row(
+                                          children: [
+                                            Icon(
+                                              Icons.check_circle_outline,
+                                              color: MyColors.blue,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                'Your reply is added successfully.',
+                                                style: TextStyle(
+                                                  color: MyColors.blue,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        backgroundColor: MyColors.blue2,
+                                        duration: const Duration(seconds: 5),
+                                        action: SnackBarAction(
+                                          label: 'OK',
+                                          textColor: MyColors.blue,
+                                          onPressed: () {
+                                            ScaffoldMessenger.of(context)
+                                                .hideCurrentSnackBar();
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId)),
+                                            );
+                                          },
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                backgroundColor: MyColors.blue2,
-                                duration: const Duration(seconds: 5),
-                                action: SnackBarAction(
-                                  label: 'OK',
-                                  textColor: MyColors.blue,
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                    Navigator.push(
+                                    ) //ScaffoldMessager
+                                        .closed
+                                        .then((reason) => Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId)),
-                                    );
-                                  },
-                                ),
+                                    ));
+                                  }
+                                  else {
+                                    CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
+                                  }
+                                },
+                                icon: const Icon(Icons.reply, color: MyColors.white),
                               ),
-                            ) //ScaffoldMessager
-                                .closed
-                                .then((reason) => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId)),
-                            ));
-                          }
-                          else {
-                            CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
-                          }
-                        },
-                        icon: const Icon(Icons.reply, color: MyColors.white),
-                      ),
-                    ),
+                            ),
                           ],
                         ),
                     ]
