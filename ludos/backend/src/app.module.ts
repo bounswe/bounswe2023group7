@@ -40,6 +40,10 @@ import { EntityRepository } from './repositories/entity.repository';
 import { EntityController } from './controllers/entity.controller';
 import { CompletionDuration } from './entities/completion-duration.entity';
 import { CompletionDurationRepository } from './repositories/completion-duration.repository';
+import { Group } from './entities/group.entity';
+import { GroupController } from './controllers/group.controller';
+import { GroupRepository } from './repositories/group.repository';
+import { GroupService } from './services/group.service';
 
 @Module({
   imports: [
@@ -70,6 +74,7 @@ import { CompletionDurationRepository } from './repositories/completion-duration
       Rating,
       Comment,
       Entity,
+      Group,
     ]),
   ],
   controllers: [
@@ -82,6 +87,7 @@ import { CompletionDurationRepository } from './repositories/completion-duration
     RatingController,
     CommentController,
     EntityController,
+    GroupController,
   ],
   providers: [
     SearchService,
@@ -102,6 +108,8 @@ import { CompletionDurationRepository } from './repositories/completion-duration
     EntityService,
     EntityRepository,
     CompletionDurationRepository,
+    GroupRepository,
+    GroupService,
   ],
 })
 export class AppModule implements NestModule {

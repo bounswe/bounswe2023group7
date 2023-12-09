@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Game } from './game.entity';
+import { Group } from './group.entity';
 
 @Entity('posts')
 export class Post {
@@ -52,13 +53,8 @@ export class Post {
   })
   numberOfDislikes: number;
 
-  // @OneToMany(() => Comment)
-  // comments: Comment[];
-
-  // @VirtualColumn({
-  //   query: (post) => `SELECT COUNT(*) FROM comments WHERE parentId = ${post}.id`
-  // })
-  // numberOfComments: number;
+  @ManyToOne(() => Group)
+  group: Group;
 
   @Column('text', { array: true, default: [] })
   tags: string[];
