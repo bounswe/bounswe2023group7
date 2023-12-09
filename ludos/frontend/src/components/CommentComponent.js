@@ -8,6 +8,7 @@ import {
   Menu,
   MenuItem,
   IconButton,
+  TextField,
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
@@ -31,6 +32,9 @@ function CommentComponent({
   dislikedUsers,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [newContent, setNewContent] = useState(content);
+  const [contentText, setContentText] = useState(content);
 
   const handleClick2 = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,6 +42,7 @@ function CommentComponent({
 
   const handleClose = () => {
     setAnchorEl(null);
+    //setEditing(false);
   };
   const navigate = useNavigate();
   const [likes, setLikes] = useState(likeCount);
@@ -222,6 +227,38 @@ function CommentComponent({
     }
   };
 
+  const handleUpdate = () => {
+    setEditing(true);
+    handleClose();
+  };
+
+  const handleUpdateComment = async () => {
+    try {
+      const response = await axios.put(
+        `http://${process.env.REACT_APP_API_URL}/comment/${commentId}/edit-comment`,
+        {
+          newText: newContent,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (response.status == 200) {
+        // Update the content and set editing to false after successful update
+        setEditing(false);
+        setContentText(newContent);
+      } else {
+        console.error("Failed to update the comment:", response.status);
+      }
+    } catch (error) {
+      console.error("Error updating the comment:", error);
+    }
+  };
+
   const isOwner = currentUserId === userId;
 
   return (
@@ -319,7 +356,7 @@ function CommentComponent({
                 <MenuItem onClick={handleDeleteComment}>
                   Delete Comment
                 </MenuItem>
-                {/* <MenuItem onClick={handleUpdateThread}>Update Comment</MenuItem>*/}
+                <MenuItem onClick={handleUpdate}>Edit Comment</MenuItem>
                 {/* You can add more options here as needed */}
               </Menu>
             </>
@@ -344,21 +381,47 @@ function CommentComponent({
           </Grid>
         )}
 
-        <Typography
-          variant="body2"
-          component="div"
-          style={{
-            color: "white",
-            marginTop: "3px",
-            marginRight: "10px",
-            display: "flex",
-            marginLeft: "10px",
-            textAlign: "left",
-            lineHeight: "1.7",
-          }}
-        >
-          {content}
-        </Typography>
+        {editing ? (
+          <TextField
+            value={newContent}
+            onChange={(e) => setNewContent(e.target.value)}
+            rows={3}
+            cols={50}
+            multiline
+            style={{
+              color: "white",
+              backgroundColor: "rgb(200,200,200,0.6)",
+              borderRadius: "10px",
+              marginBottom: "10px",
+              height: "100%",
+            }}
+          />
+        ) : (
+          <Typography
+            variant="body2"
+            component="div"
+            style={{
+              color: "white",
+              marginTop: "3px",
+              marginRight: "10px",
+              display: "flex",
+              marginLeft: "10px",
+              textAlign: "left",
+              lineHeight: "1.7",
+            }}
+          >
+            {contentText}
+          </Typography>
+        )}
+        {editing && (
+          <Button
+            variant="contained"
+            onClick={handleUpdateComment}
+            style={{ marginTop: "10px", alignSelf: "flex-end" }}
+          >
+            Edit Comment
+          </Button>
+        )}
         <Grid
           style={{
             display: "flex",
