@@ -6,9 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/create_entity.dart';
 import 'package:ludos_mobile_app/edit_game.dart';
+import 'package:ludos_mobile_app/entities_page.dart';
+import 'package:ludos_mobile_app/helper/EntityContent.dart';
+import 'package:ludos_mobile_app/reusable_widgets/entity_summary.dart';
 import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'package:provider/provider.dart';
 import 'forum_page.dart';
 import 'game_properties.dart';
 import 'games_page.dart';
@@ -183,6 +187,17 @@ class _GamePageState extends State<GamePage> {
                         token: widget.token,
                         userProvider: widget.userProvider,
                       ),
+                    ));
+                },
+              ),
+                 ListTile(
+                title: const Text(
+                  'See all Entities',
+                  style: TextStyle(color: MyColors.white),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EntitiesPage(gameId: widget.id, userProvider: widget.userProvider,),
                     ));
                 },
               ),
