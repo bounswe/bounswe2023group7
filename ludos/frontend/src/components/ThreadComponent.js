@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Grid,
@@ -12,6 +12,7 @@ import {
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import axios from "axios";
 //import ReplyIcon from "@mui/icons-material/Reply";
 
 function ThreadComponent({
@@ -42,6 +43,8 @@ function ThreadComponent({
   const [liked, setLiked] = useState(isLiked);
   const [disliked, setDisliked] = useState(isDisliked);
   const [showMenu, setShowMenu] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState("");
+  const accessToken = localStorage.getItem("accessToken");
   const upVoteButton = {
     backgroundColor: "transparent",
     marginRight: "5px",
@@ -54,14 +57,35 @@ function ThreadComponent({
     height: "auto",
   };
 
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(
+          `http://${process.env.REACT_APP_API_URL}/user/info`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`, // Replace userAccessToken with the actual user's access token
+              "Content-Type": "application/json",
+            },
+          },
+        );
+
+        setCurrentUserId(response.data.id);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
   const handleClick = (userId) => {
     navigate(`/profile-page/${userId}`);
   };
 
   const handleLikeClick = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-
       if (!accessToken) {
         // Handle case where access token is not available
         // You might want to redirect the user to login or handle this case as needed
@@ -106,8 +130,6 @@ function ThreadComponent({
 
   const handleDislikeClick = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-
       if (!accessToken) {
         // Handle case where access token is not available
         // You might want to redirect the user to login or handle this case as needed
@@ -156,8 +178,6 @@ function ThreadComponent({
 
   const handleDeleteThread = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-
       if (!accessToken) {
         // Handle case where access token is not available
         // You might want to redirect the user to login or handle this case as needed
@@ -186,7 +206,7 @@ function ThreadComponent({
     }
   };
 
-  const isOwner = true;
+  const isOwner = currentUserId === userId;
 
   return (
     <Grid style={{ display: "flex", flexDirection: "row" }}>

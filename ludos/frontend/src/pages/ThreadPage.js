@@ -36,7 +36,7 @@ const ThreadPage = () => {
   const [numDislikes, setNumDislikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
-  const [ownerId, setOwnerId] = useState("");
+  //const [ownerId, setOwnerId] = useState("");
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -53,6 +53,7 @@ const ThreadPage = () => {
 
         setComments(response.data);
         setNumReplies(response.data.length + 1);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -137,7 +138,7 @@ const ThreadPage = () => {
         setNumDislikes(response.data.numberOfDislikes);
         setIsDisliked(response.data.isDisliked);
         setIsLiked(response.data.isLiked);
-        setOwnerId(response.data.user.id);
+        //setOwnerId(response.data.user.id);
         setLoading(false); // Set loading to false when data is fetched
         console.log(response.data);
       } catch (error) {
@@ -330,7 +331,9 @@ const ThreadPage = () => {
                 userId={comment?.author?.id}
                 likeCount={comment.likeCount}
                 dislikeCount={comment.dislikeCount}
-                //commentId?
+                commentId={comment.id}
+                likedUsers={comment.likedUsers}
+                dislikedUsers={comment.dislikedUsers}
 
                 // Add any other necessary props for the ThreadComponent
               />
