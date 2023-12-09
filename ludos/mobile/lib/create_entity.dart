@@ -106,6 +106,78 @@ class _CreateEntityPageState extends State<CreateEntityPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
   final TextEditingController imageController = TextEditingController();
+  List<TextEditingController> nameControllers = [];
+  List<TextEditingController> valueControllers = [];
+  List<Widget> textFields = [];
+
+    void _addTextField() {
+    TextEditingController controller1 = TextEditingController();
+    nameControllers.add(controller1);
+    TextEditingController controller2 = TextEditingController();
+    valueControllers.add(controller2);
+
+    setState(() {
+      textFields.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: TextFormField(
+            controller: controller1,
+            style: const TextStyle(color: MyColors.red),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: MyColors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: const BorderSide(
+                  color: Colors.white,
+                  width: 2.0,
+                ),
+              ),
+              hintText: '',
+              labelText: "Property Name",
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              focusedBorder: OutlineInputBorder(
+                borderSide:
+                    const BorderSide(color: MyColors.lightBlue, width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+            ),
+            cursorColor: MyColors.lightBlue,
+          ),
+        ),
+      );
+
+      textFields.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: TextFormField(
+            controller: controller2,
+            style: const TextStyle(color: MyColors.red),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: MyColors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: const BorderSide(
+                  color: Colors.white,
+                  width: 2.0,
+                ),
+              ),
+              hintText: '',
+              labelText: "Property Value",
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              focusedBorder: OutlineInputBorder(
+                borderSide:
+                    const BorderSide(color: MyColors.lightBlue, width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+            ),
+            cursorColor: MyColors.lightBlue,
+          ),
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -189,18 +261,41 @@ class _CreateEntityPageState extends State<CreateEntityPage> {
                 const SizedBox(height: 20),
                 getbox("Entity Content", contentController, true, true),
                 const SizedBox(height: 20),
+                const Row(
+                  children: [
+                    Text(
+                      "Entity Properties",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: MyColors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                ...textFields,
+                 IconButton(
+                    onPressed: () {
+                      _addTextField();
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: MyColors.white,
+                    )),
                 TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: MyColors.lightBlue,
                   ),
                   onPressed: () async {
-                     http.Response token = await APIService().createEntity(
+                      http.Response token = await APIService().createEntity(
                         widget.token,
                         widget.gameID,
                         entityTypes[selectedEntityType].toLowerCase(),
                         nameController.text,
                         imageController.text,
-                        contentController.text);
+                        contentController.text, 
+                        nameControllers,
+                        valueControllers);
                     if (token.statusCode == 201 || token.statusCode == 200) {
                       print("status code:" + token.statusCode.toString());
                       print(token);

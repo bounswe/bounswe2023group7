@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -438,15 +439,24 @@ class APIService {
     return response;
   }
 
+  
   Future<http.Response> createEntity(
-      String? authToken, String gameId, String type, String name, String image, String content) async {
+      String? authToken, String gameId, String type, String name, String image, String contentmsg, 
+      List<TextEditingController> nameControllers, List<TextEditingController> valueControllers) async {
     var uri = Uri.parse("$baseURL/entity/$gameId");
-    final content = EntityContent(image: image, role: name);
+    Map<String, String> con = {};
+    con['image'] = image;
+    con['description'] = contentmsg;
+    for (int i = 0; i < nameControllers.length && i < valueControllers.length; i++) {
+      String name = nameControllers[i].text;
+      String value = valueControllers[i].text;
+      con[name] = value;
+    }
     final body =
     jsonEncode(<String, Object>{
       'type': type,
       'name': name,
-      'content': content,
+      'content': con,
       });
       print(body);
     final response = await http.post(uri, body: body, headers: {
@@ -456,5 +466,30 @@ class APIService {
 
     return response;
   }
+
+  Future<http.Response> listEntitesByGame(String? authToken, String gameId) async {
+    var uri = Uri.parse("$baseURL/entity/game/$gameId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
+  
+  Future<Map<String, dynamic>> getEntity(String id, String? authToken) async {
+    var uri = Uri.parse("$baseURL/entity/$id");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to load entity data');
+    }
+  }
+
 
 }
