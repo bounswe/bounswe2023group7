@@ -190,17 +190,6 @@ class _GamePageState extends State<GamePage> {
                     ));
                 },
               ),
-                 ListTile(
-                title: const Text(
-                  'See all Entities',
-                  style: TextStyle(color: MyColors.white),
-                ),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => EntitiesPage(gameId: widget.id, userProvider: widget.userProvider,),
-                    ));
-                },
-              ),
             ],
           ),
         ),
@@ -491,6 +480,27 @@ class _GamePageState extends State<GamePage> {
                 ),
               ),
             const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                 ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(MyColors.blue),
+                  ),
+                child: const Text(
+                  'See All Entities',
+                  style: TextStyle(color: MyColors.white),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EntitiesPage(gameId: widget.id, userProvider: widget.userProvider,),
+                    ));
+                },
+              ),
+              ],
+            ),
+              const SizedBox(height: 20),
             Container(
                 padding: const EdgeInsets.all(15.0),
                 child: Row(
