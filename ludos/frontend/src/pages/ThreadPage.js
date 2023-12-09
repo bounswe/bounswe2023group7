@@ -12,6 +12,15 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ThreadPage = () => {
   const navigate = useNavigate();
+  const convertToSlug = (text) => {
+    return text
+      ?.toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+      .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+      .replace(/--+/g, "-"); // Replace multiple dashes with single dash
+  };
 
   const options = {
     year: "numeric",
@@ -126,6 +135,7 @@ const ThreadPage = () => {
         });
 
         setThreadDetails(response.data);
+        console.log(response.data);
         setLoading(false); // Set loading to false when data is fetched
       } catch (error) {
         console.error("Error fetching thread details:", error);
@@ -198,9 +208,14 @@ const ThreadPage = () => {
             lg={12}
             style={{ display: "flex", justifyContent: "space-between" }}
           >
-            <Typography variant="body1" component="div" style={forumStyle}>
-              {threadDetails?.game?.title}
-            </Typography>
+            <a
+              href={`/game/${convertToSlug(threadDetails?.game?.title)}`}
+              style={{ textDecoration: "none" }}
+            >
+              <Typography variant="body1" component="div" style={forumStyle}>
+                {threadDetails?.game?.title}
+              </Typography>
+            </a>
             <Grid style={{ display: "flex" }}>
               {threadDetails?.tags &&
                 threadDetails?.tags.map((data1, index1) => (
@@ -236,17 +251,22 @@ const ThreadPage = () => {
             }}
           >
             <Person2OutlinedIcon style={{ color: "white" }} />
-            <Typography
-              variant="caption"
-              component="div"
-              style={{
-                color: "white",
-                marginTop: "3px",
-                marginRight: "10px",
-              }}
+            <a
+              href={`/profile-page/${threadDetails?.user?.id}`}
+              style={{ textDecoration: "none" }}
             >
-              {threadDetails?.user?.username}
-            </Typography>
+              <Typography
+                variant="caption"
+                component="div"
+                style={{
+                  color: "white",
+                  marginTop: "3px",
+                  marginRight: "10px",
+                }}
+              >
+                {threadDetails?.user?.username}
+              </Typography>
+            </a>
             <AccessTimeOutlinedIcon
               style={{ color: "white", marginRight: "3px" }}
             />
