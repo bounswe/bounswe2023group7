@@ -29,4 +29,12 @@ export class GetCommentResponseDto {
   @ApiProperty()
   @IsNumber()
   dislikeCount: number;
+
+  @ApiProperty()
+  @IsBoolean()
+  isLiked: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
+  isDisLiked: boolean;
 }
