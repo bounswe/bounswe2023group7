@@ -53,7 +53,7 @@ export class Post {
   })
   numberOfDislikes: number;
 
-  @ManyToOne(() => Group)
+  @ManyToOne("Group")
   group: Group;
 
   @Column('text', { array: true, default: [] })
