@@ -14,6 +14,7 @@ import { Game } from './game.entity';
 import { Post } from './post.entity';
 import { Rating } from './rating.entity';
 import { Review } from './review.entity';
+import { Group } from './group.entity';
 
 @Entity('users')
 export class User {
@@ -96,6 +97,9 @@ export class User {
 
   @ManyToMany('Post', 'dislikedUsers')
   dislikedPosts: Post[];
+
+  @ManyToMany('Group', 'members')
+  groups: Group[];
 
   @BeforeInsert()
   @BeforeUpdate()

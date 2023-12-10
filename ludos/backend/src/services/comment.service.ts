@@ -35,9 +35,9 @@ export class CommentService {
       );
     }
 
-    let checkLike = (comment: Comment) => {
+    const checkLike = (comment: Comment) => {
       let isLiked = false;
-      comment.likedUsers.forEach(likedUser => {
+      comment.likedUsers.forEach((likedUser) => {
         if (likedUser.id == userId) {
           isLiked = true;
         }
@@ -45,9 +45,9 @@ export class CommentService {
       return isLiked;
     };
 
-    let checkDisLike = (comment: Comment) => {
+    const checkDisLike = (comment: Comment) => {
       let isDisliked = false;
-      comment.dislikedUsers.forEach(dislikedUser => {
+      comment.dislikedUsers.forEach((dislikedUser) => {
         if (dislikedUser.id == userId) {
           isDisliked = true;
         }
@@ -81,9 +81,9 @@ export class CommentService {
       );
     }
 
-    let checkLike = (comment: Comment) => {
+    const checkLike = (comment: Comment) => {
       let isLiked = false;
-      comment.likedUsers.forEach(likedUser => {
+      comment.likedUsers.forEach((likedUser) => {
         if (likedUser.id == userId) {
           isLiked = true;
         }
@@ -91,9 +91,9 @@ export class CommentService {
       return isLiked;
     };
 
-    let checkDisLike = (comment: Comment) => {
+    const checkDisLike = (comment: Comment) => {
       let isDisliked = false;
-      comment.dislikedUsers.forEach(dislikedUser => {
+      comment.dislikedUsers.forEach((dislikedUser) => {
         if (dislikedUser.id == userId) {
           isDisliked = true;
         }
