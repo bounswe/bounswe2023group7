@@ -4,6 +4,7 @@ import { EditCommentDto } from '../dtos/comment/request/edit-comment.dto';
 import { GetCommentResponseDto } from '../dtos/comment/response/get-comment.response.dto';
 import { UserRepository } from '../repositories/user.repository';
 import { CommentRepository } from '../repositories/comment.repository';
+import { Comment } from 'entities/comment.entity';
 
 @Injectable()
 export class CommentService {
@@ -33,6 +34,27 @@ export class CommentService {
         HttpStatus.FORBIDDEN,
       );
     }
+
+    let checkLike = (comment: Comment) => {
+      let isLiked = false;
+      comment.likedUsers.forEach(likedUser => {
+        if (likedUser.id == userId) {
+          isLiked = true;
+        }
+      });
+      return isLiked;
+    };
+
+    let checkDisLike = (comment: Comment) => {
+      let isDisliked = false;
+      comment.dislikedUsers.forEach(dislikedUser => {
+        if (dislikedUser.id == userId) {
+          isDisliked = true;
+        }
+      });
+      return isDisliked;
+    };
+
     return {
       author: comment.author,
       timestamp: comment.timestamp,
@@ -41,6 +63,8 @@ export class CommentService {
       parentId: comment.parentId,
       likeCount: comment.likedUsers.length,
       dislikeCount: comment.dislikedUsers.length,
+      isLiked: checkLike(comment),
+      isDisLiked: checkDisLike(comment),
     };
   }
 
@@ -57,11 +81,33 @@ export class CommentService {
       );
     }
 
+    let checkLike = (comment: Comment) => {
+      let isLiked = false;
+      comment.likedUsers.forEach(likedUser => {
+        if (likedUser.id == userId) {
+          isLiked = true;
+        }
+      });
+      return isLiked;
+    };
+
+    let checkDisLike = (comment: Comment) => {
+      let isDisliked = false;
+      comment.dislikedUsers.forEach(dislikedUser => {
+        if (dislikedUser.id == userId) {
+          isDisliked = true;
+        }
+      });
+      return isDisliked;
+    };
+
     return (await this.commentRepository.findCommentsByParent(parentId)).map(
       (comment) => {
         return {
           likeCount: comment.likedUsers.length,
           dislikeCount: comment.dislikedUsers.length,
+          isLiked: checkLike(comment),
+          isDisLiked: checkDisLike(comment),
           ...comment,
         };
       },
