@@ -13,6 +13,7 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ForumsPage from "./pages/ForumsPage.js";
 import ProfilePage from "./pages/ProfilePage";
 import CreateThreadPage from "./pages/CreateThreadPage.js";
+import EditThreadPage from "./pages/EditThreadPage.js";
 import GamesPage from "./pages/GamesPage.js";
 import ThreadPage from "./pages/ThreadPage.js";
 import EntityPage from "./pages/EntityPage.js";
@@ -401,6 +402,14 @@ function App() {
             element={
               <Layout>
                 <CreateThreadPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/edit-thread/:threadId"
+            element={
+              <Layout>
+                <EditThreadPage />
               </Layout>
             }
           />
