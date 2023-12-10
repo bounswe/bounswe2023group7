@@ -163,6 +163,11 @@ export class PostController {
     example: 'tag1,tag2,tag3',
   })
   @ApiQuery({ name: 'gameId', required: false })
+  @ApiQuery({
+    name: 'groupId',
+    required: false,
+    description: 'If not specified, posts with group id is null will be listed',
+  })
   @ApiQuery({ name: 'ownerUserId', required: false })
   @ApiQuery({
     name: 'isLiked',
@@ -204,6 +209,7 @@ export class PostController {
     @Query('searchKey') searchKey?: string,
     @Query('tags') tags?: string,
     @Query('gameId') gameId?: string,
+    @Query('groupId') groupId?: string,
     @Query('ownerUserId') ownerUserId?: string,
     @Query('isLiked', new DefaultValuePipe(false), ParseBoolPipe)
     isLiked?: boolean,
@@ -218,6 +224,7 @@ export class PostController {
       searchKey,
       tags,
       gameId,
+      groupId,
       ownerUserId,
       req.user && req.user.id,
       isLiked,
