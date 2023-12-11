@@ -1,4 +1,4 @@
-import { Autocomplete } from "@mui/material";
+import { Autocomplete, Typography } from "@mui/material";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -24,10 +24,16 @@ const CreateEntityForm = () => {
     const [games, setGames] = useState([]);
     const [game, setGame] = useState("");
     const [type, setType] = useState("");
-    const [content, setContent] = useState([{ name: '', value: '' }]);
     const [snackbar, setSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [serverError, setServerError] = useState(false);
+    const [additionalProperties, setAdditionalProperties] = useState([{ name: '', value: '' }]);
+    const [defaultProperties, setDefaultProperties] = useState([
+        { name: 'Description', value: '' },
+        { name: 'Image Link', value: '' },
+    ]);
+    const [defaultPropertyError, setDefaultPropertyError] = useState(false);
+
 
     const types = ["Character", "Environement", "Item", "Package"];
 
@@ -50,19 +56,37 @@ const CreateEntityForm = () => {
         }
     }, [searchKey]);
 
-    const addProperty = () => {
-        setContent([...content, { name: '', value: '' }]);
+    const addAdditionalProperty = () => {
+        setAdditionalProperties([...additionalProperties, { name: '', value: '' }]);
     };
 
-    // Handle change in property name or value
-    const handlePropertyChange = (index, field, value) => {
-        const newProperties = [...content];
+    const handleAdditionalPropertyChange = (index, field, value) => {
+        const newProperties = [...additionalProperties];
         newProperties[index][field] = value;
-        setContent(newProperties);
+        setAdditionalProperties(newProperties);
     };
 
-    // Convert contentProperties to the required format
+    const removeAdditionalProperty = (index) => {
+        const newProperties = [...additionalProperties];
+        newProperties.splice(index, 1);
+        setAdditionalProperties(newProperties);
+    };
+
+    const handleDefaultPropertyChange = (index, field, value) => {
+
+        if (value === "" || value === null) {
+            setDefaultPropertyError(true);
+        }
+
+        const newProperties = [...defaultProperties];
+        newProperties[index][field] = value;
+        setDefaultProperties(newProperties);
+        setDefaultPropertyError(false);
+    };
+
     const formatContentForSubmission = () => {
+
+        let content = [...defaultProperties, ...additionalProperties];
         const formattedContent = {};
         content.forEach(property => {
             if (property.name && property.value) {
@@ -70,12 +94,6 @@ const CreateEntityForm = () => {
             }
         });
         return formattedContent;
-    };
-
-    const removeProperty = (index) => {
-        const newProperties = [...content];
-        newProperties.splice(index, 1);
-        setContent(newProperties);
     };
 
     const handleCloseSnackbar = () => {
@@ -95,6 +113,15 @@ const CreateEntityForm = () => {
             setSnackbar(true);
             return;
         }
+
+        if (defaultProperties[0].value === "" || defaultProperties[1].value === "") {
+            setDefaultPropertyError(true);
+            setSnackbarMessage("Default properties cannot be empty!");
+            setServerError(true);
+            setSnackbar(true);
+            return;
+        }
+
 
         let gameId = games.filter((value) => value.title === game)[0].id;
 
@@ -171,14 +198,48 @@ const CreateEntityForm = () => {
                 </Grid>
                 <Grid item xs={12} spacing={1} >
                     <h3 style={{ display: 'flex', alignItems: 'flex-start' }}>Entity Properties:</h3>
-                    {content.map((property, index) => (
+                    {/* Default properties */}
+                    <Grid container spacing={2} style={{ display: 'flex', direction: 'row' }}>
+                        <Grid item xs={5} my={1} style={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="h6">Description:</Typography>
+                        </Grid>
+                        <Grid item xs={6} my={1}>
+                            <TextField
+                                fullWidth
+                                required
+                                label="Description"
+                                value={defaultProperties[0].value}
+                                onChange={(e) => handleDefaultPropertyChange(0, 'value', e.target.value)}
+                                error={defaultPropertyError}
+                                helperText={defaultPropertyError ? "Description cannot be empty." : ""}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} style={{ display: 'flex', direction: 'row' }}>
+                        <Grid item xs={5} my={1} style={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Typography variant="h6">Image Link:</Typography>
+                        </Grid>
+                        <Grid item xs={6} my={1}>
+                            <TextField
+                                fullWidth
+                                required
+                                label="Image Link"
+                                value={defaultProperties[1].value}
+                                onChange={(e) => handleDefaultPropertyChange(1, 'value', e.target.value)}
+                                error={defaultPropertyError}
+                                helperText={defaultPropertyError ? "Image link cannot be empty." : ""}
+                            />
+                        </Grid>
+                    </Grid>
+                    {/* Additional properties */}
+                    {additionalProperties.map((property, index) => (
                         <Grid container spacing={2} key={index}>
                             <Grid item xs={5} my={1}>
                                 <TextField
                                     fullWidth
                                     label="Property Name"
                                     value={property.name}
-                                    onChange={(e) => handlePropertyChange(index, 'name', e.target.value)}
+                                    onChange={(e) => handleAdditionalPropertyChange(index, 'name', e.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={6} my={1}>
@@ -186,18 +247,18 @@ const CreateEntityForm = () => {
                                     fullWidth
                                     label="Property Value"
                                     value={property.value}
-                                    onChange={(e) => handlePropertyChange(index, 'value', e.target.value)}
+                                    onChange={(e) => handleAdditionalPropertyChange(index, 'value', e.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={1} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <IconButton onClick={() => removeProperty(index)}>
+                                <IconButton onClick={() => removeAdditionalProperty(index)}>
                                     <DeleteIcon />
                                 </IconButton>
                             </Grid>
                         </Grid>
                     ))}
 
-                    <Button variant="contained" onClick={addProperty} style={{ marginTop: '10px' }} >Add Property</Button>
+                    <Button variant="contained" onClick={addAdditionalProperty} style={{ marginTop: '10px' }} >Add Property</Button>
 
                 </Grid>
                 <Grid item xs={12} spacing={1} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
