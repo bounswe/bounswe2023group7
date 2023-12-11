@@ -55,7 +55,7 @@ class CustomNavigationBar extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     //builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
-                    builder: (context) => SearchPage(),
+                    builder: (context) => SearchPage(userProvider: userProvider),
                   ));
                 },
                 icon: const Icon(Icons.search_outlined)),
