@@ -264,8 +264,7 @@ export class GameController {
     return HttpStatus.OK;
   }
 
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
+  
   @ApiOperation({ summary: 'Get Related Games Endpoint' })
   @ApiNotFoundResponse({ description: 'Game is not found!' })
   @Get(':gameId/related')

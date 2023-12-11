@@ -130,18 +130,19 @@ export class GameRepository extends Repository<Game> {
 
 
   public async getRelatedGames(gameId: string, tags: string[]): Promise<Game[]> {
+    const tagArray = tags.map(tag => `'${tag}'`).join(',');
 
-    const relatedGames = await this.createQueryBuilder('games')
-    .addSelect('COUNT(tags) FILTER (WHERE tags @> :tags) AS matchingTags', 'matchingTags')
-    .where('games.id != :gameId', { gameId })
-    .andWhere('games.tags @> :tags', { tags })
-    .groupBy('games.id')
-    .orderBy('matchingTags', 'DESC')
-    .addOrderBy('RANDOM()')
-    .take(10)
-    .getMany();
+    const query = `
+      SELECT *,
+        (SELECT COUNT(*) FROM UNNEST(games.tags) tag WHERE tag = ANY(ARRAY[${tagArray}])) AS match_count
+      FROM games
+      WHERE games.id::text != $1
+      ORDER BY match_count DESC
+      LIMIT 10
+    `;
 
-  return relatedGames;
+    const relatedGames = await this.query(query, [gameId]);
+
+    return relatedGames;
   }
-
 }
