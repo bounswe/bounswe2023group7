@@ -150,7 +150,23 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SelectionArea(contextMenuBuilder:(context, editableTextState) {
+      final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
+      buttonItems.insert(
+        0,
+        ContextMenuButtonItem(
+          label: 'Annotate',
+          onPressed: () {
+            // Annotation code    
+          },
+        ),
+      );
+      return AdaptiveTextSelectionToolbar.buttonItems(
+        anchors: editableTextState.contextMenuAnchors,
+        buttonItems: buttonItems,
+      );
+    },
+      child: Scaffold(
       endDrawer: Drawer(
         child: Container(
           color: MyColors.darkBlue, // Drawer background color
@@ -656,6 +672,7 @@ class _GamePageState extends State<GamePage> {
         ),
       ),
       bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
-    );
+    )
+);
   }
 }
