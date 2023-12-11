@@ -127,4 +127,21 @@ export class GameRepository extends Repository<Game> {
   public getAllRelationsAsList() {
     return this.metadata.relations.map((relation) => relation.propertyName);
   }
+
+
+  public async getRelatedGames(gameId: string, tags: string[]): Promise<Game[]> {
+
+    const relatedGames = await this.createQueryBuilder('games')
+    .addSelect('COUNT(tags) FILTER (WHERE tags @> :tags) AS matchingTags', 'matchingTags')
+    .where('games.id != :gameId', { gameId })
+    .andWhere('games.tags @> :tags', { tags })
+    .groupBy('games.id')
+    .orderBy('matchingTags', 'DESC')
+    .addOrderBy('RANDOM()')
+    .take(10)
+    .getMany();
+
+  return relatedGames;
+  }
+
 }
