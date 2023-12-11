@@ -25,6 +25,14 @@ export class PostCreateDto {
   gameId?: string;
 
   @ApiProperty({
+    description: 'Id of the group',
+    required: false,
+  })
+  @IsUUID()
+  @IsOptional()
+  groupId?: string;
+
+  @ApiProperty({
     description: 'Optional list of links for media',
     required: false,
   })

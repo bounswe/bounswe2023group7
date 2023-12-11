@@ -8,6 +8,7 @@ import {
   Menu,
   MenuItem,
   IconButton,
+  TextField,
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
@@ -15,20 +16,25 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import axios from "axios";
 //import ReplyIcon from "@mui/icons-material/Reply";
 
-function ThreadComponent({
+function CommentComponent({
   imgsrc,
   contentImg,
   username,
   date,
   content,
   userId,
-  numLikes,
-  numDislikes,
-  threadId,
+  commentId,
   isLiked,
   isDisliked,
+  likeCount,
+  dislikeCount,
+  likedUsers,
+  dislikedUsers,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [newContent, setNewContent] = useState(content);
+  const [contentText, setContentText] = useState(content);
 
   const handleClick2 = (event) => {
     setAnchorEl(event.currentTarget);
@@ -36,10 +42,11 @@ function ThreadComponent({
 
   const handleClose = () => {
     setAnchorEl(null);
+    //setEditing(false);
   };
   const navigate = useNavigate();
-  const [likes, setLikes] = useState(numLikes);
-  const [dislikes, setDislikes] = useState(numDislikes);
+  const [likes, setLikes] = useState(likeCount);
+  const [dislikes, setDislikes] = useState(dislikeCount);
   const [liked, setLiked] = useState(isLiked);
   const [disliked, setDisliked] = useState(isDisliked);
   const [showMenu, setShowMenu] = useState(false);
@@ -55,6 +62,10 @@ function ThreadComponent({
     marginRight: "5px",
     display: "flex",
     height: "auto",
+  };
+
+  const handleClick = (userId) => {
+    navigate(`/profile-page/${userId}`);
   };
 
   useEffect(() => {
@@ -80,9 +91,19 @@ function ThreadComponent({
     fetchUserId();
   }, []);
 
-  const handleClick = (userId) => {
-    navigate(`/profile-page/${userId}`);
-  };
+  useEffect(() => {
+    if (currentUserId) {
+      const isLikedTemp = likedUsers.some((user) => user.id === currentUserId);
+      const isDislikedTemp = dislikedUsers.some(
+        (user) => user.id === currentUserId,
+      );
+
+      setLiked(isLikedTemp);
+      setDisliked(isDislikedTemp);
+      console.log(isLikedTemp);
+      console.log(isDislikedTemp);
+    }
+  }, [currentUserId, likedUsers, dislikedUsers]);
 
   const handleLikeClick = async () => {
     try {
@@ -93,9 +114,9 @@ function ThreadComponent({
       }
 
       const response = await fetch(
-        `http://${process.env.REACT_APP_API_URL}/post/like/${threadId}`,
+        `http://${process.env.REACT_APP_API_URL}/comment/${commentId}/like-comment`,
         {
-          method: "PUT",
+          method: "POST",
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json", // You might need to adjust this based on your API requirements
@@ -137,9 +158,9 @@ function ThreadComponent({
       }
 
       const response = await fetch(
-        `http://${process.env.REACT_APP_API_URL}/post/dislike/${threadId}`,
+        `http://${process.env.REACT_APP_API_URL}/comment/${commentId}/dislike-comment`,
         {
-          method: "PUT",
+          method: "POST",
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json", // You might need to adjust this based on your API requirements
@@ -176,11 +197,7 @@ function ThreadComponent({
     setShowMenu(!showMenu);
   };
 
-  const handleEditThread = () => {
-    navigate(`/edit-thread/${threadId}`);
-  };
-
-  const handleDeleteThread = async () => {
+  const handleDeleteComment = async () => {
     try {
       if (!accessToken) {
         // Handle case where access token is not available
@@ -189,7 +206,7 @@ function ThreadComponent({
       }
 
       const response = await fetch(
-        `http://${process.env.REACT_APP_API_URL}/post/${threadId}`,
+        `http://${process.env.REACT_APP_API_URL}/comment/${commentId}/delete-comment`,
         {
           method: "DELETE",
           headers: {
@@ -199,14 +216,46 @@ function ThreadComponent({
       );
 
       if (response.ok) {
-        navigate("/forums");
+        window.location.reload();
       } else {
         // Handle other status codes, e.g., unauthorized access or error in deletion
-        console.error("Failed to delete the post:", response.status);
+        console.error("Failed to delete the comment:", response.status);
       }
     } catch (error) {
       // Handle error if the request fails
-      console.error("Error deleting the post:", error);
+      console.error("Error deleting the comment:", error);
+    }
+  };
+
+  const handleUpdate = () => {
+    setEditing(true);
+    handleClose();
+  };
+
+  const handleUpdateComment = async () => {
+    try {
+      const response = await axios.put(
+        `http://${process.env.REACT_APP_API_URL}/comment/${commentId}/edit-comment`,
+        {
+          newText: newContent,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (response.status == 200) {
+        // Update the content and set editing to false after successful update
+        setEditing(false);
+        setContentText(newContent);
+      } else {
+        console.error("Failed to update the comment:", response.status);
+      }
+    } catch (error) {
+      console.error("Error updating the comment:", error);
     }
   };
 
@@ -304,8 +353,10 @@ function ThreadComponent({
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleDeleteThread}>Delete Thread</MenuItem>
-                <MenuItem onClick={handleEditThread}>Edit Thread</MenuItem>
+                <MenuItem onClick={handleDeleteComment}>
+                  Delete Comment
+                </MenuItem>
+                <MenuItem onClick={handleUpdate}>Edit Comment</MenuItem>
                 {/* You can add more options here as needed */}
               </Menu>
             </>
@@ -322,7 +373,7 @@ function ThreadComponent({
                     borderRadius: "10px",
                     marginBottom: "10px",
                   }}
-                  src={JSON.parse(imgSrc).url}
+                  src={imgSrc}
                   alt={`Image ${index + 1}`}
                 />
               </Grid>
@@ -330,21 +381,47 @@ function ThreadComponent({
           </Grid>
         )}
 
-        <Typography
-          variant="body2"
-          component="div"
-          style={{
-            color: "white",
-            marginTop: "3px",
-            marginRight: "10px",
-            display: "flex",
-            marginLeft: "10px",
-            textAlign: "left",
-            lineHeight: "1.7",
-          }}
-        >
-          {content}
-        </Typography>
+        {editing ? (
+          <TextField
+            value={newContent}
+            onChange={(e) => setNewContent(e.target.value)}
+            rows={3}
+            cols={50}
+            multiline
+            style={{
+              color: "white",
+              backgroundColor: "rgb(200,200,200,0.6)",
+              borderRadius: "10px",
+              marginBottom: "10px",
+              height: "100%",
+            }}
+          />
+        ) : (
+          <Typography
+            variant="body2"
+            component="div"
+            style={{
+              color: "white",
+              marginTop: "3px",
+              marginRight: "10px",
+              display: "flex",
+              marginLeft: "10px",
+              textAlign: "left",
+              lineHeight: "1.7",
+            }}
+          >
+            {contentText}
+          </Typography>
+        )}
+        {editing && (
+          <Button
+            variant="contained"
+            onClick={handleUpdateComment}
+            style={{ marginTop: "10px", alignSelf: "flex-end" }}
+          >
+            Edit Comment
+          </Button>
+        )}
         <Grid
           style={{
             display: "flex",
@@ -420,4 +497,4 @@ function ThreadComponent({
   );
 }
 
-export default ThreadComponent;
+export default CommentComponent;

@@ -10,6 +10,7 @@ import { Post } from '../../entities/post.entity';
 import { Rating } from '../../entities/rating.entity';
 import { Entity } from '../../entities/entity.entity';
 import { CompletionDuration } from '../../entities/completion-duration.entity';
+import { Group } from '../../entities/group.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -33,6 +34,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         Post,
         Entity,
         CompletionDuration,
+        Group,
       ],
       synchronize: true,
     };
