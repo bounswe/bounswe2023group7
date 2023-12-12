@@ -38,7 +38,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         }
       });
     } catch (e) {
-      print('Error loading game data: $e');
+      print('Error loading user data: $e');
     }
   }
   @override

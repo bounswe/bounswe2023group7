@@ -1,23 +1,19 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
-import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/user_profile_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_thread.dart';
 import 'package:ludos_mobile_app/reusable_widgets/home_game_sum.dart';
 import 'helper/APIService.dart';
 import 'login_page.dart';
-import 'games_page.dart';
 import 'userProvider.dart';
 import 'package:provider/provider.dart';
 import 'helper/colors.dart';
-import 'search_page.dart';
 import 'reusable_widgets/custom_navigation_bar.dart';
 
 void main() => runApp(ChangeNotifierProvider(
       create: (context) => UserProvider(),
-      child: MaterialApp(
+      child: const MaterialApp(
         home: Home(),
       ),
     ));
@@ -33,12 +29,13 @@ class Home extends StatefulWidget{
 class _HomeState extends State<Home> {
   late Future<List<HomeGameSum>> games;
   late Future<List<ThreadSummary>> threads;
+  late Future<Map<String, dynamic>> userData;
+
+
 
   Future<List<HomeGameSum>> fetchGameData(UserProvider userProvider, String? token) async {
-    //final userProvider = Provider.of<UserProvider>(context, listen: false);
     final response = await APIService().listGames(token, limit: "6");
     try {
-      //print(json.decode(response.body));
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
@@ -100,15 +97,33 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<Map<String, dynamic>> fetchUserData(UserProvider userProvider, String? token) async {
+    final response = await APIService().userInfo(userProvider.token!);
+    try {
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> userData = json.decode(response.body);
+        return userData;
+      }
+      else {
+        throw Exception('Failed to load user data');
+      }
+    }
+    catch (e) {
+      throw Exception('Failed to load user data');
+
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(context);
     games = fetchGameData(userProvider, userProvider.token);
     threads = fetchThreadData(userProvider, userProvider.token);
+    userData = fetchUserData(userProvider, userProvider.token);
     return Scaffold(
       drawer: Drawer(
         child: Container(
-          color: MyColors.darkBlue, // Drawer background color
+          color: MyColors.darkBlue,
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
@@ -118,27 +133,49 @@ class _HomeState extends State<Home> {
                       const TextStyle(color: MyColors.darkBlue), // Text color
                 ),
                 accountEmail: null,
-                currentAccountPicture: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 15.0,
-                    backgroundColor: MyColors.white,
-                    shape: const CircleBorder(),
-                    padding: const EdgeInsets.all(0.0),
-                  ),
-                  child: const CircleAvatar(
-                    backgroundColor: MyColors.white,
-                    child: Icon(Icons.person),
-                  ),
-                  onPressed: () {
-                    if(userProvider.isLoggedIn){
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => UserProfilePage(userProvider: userProvider, id: userProvider.username),
-                      ));
+                currentAccountPicture: FutureBuilder(
+                  future: userData,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      var avatarUrl = snapshot.data!['avatar'];
+
+                      return ElevatedButton(
+                        onPressed: () {
+                          if (userProvider.isLoggedIn) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  UserProfilePage(userProvider: userProvider,
+                                      id: userProvider.username),
+                            ));
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          elevation: 15.0,
+                          backgroundColor: MyColors.white,
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(0.0),
+                        ),
+                        child: CircleAvatar(
+                          backgroundColor: MyColors.lightBlue,
+                          radius: 50,
+                          child: ClipOval(
+                            child: avatarUrl != null
+                                ? Image.network(
+                              avatarUrl.toString(),
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            )
+                                : const Icon(Icons.person),
+                          ),
+                        ),
+                      );
                     }
-                    else{
-                      Navigator.pop(context);
-                      CustomWidgets.needLoginSnackbar(context, "Please log in to visit the profile page! ");
-                    }
+                    return Container();
                   },
                 ),
                 decoration: const BoxDecoration(
