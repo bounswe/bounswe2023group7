@@ -42,14 +42,14 @@ class _SearchPageGameState extends State<SearchPageGame> {
   }
 
   Future<List<GameSummary>> fetchData(String? token) async {
-    //final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final response = await APIService().listSearchedGames(widget.userProvider.token, widget.searchKey);
+    //final response = await APIService().listSearchedGames(widget.userProvider.token, widget.searchKey);
+    final response = await APIService().search(widget.userProvider.token, widget.searchKey!);
     try {
       //print(json.decode(response.body));
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
-        List<dynamic> gamesList = responseData['items'];
+        List<dynamic> gamesList = responseData['games'];
         setState(() {
           size = gamesList.length;
         });
@@ -102,9 +102,9 @@ class _SearchPageGameState extends State<SearchPageGame> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     // Handle the case when there is no data
                     return const Center(
-                        child: Text('No game found with this input.',
-                            style: TextStyle(color: MyColors.lightBlue,
-                                fontSize: 20,
+                        child: Text('No game found',
+                            style: TextStyle(color: MyColors.orange,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold)));
                   } else {
                     // Display the fetched data

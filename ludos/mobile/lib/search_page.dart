@@ -1,14 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_navigation_bar.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
-import 'login_page.dart';
-import 'main.dart';
-import 'reusable_widgets/game_summary.dart';
-import 'helper/APIService.dart';
-import 'create_game.dart';
 import 'search_page_game.dart';
+import 'search_page_user.dart';
 
 class SearchPage extends StatefulWidget {
   final UserProvider userProvider;
@@ -36,14 +31,29 @@ class _SearchPageState extends State<SearchPage> {
   String searchText = '';
 
   Key searchGameKey = UniqueKey();
+  Key searchUserKey = UniqueKey();
 
   @override
   void initState() {
+    updateShowState();
     super.initState();
-    if (widget.initialSearchKey != null) {
-      searchText = widget.initialSearchKey!;
-      showResult = true;
-    }
+  }
+
+  void updateShowState() {
+    setState(() {
+      if(isGamesSelected == false && isUsersSelected == false){
+        showResult = false;
+      }else{
+        showResult = true;
+      }
+    });
+  }
+
+  void updateKeys() {
+    searchGameKey = UniqueKey();
+    searchUserKey = UniqueKey();
+    showResult = isGamesSelected || isPostsSelected || isUsersSelected;
+    searchText = '';
   }
 
   @override
@@ -84,7 +94,7 @@ class _SearchPageState extends State<SearchPage> {
                         onPressed: () {
                           setState(() {
                             searchText = searchInputController.text;
-                            showResult = true;
+                            updateShowState();
                             setState(() {});
                           });
                         },
@@ -128,9 +138,9 @@ class _SearchPageState extends State<SearchPage> {
                     onPressed: () {
                     setState(() {
                       isGamesSelected = (isGamesSelected == false) ? true : false;
-                    });
-                    setState(() {
                       gamesButtonColor = (isGamesSelected == true) ? MyColors.green : MyColors.red;
+                      updateKeys();
+                      updateShowState();
                     });
                     },
                     child: const Text(
@@ -166,9 +176,9 @@ class _SearchPageState extends State<SearchPage> {
                     onPressed: () {
                       setState(() {
                         isUsersSelected = (isUsersSelected == false) ? true : false;
-                      });
-                      setState(() {
                         usersButtonColor = (isUsersSelected == true) ? MyColors.green : MyColors.red;
+                        updateKeys();
+                        updateShowState();
                       });
                     },
                     child: const Text(
@@ -182,12 +192,56 @@ class _SearchPageState extends State<SearchPage> {
             SingleChildScrollView(
               child: Column(
                 children: [
+                  //if (isGamesSelected != true && showResult == true)
                   if (isGamesSelected == true && showResult == true)
-                    SearchPageGame(
-                      key: searchGameKey, // Use the unique key
-                      searchKey: searchText,
-                      userProvider: widget.userProvider,
-                      token: widget.userProvider.token,
+                    Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(width: 20),
+                            Text(
+                              'Games',
+                              style: TextStyle(
+                                color: MyColors.lightBlue,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SearchPageGame(
+                          key: searchGameKey, // Use the unique key
+                          searchKey: searchText,
+                          userProvider: widget.userProvider,
+                          token: widget.userProvider.token,
+                        ),
+                      ],
+                    ),
+
+                  if (isUsersSelected == true && showResult == true)
+                    Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(width: 20),
+                            Text(
+                              'Users',
+                              style: TextStyle(
+                                color: MyColors.lightBlue,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SearchPageUser(
+                            key: searchUserKey,
+                            token: widget.userProvider.token,
+                            searchKey: searchText,
+                            userProvider: widget.userProvider)
+                      ],
                     ),
                 ],
               )
