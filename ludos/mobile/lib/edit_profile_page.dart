@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:image_picker/image_picker.dart';
 import 'helper/APIService.dart';
 import 'helper/colors.dart';
 import 'main.dart';
@@ -24,6 +24,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _pickImage() async {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+          // Update the avatarController text with the selected image path
+          avatarController.text = pickedFile.path;
+        });
+      }
+    }
     var userProvider = Provider.of<UserProvider>(context);
     Map<String, dynamic> userData = widget.userData;
     return Scaffold(
@@ -63,11 +74,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 cursorColor: MyColors.lightBlue,
               ),
               const SizedBox(height: 20),
+
               TextField(
                 style: const TextStyle(color: MyColors.white),
                 controller: avatarController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.account_circle),
+                  suffixIcon: IconButton(
+                    onPressed: _pickImage,
+                    icon: const Icon(Icons.cloud_upload),
+                    color: MyColors.lightBlue,
+                  ),
                   labelText: 'Avatar',
                   labelStyle: const TextStyle(
                       color: MyColors.lightBlue, fontWeight: FontWeight.bold),
