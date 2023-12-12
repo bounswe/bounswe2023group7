@@ -258,6 +258,35 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> likeComment(String? authToken, String commentId) async {
+    var uri = Uri.parse("$baseURL/comment/$commentId/like-comment");
+    final response = await http.post(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to load entity data');
+    }
+  }
+
+  Future<http.Response> dislikeComment(
+      String? authToken, String commentId) async {
+    var uri = Uri.parse("$baseURL/comment/$commentId/dislike-comment");
+    final response = await http.post(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to load entity data');
+    }
+  }
+
   Future<http.Response> listReviews(String? authToken, String gameId) async {
     var uri = Uri.parse("$baseURL/review/game/$gameId");
     final response = await http.get(uri, headers: {

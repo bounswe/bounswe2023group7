@@ -121,9 +121,11 @@ class _GamePageState extends State<GamePage> {
               gameId: item['gameId'],
               userId: item['userId'],
               username: json.decode(userResponse.body)['username'],
-              thumbUps: item['likedUserCount'],
-              thumbDowns: item['dislikeUserCount'],
+              thumbUps: item['likedUserCount'] ?? 0,
+              thumbDowns: item['dislikeUserCount'] ?? 0,
               time: item['createdAt'],
+              isLiked: item['isLikedByUser'] ?? false,
+              isDisliked: item['isDislikedByUser'] ?? false,
             );
           } else {
             print(
@@ -649,7 +651,7 @@ class _GamePageState extends State<GamePage> {
                 thickness: 4.0,
                 color: MyColors.lightBlue,
               ),
-              if(reviews.isNotEmpty)
+              if(!reviews.isEmpty)
                 reviews[0],
             ])
           ],
