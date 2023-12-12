@@ -127,4 +127,22 @@ export class GameRepository extends Repository<Game> {
   public getAllRelationsAsList() {
     return this.metadata.relations.map((relation) => relation.propertyName);
   }
+
+
+  public async getRelatedGames(gameId: string, tags: string[]): Promise<Game[]> {
+    
+    const tagArray = tags.map(tag => `'${tag}'`).join(',');
+    const query = `
+      SELECT *,
+        (SELECT COUNT(*) FROM UNNEST(games.tags) tag WHERE tag = ANY(ARRAY[${tagArray}])) AS match_count
+      FROM games
+      WHERE games.id::text != $1
+      ORDER BY match_count DESC
+      LIMIT 10
+    `;
+
+    const relatedGames = await this.query(query, [gameId]);
+
+    return relatedGames;
+  }
 }
