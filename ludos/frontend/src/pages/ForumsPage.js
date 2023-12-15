@@ -17,6 +17,7 @@ const ForumsPage = () => {
   const uniqueOptions = Array.from(
     new Set(mergedThreads.map((item) => item.title)),
   );
+  const [trendingTopics, setTrendingTopics] = useState([]);
 
   const handleThreadSearch = (threadId) => {
     //value should be the id of the thread
@@ -121,9 +122,43 @@ const ForumsPage = () => {
     }
   };
 
-  useEffect(() => {
-    getLatestTopics();
-  }, []);
+  const fetchTrendingTopics = async () => {
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
+    };
+    try {
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_API_URL}/post?limit=3&order=DESC&orderByKey=numberOfLikes`,
+      );
+
+      // Handle the response data and create a new formatted list
+      const formattedTopics = response.data.items.map((topic) => ({
+        title: topic.title,
+        numOfReplies: topic.numOfReplies,
+        userOpened: topic.user.username,
+        whenOpened: new Date(topic.createdAt).toLocaleDateString(
+          "en-US",
+          options,
+        ),
+        forumTags: topic.tags,
+        forumGame: topic.game.title,
+        id: topic.id,
+        userId: topic.user.id,
+      }));
+      console.log("Trending Topics: ", formattedTopics);
+
+      // Set the state with the formatted list
+      setTrendingTopics(formattedTopics);
+    } catch (error) {
+      console.error("Error fetching trending topics:", error);
+    }
+  };
   const handleButtonClickLogged = () => {
     navigate("/create-thread");
   };
@@ -133,6 +168,8 @@ const ForumsPage = () => {
     if (localStorage.getItem("accessToken")) {
       setUserLoggedIn(true);
     }
+    getLatestTopics();
+    fetchTrendingTopics();
   }, []);
 
   /*
@@ -163,7 +200,7 @@ const ForumsPage = () => {
     },
     // Add more topics as needed...
   ];
-*/
+
   const trendTopics = [
     {
       title: "OMG! New Character for Dota",
@@ -196,7 +233,7 @@ const ForumsPage = () => {
         "https://assets-prd.ignimgs.com/2022/04/15/zuko-alone-1650039877625.jpg",
     },
     // Add more topics as needed...
-  ];
+  ]; */
   return (
     <div
       style={{
@@ -407,7 +444,7 @@ const ForumsPage = () => {
           <div
             style={{ gap: "16px", display: "flex", flexDirection: "column" }}
           >
-            {trendTopics.map((topic, index) => (
+            {trendingTopics.map((topic, index) => (
               <ForumTopic key={index} topic={topic} />
             ))}
           </div>
