@@ -38,7 +38,11 @@ const Header = ({ userLoggedIn }) => {
         }}
       >
         <a href="/">
-          <img src={logo} alt="Logo" style={{ width: "100px", height: "auto" }} />
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ width: "100px", height: "auto" }}
+          />
         </a>
         <div
           style={{
@@ -74,7 +78,8 @@ const Header = ({ userLoggedIn }) => {
                   marginLeft: "160px", // Adjust the left margin as needed
                 }}
               >
-                <a href="/profile-page/#favGamesSection"
+                <a
+                  href="/profile-page/#favGamesSection"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div>
@@ -95,8 +100,8 @@ const Header = ({ userLoggedIn }) => {
                     </p>
                   </div>
                 </a>
-                <Link
-                  to="/myGroups"
+                <a
+                  href="/profile-page/#myGroupsSection"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div style={{ marginLeft: "50px" }}>
@@ -119,7 +124,7 @@ const Header = ({ userLoggedIn }) => {
                       My Groups
                     </p>
                   </div>
-                </Link>
+                </a>
               </div>
             </>
           ) : (
