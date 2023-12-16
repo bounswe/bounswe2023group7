@@ -1,12 +1,15 @@
 import React from "react";
 import CreateGameForm from "../components/CreateGameForum"; // Adjust the path based on your project structure
+import { useLocation } from "react-router-dom";
 
 const CreateGamePage = () => {
-  // You can add any additional state or logic specific to this page
+  const location = useLocation();
+  console.log(location);
+  const formData = location.state;
 
   return (
     <div>
-      <CreateGameForm />
+      <CreateGameForm formData={formData} />
     </div>
   );
 };
