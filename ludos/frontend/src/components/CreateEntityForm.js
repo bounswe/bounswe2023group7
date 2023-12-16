@@ -32,7 +32,8 @@ const CreateEntityForm = () => {
         { name: 'Description', value: '' },
         { name: 'Image Link', value: '' },
     ]);
-    const [defaultPropertyError, setDefaultPropertyError] = useState(false);
+    const [imageError, setImageError] = useState(false);
+    const [descriptionError, setDescriptionError] = useState(false);
 
 
     const types = ["Character", "Environement", "Item", "Package"];
@@ -72,16 +73,29 @@ const CreateEntityForm = () => {
         setAdditionalProperties(newProperties);
     };
 
-    const handleDefaultPropertyChange = (index, field, value) => {
+    const handleImageLinkChange = (index, field, value) => {
 
         if (value === "" || value === null) {
-            setDefaultPropertyError(true);
+            setImageError(true);
         }
 
         const newProperties = [...defaultProperties];
         newProperties[index][field] = value;
         setDefaultProperties(newProperties);
-        setDefaultPropertyError(false);
+        setImageError(false);
+    };
+
+    const handleDescriptionChange = (index, field, value) => {
+
+        if (value === "" || value === null) {
+            setDescriptionError(true);
+        }
+
+        const newProperties = [...defaultProperties];
+        newProperties[index][field] = value;
+        setDefaultProperties(newProperties);
+        console.log(defaultProperties);
+        setDescriptionError(false);
     };
 
     const formatContentForSubmission = () => {
@@ -114,9 +128,17 @@ const CreateEntityForm = () => {
             return;
         }
 
-        if (defaultProperties[0].value === "" || defaultProperties[1].value === "") {
-            setDefaultPropertyError(true);
-            setSnackbarMessage("Default properties cannot be empty!");
+        if (defaultProperties[0].value === "" || defaultProperties[0].value === null) {
+            setDescriptionError(true);
+            setSnackbarMessage("Description cannot be empty!");
+            setServerError(true);
+            setSnackbar(true);
+            return;
+        }
+
+        if (defaultProperties[1].value === "" || defaultProperties[1].value === null) {
+            setImageError(true);
+            setSnackbarMessage("Image Link cannot be empty!");
             setServerError(true);
             setSnackbar(true);
             return;
@@ -207,11 +229,13 @@ const CreateEntityForm = () => {
                             <TextField
                                 fullWidth
                                 required
+                                multiline
+                                minRows={4}
                                 label="Description"
                                 value={defaultProperties[0].value}
-                                onChange={(e) => handleDefaultPropertyChange(0, 'value', e.target.value)}
-                                error={defaultPropertyError}
-                                helperText={defaultPropertyError ? "Description cannot be empty." : ""}
+                                onChange={(e) => handleDescriptionChange(0, 'value', e.target.value)}
+                                error={descriptionError}
+                                helperText={descriptionError ? "Description cannot be empty." : ""}
                             />
                         </Grid>
                     </Grid>
@@ -225,9 +249,9 @@ const CreateEntityForm = () => {
                                 required
                                 label="Image Link"
                                 value={defaultProperties[1].value}
-                                onChange={(e) => handleDefaultPropertyChange(1, 'value', e.target.value)}
-                                error={defaultPropertyError}
-                                helperText={defaultPropertyError ? "Image link cannot be empty." : ""}
+                                onChange={(e) => handleImageLinkChange(1, 'value', e.target.value)}
+                                error={imageError}
+                                helperText={imageError ? "Image link cannot be empty." : ""}
                             />
                         </Grid>
                     </Grid>
