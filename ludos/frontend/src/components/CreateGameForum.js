@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Chip from "@mui/material/Chip";
@@ -15,7 +15,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const CreateGameForm = () => {
+const CreateGameForm = (formComp) => {
   const convertToSlug = (text) => {
     return text
       .toString()
@@ -102,13 +102,83 @@ const CreateGameForm = () => {
     "macOS",
     "Linux",
     "PlayStation",
+    "PlayStation 2",
+    "PlayStation 3",
+    "PlayStation 4",
+    "PlayStation 5",
     "Xbox",
+    "Xbox 360",
+    "Xbox One",
+    "Xbox Series X",
+    "Xbox Series S",
     "Nintendo Switch",
+    "Nintendo Entertainment System (NES)",
+    "Super Nintendo Entertainment System (SNES)",
+    "Nintendo 64",
+    "GameCube",
+    "Wii",
+    "Wii U",
+    "Game Boy",
+    "Game Boy Color",
+    "Game Boy Advance",
+    "Nintendo DS",
+    "Nintendo 3DS",
+    "Sega Master System",
+    "Sega Genesis",
+    "Sega Saturn",
+    "Sega Dreamcast",
+    "Atari 2600",
+    "Atari 5200",
+    "Atari 7800",
+    "Atari Lynx",
+    "Neo Geo",
+    "TurboGrafx-16",
+    "Intellivision",
+    "ColecoVision",
+    "Magnavox Odyssey",
+    "Commodore 64",
+    "Amiga",
+    "ZX Spectrum",
+    "MSX",
+    "Oculus Rift",
+    "HTC Vive",
+    "PlayStation VR",
+    "Oculus Quest",
+    "Google Stadia",
+    "Amazon Luna",
+    "Steam Deck",
+    "Apple Arcade",
+    "Game & Watch",
+    "Pokémon Mini",
+    "Commodore VIC-20",
+    "Atari Jaguar",
+    "3DO Interactive Multiplayer",
+    "Philips CD-i",
+    "WonderSwan",
+    "WonderSwan Color",
+    "Tapwave Zodiac",
+    "N-Gage",
+    "GP32",
+    "ZX81",
+    "Amstrad CPC",
+    "TRS-80",
+    "Sharp X68000",
+    "Fairchild Channel F",
+    "Bally Astrocade",
+    "Vectrex",
     "Board Game",
-    "VR",
+    "Card Game",
+    // Add more platforms as needed
   ];
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
+
+  useEffect(() => {
+    if (formComp.formData !== null) {
+      setFormData(formComp.formData);
+      setIsTagSelected(formComp.formData.tags.length > 0);
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -188,40 +258,75 @@ const CreateGameForm = () => {
       return; // Prevent form submission
     }
 
-    // Replace 'your-api-endpoint' with the actual endpoint
-    const apiUrl = `http://${process.env.REACT_APP_API_URL}/game`;
+    if (formComp.formData !== null) {
+      const apiUrl = `http://${process.env.REACT_APP_API_URL}/game/${formComp.formData.id}/edit`;
 
-    axios
-      .post(apiUrl, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        // Game created successfully
-        toast.success("Kudos to you! Game is created", {
-          position: "top-right",
-          autoClose: 3000, // 3 seconds
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
+      axios
+        .put(apiUrl, formData, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        })
+        .then((response) => {
+          // Game created successfully
+          toast.success("Kudos to you! Game is edited", {
+            position: "top-right",
+            autoClose: 3000, // 3 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+          console.log("Game edited successfully:", response.data);
+          navigate(`/game/${convertToSlug(formData.title)}`);
+        })
+        .catch((error) => {
+          // Error creating game
+          toast.error("Game creation failed", {
+            position: "top-right",
+            autoClose: 3000, // 3 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+          console.error("Error creating game:", error);
         });
-        console.log("Game created successfully:", response.data);
-        navigate(`/game/${convertToSlug(formData.title)}`);
-      })
-      .catch((error) => {
-        // Error creating game
-        toast.error("Game creation failed", {
-          position: "top-right",
-          autoClose: 3000, // 3 seconds
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
+    } else {
+      const apiUrl = `http://${process.env.REACT_APP_API_URL}/game`;
+
+      axios
+        .post(apiUrl, formData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          // Game created successfully
+          toast.success("Kudos to you! Game is created", {
+            position: "top-right",
+            autoClose: 3000, // 3 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+          console.log("Game created successfully:", response.data);
+          navigate(`/game/${convertToSlug(formData.title)}`);
+        })
+        .catch((error) => {
+          // Error creating game
+          toast.error("Game creation failed", {
+            position: "top-right",
+            autoClose: 3000, // 3 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+          console.error("Error creating game:", error);
         });
-        console.error("Error creating game:", error);
-      });
+    }
   };
 
   const renderStepForm = () => {
@@ -615,7 +720,7 @@ const CreateGameForm = () => {
                   </Button>
                 ) : (
                   <Button type="submit" variant="contained" color="primary">
-                    Create Game
+                    {formComp.formData ? "Edit Game" : "Create Game"}
                   </Button>
                 )}
               </Grid>

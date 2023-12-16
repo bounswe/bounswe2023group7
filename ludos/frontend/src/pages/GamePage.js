@@ -19,8 +19,10 @@ import DescriptionTab from "../components/DescriptionTab.js";
 import RelatedGames from "../components/RelatedGamesTab.js";
 import EntityTab from "../components/EntityTab.js";
 import GameForum from "../components/GameForums.js";
+import { useNavigate } from "react-router-dom";
 
 function GamePage(id) {
+  const navigate = useNavigate();
   const [auth, setAuth] = useState(false);
   const [game, setGame] = useState(false);
   const [follow, setFollow] = useState(false);
@@ -133,6 +135,15 @@ function GamePage(id) {
     color: "rgb(255, 255, 255)",
     height: "20px",
     width: "8%",
+    textTransform: "none",
+    fontFamily: "Trebuchet MS, sans-serif",
+  };
+  const editGame = {
+    backgroundColor: "rgb(125, 165, 0)",
+    color: "rgb(255, 255, 255)",
+    height: "20px",
+    width: "100%",
+    marginLeft: "0%",
     textTransform: "none",
     fontFamily: "Trebuchet MS, sans-serif",
   };
@@ -300,6 +311,16 @@ function GamePage(id) {
         console.log(error);
       });
   };
+
+  const handleEditGameClick = () => {
+    if (auth) {
+      // If the user is logged in, redirect to the create game page
+      navigate("/create-game", { state: game });
+    } else {
+      // If the user is not logged in, redirect to the login page
+      navigate("/signup");
+    }
+  };
   return (
     <Container
       style={{ backgroundColor: "rgb(0, 150, 255)", maxWidth: "1200px" }}
@@ -316,7 +337,33 @@ function GamePage(id) {
             {game.title}
           </Typography>
         </Box>
-        <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          style={{
+            flexDirection: "row",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Grid
+            style={{
+              display: "flex",
+              justifyContent: "left",
+              marginLeft: "3.5%",
+            }}
+          >
+            <Button
+              variant="contained"
+              style={editGame}
+              onClick={handleEditGameClick}
+            >
+              Edit Game
+            </Button>
+          </Grid>
           <Grid
             style={{
               display: "flex",
