@@ -16,6 +16,9 @@ import steamLogo from "../assets/steam.png";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import Gamer from "../assets/gamer.png";
+import Developer from "../assets/developer.png";
+import EsportPlayer from "../assets/esportplayer.png";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -47,6 +50,8 @@ function ProfilePage() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbar, setSnackbar] = useState(false);
   const [myProfile, setMyProfile] = useState(false);
+  const [userType, setUserType] = useState(null);
+  const [groups, setGroups] = useState([]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -127,6 +132,8 @@ function ProfilePage() {
             setMyProfile(true);
             setProfile(response.data);
             setAvatarImage(response.data.avatar);
+            setUserType(response.data.userType);
+            setGroups(response.data.groups);
             setFormData({
               fullName: response.data.fullName,
               steamUrl: response.data.steamUrl,
@@ -151,6 +158,8 @@ function ProfilePage() {
               })
               .then((response1) => {
                 setProfile(response1.data);
+                setUserType(response1.data.userType);
+                setGroups(response.data.groups);
                 setAvatarImage(response1.data.avatar);
                 setFormData({
                   fullName: response1.data.fullName,
@@ -325,6 +334,20 @@ function ProfilePage() {
     borderRadius: "50%",
   };
 
+  const getImageForUserType = (userType) => {
+    switch (userType) {
+      case "gamer":
+        return Gamer;
+      case "developer":
+        return Developer;
+      case "esport player":
+        return EsportPlayer;
+      default:
+        return null; // Or a default image if userType doesn't match any specific type
+    }
+  };
+
+  const userTypeImage = getImageForUserType(userType);
   return (
     <>
       {auth && myProfile ? (
@@ -638,8 +661,19 @@ function ProfilePage() {
                     color: "rgb(0, 150, 255)",
                   }}
                 >
-                  Favorite Genres:
+                  User Type:
                 </Typography>
+                {userTypeImage && (
+                  <img
+                    src={userTypeImage}
+                    alt={userType}
+                    style={{
+                      width: "100px",
+                      marginBottom: "10px",
+                      marginTop: "10px",
+                    }}
+                  />
+                )}
                 <Typography
                   variant="caption"
                   component="legend"
@@ -648,37 +682,7 @@ function ProfilePage() {
                     color: "rgb(0, 150, 255)",
                   }}
                 >
-                  Action
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  Hack-and-Slash
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  Sports
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  FPS
+                  {userType}
                 </Typography>
               </Grid>
             </Grid>
@@ -692,7 +696,7 @@ function ProfilePage() {
                   fontFamily: "Trebuchet MS, sans-serif",
                 }}
               >
-                Favorite Games of the User
+                My Games
               </Typography>
             </Grid>
             {favGames.map((game, index1) => (
@@ -733,6 +737,28 @@ function ProfilePage() {
                 </Typography>
               </Grid>
             ))}
+          </Grid>
+          <Grid container spacing={1} style={gameBoxStyle}>
+            <Grid
+              id="myGroupsSection"
+              item
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              style={{ marginBottom: "25px" }}
+            >
+              <Typography
+                style={{
+                  fontSize: "25px",
+                  color: "white",
+                  fontFamily: "Trebuchet MS, sans-serif",
+                }}
+              >
+                My Groups
+              </Typography>
+            </Grid>
+            {/** Groups will be displayed with group topics */}
           </Grid>
         </Container>
       ) : (
@@ -922,8 +948,19 @@ function ProfilePage() {
                     color: "rgb(0, 150, 255)",
                   }}
                 >
-                  Favorite Genres:
+                  User Type:
                 </Typography>
+                {userTypeImage && (
+                  <img
+                    src={userTypeImage}
+                    alt={userType}
+                    style={{
+                      width: "100px",
+                      marginBottom: "10px",
+                      marginTop: "10px",
+                    }}
+                  />
+                )}
                 <Typography
                   variant="caption"
                   component="legend"
@@ -932,37 +969,7 @@ function ProfilePage() {
                     color: "rgb(0, 150, 255)",
                   }}
                 >
-                  Action
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  Hack-and-Slash
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  Sports
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  FPS
+                  {userType}
                 </Typography>
               </Grid>
             </Grid>
@@ -1014,6 +1021,28 @@ function ProfilePage() {
                 </Typography>
               </Grid>
             ))}
+          </Grid>
+          <Grid container spacing={1} style={gameBoxStyle}>
+            <Grid
+              id="myGroupsSection"
+              item
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              style={{ marginBottom: "25px" }}
+            >
+              <Typography
+                style={{
+                  fontSize: "25px",
+                  color: "white",
+                  fontFamily: "Trebuchet MS, sans-serif",
+                }}
+              >
+                Groups of the User
+              </Typography>
+            </Grid>
+            {/** Groups will be displayed with group topics */}
           </Grid>
         </Container>
       )}

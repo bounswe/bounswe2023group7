@@ -31,16 +31,18 @@ function ForumTopic(data) {
     color: "white",
     height: "6px",
     borderRadius: "10px",
-    padding: "5px",
+    padding: "10px",
     marginRight: "5px",
+    lineHeight: "1",
   };
   const forumStyle = {
     backgroundColor: "rgb(200, 10, 10)",
     color: "white",
     borderRadius: "10px",
-    padding: "2px",
+    padding: "3px",
     marginBottom: "8px",
     fontWeight: "bold",
+    lineHeight: "1",
   };
 
   /*
@@ -108,7 +110,7 @@ function ForumTopic(data) {
         }}
       >
         <Box
-          onClick={() => handleClick(data.topic.userid)}
+          onClick={() => handleClick(data.topic.userId)}
           style={{ cursor: "pointer" }}
           component="img"
           sx={{
@@ -228,14 +230,19 @@ function ForumTopic(data) {
               marginRight: "20px",
             }}
           >
-            <Person2Icon />
+            <Person2Icon
+              onClick={() => handleClick(data.topic.userId)}
+              style={{ cursor: "pointer" }}
+            />
             <Typography
+              onClick={() => handleClick(data.topic.userId)}
               variant="caption"
               component="div"
               style={{
                 color: "white",
                 marginTop: "3px",
                 marginRight: "5px",
+                cursor: "pointer",
               }}
             >
               @{data.topic.userOpened}
