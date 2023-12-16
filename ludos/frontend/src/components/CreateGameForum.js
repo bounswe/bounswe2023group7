@@ -552,7 +552,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="CPU"
                   name="systemRequirements-minimum-CPU"
-                  value={formData.systemRequirements.minimum.CPU}
+                  value={formData.systemRequirements?.minimum?.CPU}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -560,7 +560,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="RAM"
                   name="systemRequirements-minimum-RAM"
-                  value={formData.systemRequirements.minimum.RAM}
+                  value={formData.systemRequirements?.minimum?.RAM}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -568,7 +568,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="GPU"
                   name="systemRequirements-minimum-GPU"
-                  value={formData.systemRequirements.minimum.GPU}
+                  value={formData.systemRequirements?.minimum?.GPU}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -576,7 +576,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="Operating System"
                   name="systemRequirements-minimum-OS"
-                  value={formData.systemRequirements.minimum.OS}
+                  value={formData.systemRequirements?.minimum?.OS}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -584,7 +584,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="DirectX"
                   name="systemRequirements-minimum-DirectX"
-                  value={formData.systemRequirements.minimum.DirectX}
+                  value={formData.systemRequirements?.minimum?.DirectX}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -592,7 +592,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="Storage"
                   name="systemRequirements-minimum-Storage"
-                  value={formData.systemRequirements.minimum.Storage}
+                  value={formData.systemRequirements?.minimum?.Storage}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -600,7 +600,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="Network"
                   name="systemRequirements-minimum-Network"
-                  value={formData.systemRequirements.minimum.Network}
+                  value={formData.systemRequirements?.minimum?.Network}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -613,7 +613,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="CPU"
                   name="systemRequirements-recommended-CPU"
-                  value={formData.systemRequirements.recommended.CPU}
+                  value={formData.systemRequirements?.recommended?.CPU}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -621,7 +621,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="RAM"
                   name="systemRequirements-recommended-RAM"
-                  value={formData.systemRequirements.recommended.RAM}
+                  value={formData.systemRequirements?.recommended?.RAM}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -629,7 +629,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="GPU"
                   name="systemRequirements-recommended-GPU"
-                  value={formData.systemRequirements.recommended.GPU}
+                  value={formData.systemRequirements?.recommended?.GPU}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -637,7 +637,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="Operating System"
                   name="systemRequirements-recommended-OS"
-                  value={formData.systemRequirements.recommended.OS}
+                  value={formData.systemRequirements?.recommended?.OS}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -645,7 +645,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="DirectX"
                   name="systemRequirements-recommended-DirectX"
-                  value={formData.systemRequirements.recommended.DirectX}
+                  value={formData.systemRequirements?.recommended?.DirectX}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -653,7 +653,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="Storage"
                   name="systemRequirements-recommended-Storage"
-                  value={formData.systemRequirements.recommended.Storage}
+                  value={formData.systemRequirements?.recommended?.Storage}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
@@ -661,7 +661,7 @@ const CreateGameForm = (formComp) => {
                 <TextField
                   label="Network"
                   name="systemRequirements-recommended-Network"
-                  value={formData.systemRequirements.recommended.Network}
+                  value={formData.systemRequirements?.recommended?.Network}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
