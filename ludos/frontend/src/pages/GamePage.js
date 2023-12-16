@@ -632,10 +632,11 @@ function GamePage(id) {
                 </Typography>
               </TabPanel>
               <TabPanel value="3">
-                <Typography style={{ fontSize: "15px", color: "white" }}>
+                <Typography style={{ fontSize: "15px", color: "white", display: 'flex', justifyContent: 'center' }}>
                   <RelatedGames
                     predecessors={game.predecessors}
                     successors={game.successors}
+                    gameId={game.id}
                   />
                 </Typography>
               </TabPanel>
