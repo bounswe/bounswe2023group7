@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TrendingGamesSlider from "../components/TrendingGamesSlider";
 import Game1 from "../assets/witcher3.jpg";
 import Game2 from "../assets/sims4.png";
@@ -6,8 +6,26 @@ import Game3 from "../assets/Tekken5Cover.jpg";
 import { Typography, Container } from "@mui/material";
 import ForumTopic from "../components/ForumTopic";
 import GroupTopic from "../components/GroupTopic";
+import axios from "axios";
 
 const Homepage = () => {
+  const [groups, setGroups] = useState([]);
+  useEffect(() => {
+    const link = `http://${process.env.REACT_APP_API_URL}/group?limit=3&page=1&order=DESC&orderByKey=maxNumberOfMembers`;
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data.items);
+        setGroups(response.data.items);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   const trendTopics = [
     {
       title: "OMG! New Character for Dota",
@@ -166,7 +184,7 @@ const Homepage = () => {
             <div
               style={{ gap: "16px", display: "flex", flexDirection: "column" }}
             >
-              {groupTopics.map((topic, index) => (
+              {groups.map((topic, index) => (
                 <GroupTopic key={index} topic={topic} />
               ))}
             </div>
