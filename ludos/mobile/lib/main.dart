@@ -34,7 +34,7 @@ class _HomeState extends State<Home> {
 
 
   Future<List<HomeGameSum>> fetchGameData(UserProvider userProvider, String? token) async {
-    final response = await APIService().listGames(token, limit: "6");
+    final response = await APIService().listGames(token, limit: 6);
     try {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);

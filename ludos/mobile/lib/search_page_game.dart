@@ -11,11 +11,27 @@ import 'create_game.dart';
 import 'reusable_widgets/custom_navigation_bar.dart';
 
 class SearchPageGame extends StatefulWidget {
+  final int page;
+  final bool isFollowed;
+  final String? criteria;
   final String? searchKey;
+  final String? order;
+  final String? tags;
   final String? token;
+  final String? platforms;
   final UserProvider userProvider;
 
-  const SearchPageGame({Key? key, required this.token, required this.searchKey, required this.userProvider})
+  const SearchPageGame({
+    Key? key,
+    required this.page,
+    required this.isFollowed,
+    required this.token,
+    this.order,
+    this.criteria,
+    this.searchKey,
+    this.tags,
+    this.platforms,
+    required this.userProvider})
       : super(key: key);
 
   @override
@@ -43,13 +59,22 @@ class _SearchPageGameState extends State<SearchPageGame> {
 
   Future<List<GameSummary>> fetchData(String? token) async {
     //final response = await APIService().listSearchedGames(widget.userProvider.token, widget.searchKey);
-    final response = await APIService().search(widget.userProvider.token, widget.searchKey!);
+    //final response = await APIService().search(widget.userProvider.token, widget.searchKey!);
+    final response = await APIService().listGames(
+        widget.userProvider.token,
+        page: widget.page,
+        searchKey: widget.searchKey ?? '',
+        platforms: widget.platforms ?? '',
+        isFollowed: widget.isFollowed,
+        orderByKey: widget.criteria ?? '',
+        tags: widget.tags ?? '');
     try {
       //print(json.decode(response.body));
       if (response.statusCode == 200) {
+        print("Success: ${response.statusCode} - ${response.body}");
         final Map<String, dynamic> responseData = json.decode(response.body);
 
-        List<dynamic> gamesList = responseData['games'];
+        List<dynamic> gamesList = responseData['items'];
         setState(() {
           size = gamesList.length;
         });

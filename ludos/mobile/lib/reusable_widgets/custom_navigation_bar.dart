@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
 import 'package:ludos_mobile_app/user_profile_page.dart';
@@ -13,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../helper/colors.dart';
 import '../search_page.dart';
 import '../main.dart';
+import '../search_landing_page.dart';
 
 class CustomNavigationBar extends StatelessWidget {
   final UserProvider userProvider;
@@ -48,7 +48,11 @@ class CustomNavigationBar extends StatelessWidget {
                 icon: const Icon(Icons.games)),
             IconButton(
                 color: MyColors.white,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SearchLandingPage(userProvider: userProvider),
+                  ));
+                },
                 icon: const Icon(Icons.favorite)),
             IconButton(
                 color: MyColors.white,
