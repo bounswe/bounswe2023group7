@@ -30,7 +30,6 @@ function GroupTopic(data) {
           console.log(error);
         });
     } else {
-      console.log(data.topic);
       const followLink = `http://${process.env.REACT_APP_API_URL}/group/join/${data.topic.id}`;
       axios
         .put(
@@ -109,8 +108,6 @@ function GroupTopic(data) {
       .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
       .replace(/--+/g, "-"); // Replace multiple dashes with single dash
   };
-
-  useEffect(() => {}, []);
 
   return (
     <Grid

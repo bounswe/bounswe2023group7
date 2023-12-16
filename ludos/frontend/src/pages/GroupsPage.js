@@ -35,7 +35,6 @@ const ForumsPage = () => {
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
-    console.log("geldim işte dostum");
     if (localStorage.getItem("accessToken")) {
       const link1 = `http://${process.env.REACT_APP_API_URL}/user/info`;
       axios
