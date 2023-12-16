@@ -63,12 +63,14 @@ class _SearchPageGameState extends State<SearchPageGame> {
     final response = await APIService().listGames(
         widget.userProvider.token,
         page: widget.page,
+        order: widget.order ?? '',
         searchKey: widget.searchKey ?? '',
         platforms: widget.platforms ?? '',
         isFollowed: widget.isFollowed,
         orderByKey: widget.criteria ?? '',
         tags: widget.tags ?? '');
     try {
+      print("criteria: ${widget.criteria}");
       //print(json.decode(response.body));
       if (response.statusCode == 200) {
         print("Success: ${response.statusCode} - ${response.body}");

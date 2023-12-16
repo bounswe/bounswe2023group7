@@ -177,6 +177,9 @@ class APIService {
       'orderByKey': orderByKey,
     };
 
+    print("orderby: $orderByKey");
+    print("order: $order");
+
     // Add optional parameters if provided
     if (searchKey != null) queryParams['searchKey'] = searchKey;
     if (tags != null) queryParams['tags'] = tags;

@@ -310,6 +310,7 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             }
                             orderByFollowers = orderByRatings ? orderByFollowers : value!;
+                            updateCriteria();
                             //searchGameKey = UniqueKey();
                           });
                         },
@@ -349,6 +350,7 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             }
                             orderByRatings = orderByFollowers ? orderByRatings : value!;
+                            updateCriteria();
                             //searchGameKey = UniqueKey();
                           });
                         },
@@ -451,6 +453,7 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                               ),
                             ],
                           ),
+
                           SearchPageGame(
                             key: searchGameKey,
                             searchKey: searchText,
