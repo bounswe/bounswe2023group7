@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/user_profile_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_thread.dart';
 import 'package:ludos_mobile_app/reusable_widgets/home_game_sum.dart';
@@ -126,7 +127,8 @@ class _HomeState extends State<Home> {
           color: MyColors.darkBlue,
           child: ListView(
             children: <Widget>[
-              UserAccountsDrawerHeader(
+              if(userProvider.isLoggedIn)
+                UserAccountsDrawerHeader(
                 accountName: Text(
                   userProvider.username,
                   style:
@@ -182,6 +184,34 @@ class _HomeState extends State<Home> {
                   color: MyColors.blue, // Header background color
                 ),
               ),
+              if(!userProvider.isLoggedIn)
+                UserAccountsDrawerHeader(
+                  accountName: Text(
+                  userProvider.username,
+                    style:
+                const TextStyle(color: MyColors.darkBlue), // Text color
+                ),
+                accountEmail: null,
+                currentAccountPicture: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                elevation: 15.0,
+                backgroundColor: MyColors.white,
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(0.0),
+              ),
+                child: const CircleAvatar(
+                backgroundColor: MyColors.white,
+                    child: Icon(Icons.person),
+                ),
+            onPressed: () {
+          Navigator.pop(context);
+          CustomWidgets.needLoginSnackbar(context, "Please log in to visit the profile page! ");
+    },
+      ),
+                    decoration: const BoxDecoration(
+                    color: MyColors.blue,
+                  ),
+                ),
               if (userProvider.isLoggedIn)
                 ListTile(
                   title: const Text(
