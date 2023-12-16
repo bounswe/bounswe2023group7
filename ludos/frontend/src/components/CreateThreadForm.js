@@ -165,7 +165,7 @@ const CreateThreadPage = () => {
       .catch((error) => {
         setSnackbarMessage(
           "An error occurred while creating the thread!: " +
-            error.response.data.message,
+          error.response.data.message,
         );
         setServerError(true);
         console.log(error);
