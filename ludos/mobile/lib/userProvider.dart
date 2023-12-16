@@ -15,4 +15,5 @@ class UserProvider extends ChangeNotifier {
     _token = token;
     notifyListeners();
   }
+
 }

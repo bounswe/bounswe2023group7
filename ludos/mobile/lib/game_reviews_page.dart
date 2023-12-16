@@ -64,7 +64,23 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+     return SelectionArea(contextMenuBuilder:(context, editableTextState) {
+      final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
+      buttonItems.insert(
+        0,
+        ContextMenuButtonItem(
+          label: 'Annotate',
+          onPressed: () {
+            // Annotation code    
+          },
+        ),
+      );
+      return AdaptiveTextSelectionToolbar.buttonItems(
+        anchors: editableTextState.contextMenuAnchors,
+        buttonItems: buttonItems,
+      );
+    },
+      child: Scaffold(
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
@@ -104,7 +120,8 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
       ),
       bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
-    );
+    )
+     );
   }
 }
 

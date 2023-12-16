@@ -263,4 +263,13 @@ export class GameController {
     );
     return HttpStatus.OK;
   }
+
+  
+  @ApiOperation({ summary: 'Get Related Games Endpoint' })
+  @ApiNotFoundResponse({ description: 'Game is not found!' })
+  @Get(':gameId/related')
+  public async getRelatedGames(@Param('gameId') gameId: string) {
+    const relatedGames = await this.gameService.getRelatedGames(gameId);
+    return relatedGames;
+  }
 }

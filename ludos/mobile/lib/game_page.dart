@@ -7,21 +7,15 @@ import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/create_entity.dart';
 import 'package:ludos_mobile_app/edit_game.dart';
 import 'package:ludos_mobile_app/entities_page.dart';
-import 'package:ludos_mobile_app/helper/EntityContent.dart';
-import 'package:ludos_mobile_app/reusable_widgets/entity_summary.dart';
 import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
-import 'package:provider/provider.dart';
 import 'forum_page.dart';
 import 'game_properties.dart';
-import 'games_page.dart';
 import 'game_reviews_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
-import 'login_page.dart';
-import 'main.dart';
 import 'reusable_widgets/custom_navigation_bar.dart';
 
 class GamePage extends StatefulWidget {
@@ -150,7 +144,23 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SelectionArea(contextMenuBuilder:(context, editableTextState) {
+      final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
+      buttonItems.insert(
+        0,
+        ContextMenuButtonItem(
+          label: 'Annotate',
+          onPressed: () {
+            // Annotation code    
+          },
+        ),
+      );
+      return AdaptiveTextSelectionToolbar.buttonItems(
+        anchors: editableTextState.contextMenuAnchors,
+        buttonItems: buttonItems,
+      );
+    },
+      child: Scaffold(
       endDrawer: Drawer(
         child: Container(
           color: MyColors.darkBlue, // Drawer background color
@@ -331,7 +341,9 @@ class _GamePageState extends State<GamePage> {
                     Icons.star,
                     color: MyColors.orange,
                   ),
-                  onRatingUpdate: (rating) {},
+                  onRatingUpdate: (rating) async {
+                    await APIService().createRate(widget.token, widget.id, rating);
+                  },
                 ),
               ],
             ),
@@ -656,6 +668,7 @@ class _GamePageState extends State<GamePage> {
         ),
       ),
       bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
-    );
+    )
+);
   }
 }

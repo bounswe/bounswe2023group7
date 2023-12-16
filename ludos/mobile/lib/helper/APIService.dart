@@ -345,6 +345,16 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> search(String? authToken, String searchKey) async {
+    var uri = Uri.parse("$baseURL/search/$searchKey");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+
 
   Future<http.Response> editGame(
       String? authToken,
