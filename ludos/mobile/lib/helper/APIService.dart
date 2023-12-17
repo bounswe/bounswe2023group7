@@ -612,5 +612,12 @@ class APIService {
     });
     return response;
   }
-
+  Future<http.Response> getGameRecforUser(String? authToken) async {
+    var uri = Uri.parse("$baseURL/user/suggested");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
 }
