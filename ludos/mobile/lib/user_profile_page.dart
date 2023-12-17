@@ -20,7 +20,7 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage> {
   final APIService apiService = APIService();
   late Map<String, dynamic> userData = {};
-  late Future<List<RecommendedGame>> recGameListforUser;
+  //late Future<List<RecommendedGame>> recGameListforUser;
 
   @override
 
@@ -45,8 +45,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
       print('Error loading user data: $e');
     }
   }
+  /*
   Future<List<RecommendedGame>> loadRecGamesforUser(UserProvider userProvider, String? token) async {
-    final response = await apiService.getGameRecforUser(userProvider.token);
+    final response = await apiService.getGameRecForUser(userProvider.token);
     try {
       if (response.statusCode == 200) {
         final  List<dynamic> gamesList = json.decode(response.body);
@@ -70,10 +71,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
       throw Exception('Failed to load games');
     }
   }
+   */
   @override
   Widget build(BuildContext context) {
-    var userProvider = Provider.of<UserProvider>(context);
-    recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
+    //var userProvider = Provider.of<UserProvider>(context);
+    //recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
     return Scaffold(
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
@@ -443,6 +445,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               }).toList(),
             ),
           ),
+          /*
           const SizedBox(height: 20),
           const Text(
             'Check These Games!',
@@ -478,7 +481,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 },
               ),
             ),
-          ),
+          ),*/
         ],
       ),
     ),
