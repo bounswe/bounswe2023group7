@@ -29,8 +29,8 @@ const CreateEntityForm = () => {
     { name: "", value: "" },
   ]);
   const [defaultProperties, setDefaultProperties] = useState([
-    { name: "Description", value: "" },
-    { name: "Image Link", value: "" },
+    { name: "description", value: "" },
+    { name: "image", value: "" },
   ]);
   const [imageError, setImageError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
