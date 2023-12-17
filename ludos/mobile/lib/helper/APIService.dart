@@ -561,4 +561,13 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> deleteReview(String id, String? authToken) async {
+    var uri = Uri.parse("$baseURL/review/$id");
+    final response = await http.delete(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
 }

@@ -9,7 +9,10 @@ import '../visit_user_page.dart';
 import '/helper/colors.dart';
 import 'package:intl/intl.dart';
 
+import 'custom_widgets.dart';
+
 class Review extends StatefulWidget {
+  final bool isBelongToUser;
   final String gameId;
   final double rating;
   final String content;
@@ -24,6 +27,7 @@ class Review extends StatefulWidget {
 
   Review({
     Key? key,
+    required this.isBelongToUser,
     required this.gameId,
     required this.rating,
     required this.content,
@@ -39,6 +43,7 @@ class Review extends StatefulWidget {
 
   @override
   State<Review> createState() => _ReviewState(
+    isBelongToUser: isBelongToUser,
     gameId: gameId,
     rating: rating,
     content: content,
@@ -54,6 +59,7 @@ class Review extends StatefulWidget {
 }
 
 class _ReviewState extends State<Review> {
+  final bool isBelongToUser;
   final String gameId;
   final double rating;
   final String content;
@@ -67,6 +73,7 @@ class _ReviewState extends State<Review> {
   final String reviewId;
 
   _ReviewState({
+    required this.isBelongToUser,
     required this.gameId,
     required this.rating,
     required this.content,
@@ -173,7 +180,7 @@ class _ReviewState extends State<Review> {
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                ElevatedButton(
+                  ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
                         MyColors.darkBlue),
@@ -189,10 +196,22 @@ class _ReviewState extends State<Review> {
                   builder: (context) => VisitUserPage(userProvider: userProvider, username: widget.username, id: widget.userId ),
                   )); },
                 ),
-                  Text(
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
                     timeAgo(time),
                     style: TextStyle(color: Colors.white),
                   ),
+                      if(isBelongToUser)
+                        IconButton(
+                          onPressed: () {
+                            CustomWidgets.deleteConfirmDialogReview(widget.userProvider, context, widget.gameId, widget.reviewId);
+                          },
+                          icon: const Icon(Icons.delete, color: MyColors.orange),
+                        ),
+                    ]
+                  )
                 ]
             ),
             Row(

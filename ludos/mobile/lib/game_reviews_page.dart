@@ -30,6 +30,7 @@ class _ReviewPageState extends State<ReviewPage> {
     try {
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
+        print(responseData);
         return Future.wait(responseData.map<Future<Review>>((dynamic item) async {
           final userResponse = await APIService().userInfoById(item['userId'], widget.token);
 
@@ -37,6 +38,7 @@ class _ReviewPageState extends State<ReviewPage> {
             return Review(
               token: widget.token,
               userProvider: widget.userProvider,
+              isBelongToUser: item['isBelongToUser'] ?? false,
               reviewId: item['reviewId'],
               content: item['content'],
               rating: item['rating'].toDouble(),
@@ -54,7 +56,7 @@ class _ReviewPageState extends State<ReviewPage> {
         }).toList());
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
-        throw Exception('Failed to load reviews!');
+        throw Exception('Failed to load reviews!!');
       }
     } catch (error) {
       print("Error: $error");

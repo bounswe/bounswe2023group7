@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/userProvider.dart';
 
 import '../forum_page.dart';
+import '../game_reviews_page.dart';
 import '../helper/APIService.dart';
 import '../helper/colors.dart';
 import '../login_page.dart';
@@ -160,17 +161,17 @@ class CustomWidgets{
         builder: (context) {
           return AlertDialog(
             backgroundColor: MyColors.darkBlue,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(
                   20.0,
                 ),
               ),
             ),
-            contentPadding: EdgeInsets.only(
+            contentPadding: const EdgeInsets.only(
               top: 10.0,
             ),
-            title: Text(
+            title: const Text(
               "Delete comment?",
               style: TextStyle(fontSize: 20.0, color: MyColors.white),
             ),
@@ -183,8 +184,8 @@ class CustomWidgets{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Text(
                         "Your comment will be deleted permanently.",
                         style: TextStyle(fontSize: 15, color: MyColors.white),
@@ -230,4 +231,82 @@ class CustomWidgets{
         });
   }
 
+  static deleteConfirmDialogReview(UserProvider userProvider, BuildContext context, String id, String reviewId){
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: MyColors.darkBlue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  20.0,
+                ),
+              ),
+            ),
+            contentPadding: EdgeInsets.only(
+              top: 10.0,
+            ),
+            title: Text(
+              "Delete review?",
+              style: TextStyle(fontSize: 20.0, color: MyColors.white),
+            ),
+            content: Container(
+              height: 120,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Your review will be deleted permanently.",
+                        style: TextStyle(fontSize: 15, color: MyColors.white),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 60,
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          http.Response token = await APIService().deleteReview(
+                            reviewId,
+                            userProvider.token,
+                          );
+                          if (token.statusCode == 200) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ReviewPage(
+                                    gameid: id,
+                                    token: userProvider.token,
+                                    userProvider: userProvider),
+                                ));
+                          } else {
+                            Navigator.of(context).pop();
+                            CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyColors.orange,
+                        ),
+                        child: const Text(
+                            "Delete",
+                            style: TextStyle(
+                                color: MyColors.white
+                            )
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
 }

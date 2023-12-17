@@ -109,6 +109,7 @@ class _GamePageState extends State<GamePage> {
             return Review(
               token: widget.token,
               userProvider: widget.userProvider,
+              isBelongToUser: item['isBelongToUser'] ?? false,
               reviewId: item['reviewId'],
               content: item['content'],
               rating: item['rating'].toDouble(),
