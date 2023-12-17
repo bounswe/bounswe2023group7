@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:ludos_mobile_app/reusable_widgets/rec_games.dart';
-import 'package:provider/provider.dart';
 import 'edit_profile_page.dart';
 import 'game_page.dart';
 import 'helper/APIService.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
+import 'main.dart';
 
 class UserProfilePage extends StatefulWidget {
   final UserProvider userProvider;
@@ -76,7 +75,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     //var userProvider = Provider.of<UserProvider>(context);
     //recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+      return false;
+    },
+    child: Scaffold(
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         title: Text('${widget.id}'),
@@ -485,7 +489,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         ],
       ),
     ),
-    );
+    ),);
   }
 }
 
