@@ -20,11 +20,11 @@ class ThreadSummary extends StatefulWidget {
   final String title;
   final String userId;
   final String username;
-   int thumbUps;
-   int thumbDowns;
+  final int thumbUps;
+  final int thumbDowns;
   final String time;
-  bool isLiked;
-  bool isDisliked;
+  final bool isLiked;
+  final bool isDisliked;
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
@@ -74,15 +74,15 @@ class ThreadSummary extends StatefulWidget {
 }
 
 class _ThreadSummaryState extends State<ThreadSummary> {
-  bool isLiked;
-  bool isDisliked;
+  final bool isLiked;
+  final bool isDisliked;
   final String game;
   final String gameId;
   final String title;
   final String userId;
   final String username;
-   int thumbUps;
-   int thumbDowns;
+  final int thumbUps;
+  final int thumbDowns;
   final String time;
   final Color textColor;
   final Color backgroundColor;
@@ -140,79 +140,6 @@ class _ThreadSummaryState extends State<ThreadSummary> {
       return 'Just now';
     }
   }
-
-  Future<void> userPressed(bool like) async {
-    if (like && isDisliked) {
-      try {
-        await APIService().likeThread(
-            widget.token, widget.threadId);
-      } catch (e) {
-        throw Exception('Failed to like thread');
-      }
-      isDisliked = false;
-      isLiked = true;
-      setState(() {
-        thumbUps = thumbUps! + 1;
-      });
-    } else if (!like && isDisliked) {
-      try {
-        await APIService().dislikeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to dislike thread');
-      }
-      isDisliked = false;
-      setState(() {
-      });
-    } else if (!like && isLiked) {
-      try {
-        await APIService().dislikeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to dislike thread');
-      }
-      isLiked = false;
-      isDisliked = true;
-
-      setState(() {
-        thumbUps = thumbUps! - 1;
-      });
-    } else if (like && isLiked) {
-      try {
-         await APIService().likeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to like thread');
-      }
-      isLiked = false;
-
-      setState(() {
-        thumbUps = thumbUps! - 1;
-      });
-    } else if (like) {
-      try {
-        await APIService().likeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to like thread');
-      }
-      isLiked = true;
-      setState(() {
-        thumbUps = thumbUps! + 1;
-      });
-    } else if(!like) {
-      try {
-          await APIService().dislikeThread(
-              widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to dislike thread');
-      }
-      isDisliked = true;
-      setState(() {
-      });
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +227,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    LikeDislikeButton(numberOfLikes: (thumbUps - thumbDowns), isLiked: isLiked, isDisliked: isDisliked, type: "thread", userProvider: userProvider, id: threadId, token: token),
+                    LikeDislikeButton(numberOfLikes: (thumbUps - thumbDowns), isLiked: isLiked, isDisliked: isDisliked, userProvider: userProvider, id: threadId, token: token),
                     Text(
                       timeAgo(time),
                       style: TextStyle(color: Colors.white),

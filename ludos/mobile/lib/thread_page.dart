@@ -310,7 +310,7 @@ class _ThreadPageState extends State<ThreadPage>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          LikeDislikeButton(userProvider: widget.userProvider, id: widget.threadId, token: widget.token, numberOfLikes: threadData['numberOfLikes'] - threadData['numberOfDislikes'], isLiked: threadData['isLiked'], isDisliked: threadData['isDisliked'], type: 'thread',),
+                          LikeDislikeButton(userProvider: widget.userProvider, id: widget.threadId, token: widget.token, numberOfLikes: threadData['numberOfLikes'] - threadData['numberOfDislikes'], isLiked: threadData['isLiked'], isDisliked: threadData['isDisliked']),
                           IconButton(
                               color: Colors.white,
                               onPressed: () {},

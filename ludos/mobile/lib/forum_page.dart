@@ -55,7 +55,7 @@ class _ForumPageState extends State<ForumPage> {
           userId: item['user']['id'],
           username: item['user']['username'],
           thumbUps: (item['numberOfLikes'] ?? 0),
-          thumbDowns: (item['NumberOfDislikes'] ?? 0),
+          thumbDowns: (item['numberOfDislikes'] ?? 0),
           time: item['createdAt'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),

@@ -122,7 +122,7 @@ class _GamePageState extends State<GamePage> {
               userId: item['userId'],
               username: json.decode(userResponse.body)['username'],
               thumbUps: item['likedUserCount'] ?? 0,
-              thumbDowns: item['dislikeUserCount'] ?? 0,
+              thumbDowns: item['dislikedUserCount'] ?? 0,
               time: item['createdAt'],
               isLiked: item['isLikedByUser'] ?? false,
               isDisliked: item['isDislikedByUser'] ?? false,

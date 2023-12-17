@@ -8,7 +8,6 @@ class LikeDislikeButton extends StatefulWidget{
   final UserProvider userProvider;
   final String id;
   final String? token;
-  final String type; // type will be thread, comment, review
   int numberOfLikes;
   bool isLiked;
   bool isDisliked;
@@ -18,7 +17,6 @@ class LikeDislikeButton extends StatefulWidget{
     required this.numberOfLikes,
     required this.isDisliked,
     required this.isLiked,
-    required this.type,
     required this.userProvider,
     required this.id,
     required this.token,
@@ -29,7 +27,6 @@ class LikeDislikeButton extends StatefulWidget{
       isLiked: isLiked,
       isDisliked: isDisliked,
       numberOfLikes: numberOfLikes,
-      type: type,
       userProvider: userProvider,
       id: id,
       token: token,
@@ -42,14 +39,12 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
   final UserProvider userProvider;
   final String id;
   final String? token;
-  final String type;
   int numberOfLikes;
 
   _LikeDislikeButtonState({
     required this.numberOfLikes,
     required this.isLiked,
     required this.isDisliked,
-    required this.type,
     required this.userProvider,
     required this.id,
     required this.token,

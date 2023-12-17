@@ -241,7 +241,7 @@ class APIService {
 
   Future<http.Response> likeReview(String? authToken, String reviewId) async {
     var uri = Uri.parse("$baseURL/review/$reviewId/like");
-    final response = await http.put(uri, headers: {
+    final response = await http.post(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
@@ -251,7 +251,7 @@ class APIService {
   Future<http.Response> dislikeReview(
       String? authToken, String reviewId) async {
     var uri = Uri.parse("$baseURL/review/$reviewId/dislike");
-    final response = await http.put(uri, headers: {
+    final response = await http.post(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
