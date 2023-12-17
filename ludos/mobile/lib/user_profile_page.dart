@@ -31,6 +31,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       setState(() {
         if(response.statusCode == 200){
           userData = json.decode(response.body);
+          print(userData);
         }
         else{
           userData = {};
