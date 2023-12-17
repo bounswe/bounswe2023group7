@@ -446,7 +446,7 @@ Future<void> _sendEmail(String emailAddress) async {
               ),
               margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: InkWell(
-                onTap: () => _sendEmail('ludos@gmail.com'),
+                onTap: () => _sendEmail('ludos.game.platform@gmail.com'),
                 child: const Padding(
                   padding: EdgeInsets.all(20),
                   child: Row(
@@ -468,7 +468,7 @@ Future<void> _sendEmail(String emailAddress) async {
                                 ),
                               ),
                               TextSpan(
-                                text: 'ludos@gmail.com',
+                                text: 'ludos.game.platform@gmail.com',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: MyColors.white,
