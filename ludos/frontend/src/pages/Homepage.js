@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import TrendingGamesSlider from "../components/TrendingGamesSlider";
 import Game1 from "../assets/witcher3.jpg";
 import Game2 from "../assets/sims4.png";
@@ -9,8 +9,10 @@ import GroupTopic from "../components/GroupTopic";
 import axios from "axios";
 
 const Homepage = () => {
+  const [trendingTopics, setTrendingTopics] = useState([]);
   const [groups, setGroups] = useState([]);
   useEffect(() => {
+    fetchTrendingTopics();
     const link = `http://${process.env.REACT_APP_API_URL}/group?limit=3&page=1&order=DESC&orderByKey=maxNumberOfMembers`;
     axios
       .get(link, {
@@ -26,6 +28,8 @@ const Homepage = () => {
         console.log(error);
       });
   }, []);
+
+  /*
   const trendTopics = [
     {
       title: "OMG! New Character for Dota",
@@ -59,7 +63,7 @@ const Homepage = () => {
     },
     // Add more topics as needed...
   ];
-
+*/
   const groupTopics = [
     {
       title: "GameZone Guild",
@@ -111,6 +115,51 @@ const Homepage = () => {
     // Add more game objects as needed
   ];
 
+  const axiosInstance = axios.create({
+    baseURL: `http://${process.env.REACT_APP_API_URL}`,
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  });
+
+  const fetchTrendingTopics = async () => {
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
+    };
+    try {
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_API_URL}/post?limit=3&order=DESC&orderByKey=numberOfLikes`,
+      );
+
+      // Handle the response data and create a new formatted list
+      const formattedTopics = response.data.items.map((topic) => ({
+        title: topic.title,
+        numOfReplies: topic.numOfReplies,
+        userOpened: topic.user.username,
+        whenOpened: new Date(topic.createdAt).toLocaleDateString(
+          "en-US",
+          options,
+        ),
+        forumTags: topic.tags,
+        forumGame: topic.game.title,
+        id: topic.id,
+        userId: topic.user.id,
+      }));
+      console.log("Trending Topics: ", formattedTopics);
+
+      // Set the state with the formatted list
+      setTrendingTopics(formattedTopics);
+    } catch (error) {
+      console.error("Error fetching trending topics:", error);
+    }
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
       {/* Other homepage content */}
@@ -153,7 +202,7 @@ const Homepage = () => {
           <div
             style={{ gap: "16px", display: "flex", flexDirection: "column" }}
           >
-            {trendTopics.map((topic, index) => (
+            {trendingTopics.map((topic, index) => (
               <ForumTopic key={index} topic={topic} />
             ))}
           </div>

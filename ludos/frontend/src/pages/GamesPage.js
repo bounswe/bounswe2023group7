@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import TrendingGamesSlider from "../components/TrendingGamesSlider";
-import SuggestedGame from "../components/SuggestedGame";
+import GameCard from "../components/GameCard";
 import TrendingGames from "../components/TrendingGames";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -10,7 +10,6 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Mock data for GameHighlight
 const gameHighlight = [
   {
     title: "Baldur's Gate 3",
@@ -31,45 +30,6 @@ const gameHighlight = [
       "https://cdn1.epicgames.com/offer/610a546d4e204215a0b9a1c8a382bacb/EGS_FootballManager2024_SportsInteractive_S2_1200x1600-d59e8b3545615cbc8a51d8acd316dd60",
     content:
       "Take on the role of a football manager in Football Manager 2024, where every decision you make shapes the destiny of your team. Immerse yourself in the world of football, filled with tactics, transfers, and morally complex choices as you strive for victory on the pitch.",
-  },
-];
-const suggestedGames = [
-  {
-    title: "Silent Hill 2",
-    image:
-      "https://cdn.akamai.steamstatic.com/steam/apps/2124490/capsule_616x353.jpg?t=1696910505",
-    description:
-      "Experience the horror classic that defined an entire genre for years to come.",
-    rating: 4.8,
-    tags: ["Horror", "Survival", "Classic"],
-  },
-  {
-    title: "Resident Evil 4",
-    image:
-      "https://miro.medium.com/v2/resize:fit:1358/1*-J7U0WH4t39Rkyn-TftbEw.jpeg",
-    description:
-      "Enter a world of survival horror in Resident Evil 4, where you must save the President's daughter from a sinister cult.",
-    rating: 4.7,
-    tags: ["Horror", "Survival", "Action"],
-  },
-
-  {
-    title: "The Legend of Zelda: Breath of the Wild",
-    image:
-      "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70010000000025/7137262b5a64d921e193653f8aa0b722925abc5680380ca0e18a5cfd91697f58",
-    description:
-      "Embark on an epic adventure in a vast open world in The Legend of Zelda: Breath of the Wild.",
-    rating: 4.9,
-    tags: ["Action", "Adventure", "Open World"],
-  },
-  {
-    title: "Red Dead Redemption 2",
-    image:
-      "https://image.api.playstation.com/vulcan/img/rnd/202011/1215/WyHa1BM3ISDVqYSEUMB9VZJs.png",
-    description:
-      "Experience the wild west in this critically acclaimed open-world action-adventure game.",
-    rating: 4.8,
-    tags: ["Action", "Adventure", "Open World"],
   },
 ];
 
@@ -135,12 +95,14 @@ const convertToSlug = (text) => {
     .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
     .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
     .replace(/--+/g, "-"); // Replace multiple dashes with single dash
-};
+}
 
 export default function GamesPage() {
   const [searchValue, setSearchValue] = useState("");
   const [searchKey, setSearchKey] = useState("");
   const [games, setGames] = useState([]);
+  const [suggestedGames, setSuggestedGames] = useState([]);
+
 
   const axiosInstance = axios.create({
     baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -151,9 +113,22 @@ export default function GamesPage() {
 
   const navigate = useNavigate();
 
-  const handleGameSearch = (value) => {
+  const handleGameRoute = (value) => {
     navigate(`/game/${convertToSlug(value)}`);
   };
+
+  useEffect(() => {
+    axiosInstance
+      .get(`/user/suggested`)
+      .then((response) => {
+        setSuggestedGames(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -245,7 +220,7 @@ export default function GamesPage() {
           value={searchValue}
           onChange={(event, newValue) => {
             setSearchValue(newValue);
-            handleGameSearch(newValue);
+            handleGameRoute(newValue);
           }}
           options={games.map((game) => game.title)}
           onInputChange={(event, newInputValue) => {
@@ -322,13 +297,11 @@ export default function GamesPage() {
           >
             Suggested Games
           </Typography>
-          {/* Render your forum topics below */}
-          {/* Replace this section with your actual forum topics */}
           <div
             style={{ gap: "16px", display: "flex", flexDirection: "column" }}
           >
             {suggestedGames.map((game, index) => (
-              <SuggestedGame key={index} game={game} />
+              <GameCard key={index} game={game} />
             ))}
           </div>
         </Container>
@@ -354,7 +327,6 @@ export default function GamesPage() {
             Trending Games
           </Typography>
           {/* Render your forum topics below */}
-          {/* Replace this section with your actual forum topics */}
           <div>
             <div
               style={{ gap: "16px", display: "flex", flexDirection: "column" }}

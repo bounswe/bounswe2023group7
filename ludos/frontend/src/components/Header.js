@@ -8,9 +8,76 @@ import logo from "../assets/logo.png";
 import { useNavigate, Link } from "react-router-dom";
 import MyGamesIcon from "../assets/my_games.png";
 import MyGroupsIcon from "../assets/my_groups.png";
+import { Autocomplete, Box, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+import { useEffect } from "react";
+import PersonIcon from '@mui/icons-material/Person';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import axios from "axios";
+
+const convertToSlug = (text) => {
+  return text
+    ?.toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+    .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+    .replace(/--+/g, "-"); // Replace multiple dashes with single dash
+}
+
 
 const Header = ({ userLoggedIn }) => {
+  const [searchKey, setSearchKey] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [datas, setDatas] = useState([]);
   const navigate = useNavigate();
+
+
+  const axiosInstance = axios.create({
+    baseURL: `http://${process.env.REACT_APP_API_URL}`,
+  });
+
+  const searchOptions = (datas) => {
+    let options = [];
+
+    if (datas.games) {
+      datas.games.map((game) => options.push("Game: " + game.title));
+    }
+    if (datas.users) {
+      datas.users.map((user) => options.push("User: " + user.username));
+    }
+    if (datas.posts) {
+      datas.posts.map((post) => options.push("Thread: " + post.title));
+    }
+
+
+    return options;
+  }
+
+  const handleRoute = (info) => {
+
+    var path = "";
+
+    if (info.includes("Game: ")) {
+      info = info.replace("Game: ", "");
+      info = convertToSlug(info);
+      path = `/game/${info}`;
+    }
+    else if (info.includes("User: ")) {
+      info = info.replace("User: ", "");
+      let specUser = datas.users.find((user) => user.username === info);
+      path = `/profile-page/${specUser.id}`;
+    }
+    else if (info.includes("Thread: ")) {
+      info = info.replace("Thread: ", "");
+      let specPost = datas.posts.find((post) => post.title === info);
+      path = `/thread/${specPost.id}`;
+    }
+    navigate(path);
+    window.location.reload(false);
+  };
+
   const handleSignInClick = () => {
     navigate("/login");
   };
@@ -18,6 +85,28 @@ const Header = ({ userLoggedIn }) => {
   const handleRegisterClick = () => {
     navigate("/signup");
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      axiosInstance
+        .get(`/search/${searchKey}`)
+        .then((response) => {
+          console.log(response);
+          setDatas(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    if (searchKey && searchKey.length > 1) {
+      fetchData();
+    }
+  }, [searchKey]);
+
+
+
+
 
   return (
     <AppBar
@@ -30,7 +119,7 @@ const Header = ({ userLoggedIn }) => {
     >
       <Toolbar
         style={{
-          width: "75%",
+          width: "100%",
           maxWidth: "1200px",
           display: "flex",
           justifyContent: "space-between",
@@ -38,7 +127,11 @@ const Header = ({ userLoggedIn }) => {
         }}
       >
         <a href="/">
-          <img src={logo} alt="Logo" style={{ width: "100px", height: "auto" }} />
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ width: "100px", height: "auto" }}
+          />
         </a>
         <div
           style={{
@@ -46,19 +139,82 @@ const Header = ({ userLoggedIn }) => {
             alignItems: "center",
             justifyContent: "space-between",
             height: "100%",
+            width: "100%",
+            padding: "20px",
           }}
         >
-          <InputBase
-            placeholder="Search..."
-            endAdornment={<SearchIcon />}
+          <Autocomplete
+            value={searchValue}
+            onChange={(event, newValue) => {
+              if (newValue && newValue.length > 1) {
+                setSearchValue(newValue);
+                handleRoute(newValue);
+              }
+            }}
+            options={searchOptions(datas)}
+            renderOption={(props, option) => {
+              if (option.includes("Game: ")) {
+                return (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <SportsEsportsIcon />
+                    {option.split("Game: ")[1]}
+                  </Box>
+                );
+              } else if (option.includes("User: ")) {
+                return (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <PersonIcon />
+                    {option.split("User: ")[1]}
+                  </Box>
+                );
+              }
+              else if (option.includes("Thread: ")) {
+                return (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <QuestionAnswerIcon margin={5} />
+                    {option.split("Thread: ")[1]}
+                  </Box>
+                );
+              }
+
+            }}
+            onInputChange={(event, newInputValue) => {
+              setSearchKey(newInputValue);
+            }}
+            required
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                width="90%"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "50px",
+
+                    legend: {
+                      marginLeft: "30px",
+                    },
+                  },
+                  "& .MuiAutocomplete-inputRoot": {
+                    paddingLeft: "20px !important",
+                    borderRadius: "50px",
+                  },
+                  "& .MuiInputLabel-outlined": {
+                    paddingLeft: "20px",
+                  },
+                  "& .MuiInputLabel-shrink": {
+                    marginLeft: "20px",
+                    paddingLeft: "10px",
+                    paddingRight: 0,
+                    background: "white",
+                  },
+                }}
+              />
+            )}
             style={{
+              margin: "10px",
               backgroundColor: "white",
-              flex: 1,
-              marginLeft: "250px",
-              marginRight: "100px",
-              alignItems: "center",
-              borderRadius: "20px",
-              width: "500px",
+              borderRadius: "40px",
+              width: "100%",
             }}
           />
         </div>
@@ -74,7 +230,8 @@ const Header = ({ userLoggedIn }) => {
                   marginLeft: "160px", // Adjust the left margin as needed
                 }}
               >
-                <a href="/profile-page/#favGamesSection"
+                <a
+                  href="/profile-page/#favGamesSection"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div>
@@ -95,8 +252,8 @@ const Header = ({ userLoggedIn }) => {
                     </p>
                   </div>
                 </a>
-                <Link
-                  to="/myGroups"
+                <a
+                  href="/profile-page/#myGroupsSection"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div style={{ marginLeft: "50px" }}>
@@ -119,7 +276,7 @@ const Header = ({ userLoggedIn }) => {
                       My Groups
                     </p>
                   </div>
-                </Link>
+                </a>
               </div>
             </>
           ) : (
@@ -160,7 +317,7 @@ const Header = ({ userLoggedIn }) => {
           )}
         </div>
       </Toolbar>
-    </AppBar>
+    </AppBar >
   );
 };
 

@@ -145,11 +145,55 @@ class APIService {
     return response;
   }
 
+  /*
   Future<http.Response> listGames(String? authToken, {String limit = "20"}) async {
     var uri = Uri.parse("$baseURL/game?limit=$limit");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
+    });
+
+    return response;
+  }
+  */
+
+  Future<http.Response> listGames(String? authToken,
+      {int page = 1,
+        int limit = 10,
+        String? searchKey,
+        String? tags,
+        String? platforms,
+        String? publisher,
+        String? developer,
+        String order = "ASC",
+        bool isFollowed = false,
+        String orderByKey = "id"}) async {
+    // Create a map to store query parameters
+    final Map<String, String> queryParams = {
+      'page': page.toString(),
+      'limit': limit.toString(),
+      'order': order,
+      'isFollowed': isFollowed.toString(),
+      'orderByKey': orderByKey,
+    };
+
+    print("orderby: $orderByKey");
+    print("order: $order");
+
+    // Add optional parameters if provided
+    if (searchKey != null) queryParams['searchKey'] = searchKey;
+    if (tags != null) queryParams['tags'] = tags;
+    if (platforms != null) queryParams['platforms'] = platforms;
+    if (publisher != null) queryParams['publisher'] = publisher;
+    if (developer != null) queryParams['developer'] = developer;
+
+    // Create the URI with query parameters
+    var uri = Uri.parse("$baseURL/game").replace(queryParameters: queryParams);
+
+    // Make the HTTP request
+    final response = await http.get(uri, headers: {
+      'content-type': 'application/json',
+      'Authorization': 'Bearer $authToken',
     });
 
     return response;

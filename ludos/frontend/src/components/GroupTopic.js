@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 function GroupTopic(data) {
+  console.log(data);
   const [isUserJoined, SetIsUserJoined] = useState(data.topic.isJoined);
 
   const setMembership = () => {

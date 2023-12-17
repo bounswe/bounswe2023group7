@@ -24,9 +24,6 @@ class _SearchPageState extends State<SearchPage> {
   Color gamesButtonColor = MyColors.red;
   Color postsButtonColor = MyColors.red;
   Color usersButtonColor = MyColors.red;
-  bool isGamesSelected = false;
-  bool isPostsSelected = false;
-  bool isUsersSelected = false;
   bool showResult = false;
   String searchText = '';
 
@@ -41,19 +38,8 @@ class _SearchPageState extends State<SearchPage> {
 
   void updateShowState() {
     setState(() {
-      if(isGamesSelected == false && isUsersSelected == false){
-        showResult = false;
-      }else{
-        showResult = true;
-      }
+      showResult = (searchText.toString() != '');
     });
-  }
-
-  void updateKeys() {
-    searchGameKey = UniqueKey();
-    searchUserKey = UniqueKey();
-    showResult = isGamesSelected || isPostsSelected || isUsersSelected;
-    searchText = '';
   }
 
   @override
@@ -100,7 +86,7 @@ class _SearchPageState extends State<SearchPage> {
                         },
                       ),
                     ),
-                    hintText: 'Search for games, posts, users',
+                    hintText: 'Search for games',
                     filled: true,
                     fillColor: MyColors.blue2,
                     //labelText: 'Search',
@@ -125,75 +111,12 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(width: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: gamesButtonColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // <-- Radius
-                    )),
-                    onPressed: () {
-                    setState(() {
-                      isGamesSelected = (isGamesSelected == false) ? true : false;
-                      gamesButtonColor = (isGamesSelected == true) ? MyColors.green : MyColors.red;
-                      updateKeys();
-                      updateShowState();
-                    });
-                    },
-                    child: const Text(
-                        'Games',
-                        style: TextStyle(fontSize: 20))
-                ),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: postsButtonColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12), // <-- Radius
-                        )),
-                    onPressed: () {
-                      setState(() {
-                        isPostsSelected = (isPostsSelected == false) ? true : false;
-                      });
-                      setState(() {
-                        postsButtonColor = (isPostsSelected == true) ? MyColors.green : MyColors.red;
-                      });
-                    },
-                    child: const Text(
-                        'Posts',
-                        style: TextStyle(fontSize: 20))
-                ),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: usersButtonColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12), // <-- Radius
-                        )),
-                    onPressed: () {
-                      setState(() {
-                        isUsersSelected = (isUsersSelected == false) ? true : false;
-                        usersButtonColor = (isUsersSelected == true) ? MyColors.green : MyColors.red;
-                        updateKeys();
-                        updateShowState();
-                      });
-                    },
-                    child: const Text(
-                        'Users',
-                        style: TextStyle(fontSize: 20))
-                ),
-                const SizedBox(width: 20),
-              ],
-            ),
             const SizedBox(height: 20),
             SingleChildScrollView(
               child: Column(
                 children: [
                   //if (isGamesSelected != true && showResult == true)
-                  if (isGamesSelected == true && showResult == true)
+                  if (showResult == true)
                     Column(
                       children: [
                         const SizedBox(height: 10),
@@ -211,36 +134,13 @@ class _SearchPageState extends State<SearchPage> {
                           ],
                         ),
                         SearchPageGame(
+                          page : 1,
+                          isFollowed: false,
                           key: searchGameKey, // Use the unique key
                           searchKey: searchText,
                           userProvider: widget.userProvider,
                           token: widget.userProvider.token,
                         ),
-                      ],
-                    ),
-
-                  if (isUsersSelected == true && showResult == true)
-                    Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(width: 20),
-                            Text(
-                              'Users',
-                              style: TextStyle(
-                                color: MyColors.lightBlue,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SearchPageUser(
-                            key: searchUserKey,
-                            token: widget.userProvider.token,
-                            searchKey: searchText,
-                            userProvider: widget.userProvider)
                       ],
                     ),
                 ],
