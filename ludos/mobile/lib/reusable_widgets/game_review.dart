@@ -15,9 +15,11 @@ class Review extends StatefulWidget {
   final String content;
   final String userId;
   final String username;
-  final int? thumbUps;
-  final int? thumbDowns;
+  final int thumbUps;
+  final int thumbDowns;
   final String time;
+  final bool isLiked;
+  final bool isDisliked;
   final UserProvider userProvider;
   final String? token;
   final String reviewId;
@@ -32,6 +34,8 @@ class Review extends StatefulWidget {
     required this.thumbUps,
     required this.thumbDowns,
     required this.time,
+    required this.isLiked,
+    required this.isDisliked,
     required this.userProvider,
     required this.token,
     required this.reviewId,
@@ -47,6 +51,8 @@ class Review extends StatefulWidget {
     thumbUps: thumbUps,
     thumbDowns: thumbDowns,
     time: time,
+    isLiked: isLiked,
+    isDisliked: isDisliked,
     userProvider: userProvider,
     token: token,
     reviewId: reviewId,
@@ -59,12 +65,15 @@ class _ReviewState extends State<Review> {
   final String content;
   final String userId;
   final String username;
-  final int? thumbUps;
-  final int? thumbDowns;
+  final int thumbUps;
+  final int thumbDowns;
   final String time;
+  bool isLiked = false;
+  bool isDisliked = false;
   final UserProvider userProvider;
   final String? token;
   final String reviewId;
+  int numberOfLikes = 0;
 
   _ReviewState({
     required this.gameId,
@@ -74,11 +83,19 @@ class _ReviewState extends State<Review> {
     required this.username,
     required this.thumbUps,
     required this.thumbDowns,
+    required this.isLiked,
+    required this.isDisliked,
     required this.time,
     required this.userProvider,
     required this.token,
     required this.reviewId,
   });
+
+  @override
+  void initState() {
+    super.initState();
+    numberOfLikes = thumbUps - thumbDowns;
+  }
 
   String timeAgo(String timestamp) {
     DateTime currentTime = DateTime.now();
@@ -105,63 +122,79 @@ class _ReviewState extends State<Review> {
     }
   }
 
-  /*
   Future<void> userPressed(bool like) async {
     if (like && isDisliked) {
       try {
         await APIService().likeReview(
             widget.token, widget.reviewId);
       } catch (e) {
-        throw Exception('Failed to like thread');
+        throw Exception('Failed to like review.');
       }
       isDisliked = false;
       isLiked = true;
+      setState(() {
+        numberOfLikes = numberOfLikes! + 2;
+      });
     } else if (!like && isDisliked) {
       try {
         await APIService().dislikeReview(
             widget.token, widget.reviewId);
       } catch(e) {
-        throw Exception('Failed to dislike thread');
+        throw Exception('Failed to dislike review.');
       }
-      isLiked = false;
       isDisliked = false;
+      setState(() {
+        numberOfLikes = numberOfLikes! + 1;
+      });
     } else if (!like && isLiked) {
       try {
         await APIService().dislikeReview(
             widget.token, widget.reviewId);
       } catch(e) {
-        throw Exception('Failed to dislike thread');
+        throw Exception('Failed to dislike review.');
       }
       isLiked = false;
       isDisliked = true;
+
+      setState(() {
+        numberOfLikes = numberOfLikes! - 2;
+      });
     } else if (like && isLiked) {
       try {
-        var responseDislike = await APIService().likeReview(
+        await APIService().likeReview(
             widget.token, widget.reviewId);
       } catch(e) {
-        throw Exception('Failed to like thread');
+        throw Exception('Failed to like review.');
       }
       isLiked = false;
-      isDisliked = false;
+
+      setState(() {
+        numberOfLikes = numberOfLikes! - 1;
+      });
     } else if (like) {
       try {
         await APIService().likeReview(
             widget.token, widget.reviewId);
       } catch(e) {
-        throw Exception('Failed to like thread');
+        throw Exception('Failed to like review.');
       }
       isLiked = true;
-    } else {
+      setState(() {
+        numberOfLikes = numberOfLikes! + 1;
+      });
+    } else if(!like) {
       try {
         await APIService().dislikeReview(
             widget.token, widget.reviewId);
       } catch(e) {
-        throw Exception('Failed to dislike thread');
+        throw Exception('Failed to dislike review.');
       }
       isDisliked = true;
+      setState(() {
+        numberOfLikes = numberOfLikes! - 1;
+      });
     }
   }
-  */
 
   @override
   Widget build(BuildContext context) {
@@ -250,23 +283,31 @@ class _ReviewState extends State<Review> {
                     backgroundColor: MyColors.orange,
                   ),
                   onPressed: () => setState(() {
-                    //userPressed(true);
+                    userPressed(true);
                   }),
                   child: Icon(
                     Icons.thumb_up,
-                    // color: isLiked ? Colors.green : Colors.white,
+                    color: isLiked ? Colors.green : Colors.white,
                   ),
                 ),
+                Text(
+                    numberOfLikes.toString(),
+                    style: const TextStyle(
+                      color: MyColors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: MyColors.orange,
                   ),
                   onPressed: () => setState(() {
-                    //userPressed(false);
+                    userPressed(false);
                   }),
                   child: Icon(
                     Icons.thumb_down,
-                    //color: isDisliked ? Colors.red : Colors.white,
+                    color: isDisliked ? Colors.red : Colors.white,
                   ),
                 ),
               ],
