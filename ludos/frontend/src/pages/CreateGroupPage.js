@@ -30,7 +30,6 @@ const CreateGroupPage = () => {
   const [games, setGames] = useState([]);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [media, setMedia] = useState([]);
   const [value, setValue] = useState("");
   const [searchKey, setSearchKey] = useState("");
   const [italic, setItalic] = useState(false);
@@ -42,7 +41,7 @@ const CreateGroupPage = () => {
   const [titleEmpty, setTitleEmpty] = useState(false);
   const [bodyEmpty, setBodyEmpty] = useState(false);
   const [member, setMember] = useState(0);
-  const [memberCheck, setMemberCheck] = useState(true);
+  const [memberCheck, setMemberCheck] = useState(false);
   const [logo, setLogo] = useState("");
   const [logoEmpty, setLogoEmpty] = useState(false);
 
@@ -68,13 +67,6 @@ const CreateGroupPage = () => {
 
   const HandleMemberChange = (event) => {
     setMember(event.target.value);
-
-    if (parseInt(event.target.value) > 1) {
-      console.log(1);
-      setMemberCheck(false);
-    } else {
-      setMemberCheck(true);
-    }
   };
 
   const handleChange = (e) => {
@@ -108,72 +100,63 @@ const CreateGroupPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     if (title.length === 0 || title === "") {
       setSnackbarMessage("Title cannot be empty!");
       setServerError(true);
       setTitleEmpty(true);
       setSnackbar(true);
       return;
-    }
-
-    if (body.length === 0 || body === "") {
+    } else if (body.length === 0 || body === "") {
       setSnackbarMessage("Description cannot be empty!");
       setServerError(true);
       setBodyEmpty(true);
       setSnackbar(true);
       return;
-    }
-
-    if (!value || value.length === 0 || value === "") {
+    } else if (!value || value.length === 0 || value === "") {
       setSnackbarMessage("Game cannot be empty!");
       setServerError(true);
       setSnackbar(true);
       return;
-    }
-
-    if (memberCheck) {
+    } else if (parseInt(member) <= 1 || isNaN(parseInt(member))) {
       setSnackbarMessage("Max number of members must be greater than 1!");
       setServerError(true);
       setSnackbar(true);
-      return;
-    }
-
-    if (!logo || logo.length === 0 || logo === "") {
+      setMemberCheck(true);
+    } else if (!logo || logo.length === 0 || logo === "") {
       setSnackbarMessage("Logo link cannot be empty!");
       setServerError(true);
       setSnackbar(true);
       return;
+    } else {
+      let gameId = games.filter((game) => game.title === value)[0].id;
+      const maxNumberOfMembers = parseInt(member);
+      const description = body;
+      const name = title;
+
+      axiosInstance
+        .post("/group", {
+          gameId,
+          maxNumberOfMembers,
+          description,
+          name,
+          logo,
+          tags,
+        })
+        .then((response) => {
+          setSnackbarMessage("Group created successfully!");
+          setSnackbar(true);
+          navigate(`/group/${response.data.id}`);
+          console.log(response);
+        })
+        .catch((error) => {
+          setSnackbarMessage(
+            "An error occurred while creating the group!: " +
+              error.response.data.message,
+          );
+          setServerError(true);
+          console.log(error);
+        });
     }
-
-    let gameId = games.filter((game) => game.title === value)[0].id;
-    const maxNumberOfMembers = parseInt(member);
-    const description = body;
-    const name = title;
-
-    axiosInstance
-      .post("/group", {
-        gameId,
-        maxNumberOfMembers,
-        description,
-        name,
-        logo,
-        tags,
-      })
-      .then((response) => {
-        setSnackbarMessage("Group created successfully!");
-        setSnackbar(true);
-        navigate(`/group/${response.data.id}`);
-        console.log(response);
-      })
-      .catch((error) => {
-        setSnackbarMessage(
-          "An error occurred while creating the group!: " +
-            error.response.data.message,
-        );
-        setServerError(true);
-        console.log(error);
-      });
   };
 
   return (
