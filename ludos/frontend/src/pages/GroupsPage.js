@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Autocomplete,
   Button,
   Checkbox,
+  Chip,
   Container,
+  FormControl,
   FormControlLabel,
   Grid,
+  Input,
   MenuItem,
   Pagination,
   Select,
@@ -15,10 +18,12 @@ import {
   Typography,
 } from "@mui/material";
 import GroupTopic from "../components/GroupTopic";
+import GroupsImage from "../assets/Groups.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const ForumsPage = () => {
+  const myComponentRef = useRef(null);
   const navigate = useNavigate();
   const [auth, setAuth] = useState(false);
   const [groups, setGroups] = useState([]);
@@ -27,12 +32,13 @@ const ForumsPage = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [games, setGames] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [tagsInput, setTagsInput] = useState("");
   const [searchGame, setSearchGame] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("ASC");
   const [joinedOnly, setJoinedOnly] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [tags, setTags] = useState([]);
+  const [currTag, setCurrTag] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
@@ -53,7 +59,8 @@ const ForumsPage = () => {
     } else {
       setAuth(false);
     }
-    const link = `http://${process.env.REACT_APP_API_URL}/group?page=${page}&searchKey=${searchInput}&tags=${tagsInput}&gameId=${searchGame}&order=${sortOrder}&orderByKey=${sortBy}&isJoined=${joinedOnly}`;
+    const tagsString = tags.join("%2C");
+    const link = `http://${process.env.REACT_APP_API_URL}/group?page=${page}&searchKey=${searchInput}&tags=${tagsString}&gameId=${searchGame}&order=${sortOrder}&orderByKey=${sortBy}&isJoined=${joinedOnly}`;
     console.log(link);
     axios
       .get(link, {
@@ -127,17 +134,24 @@ const ForumsPage = () => {
     }
   };
 
-  const handleTagsInputChange = (event) => {
-    const inputValue = event.target.value;
-    // Virgülle ayrılmış değerleri diziye çevir
-    const tagsArray = inputValue.split(",");
-
-    // İki arasında boşlukları temizle ve tekrar virgülle birleştir
-    const cleanedTags = tagsArray.map((tag) => tag.trim()).join("%2C");
-
-    // Temizlenmiş değeri state'e set et
-    setTagsInput(cleanedTags);
+  const handleTagsChange = (e) => {
+    setCurrTag(e.target.value);
   };
+
+  const handleKeyUp = (e) => {
+    if (e.keyCode == 13) {
+      setTags((oldState) => [...oldState, e.target.value]);
+      setCurrTag("");
+    }
+  };
+
+  const handleDeleteTag = (item, index) => {
+    let arr = [...tags];
+    arr.splice(index, 1);
+    console.log(item);
+    setTags(arr);
+  };
+
   const handleSortOrderChange = (event) => {
     setSortOrder(event.target.value);
   };
@@ -165,7 +179,7 @@ const ForumsPage = () => {
     <Container style={{ maxWidth: "1200px" }}>
       <Grid container spacing={1}>
         <img
-          src="https://www.gamebyte.com/wp-content/uploads/2020/12/EpS1HMIXYAcamyj.jpeg"
+          src={GroupsImage}
           alt="groupImage"
           style={{ width: "100%", height: "auto", marginBottom: "20px" }}
         />
@@ -233,13 +247,24 @@ const ForumsPage = () => {
           lg={3}
           style={{
             backgroundColor: "rgba(51, 153, 255, 1)",
-            height: "480px",
+            height: `${myComponentRef?.current?.clientHeight + 520}px`,
             borderRadius: "10px",
             paddingRight: "10px",
             marginTop: "10px",
           }}
         >
           {/* Search Input */}
+          <Typography
+            variant="h7"
+            gutterBottom
+            style={{
+              color: "white",
+              fontFamily: "Trebuchet MS, sans-serif",
+              fontWeight: "bold",
+            }}
+          >
+            Group Name:
+          </Typography>
           <TextField
             type="text"
             label="Search the Group Name"
@@ -255,21 +280,60 @@ const ForumsPage = () => {
             }}
           />
 
-          {/* Tags Input */}
-          <TextField
-            type="text"
-            label="Enter Multiple Tags Using Comma"
-            placeholder="Enter tags..."
-            value={tagsInput}
-            onChange={handleTagsInputChange}
-            variant="outlined"
-            fullWidth
+          <Typography
+            variant="h7"
+            gutterBottom
             style={{
-              marginBottom: "10px",
-              backgroundColor: "white",
-              borderRadius: "10px",
+              color: "white",
+              fontFamily: "Trebuchet MS, sans-serif",
+              fontWeight: "bold",
             }}
-          />
+          >
+            Filter with Tags:
+          </Typography>
+          <div ref={myComponentRef}>
+            <FormControl
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "20px",
+                flexWrap: "wrap",
+                flexDirection: "row",
+                border: "2px solid lightgray",
+                padding: 1,
+                borderRadius: "4px",
+                backgroundColor: "white",
+                marginBottom: "10px",
+              }}
+            >
+              <div className={"container"}>
+                {tags.map((item, index) => (
+                  <Chip
+                    key={index}
+                    size="small"
+                    onDelete={() => handleDeleteTag(item, index)}
+                    label={item}
+                  />
+                ))}
+              </div>
+              <Input
+                value={currTag}
+                onChange={handleTagsChange}
+                onKeyDown={handleKeyUp}
+              />
+            </FormControl>
+          </div>
+          <Typography
+            variant="h7"
+            gutterBottom
+            style={{
+              color: "white",
+              fontFamily: "Trebuchet MS, sans-serif",
+              fontWeight: "bold",
+            }}
+          >
+            Filter with Game:
+          </Typography>
           <Autocomplete
             onChange={handleGameChange}
             options={games.map((game) => ({

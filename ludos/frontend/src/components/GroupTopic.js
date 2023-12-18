@@ -170,14 +170,20 @@ function GroupTopic(data) {
                 @{data.topic.admin.username}
               </Link>
             </Typography>
-            <AccessTimeIcon style={{ fontSize: "18px", marginRight: "10px" }} />
+            <AccessTimeIcon style={{ fontSize: "18px", marginRight: "3px" }} />
             <Typography
               variant="caption"
               component="div"
               textAlign="left"
-              style={userStyle}
+              style={{
+                fontStyle: "italic",
+                marginRight: "10px",
+                color: "black",
+              }}
             >
-              {data.topic.whenOpened}
+              {data.topic.createdAt.split("T")[0] +
+                " " +
+                data.topic.createdAt.split("T")[1].split(".")[0]}
             </Typography>
             <Diversity1Icon style={{ fontSize: "18px", marginRight: "3px" }} />
             <Typography
