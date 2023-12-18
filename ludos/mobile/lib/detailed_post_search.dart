@@ -55,7 +55,9 @@ class _DetailedPostSearchState extends State<DetailedPostSearch> {
           tags.toString() != '' ||
           gameTitle.toString() != '' ||
           groupID.toString() != '' ||
-          ownerUserID.toString() != ''
+          ownerUserID.toString() != '' ||
+          isLiked == true ||
+          isDisliked == true
       );
     });
   }
