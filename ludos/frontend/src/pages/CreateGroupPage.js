@@ -66,6 +66,7 @@ const CreateGroupPage = () => {
   };
 
   const HandleMemberChange = (event) => {
+    setMemberCheck(false);
     setMember(event.target.value);
   };
 
