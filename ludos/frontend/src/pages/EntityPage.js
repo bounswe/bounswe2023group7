@@ -25,13 +25,13 @@ function EntityPage() {
         Object.keys(response.data?.content).map((keyName, i) => {
           if (
             response.data.content[keyName].length < 50 &&
-            keyName !== "Image Link"
+            keyName !== "image"
           ) {
             shorts = {
               ...shorts,
               [keyName]: response.data?.content[keyName],
             };
-          } else if (keyName !== "Image Link") {
+          } else if (keyName !== "image") {
             longs = {
               ...longs,
               [keyName]: response.data?.content[keyName],
@@ -119,7 +119,7 @@ function EntityPage() {
         </Box>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
           <img
-            src={entity?.content?.["Image Link"]}
+            src={entity?.content?.["image"]}
             alt={entity?.name}
             style={{ height: 350, width: 250 }}
           />
