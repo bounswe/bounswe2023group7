@@ -337,7 +337,7 @@ const CreateThreadPage = () => {
           </FormControl>
 
           {previewUrl && (
-            <div style={{ display: 'inline-block' }}>
+            <div key={previewUrl} style={{ display: 'inline-block' }}>
               <h3 style={{ display: "flex", alignItems: "flex-start" }}>
                 Image:
               </h3>
