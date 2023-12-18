@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Container, Grid, Box, Typography } from "@mui/material";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function EntityPage() {
+  const [shortEntityFeatures, setShortEntityFeatures] = useState({});
+  const [longEntityFeatures, setLongEntityFeatures] = useState({});
   const [entity, setEntity] = useState({});
   let { entityId } = useParams();
-  console.log(entity);
 
   useEffect(() => {
     const link = `http://${process.env.REACT_APP_API_URL}/entity/${entityId}`;
@@ -19,12 +20,42 @@ function EntityPage() {
       })
       .then((response) => {
         setEntity(response.data);
-        console.log(response.data);
+        let shorts = {};
+        let longs = {};
+        Object.keys(response.data?.content).map((keyName, i) => {
+          if (
+            response.data.content[keyName].length < 50 &&
+            keyName !== "Image Link"
+          ) {
+            shorts = {
+              ...shorts,
+              [keyName]: response.data?.content[keyName],
+            };
+          } else if (keyName !== "Image Link") {
+            longs = {
+              ...longs,
+              [keyName]: response.data?.content[keyName],
+            };
+          }
+          setShortEntityFeatures(shorts);
+          setLongEntityFeatures(longs);
+          setEntity(response.data);
+        });
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+
+  const convertToSlug = (text) => {
+    return text
+      ?.toString()
+      ?.toLowerCase()
+      ?.trim()
+      ?.replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+      ?.replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+      ?.replace(/--+/g, "-"); // Replace multiple dashes with single dash
+  };
 
   const headerStyle = {
     marginBottom: "8px",
@@ -88,66 +119,69 @@ function EntityPage() {
         </Box>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
           <img
-            src={entity?.content?.image}
+            src={entity?.content?.["Image Link"]}
             alt={entity?.name}
             style={{ height: 350, width: 250 }}
           />
-          {entity?.content &&
-            Object.keys(entity?.content).map((keyName, i) =>
-              keyName === "image" ? null : (
-                <Box style={smallBoxStyle} key={i}>
-                  <Typography
-                    component="legend"
-                    style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-                  >
-                    {keyName}: {entity?.content[keyName]}
-                  </Typography>
-                </Box>
-              ),
-            )}
+          <Box style={smallBoxStyle}>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              <Link
+                style={{ color: smallBoxStyle.color, textDecoration: "none" }}
+                to={`/game/${convertToSlug(entity.game?.title)}`}
+              >
+                Game: {entity.game?.title}
+              </Link>
+            </Typography>
+          </Box>
+          <Box style={smallBoxStyle}>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Entity Type:{" "}
+              {entity.type?.charAt(0).toUpperCase() + entity.type?.slice(1)}
+            </Typography>
+          </Box>
+          {Object.keys(shortEntityFeatures).map((keyName, i) => (
+            <Box style={smallBoxStyle} key={i}>
+              <Typography
+                component="legend"
+                style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+              >
+                {keyName}: {shortEntityFeatures[keyName]}
+              </Typography>
+            </Box>
+          ))}
         </Grid>
         <Grid item xs={12} sm={8} md={8} lg={8} style={{ width: "100%" }}>
-          <Typography
-            variant="body1"
-            color="white"
-            align="left"
-            style={{
-              marginBottom: "8px",
-              fontFamily: "Trebuchet MS, sans-serif",
-              marginLeft: "2%",
-            }}
-          >
-            {entity.bio}
-            {
-              "Nina Williams (ニーナ・ウィリアムズ Nīna Wiriamuzu?) is a cold-blooded Irish assassin that made her first appearance in the original Tekken game and has appeared in every Tekken game since. Nina has a lethal fighting style, consisting of throws, grapples, and holds. She has an infamous rivalry with her younger sister, Anna Williams."
-            }
-          </Typography>
-          <Typography
-            variant="h5"
-            color="gray"
-            align="left"
-            style={headerStyle}
-          >
-            STORY
-          </Typography>
-          <Typography
-            variant="body1"
-            color="white"
-            align="left"
-            style={{
-              marginBottom: "8px",
-              fontFamily: "Trebuchet MS, sans-serif",
-              marginLeft: "2%",
-            }}
-          >
-            Nina and her younger sister are from a family of assassins hailing
-            from the Republic of Ireland. Nina was trained in assassination arts
-            by her father and in aikido by her mother. Anna was trained
-            alongside Nina, and the two developed a deadly rivalry, often
-            attempting to humiliate or kill one another.
-          </Typography>
+          {Object.keys(longEntityFeatures).map((keyName, i) => (
+            <>
+              <Typography
+                variant="h5"
+                color="gray"
+                align="left"
+                style={headerStyle}
+              >
+                {keyName}
+              </Typography>
+              <Typography
+                variant="body1"
+                color="white"
+                align="left"
+                style={{
+                  marginBottom: "8px",
+                  fontFamily: "Trebuchet MS, sans-serif",
+                  marginLeft: "2%",
+                }}
+              >
+                {longEntityFeatures[keyName]}
+              </Typography>
+            </>
+          ))}
         </Grid>
-        <Grid style={{ width: "100%" }}></Grid>
       </Grid>
     </Container>
   );

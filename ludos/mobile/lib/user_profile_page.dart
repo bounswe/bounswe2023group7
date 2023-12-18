@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/reusable_widgets/rec_games.dart';
+import 'package:provider/provider.dart';
 import 'edit_profile_page.dart';
 import 'game_page.dart';
 import 'helper/APIService.dart';
@@ -19,6 +21,8 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage> {
   final APIService apiService = APIService();
   late Map<String, dynamic> userData = {};
+  //late Future<List<RecommendedGame>> recGameListforUser;
+
   @override
 
   void initState() {
@@ -32,6 +36,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       setState(() {
         if(response.statusCode == 200){
           userData = json.decode(response.body);
+          print(userData);
         }
         else{
           userData = {};
@@ -42,6 +47,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       print('Error loading user data: $e');
     }
   }
+
 // Function to open email app
 Future<void> _sendEmail(String emailAddress) async {
   final Uri emailLaunchUri = Uri(
@@ -56,9 +62,38 @@ Future<void> _sendEmail(String emailAddress) async {
   }
 }
 
+  /*
+  Future<List<RecommendedGame>> loadRecGamesforUser(UserProvider userProvider, String? token) async {
+    final response = await apiService.getGameRecForUser(userProvider.token);
+    try {
+      if (response.statusCode == 200) {
+        final  List<dynamic> gamesList = json.decode(response.body);
+        return gamesList
+            .map((dynamic item) => RecommendedGame(
+            title: item['title'],
+            averageRating: (item['averageRating'] == null
+                ? 0
+                : item['averageRating'].toDouble()),
+            coverLink: item['coverLink'],
+            id: item['id'],
+            token: token,
+            userProvider: userProvider))
+            .toList();
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+        throw Exception('Failed to load games');
+      }
+    } catch (error) {
+      print("Error: $error");
+      throw Exception('Failed to load games');
+    }
+  }
+   */
 
   @override
   Widget build(BuildContext context) {
+    //var userProvider = Provider.of<UserProvider>(context);
+    //recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
     return Scaffold(
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
@@ -485,6 +520,44 @@ Future<void> _sendEmail(String emailAddress) async {
                 ),
               ),
             ),
+
+          /*
+          const SizedBox(height: 20),
+          const Text(
+            'Check These Games!',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: MyColors.white,
+            ),
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: FutureBuilder<List<RecommendedGame>>(
+                future: recGameListforUser,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Show a loading indicator while fetching data
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    // Handle errors
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    // Handle the case when there is no data
+                    return const Center(child: Text('No games available.'));
+                  } else {
+                    // Display the fetched data
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: snapshot.data!,
+                    );
+                  }
+                },
+              ),
+            ),
+          ),*/
         ],
       ),
     ),
