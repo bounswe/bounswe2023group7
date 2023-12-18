@@ -158,6 +158,7 @@ const CreateGroupPage = () => {
         description,
         name,
         logo,
+        tags,
       })
       .then((response) => {
         setSnackbarMessage("Group created successfully!");

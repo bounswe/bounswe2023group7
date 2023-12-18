@@ -212,6 +212,15 @@ function ThreadComponent({
 
   const isOwner = currentUserId === userId;
 
+  function isValidJson(str) {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   return (
     <Grid style={{ display: "flex", flexDirection: "row" }}>
       <Grid
@@ -313,23 +322,27 @@ function ThreadComponent({
         </Grid>
         {contentImg && contentImg.length > 0 && (
           <Grid container spacing={2} justifyContent="center">
-            {contentImg.map((imgSrc, index) => (
-              <Grid item key={index}>
-                <img
-                  style={{
-                    maxHeight: "400px",
-                    maxWidth: "610px",
-                    borderRadius: "10px",
-                    marginBottom: "10px",
-                  }}
-                  src={JSON.parse(imgSrc).url}
-                  alt={`Image ${index + 1}`}
-                />
-              </Grid>
-            ))}
+            {contentImg.map(
+              (imgSrc, index) =>
+                imgSrc &&
+                imgSrc.length > 0 &&
+                isValidJson(imgSrc) && (
+                  <Grid item key={index}>
+                    <img
+                      style={{
+                        maxHeight: "400px",
+                        maxWidth: "610px",
+                        borderRadius: "10px",
+                        marginBottom: "10px",
+                      }}
+                      src={JSON.parse(imgSrc).url}
+                      alt={`Image ${index + 1}`}
+                    />
+                  </Grid>
+                ),
+            )}
           </Grid>
         )}
-
         <Typography
           variant="body2"
           component="div"

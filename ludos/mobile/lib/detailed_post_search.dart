@@ -4,41 +4,44 @@ import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'search_page_game.dart';
 import 'search_page_user.dart';
+import 'search_page_post.dart';
 
-
-class DetailedGameSearch extends StatefulWidget {
+class DetailedPostSearch extends StatefulWidget {
   final UserProvider userProvider;
-  final String? initialSearchKey; // Pass an initial search key if available
+  final String? initialSearchKey;
 
-  const DetailedGameSearch({
+  const DetailedPostSearch({
     Key? key,
     required this.userProvider,
     this.initialSearchKey,
   }) : super(key: key);
 
   @override
-  State<DetailedGameSearch> createState() => _DetailedGameSearchState();
+  State<DetailedPostSearch> createState() => _DetailedPostSearchState();
 }
 
-class _DetailedGameSearchState extends State<DetailedGameSearch> {
+class _DetailedPostSearchState extends State<DetailedPostSearch> {
   final TextEditingController searchInputController = TextEditingController();
   final TextEditingController tagsController = TextEditingController();
-  final TextEditingController platformsController = TextEditingController();
-  final TextEditingController publisherController = TextEditingController();
+  final TextEditingController gameIDController = TextEditingController();
+  final TextEditingController groupIDController = TextEditingController();
+  final TextEditingController ownerUserIDController = TextEditingController();
   final TextEditingController developerController = TextEditingController();
 
   int page_number = 1;
   bool showResult = false;
-  bool isFollowed = false;
-  bool orderByFollowers = false;
-  bool orderByRatings = false;
+  bool isLiked = false;
+  bool isDisliked = false;
+  bool orderByLikes = false;
   bool order = false;
   String searchText = '';
   String tags = '';
-  String platforms = '';
+  String groupID = '';
+  String gameTitle = '';
+  String ownerUserID = '';
   String? criteria = '';
 
-  Key searchGameKey = UniqueKey();
+  Key searchPostKey = UniqueKey();
 
   @override
   void initState() {
@@ -46,23 +49,24 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
     super.initState();
   }
 
-    void updateCriteria(){
-      setState((){
-        if (orderByFollowers == true){
-          criteria = 'followers';
-        }
-        else if (orderByRatings == true){
-          criteria = 'ratings';
-        }
-        else {
-          criteria = '';
-        }
-      });
-    }
-
   void updateShowState() {
     setState(() {
-      showResult = (searchText.toString() != '' || tags.toString() != '');
+      showResult = (searchText.toString() != '' ||
+          tags.toString() != '' ||
+          gameTitle.toString() != '' ||
+          groupID.toString() != '' ||
+          ownerUserID.toString() != ''
+      );
+    });
+  }
+
+  void updateCriteria(){
+    setState((){
+      if (orderByLikes == true){
+        criteria = 'numberOfLikes';
+      }else{
+        criteria = 'createdAt';
+      }
     });
   }
 
@@ -73,7 +77,7 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
         title: const Text(
-          'Search Games',
+          'Search Posts',
           style: TextStyle(
             color: MyColors.white,
             fontSize: 20,
@@ -84,7 +88,6 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            // Search key field
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -97,10 +100,9 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                   ),
                   obscureText: false,
                   decoration: InputDecoration(
-                    hintText: 'Search by title',
+                    hintText: 'Search by title or body',
                     filled: true,
                     fillColor: MyColors.blue2,
-                    //labelText: 'Search',
                     labelStyle: const TextStyle(
                         color: MyColors.darkBlue,
                         fontWeight: FontWeight.bold),
@@ -108,7 +110,6 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                         borderSide: BorderSide(
                             color: MyColors.red, width: 2.0)
                     ),
-
                     focusedBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: MyColors.red, width: 2.0),
                     ),
@@ -116,11 +117,9 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                       borderSide: BorderSide(color: MyColors.red, width: 3.0),
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                     ),
-                    //floatingLabelBehavior: (searchText.toString() != '') ? FloatingLabelBehavior.never : FloatingLabelBehavior.always,
                   ),
                   cursorColor: MyColors.lightBlue,
                 ),
-
               ),
             ),
             const SizedBox(height: 10),
@@ -148,7 +147,6 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                         borderSide: BorderSide(
                             color: MyColors.red, width: 2.0)
                     ),
-
                     focusedBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: MyColors.red, width: 2.0),
                     ),
@@ -167,7 +165,7 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextFormField(
-                  controller: platformsController,
+                  controller: gameIDController,
                   style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -175,7 +173,7 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                   ),
                   obscureText: false,
                   decoration: InputDecoration(
-                    hintText: 'Search by comma separated platforms',
+                    hintText: 'Search by game title that post belongs to',
                     filled: true,
                     fillColor: MyColors.blue2,
                     //labelText: 'Search',
@@ -186,7 +184,6 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                         borderSide: BorderSide(
                             color: MyColors.red, width: 2.0)
                     ),
-
                     focusedBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: MyColors.red, width: 2.0),
                     ),
@@ -200,67 +197,161 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
               ),
             ),
             const SizedBox(height: 10),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: TextFormField(
+                  controller: ownerUserIDController,
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    hintText: 'Search by owner id that post belongs to',
+                    filled: true,
+                    fillColor: MyColors.blue2,
+                    labelStyle: const TextStyle(
+                        color: MyColors.darkBlue,
+                        fontWeight: FontWeight.bold),
+                    border: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: MyColors.red, width: 2.0)
+                    ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: MyColors.red, width: 2.0),
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: MyColors.red, width: 3.0),
+                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    ),
+                  ),
+                  cursorColor: MyColors.lightBlue,
+                ),
+              ),
+            ),
+            // checkboxes
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const SizedBox(width: 10),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'List only',
-                      style: TextStyle(
-                        color: MyColors.white,
-                        fontSize: 18,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'List only',
+                        style: TextStyle(
+                          color: MyColors.white,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'followed',
-                      style: TextStyle(
-                        color: MyColors.white,
-                        fontSize: 18,
+                      Text(
+                        'liked',
+                        style: TextStyle(
+                          color: MyColors.white,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'games',
-                      style: TextStyle(
-                        color: MyColors.white,
-                        fontSize: 18,
+                      Text(
+                        'posts',
+                        style: TextStyle(
+                          color: MyColors.white,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
 
-                    Checkbox(
-                      value: isFollowed,
-                      overlayColor: MaterialStateProperty.all(MyColors.lightBlue),
-                      side: const BorderSide(color: MyColors.lightBlue),
-                      activeColor: MyColors.green,
-
-                      onChanged: (value) {
-                        setState(() {
-                          if(widget.userProvider.username == ''){
-                            SnackBar snackBar = SnackBar(
-                              content: Text('You must be logged in to use this feature'),
-                              backgroundColor: MyColors.red,
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          }
-                          else{
-                            isFollowed = value!;
-                            //searchGameKey = UniqueKey();
-                          }
-
-                        });
-                      },
-                    ),
-                  ]
-                ),
-                const SizedBox(width: 10),
-                VerticalDivider(
-                  color: MyColors.red,
-                  thickness: 20,
+                      Checkbox(
+                        value: isLiked,
+                        overlayColor: MaterialStateProperty.all(MyColors.lightBlue),
+                        side: BorderSide(color: isDisliked ? MyColors.red : MyColors.lightBlue),
+                        activeColor: MyColors.green,
+                        onChanged: (value) {
+                          setState(() {
+                            if(widget.userProvider.username == ''){
+                              SnackBar snackBar = SnackBar(
+                                content: Text('You must be logged in to use this feature'),
+                                backgroundColor: MyColors.red,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            }
+                            else{
+                              if (isDisliked == true){
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('You cannot select both liked and disliked'),
+                                      backgroundColor: MyColors.red,
+                                    )
+                                );
+                            }
+                              else{
+                                isLiked = value!;
+                              }
+                            }
+                          });
+                        },
+                      ),
+                    ]
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'List only',
+                        style: TextStyle(
+                          color: MyColors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Text(
+                        'disliked',
+                        style: TextStyle(
+                          color: MyColors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Text(
+                        'posts',
+                        style: TextStyle(
+                          color: MyColors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Checkbox(
+                        value: isDisliked,
+                        overlayColor: MaterialStateProperty.all(MyColors.lightBlue),
+                        side: BorderSide(color: isLiked ? MyColors.red : MyColors.lightBlue),
+                        activeColor: MyColors.green,
+                        onChanged: (value) {
+                          setState(() {
+                            if(widget.userProvider.username == ''){
+                              SnackBar snackBar = SnackBar(
+                                content: Text('You must be logged in to use this feature'),
+                                backgroundColor: MyColors.red,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            }
+                            else{
+                              if (isLiked == true){
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('You cannot select both liked and disliked'),
+                                      backgroundColor: MyColors.red,
+                                    )
+                                );
+                              }else{
+                                isDisliked = value!;
+                              }
+                              //searchGameKey = UniqueKey();
+                            }
+                          });
+                        },
+                      ),
+                    ]
+                ),
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Order by', style: TextStyle(
                         color: MyColors.white,
@@ -270,66 +361,18 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                         color: MyColors.white,
                         fontSize: 18,
                       )),
-                      Text('followers', style: TextStyle(
+                      Text('likes', style: TextStyle(
                         color: MyColors.white,
                         fontSize: 18,
                       )),
                       Checkbox(
-                        value: orderByFollowers,
+                        value: orderByLikes,
                         overlayColor: MaterialStateProperty.all(MyColors.lightBlue),
-                        side: BorderSide(color: orderByRatings ? MyColors.red : MyColors.lightBlue),
+                        side: const BorderSide(color: MyColors.lightBlue),
                         activeColor: MyColors.green,
-
                         onChanged: (value) {
                           setState(() {
-                            if (orderByRatings == true) {
-                              SnackBar snackBar = SnackBar(
-                                content: Text('You can only order by one criteria'),
-                                backgroundColor: MyColors.red,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            }
-                            orderByFollowers = orderByRatings ? orderByFollowers : value!;
-                            updateCriteria();
-                            //searchGameKey = UniqueKey();
-                          });
-                        },
-                      ),
-                    ]
-                ),
-                const SizedBox(width: 10),
-                Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Order', style: TextStyle(
-                        color: MyColors.white,
-                        fontSize: 18,
-                      )),
-                      Text('by', style: TextStyle(
-                        color: MyColors.white,
-                        fontSize: 18,
-                      )),
-                      Text('ratings', style: TextStyle(
-                        color: MyColors.white,
-                        fontSize: 18,
-                      )),
-                      Checkbox(
-                        value: orderByRatings,
-                        overlayColor: MaterialStateProperty.all(MyColors.lightBlue),
-                        side: BorderSide(color: orderByFollowers ? MyColors.red : MyColors.lightBlue),
-                        activeColor: MyColors.green,
-
-                        onChanged: (value) {
-                          setState(() {
-                            if (orderByFollowers == true) {
-
-                              SnackBar snackBar = SnackBar(
-                                content: Text('You can only order by one criteria'),
-                                backgroundColor: MyColors.red,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            }
-                            orderByRatings = orderByFollowers ? orderByRatings : value!;
+                            orderByLikes = value!;
                             updateCriteria();
                             //searchGameKey = UniqueKey();
                           });
@@ -379,16 +422,18 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                 ),
               ],
             ),
-
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 setState(() {
                   searchText = searchInputController.text;
                   tags = tagsController.text;
-                  platforms = platformsController.text;
+                  gameTitle = gameIDController.text;
+                  groupID = groupIDController.text;
+                  ownerUserID = ownerUserIDController.text;
+                  updateCriteria();
                   updateShowState();
-                  searchGameKey = UniqueKey();
+                  searchPostKey = UniqueKey();
                 });
               },
               style: ElevatedButton.styleFrom(
@@ -415,8 +460,7 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
             SingleChildScrollView(
                 child: Column(
                   children: [
-                    //if (showResult == true)
-                    if (true)
+                    if (showResult == true)
                       Column(
                         children: [
                           const SizedBox(height: 10),
@@ -425,7 +469,7 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                             children: [
                               SizedBox(width: 20),
                               Text(
-                                'Games',
+                                'Posts',
                                 style: TextStyle(
                                   color: MyColors.lightBlue,
                                   fontSize: 18,
@@ -433,16 +477,17 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                               ),
                             ],
                           ),
-
-                          SearchPageGame(
-                            key: searchGameKey,
+                          SearchPagePost(
+                            page: page_number,
+                            key: searchPostKey,
                             searchKey: searchText,
                             tags: tags,
-                            platforms: platforms,
-                            isFollowed: isFollowed,
-                            order : order ? 'DESC' : 'ASC',
-                            page: page_number,
                             criteria: criteria,
+                            isLiked: isLiked,
+                            isDisliked: isDisliked,
+                            order : order ? 'DESC' : 'ASC',
+                            gameTitle: gameTitle,
+                            owner: ownerUserID,
                             userProvider: widget.userProvider,
                             token: widget.userProvider.token,
                           ),
@@ -461,66 +506,66 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                           ),
                           const SizedBox(height: 20),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    if (page_number > 1){
-                                      page_number -= 1;
-                                      searchGameKey = UniqueKey();
-                                    }
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: MyColors.lightBlue, // Change the background color as needed
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12), // Optional: adjust the border radius
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      if (page_number > 1){
+                                        page_number -= 1;
+                                        searchPostKey = UniqueKey();
+                                      }
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: MyColors.lightBlue, // Change the background color as needed
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12), // Optional: adjust the border radius
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_back,
+                                          color: Colors.black, // Change the icon color as needed
+                                          size: 25.0, // Adjust the icon size as needed
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_back,
-                                        color: Colors.black, // Change the icon color as needed
-                                        size: 25.0, // Adjust the icon size as needed
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
+                                const SizedBox(width: 20),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
                                       page_number += 1;
-                                      searchGameKey = UniqueKey();
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: MyColors.lightBlue, // Change the background color as needed
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12), // Optional: adjust the border radius
+                                      searchPostKey = UniqueKey();
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: MyColors.lightBlue, // Change the background color as needed
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12), // Optional: adjust the border radius
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_forward,
+                                          color: Colors.black, // Change the icon color as needed
+                                          size: 25.0, // Adjust the icon size as needed
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_forward,
-                                        color: Colors.black, // Change the icon color as needed
-                                        size: 25.0, // Adjust the icon size as needed
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ]
+                              ]
                           ),
                           const SizedBox(height: 20),
                         ],
