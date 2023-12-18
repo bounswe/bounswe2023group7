@@ -10,6 +10,25 @@ import axios from "axios";
 
 const Homepage = () => {
   const [trendingTopics, setTrendingTopics] = useState([]);
+  const [groups, setGroups] = useState([]);
+  useEffect(() => {
+    fetchTrendingTopics();
+    const link = `http://${process.env.REACT_APP_API_URL}/group?limit=3&page=1&order=DESC&orderByKey=maxNumberOfMembers`;
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data.items);
+        setGroups(response.data.items);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   /*
   const trendTopics = [
     {
@@ -141,10 +160,6 @@ const Homepage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchTrendingTopics();
-  }, []);
-
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
       {/* Other homepage content */}
@@ -218,7 +233,7 @@ const Homepage = () => {
             <div
               style={{ gap: "16px", display: "flex", flexDirection: "column" }}
             >
-              {groupTopics.map((topic, index) => (
+              {groups.map((topic, index) => (
                 <GroupTopic key={index} topic={topic} />
               ))}
             </div>
