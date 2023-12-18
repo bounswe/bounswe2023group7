@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:ludos_mobile_app/helper/EntityContent.dart';
 
 class APIService {
   var baseURL = "http://3.125.225.39:8080";
@@ -604,5 +603,24 @@ class APIService {
 
     return response;
   }
+
+  Future<http.Response> getGameRecommendation(String? authToken, String gameID) async {
+    var uri = Uri.parse("$baseURL/game/$gameID/related");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getGameRecForUser(String? authToken) async {
+    var uri = Uri.parse("$baseURL/user/suggested");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
 
 }
