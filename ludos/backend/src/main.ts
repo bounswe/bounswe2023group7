@@ -4,6 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { RequestLoggerInterceptor } from './interceptors/request-logger.interceptor';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const config = new DocumentBuilder()
@@ -17,6 +18,7 @@ async function bootstrap() {
   });
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+  app.useGlobalInterceptors(new RequestLoggerInterceptor());
   app.useGlobalPipes(new ValidationPipe());
   const configService = new ConfigService();
   await app.listen(configService.get('PORT'));
