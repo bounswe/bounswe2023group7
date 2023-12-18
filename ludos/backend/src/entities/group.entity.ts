@@ -27,7 +27,7 @@ export class Group {
   @JoinTable()
   members: User[];
 
-  @OneToMany("Post","group")
+  @OneToMany('Post', 'group')
   posts: Post[];
 
   @Column()

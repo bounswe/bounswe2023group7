@@ -71,8 +71,7 @@ export class UserRepository extends Repository<User> {
     return paginationResult;
   }
 
-  public async getSuggestedGames (userId: string): Promise<Game[]> {
-    
+  public async getSuggestedGames(userId: string): Promise<Game[]> {
     const query = `
     WITH user_followed_games AS (
       SELECT
@@ -101,5 +100,4 @@ export class UserRepository extends Repository<User> {
 
     return suggestedGames;
   }
-
 }
