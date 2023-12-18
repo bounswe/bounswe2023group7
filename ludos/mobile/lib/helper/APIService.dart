@@ -282,7 +282,7 @@ class APIService {
 
   Future<http.Response> likeReview(String? authToken, String reviewId) async {
     var uri = Uri.parse("$baseURL/review/$reviewId/like");
-    final response = await http.put(uri, headers: {
+    final response = await http.post(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
@@ -292,11 +292,40 @@ class APIService {
   Future<http.Response> dislikeReview(
       String? authToken, String reviewId) async {
     var uri = Uri.parse("$baseURL/review/$reviewId/dislike");
-    final response = await http.put(uri, headers: {
+    final response = await http.post(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
     return response;
+  }
+
+  Future<http.Response> likeComment(String? authToken, String commentId) async {
+    var uri = Uri.parse("$baseURL/comment/$commentId/like-comment");
+    final response = await http.post(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to load entity data');
+    }
+  }
+
+  Future<http.Response> dislikeComment(
+      String? authToken, String commentId) async {
+    var uri = Uri.parse("$baseURL/comment/$commentId/dislike-comment");
+    final response = await http.post(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to load entity data');
+    }
   }
 
   Future<http.Response> listReviews(String? authToken, String gameId) async {

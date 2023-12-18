@@ -13,15 +13,15 @@ import '../visit_user_page.dart';
 import 'custom_widgets.dart';
 
 class Comment extends StatefulWidget {
-  bool isLiked;
-  bool isDisliked;
+  final bool isLiked;
+  final bool isDisliked;
   final String userId;
   final String threadId;
   final String parentId;
   final String username;
   final String content;
-   int? thumbUps;
-   int? thumbDowns;
+  final int thumbUps;
+  final int thumbDowns;
   final String time;
   final Color textColor;
   final Color backgroundColor;
@@ -82,8 +82,8 @@ class _CommentState extends State<Comment> {
   final String parentId;
   final String content;
   final String username;
-   int? thumbUps;
-   int? thumbDowns;
+  final int thumbUps;
+  final int thumbDowns;
   final String time;
   final Color textColor;
   final Color backgroundColor;
@@ -91,6 +91,7 @@ class _CommentState extends State<Comment> {
   final UserProvider userProvider;
   final String? token;
   final String commentId;
+  int numberOfLikes = 0;
 
   _CommentState({
     required this.isLiked,
@@ -115,6 +116,7 @@ class _CommentState extends State<Comment> {
   initState() {
     super.initState();
     comments = fetchData(widget.token);
+    numberOfLikes = thumbUps - thumbDowns;
     setState(() {});
   }
 
@@ -131,8 +133,8 @@ class _CommentState extends State<Comment> {
           parentId: widget.commentId,
           commentId: item['id'],
           content: item['text'],
-          isDisliked: false,
-          isLiked: false,
+          isDisliked: item['isDisLiked'] ?? false,
+          isLiked: item['isLiked'] ?? false,
           userId: item['author']['id'],
           username: item['author']['username'],
           thumbUps: item['likeCount'],
@@ -173,65 +175,80 @@ class _CommentState extends State<Comment> {
     }
   }
 
-  /*
   Future<void> userPressed(bool like) async {
     if (like && isDisliked) {
       try {
-        await APIService().likeThread(
-            widget.token, widget.threadId);
+        await APIService().likeComment(
+            widget.token, widget.commentId);
       } catch (e) {
-        throw Exception('Failed to like thread');
+        throw Exception('Failed to likee comment.');
       }
       isDisliked = false;
       isLiked = true;
+      setState(() {
+        numberOfLikes = numberOfLikes! + 2;
+      });
     } else if (!like && isDisliked) {
       try {
-        await APIService().dislikeThread(
-            widget.token, widget.threadId);
+        await APIService().dislikeComment(
+            widget.token, widget.commentId);
       } catch(e) {
-        throw Exception('Failed to dislike thread');
+        throw Exception('Failed to dislike comment.');
       }
-      isLiked = false;
       isDisliked = false;
+      setState(() {
+        numberOfLikes = numberOfLikes! + 1;
+      });
     } else if (!like && isLiked) {
       try {
-        await APIService().dislikeThread(
-            widget.token, widget.threadId);
+        await APIService().dislikeComment(
+            widget.token, widget.commentId);
       } catch(e) {
-        throw Exception('Failed to dislike thread');
+        throw Exception('Failed to dislike comment.');
       }
       isLiked = false;
       isDisliked = true;
+
+      setState(() {
+        numberOfLikes = numberOfLikes! - 2;
+      });
     } else if (like && isLiked) {
       try {
-        await APIService().likeThread(
-            widget.token, widget.threadId);
+        await APIService().likeComment(
+            widget.token, widget.commentId);
       } catch(e) {
-        throw Exception('Failed to like thread');
+        throw Exception('Failed to like comment.');
       }
       isLiked = false;
-      isDisliked = false;
+
+      setState(() {
+        numberOfLikes = numberOfLikes! - 1;
+      });
     } else if (like) {
       try {
-        await APIService().likeThread(
-            widget.token, widget.threadId);
+        await APIService().likeComment(
+            widget.token, widget.commentId);
       } catch(e) {
-        throw Exception('Failed to like thread');
+        throw Exception('Failed to like comment.');
       }
       isLiked = true;
-      isDisliked = false;
-    } else if (!like) {
+      setState(() {
+        numberOfLikes = numberOfLikes! + 1;
+      });
+    } else if(!like) {
       try {
-        await APIService().dislikeThread(
-            widget.token, widget.threadId);
+        await APIService().dislikeComment(
+            widget.token, widget.commentId);
       } catch(e) {
-        throw Exception('Failed to dislike thread');
+        throw Exception('Failed to dislike comment.');
       }
       isDisliked = true;
-      isLiked = false;
+      setState(() {
+        numberOfLikes = numberOfLikes! - 1;
+      });
     }
   }
-  */
+
   String timeAgo(String timestamp) {
     DateTime currentTime = DateTime.now();
     DateTime previousTime = DateTime.parse(timestamp);
@@ -423,7 +440,7 @@ class _CommentState extends State<Comment> {
                               if(!widget.userProvider.isLoggedIn){
                                 CustomWidgets.needLoginSnackbar(context, "Please log in to like a comment! ");
                               } else {
-                                //userPressed(true);
+                                userPressed(true);
                               }
                             }),
                             icon: Icon(
@@ -431,7 +448,7 @@ class _CommentState extends State<Comment> {
                               color: isLiked ? Colors.green : Colors.white,
                             ),
                           ),
-                          Text(thumbUps.toString(),
+                          Text(numberOfLikes.toString(),
                           style: TextStyle(
                             color: Colors.white
                           )
@@ -441,7 +458,7 @@ class _CommentState extends State<Comment> {
                               if(!widget.userProvider.isLoggedIn){
                                 CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a comment! ");
                               } else {
-                                //userPressed(false);
+                                userPressed(false);
                               }
                             }),
                             icon: Icon(

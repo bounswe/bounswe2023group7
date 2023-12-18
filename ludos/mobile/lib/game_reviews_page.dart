@@ -30,6 +30,7 @@ class _ReviewPageState extends State<ReviewPage> {
     try {
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
+        print(responseData);
         return Future.wait(responseData.map<Future<Review>>((dynamic item) async {
           final userResponse = await APIService().userInfoById(item['userId'], widget.token);
 
@@ -43,9 +44,11 @@ class _ReviewPageState extends State<ReviewPage> {
               gameId: item['gameId'],
               userId: item['userId'],
               username: json.decode(userResponse.body)['username'],
-              thumbUps: item['likedUserCount'],
-              thumbDowns: item['dislikeUserCount'],
+              thumbUps: item['likedUserCount'] ?? 0,
+              thumbDowns: item['dislikedUserCount'] ?? 0,
               time: item['createdAt'],
+              isLiked: item['isLikedByUser'] ?? false,
+              isDisliked: item['isDislikedByUser'] ?? false,
             );
           } else {
             print("Error fetching user info: ${userResponse.statusCode} - ${userResponse.body}");

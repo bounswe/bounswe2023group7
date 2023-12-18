@@ -10,7 +10,7 @@ import '../games_page.dart';
 import '../userProvider.dart';
 import 'package:provider/provider.dart';
 import '../helper/colors.dart';
-import '../search_page.dart';
+import '../detailed_user_search.dart';
 import '../main.dart';
 import '../search_landing_page.dart';
 
@@ -49,17 +49,14 @@ class CustomNavigationBar extends StatelessWidget {
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SearchLandingPage(userProvider: userProvider),
-                  ));
+
                 },
                 icon: const Icon(Icons.favorite)),
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    //builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
-                    builder: (context) => SearchPage(userProvider: userProvider),
+                    builder: (context) => SearchLandingPage(userProvider: userProvider),
                   ));
                 },
                 icon: const Icon(Icons.search_outlined)),
