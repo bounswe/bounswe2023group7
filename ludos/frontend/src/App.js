@@ -21,6 +21,7 @@ import axios from "axios";
 import SampleThreadPage from "./pages/SampleThreadPage.js";
 import CreateEntityPage from "./pages/CreateEntityPage.js";
 import GroupPage from "./pages/GroupPage.js";
+import GroupsPage from "./pages/GroupsPage.js";
 
 function App() {
   const [games, setGames] = useState([]);
@@ -504,6 +505,14 @@ function App() {
             element={
               <Layout>
                 <GroupPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/groups"
+            element={
+              <Layout>
+                <GroupsPage />
               </Layout>
             }
           />

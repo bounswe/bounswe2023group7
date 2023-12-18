@@ -4,7 +4,7 @@ import 'userProvider.dart';
 import 'helper/colors.dart';
 import 'search_page_game.dart';
 import 'search_page_user.dart';
-import 'search_page.dart';
+import 'detailed_user_search.dart';
 import 'detailed_game_search.dart';
 import 'detailed_post_search.dart';
 

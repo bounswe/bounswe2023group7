@@ -128,10 +128,11 @@ export class GameRepository extends Repository<Game> {
     return this.metadata.relations.map((relation) => relation.propertyName);
   }
 
-
-  public async getRelatedGames(gameId: string, tags: string[]): Promise<Game[]> {
-    
-    const tagArray = tags.map(tag => `'${tag}'`).join(',');
+  public async getRelatedGames(
+    gameId: string,
+    tags: string[],
+  ): Promise<Game[]> {
+    const tagArray = tags.map((tag) => `'${tag}'`).join(',');
     const query = `
       SELECT *,
         (SELECT COUNT(*) FROM UNNEST(games.tags) tag WHERE tag = ANY(ARRAY[${tagArray}])) AS match_count
