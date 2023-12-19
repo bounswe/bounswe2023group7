@@ -65,8 +65,8 @@ Due to backend service is crashed because of mobile, our progress is interrupted
 | Preparation of User Scenario | [#761](https://github.com/bounswe/bounswe2023group7/issues/761)  | Kardelen Erdal, Hatice Erk, Elif Kızılkaya | 22.12.2023 | 4 hrs |
 | Join/Leave Group functions | | Hatice Erk | 24.12.2023 | 2 hrs |
 | Game Summary Tag revision | | Hatice Erk | 24.12.2023 | 1 hr |
-| Annotations API connection | | Kardelen Erdal | 24.12.2023 | 2 hrs |
-| Create entity API revision | | Kardelen Erdal | 24.12.2023 | 2 hrs |
+| Annotations API connection | [#767](https://github.com/bounswe/bounswe2023group7/issues/767) | Kardelen Erdal | 24.12.2023 | 2 hrs |
+| Create entity API revision | [#769](https://github.com/bounswe/bounswe2023group7/issues/769)| Kardelen Erdal | 24.12.2023 | 2 hrs |
 | Add Company field to user pages |[#754](https://github.com/bounswe/bounswe2023group7/issues/754) | Fatma Sena Alçı | 24.12.2023 | 2 hrs |
 | Remove the notification button |[#752](https://github.com/bounswe/bounswe2023group7/issues/752)| Fatma Sena Alçı | 24.12.2023 | 10 mins |
 | Adding Upcoming Titles |[#753](https://github.com/bounswe/bounswe2023group7/issues/753) | Fatma Sena Alçı | 24.12.2023 | 3 hrs |
