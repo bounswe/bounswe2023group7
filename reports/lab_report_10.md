@@ -49,7 +49,10 @@ Due to backend service is crashed, our progress is interrupted. Annotations and 
 | Description | Issue | Assignee | Due | PR | 
 | --- | --- | --- | --- | --- |
 | Merging user search to the Main Search Page | [#744](https://github.com/bounswe/bounswe2023group7/issues/744) | Furkan Ülke | 19.12.2023 | [#745](https://github.com/bounswe/bounswe2023group7/pull/745) |
-| Fixing the error when clicking on some threads | [#737](https://github.com/bounswe/bounswe2023group7/issues/737) | Elif Kızılkaya | 19.12.23 | [#738](https://github.com/bounswe/bounswe2023group7/pull/738) |
+| Fixing the error when clicking on some threads | [#737](https://github.com/bounswe/bounswe2023group7/issues/737) | Elif Kızılkaya | 19.12.2023 | [#738](https://github.com/bounswe/bounswe2023group7/pull/738) |
+| Added create group thread page | [#748](https://github.com/bounswe/bounswe2023group7/issues/748) | Muhammet Tayyip Kamiloğlu | 19.12.2023 | [#749](https://github.com/bounswe/bounswe2023group7/pull/749) |
+| Changed image key in create entity page | [#741](https://github.com/bounswe/bounswe2023group7/issues/741) | Muhammet Tayyip Kamiloğlu | 19.12.2023 | [#742](https://github.com/bounswe/bounswe2023group7/pull/742) |
+
 
 ## Planned vs. Actual
 We planned to complete the backend part of the annotation feature but it could not be completed.
@@ -78,6 +81,10 @@ Due to backend service is crashed because of mobile, our progress is interrupted
 | Implement annotation in Frontend | [#755](https://github.com/bounswe/bounswe2023group7/issues/755) | Elif Kızılkaya, Yunus Emre Altuğ, Muhammet Tayyip Kamiloğlu | 25.12.23 | 5hr |
 | Profile Page User Type Revisions | [#764](https://github.com/bounswe/bounswe2023group7/issues/764) | Yunus Emre Altuğ | 24.12.23 | 1hr |
 | Game Page Related Games Design Improvements | [#765](https://github.com/bounswe/bounswe2023group7/issues/765) | Yunus Emre Altuğ | 24.12.23 | 1hr |
+| Add group search to general search | [#774](https://github.com/bounswe/bounswe2023group7/issues/774) | Muhammet Tayyip Kamiloğlu | 24.12.23 | 1hr |
+| Add upcoming titles to games page | [#775](https://github.com/bounswe/bounswe2023group7/issues/775)  | Muhammet Tayyip Kamiloğlu | 24.12.23 | 1hr |
+| Detailed search from games, forums and groups page | [#649](https://github.com/bounswe/bounswe2023group7/issues/649)  | Muhammet Tayyip Kamiloğlu | 24.12.23 | 1hr |
+
 
 ## Risks
 It is the final week and lots of thing is going on. There is a big risk in crashing backend again. Also, there are new endpoints are coming, it is a risk for the frontend and the mobile.
