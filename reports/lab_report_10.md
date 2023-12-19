@@ -14,12 +14,12 @@ Due to backend service is crashed, our progress is interrupted. Annotations and 
 | Image size problem | [#689](https://github.com/bounswe/bounswe2023group7/issues/689) | Furkan Ülke | 19.12.2023 | 2.5 hrs | 1.5 hrs | [#736](https://github.com/bounswe/bounswe2023group7/pull/736) |
 | Detailed Game Search | [#690](https://github.com/bounswe/bounswe2023group7/issues/690) | Furkan Ülke | 19.12.2023 | 6 hrs | 5 hrs | [#725](https://github.com/bounswe/bounswe2023group7/pull/725) |
 | Detailed Thread Search | [#691](https://github.com/bounswe/bounswe2023group7/issues/691) | Furkan Ülke | 19.12.2023 | 6 hrs | 6 hrs | [#734](https://github.com/bounswe/bounswe2023group7/pull/734) |
-| Create Group | [#692](https://github.com/bounswe/bounswe2023group7/issues/692) | Hatice Erk | 19.12.2023 | 3 hrs |
-| Groups Page | [#693](https://github.com/bounswe/bounswe2023group7/issues/693) | Hatice Erk | 19.12.2023 | 3 hrs |
-| Edit/delete of the Review | [#695](https://github.com/bounswe/bounswe2023group7/issues/695) | Hatice Erk | 19.12.2023 | 2 hrs |
-| Forum Revision | [#696](https://github.com/bounswe/bounswe2023group7/issues/696) | Hatice Erk | 19.12.2023 | 2 hrs |
-| Removing platforms from user page | [#687](https://github.com/bounswe/bounswe2023group7/issues/687) | Hatice Erk | 19.12.2023 | 1 hr |
-| Fixing Average Rating in Game Page | [#694](https://github.com/bounswe/bounswe2023group7/issues/694) | Hatice Erk | 19.12.2023 | 1 hrs |
+| Create Group | [#692](https://github.com/bounswe/bounswe2023group7/issues/692) | Hatice Erk | 19.12.2023 | 3 hrs | --- | Blocked |
+| Groups Page | [#693](https://github.com/bounswe/bounswe2023group7/issues/693) | Hatice Erk | 19.12.2023 | 3 hrs | --- | Blocked |
+| Edit/delete of the Review | [#695](https://github.com/bounswe/bounswe2023group7/issues/695) | Hatice Erk | 19.12.2023 | 2 hrs | --- | Blocked |
+| Forum Revision | [#696](https://github.com/bounswe/bounswe2023group7/issues/696) | Hatice Erk | 19.12.2023 | 2 hrs | --- | Blocked | 
+| Removing platforms from user page | [#687](https://github.com/bounswe/bounswe2023group7/issues/687) | Hatice Erk | 19.12.2023 | 1 hr | 15mins | [#750](https://github.com/bounswe/bounswe2023group7/pull/750) | 
+| Fixing Average Rating in Game Page | [#694](https://github.com/bounswe/bounswe2023group7/issues/694) | Hatice Erk | 19.12.2023 | 1 hrs | --- | Blocked |
 | Frontend and Mobile Team Peer Testing | [#715](https://github.com/bounswe/bounswe2023group7/issues/715) | Mobile and Frontend Team Members | 25.12.2023 | 5 hrs, may extend |
 | Game Recommendation on Game Page | [#701](https://github.com/bounswe/bounswe2023group7/issues/701) | Fatma Sena Alçı | 19.12.2023 | 2 hrs | 2 hrs|[#732](https://github.com/bounswe/bounswe2023group7/pull/732) |
 | Game Recommendation for User on Home Page |[#703](https://github.com/bounswe/bounswe2023group7/issues/703) | Fatma Sena Alçı | 19.12.2023 | 2 hrs | 3 hrs| [#733](https://github.com/bounswe/bounswe2023group7/pull/732) |
@@ -63,16 +63,16 @@ Due to backend service is crashed because of mobile, our progress is interrupted
 | Preparation of Final Milestone report | [#759](https://github.com/bounswe/bounswe2023group7/issues/759) | everyone | 29.12.23 | 5hr |
 | Preparation of Individual report | [#760](https://github.com/bounswe/bounswe2023group7/issues/760) | everyone | 29.12.23 | 3hr |
 | Preparation of User Scenario | [#761](https://github.com/bounswe/bounswe2023group7/issues/761)  | Kardelen Erdal, Hatice Erk, Elif Kızılkaya | 22.12.2023 | 4 hrs |
-| Join/Leave Group functions | | Hatice Erk | 24.12.2023 | 2 hrs |
-| Game Summary Tag revision | | Hatice Erk | 24.12.2023 | 1 hr |
+| Join/Leave Group functions | [#766](https://github.com/bounswe/bounswe2023group7/issues/766) | Hatice Erk | 24.12.2023 | 2 hrs |
+| Game Summary Tag revision | [#768](https://github.com/bounswe/bounswe2023group7/issues/768) | Hatice Erk | 24.12.2023 | 1 hr |
 | Annotations API connection | [#767](https://github.com/bounswe/bounswe2023group7/issues/767) | Kardelen Erdal | 24.12.2023 | 2 hrs |
 | Create entity API revision | [#769](https://github.com/bounswe/bounswe2023group7/issues/769)| Kardelen Erdal | 24.12.2023 | 2 hrs |
 | Add Company field to user pages |[#754](https://github.com/bounswe/bounswe2023group7/issues/754) | Fatma Sena Alçı | 24.12.2023 | 2 hrs |
 | Remove the notification button |[#752](https://github.com/bounswe/bounswe2023group7/issues/752)| Fatma Sena Alçı | 24.12.2023 | 10 mins |
 | Adding Upcoming Titles |[#753](https://github.com/bounswe/bounswe2023group7/issues/753) | Fatma Sena Alçı | 24.12.2023 | 3 hrs |
 | Last Activity section | [#751](https://github.com/bounswe/bounswe2023group7/issues/751) | Furkan Ülke | 24.12.2023 | 2.5 hrs | 
-| Username - User ID map endpoint | | Melih Gezer | 24.12.2023 | 1 hr |
-| Reviews and Comments visibility | | Melih Gezer | 24.12.2023 | 1 hr |
+| Username - User ID map endpoint | [#770](https://github.com/bounswe/bounswe2023group7/issues/770) | Melih Gezer | 24.12.2023 | 1 hr |
+| Reviews and Comments visibility | [#772](https://github.com/bounswe/bounswe2023group7/issues/772) | Melih Gezer | 24.12.2023 | 1 hr |
 | Footer for the website/contact part in the footer | [#758](https://github.com/bounswe/bounswe2023group7/issues/758) | Elif Kızılkaya | 25.12.23 | 1hr |
 | Suggested game part in the home page | [#756](https://github.com/bounswe/bounswe2023group7/issues/756) | Elif Kızılkaya | 25.12.23 | 1hr |
 | Implement annotation in Frontend | [#755](https://github.com/bounswe/bounswe2023group7/issues/755) | Elif Kızılkaya, Yunus Emre Altuğ, Muhammet Tayyip Kamiloğlu | 25.12.23 | 5hr |
