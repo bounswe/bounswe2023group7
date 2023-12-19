@@ -78,13 +78,7 @@ export default function GroupPage() {
 
     const [threads, setThreads] = useState([]);
     const [auth, setAuth] = useState(false);
-    const [game, setGame] = useState(null);
-    const [admin, setAdmin] = useState(null);
     const [members, setMembers] = useState([]);
-    const [currentMembers, setCurrentMembers] = useState(0);
-    const [description, setDescription] = useState("");
-    const [name, setName] = useState("");
-    const [tags, setTags] = useState([]);
     const [group, setGroup] = useState(null);
     const [createThreadDialogOpen, setCreateThreadDialogOpen] = useState(false);
     const [editGroupDialogOpen, setEditGroupDialogOpen] = useState(false);
@@ -173,6 +167,16 @@ export default function GroupPage() {
             .catch((error) => {
                 console.log(error);
             });
+
+
+        axiosInstance
+            .get(`/user/info`)
+            .then((response) => {
+                localStorage.setItem("userId", response.data.id);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     useEffect(() => {
@@ -203,14 +207,16 @@ export default function GroupPage() {
                 <Grid container spacing={2} sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Grid item spacing={2} sx={{ display: 'flex', flexDirection: 'row' }}>
                         <Grid item xs={3} sx={{ display: 'flex', flexDirection: "column", alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                            <Button
-                                size='small'
-                                variant='contained'
-                                style={{ backgroundColor: '#68A849', color: 'white', fontWeight: 'bold', borderRadius: '10px' }}
-                                onClick={handleEditGroupOpen}
-                            >
-                                Edit Group
-                            </Button>
+                            {localStorage.getItem("userId") === group?.admin?.id ? (
+                                <Button
+                                    size='small'
+                                    variant='contained'
+                                    style={{ backgroundColor: '#68A849', color: 'white', fontWeight: 'bold', borderRadius: '10px' }}
+                                    onClick={handleEditGroupOpen}
+                                >
+                                    Edit Group
+                                </Button>)
+                                : null}
                             <Avatar sx={{ width: 200, height: 200, borderRadius: '15px', marginTop: '20px' }} src={group?.logo} />
                         </Grid>
                         <Grid item xs={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 'auto' }}>
