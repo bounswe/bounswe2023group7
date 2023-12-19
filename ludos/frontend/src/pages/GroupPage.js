@@ -22,6 +22,7 @@ import axios from 'axios';
 import ForumTopic from '../components/ForumTopicForGame';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import CreateGroupThreadForm from '../components/CreateGroupThreadForm';
+import EditGroupForm from '../components/EditGroupForm';
 
 
 // Styled components
@@ -84,7 +85,8 @@ export default function GroupPage() {
     const [name, setName] = useState("");
     const [tags, setTags] = useState([]);
     const [group, setGroup] = useState(null);
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const [createThreadDialogOpen, setCreateThreadDialogOpen] = useState(false);
+    const [editGroupDialogOpen, setEditGroupDialogOpen] = useState(false);
     const [isJoined, setIsJoined] = useState(false);
 
     const axiosInstance = axios.create({
@@ -136,13 +138,23 @@ export default function GroupPage() {
         navigate(`/profile-page/${member.id}`);
     }
 
+    const handleEditGroupOpen = () => {
+        setEditGroupDialogOpen(true);
+    };
+
+    const handleEditGroupClose = () => {
+        setEditGroupDialogOpen(false);
+    };
+
     const handleClickOpen = () => {
-        setDialogOpen(true);
+        setCreateThreadDialogOpen(true);
     };
 
     const handleClose = () => {
-        setDialogOpen(false);
+        setCreateThreadDialogOpen(false);
     };
+
+
 
     useEffect(() => {
         if (localStorage.getItem("accessToken")) {
@@ -188,8 +200,16 @@ export default function GroupPage() {
                     padding: '50px',
                 }}>
                 <Grid container spacing={2} sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <Grid item xs={3}>
-                        <Avatar sx={{ width: 200, height: 200 }} src={group?.logo} />
+                    <Grid item xs={3} sx={{ display: 'flex', flexDirection: "column", alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <Button
+                            size='small'
+                            variant='contained'
+                            color='secondary'
+                            onClick={handleEditGroupOpen}
+                        >
+                            Edit Group
+                        </Button>
+                        <Avatar sx={{ width: 200, height: 200, borderRadius: '15px', marginTop: '20px' }} src={group?.logo} />
                     </Grid>
                     <Grid item xs={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 'auto' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
@@ -212,6 +232,8 @@ export default function GroupPage() {
                                 onClick={isJoined ? handleLeave : handleJoin}
                                 variant="contained"
                                 color={isJoined ? "primary" : "secondary"}
+                                sx={{ borderRadius: '10px', fontWeight: 'bold', paddingX: '20px', paddingY: '10px' }}
+
                             >
                                 {isJoined ? "Leave" : "Join"}
                             </Button>
@@ -329,19 +351,33 @@ export default function GroupPage() {
 
             <Dialog
                 xs={12}
-                open={dialogOpen}
+                open={createThreadDialogOpen}
                 onClose={handleClose}
                 aria-labelledby="form-dialog-title"
-                PaperProps={{
-                    style: {
-                        width: '80%', // You can adjust this value as needed
-                    },
-                }}>
-                <DialogTitle id="form-dialog-title" style={{ flex: 'display', alignItems: 'center', fontWeight: 'bold' }}>Create Thread</DialogTitle>
-                <DialogContent >
+            >
+                <DialogTitle id="form-dialog-title" style={{ display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>Create Thread</DialogTitle>
+                <DialogContent>
                     <CreateGroupThreadForm group={group} game={group?.game} />
                 </DialogContent>
             </Dialog>
+
+            <Dialog
+                fullWidth
+                maxWidth="sm"
+                open={editGroupDialogOpen}
+                onClose={handleEditGroupClose}
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <DialogContent style={{ display: 'flex' }}>
+                    <EditGroupForm group={group} game={group?.game} />
+                </DialogContent>
+            </Dialog>
+
+
         </Container >
 
     );
