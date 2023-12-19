@@ -17,9 +17,11 @@ import {
     DialogContent,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import PeopleIcon from '@mui/icons-material/People';
 import axios from 'axios';
-import ForumTopic from '../components/ForumTopic';
-import { useParams, Link } from 'react-router-dom';
+import ForumTopic from '../components/ForumTopicForGame';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import CreateGroupThreadForm from '../components/CreateGroupThreadForm';
 
 
 // Styled components
@@ -69,6 +71,7 @@ const convertToSlug = (text) => {
 }
 
 export default function GroupPage() {
+    const navigate = useNavigate();
     const { groupId } = useParams();
 
     const [threads, setThreads] = useState([]);
@@ -82,6 +85,56 @@ export default function GroupPage() {
     const [tags, setTags] = useState([]);
     const [group, setGroup] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [isJoined, setIsJoined] = useState(false);
+
+    const axiosInstance = axios.create({
+        baseURL: `http://${process.env.REACT_APP_API_URL}`,
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+    });
+
+    const handleJoin = () => {
+        axiosInstance
+            .put(`/group/join/${groupId}`)
+            .then((response) => {
+                axiosInstance
+                    .get(`/group/${groupId}`)
+                    .then((response) => {
+                        setMembers(response.data.members);
+                        setIsJoined(true);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const handleLeave = () => {
+        axiosInstance
+            .put(`/group/leave/${groupId}`)
+            .then((response) => {
+                axiosInstance
+                    .get(`/group/${groupId}`)
+                    .then((response) => {
+                        setMembers(response.data.members);
+                        setIsJoined(false);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const handleMemberClick = (member) => {
+        navigate(`/profile-page/${member.id}`);
+    }
 
     const handleClickOpen = () => {
         setDialogOpen(true);
@@ -90,13 +143,6 @@ export default function GroupPage() {
     const handleClose = () => {
         setDialogOpen(false);
     };
-
-    const axiosInstance = axios.create({
-        baseURL: `http://${process.env.REACT_APP_API_URL}`,
-        headers: {
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-    });
 
     useEffect(() => {
         if (localStorage.getItem("accessToken")) {
@@ -107,6 +153,8 @@ export default function GroupPage() {
             .get(`/group/${groupId}`)
             .then((response) => {
                 setGroup(response.data);
+                setMembers(response.data.members);
+                setIsJoined(response.data.isJoined);
                 console.log(response.data);
             })
             .catch((error) => {
@@ -115,26 +163,25 @@ export default function GroupPage() {
     }, []);
 
     useEffect(() => {
-        if (group) {
-            axiosInstance
-                .get(`/post?groupId=${groupId}&isLiked=false&isDisliked=false&order=ASC&orderByKey=numberOfLikes`)
-                .then((response) => {
-                    setThreads(response.data);
-                    console.log(response.data);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
+        axiosInstance
+            .get(`/post?groupId=${groupId}&isLiked=false&isDisliked=false&order=ASC&orderByKey=numberOfLikes`)
+            .then((response) => {
+                setThreads(response.data.items);
+                console.log(response.data.items);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
     }, []);
 
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, overflow: 'hidden' }}>
+        <Container maxWidth="lg" sx={{ mt: 4, overflow: 'hidden', marginBottom: '5s0px' }}>
             <Box
                 sx={{
                     borderRadius: '20px',
-                    background: 'rgba(135,206,235)',
+                    background: '#569CB1',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -144,26 +191,33 @@ export default function GroupPage() {
                     <Grid item xs={3}>
                         <Avatar sx={{ width: 200, height: 200 }} src={group?.logo} />
                     </Grid>
-                    <Grid item xs={6}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'space-between' }}>
+                    <Grid item xs={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 'auto' }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                             <Typography variant="h4" sx={{
                                 display: 'flex',
-                                justifyContent: 'flex-start',
+                                justifyContent: 'center',
                                 fontWeight: 'bold',
-                                color: '#0c1925',
+                                color: 'white',
                             }}>
                                 {group?.name.toUpperCase()}
                             </Typography>
                             <Link to={`/game/${convertToSlug(group?.game?.title)}`} style={{ textDecoration: 'none' }}>
-                                <Typography variant="subtitle1" sx={{ display: 'flex', justifyContent: 'center', fontSize: '30px' }}>{group?.game?.title}</Typography>
+                                <Typography variant="subtitle1" sx={{ display: 'flex', justifyContent: 'center', fontSize: '30px', color: "#E6E6E6" }}>{group?.game?.title}</Typography>
                             </Link>
                         </Box>
                     </Grid>
-                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                         <Stack direction="column" spacing={2} alignItems="center">
-                            <JoinButton>Join</JoinButton>
+                            <Button
+                                onClick={isJoined ? handleLeave : handleJoin}
+                                variant="contained"
+                                color={isJoined ? "primary" : "secondary"}
+                            >
+                                {isJoined ? "Leave" : "Join"}
+                            </Button>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Typography variant="body1" sx={{ mr: 1 }}>{group?.members?.length}/{group?.maxNumberOfMembers}</Typography>
+                                <Typography variant="body1" sx={{ mr: 1 }}>{members?.length}/{group?.maxNumberOfMembers}</Typography>
+                                <PeopleIcon />
                             </Box>
                         </Stack>
                     </Grid>
@@ -179,9 +233,10 @@ export default function GroupPage() {
                         my: 2,
                         display: 'flex',
                         flexDirection: 'column',
-                        backgroundColor: 'white',
+                        backgroundColor: '#2F5B7A',
+                        color: 'white',
                     }}>
-                        <Typography variant="h6" gutterBottom sx={{ display: 'flex', justifyContent: 'flex-start' }}>Description</Typography>
+                        <Typography variant="h6" gutterBottom sx={{ display: 'flex', justifyContent: 'flex-start', fontWeight: 'bold' }}>Description</Typography>
                         <Typography variant="body1" paragraph sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
                             {group?.description}
                         </Typography>
@@ -192,26 +247,23 @@ export default function GroupPage() {
                         my: 2,
                         display: 'flex',
                         flexDirection: 'column',
-                        backgroundColor: 'white',
+                        backgroundColor: '#2F5B7A',
+                        color: 'white',
                     }}>
-                        <Typography variant="h6" gutterBottom>Posts</Typography>
-                        {auth ? (
-                            <Box>
-                                <List>
-                                    {threads.map((topic, key) => (
-                                        <ForumTopic key={key} topic={topic} />
-                                    ))}
-                                </List>
-                                <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+                        <Typography variant="h6" gutterBottom sx={{ display: 'flex', justifyContent: 'flex-start', fontWeight: 'bold' }}>Posts</Typography>
+
+                        {auth ? (isJoined ? (
+                            <Box spacing={2}>
+                                {threads?.map((topic, key) => (
+                                    <ForumTopic style={{ backgroundColor: 'blue' }} key={key} topic={topic} />
+                                ))}
+                                <Button variant="outlined" sx={{ color: 'white' }} onClick={handleClickOpen}>
                                     Create Thread
                                 </Button>
-                                <Dialog open={dialogOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
-                                    <DialogTitle id="form-dialog-title">Create Thread</DialogTitle>
-                                    <DialogContent>
-
-                                    </DialogContent>
-                                </Dialog>
                             </Box>
+                        ) : (
+                            <Typography variant="body1" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>You must be a member to see the group threads.</Typography>
+                        )
                         ) : (
                             (
                                 <Box>
@@ -231,12 +283,24 @@ export default function GroupPage() {
                 </Grid>
 
                 <Grid item xs={12} md={4} my={2}>
-                    <MembersPaper elevation={3}>
-                        <Typography variant="h6" gutterBottom>Members</Typography>
+                    <MembersPaper elevation={3} style={{ backgroundColor: '#68A849' }}>
+                        <Typography variant="h6" gutterBottom sx={{ display: 'flex', justifyContent: 'flex-start', fontWeight: 'bold' }}>Members</Typography>
                         {auth ? (
                             <List>
-                                {group?.members.map((member, index) => (
-                                    <ListItem key={index} sx={{ backgroundColor: 'white', my: '10px', borderRadius: '20px', padding: '10px' }}>
+                                {members.map((member, index) => (
+                                    <ListItem
+                                        key={index}
+                                        onClick={() => handleMemberClick(member)}
+                                        sx={{
+                                            backgroundColor: 'white',
+                                            my: '10px',
+                                            borderRadius: '20px',
+                                            padding: '10px',
+                                            '&:hover': {
+                                                backgroundColor: 'lightgray',
+                                                cursor: 'pointer',
+                                            },
+                                        }}>
                                         <ListItemAvatar>
                                             <Avatar alt={member?.username} src={member?.avatar} />
                                         </ListItemAvatar>
@@ -262,7 +326,24 @@ export default function GroupPage() {
                     </MembersPaper>
                 </Grid>
             </Grid>
+
+            <Dialog
+                xs={12}
+                open={dialogOpen}
+                onClose={handleClose}
+                aria-labelledby="form-dialog-title"
+                PaperProps={{
+                    style: {
+                        width: '80%', // You can adjust this value as needed
+                    },
+                }}>
+                <DialogTitle id="form-dialog-title" style={{ flex: 'display', alignItems: 'center', fontWeight: 'bold' }}>Create Thread</DialogTitle>
+                <DialogContent >
+                    <CreateGroupThreadForm group={group} game={group?.game} />
+                </DialogContent>
+            </Dialog>
         </Container >
+
     );
 }
 
