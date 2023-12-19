@@ -340,7 +340,7 @@ export default function GroupPage() {
                                         <ListItemAvatar>
                                             <Avatar alt={member?.username} src={member?.avatar} />
                                         </ListItemAvatar>
-                                        <ListItemText primary={member?.username} />
+                                        <ListItemText primary={member?.username} secondary={member?.username === group?.admin?.username ? "Admin" : null} />
                                     </ListItem>
                                 ))}
                             </List>
