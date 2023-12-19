@@ -76,7 +76,8 @@ Due to backend service is crashed because of mobile, our progress is interrupted
 | Footer for the website/contact part in the footer | [#758](https://github.com/bounswe/bounswe2023group7/issues/758) | Elif Kızılkaya | 25.12.23 | 1hr |
 | Suggested game part in the home page | [#756](https://github.com/bounswe/bounswe2023group7/issues/756) | Elif Kızılkaya | 25.12.23 | 1hr |
 | Implement annotation in Frontend | [#755](https://github.com/bounswe/bounswe2023group7/issues/755) | Elif Kızılkaya, Yunus Emre Altuğ, Muhammet Tayyip Kamiloğlu | 25.12.23 | 5hr |
-
+| Profile Page User Type Revisions | [#764](https://github.com/bounswe/bounswe2023group7/issues/764) | Yunus Emre Altuğ | 24.12.23 | 1hr |
+| Game Page Related Games Design Improvements | [#765](https://github.com/bounswe/bounswe2023group7/issues/765) | Yunus Emre Altuğ | 24.12.23 | 1hr |
 
 ## Risks
 It is the final week and lots of thing is going on. There is a big risk in crashing backend again. Also, there are new endpoints are coming, it is a risk for the frontend and the mobile.
