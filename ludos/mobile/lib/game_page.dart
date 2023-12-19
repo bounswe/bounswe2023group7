@@ -19,6 +19,7 @@ import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
 import 'reusable_widgets/custom_navigation_bar.dart';
+import 'reusable_widgets/annotation.dart';
 
 class GamePage extends StatefulWidget {
   final VoidCallback onRefresh;
@@ -155,12 +156,14 @@ class _GamePageState extends State<GamePage> {
           }
         }).toList());
       } else {
+        return[];
         print("Error: ${response.statusCode} - ${response.body}");
-        throw Exception('Failed to load reviews!');
+        //throw Exception('Failed to load reviews!');
       }
     } catch (error) {
+      return[];
       print("Error: $error");
-      throw Exception('Failed to load reviews from API!');
+      //throw Exception('Failed to load reviews from API!');
     }
   }
 
@@ -182,7 +185,7 @@ class _GamePageState extends State<GamePage> {
         ContextMenuButtonItem(
           label: 'Annotate',
           onPressed: () {
-            // Annotation code    
+            Annotation.createAnnotation(context, "");
           },
         ),
       );
@@ -504,13 +507,29 @@ class _GamePageState extends State<GamePage> {
             ),
             const SizedBox(height: 20),
             if (gameData['gameBio'] != null)
-              Text(
+              SelectableText(
                 gameData['gameBio'].toString(),
                 style: const TextStyle(
                   color: MyColors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
+               contextMenuBuilder:(context, editableTextState) {
+                final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
+                buttonItems.insert(
+                  0,
+                  ContextMenuButtonItem(
+                    label: 'Annotate',
+                    onPressed: () {
+                      // Annotation code    
+                    },
+                  ),
+                );
+                return AdaptiveTextSelectionToolbar.buttonItems(
+                  anchors: editableTextState.contextMenuAnchors,
+                  buttonItems: buttonItems,
+                );
+              },
               ),
             const SizedBox(height: 20),
             if (gameData['averageUserCompilationDuration'] != null)

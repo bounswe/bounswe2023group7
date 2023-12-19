@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ludos_mobile_app/helper/colors.dart';
+import 'package:ludos_mobile_app/reusable_widgets/annotation.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_comment.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/reusable_widgets/like_dislike_button.dart';
@@ -144,7 +145,8 @@ class _ThreadPageState extends State<ThreadPage>
         ContextMenuButtonItem(
           label: 'Annotate',
           onPressed: () {
-            // Annotation code    
+            // Annotation code
+            Annotation.createAnnotation(context, "");   
           },
         ),
       );
