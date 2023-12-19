@@ -15,6 +15,7 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
+    Chip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PeopleIcon from '@mui/icons-material/People';
@@ -197,54 +198,67 @@ export default function GroupPage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '50px',
+                    padding: '20px',
                 }}>
-                <Grid container spacing={2} sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <Grid item xs={3} sx={{ display: 'flex', flexDirection: "column", alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                        <Button
-                            size='small'
-                            variant='contained'
-                            color='secondary'
-                            onClick={handleEditGroupOpen}
-                        >
-                            Edit Group
-                        </Button>
-                        <Avatar sx={{ width: 200, height: 200, borderRadius: '15px', marginTop: '20px' }} src={group?.logo} />
-                    </Grid>
-                    <Grid item xs={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 'auto' }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                            <Typography variant="h4" sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                fontWeight: 'bold',
-                                color: 'white',
-                            }}>
-                                {group?.name.toUpperCase()}
-                            </Typography>
-                            <Link to={`/game/${convertToSlug(group?.game?.title)}`} style={{ textDecoration: 'none' }}>
-                                <Typography variant="subtitle1" sx={{ display: 'flex', justifyContent: 'center', fontSize: '30px', color: "#E6E6E6" }}>{group?.game?.title}</Typography>
-                            </Link>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                        <Stack direction="column" spacing={2} alignItems="center">
+                <Grid container spacing={2} sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Grid item spacing={2} sx={{ display: 'flex', flexDirection: 'row' }}>
+                        <Grid item xs={3} sx={{ display: 'flex', flexDirection: "column", alignItems: 'flex-start', justifyContent: 'space-between' }}>
                             <Button
-                                onClick={isJoined ? handleLeave : handleJoin}
-                                variant="contained"
-                                color={isJoined ? "primary" : "secondary"}
-                                sx={{ borderRadius: '10px', fontWeight: 'bold', paddingX: '20px', paddingY: '10px' }}
-
+                                size='small'
+                                variant='contained'
+                                style={{ backgroundColor: '#68A849', color: 'white', fontWeight: 'bold', borderRadius: '10px' }}
+                                onClick={handleEditGroupOpen}
                             >
-                                {isJoined ? "Leave" : "Join"}
+                                Edit Group
                             </Button>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Typography variant="body1" sx={{ mr: 1 }}>{members?.length}/{group?.maxNumberOfMembers}</Typography>
-                                <PeopleIcon />
+                            <Avatar sx={{ width: 200, height: 200, borderRadius: '15px', marginTop: '20px' }} src={group?.logo} />
+                        </Grid>
+                        <Grid item xs={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 'auto' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '10px' }}>
+                                <Typography variant="h4" sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    fontWeight: 'bold',
+                                    color: 'white',
+                                }}>
+                                    {group?.name.toUpperCase()}
+                                </Typography>
+                                <Link to={`/game/${convertToSlug(group?.game?.title)}`} style={{ textDecoration: 'none' }}>
+                                    <Typography variant="subtitle1" sx={{ display: 'flex', justifyContent: 'center', fontSize: '25px', color: "#E6E6E6" }}>{group?.game?.title}</Typography>
+                                </Link>
                             </Box>
-                        </Stack>
+                        </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <Stack direction="column" spacing={2} alignItems="center">
+                                <Button
+                                    onClick={isJoined ? handleLeave : handleJoin}
+                                    variant="contained"
+                                    color={isJoined ? "primary" : "secondary"}
+                                    sx={{ borderRadius: '10px', fontWeight: 'bold', paddingX: '20px', paddingY: '10px' }}
+
+                                >
+                                    {isJoined ? "Leave" : "Join"}
+                                </Button>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant="body1" sx={{ mr: 1 }}>{members?.length}/{group?.maxNumberOfMembers}</Typography>
+                                    <PeopleIcon />
+                                </Box>
+                            </Stack>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+                        <div>
+                            {group?.tags.map((tag, index) => (
+                                <Chip
+                                    key={index}
+                                    label={tag}
+                                    color="primary"
+                                    style={{ marginRight: '4px', backgroundColor: '#F75C03', fontWeight: 'bold' }}
+                                />
+                            ))}
+                        </div>
                     </Grid>
                 </Grid>
-
             </Box>
 
             <Grid container spacing={2}>
@@ -307,7 +321,7 @@ export default function GroupPage() {
                 <Grid item xs={12} md={4} my={2}>
                     <MembersPaper elevation={3} style={{ backgroundColor: '#68A849' }}>
                         <Typography variant="h6" gutterBottom sx={{ display: 'flex', justifyContent: 'flex-start', fontWeight: 'bold' }}>Members</Typography>
-                        {auth ? (
+                        {auth ? (isJoined ? (
                             <List>
                                 {members.map((member, index) => (
                                     <ListItem
@@ -330,6 +344,9 @@ export default function GroupPage() {
                                     </ListItem>
                                 ))}
                             </List>
+                        ) : (
+                            <Typography variant="body1" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>You must be a member to see the group members.</Typography>
+                        )
                         ) :
                             (
                                 <Box>
