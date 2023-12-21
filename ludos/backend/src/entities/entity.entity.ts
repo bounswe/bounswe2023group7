@@ -23,7 +23,7 @@ export class Entity {
   @Column({ type: 'json', default: {} })
   content: object;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   description: string;
 
   @Column()

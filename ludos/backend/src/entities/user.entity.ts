@@ -101,10 +101,10 @@ export class User {
   @ManyToMany('Group', 'members')
   groups: Group[];
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   associatedTeam: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   associatedCompany: string;
 
   @BeforeInsert()

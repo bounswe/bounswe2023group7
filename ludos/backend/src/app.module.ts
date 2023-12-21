@@ -90,7 +90,7 @@ import { AnnotationService } from './services/annotation.service';
     CommentController,
     EntityController,
     GroupController,
-    AnnotationController
+    AnnotationController,
   ],
   providers: [
     SearchService,
@@ -113,7 +113,7 @@ import { AnnotationService } from './services/annotation.service';
     CompletionDurationRepository,
     GroupRepository,
     GroupService,
-    AnnotationService
+    AnnotationService,
   ],
 })
 export class AppModule implements NestModule {
