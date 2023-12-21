@@ -29,4 +29,9 @@ export class EntityUpdateDto {
   @IsString()
   @IsOptional()
   name: string;
+
+  @ApiProperty({ example: 'A support character' })
+  @IsString()
+  @IsOptional()
+  description: string;
 }

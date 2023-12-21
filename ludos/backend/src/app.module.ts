@@ -44,6 +44,8 @@ import { Group } from './entities/group.entity';
 import { GroupController } from './controllers/group.controller';
 import { GroupRepository } from './repositories/group.repository';
 import { GroupService } from './services/group.service';
+import { AnnotationController } from './controllers/annotation.controller';
+import { AnnotationService } from './services/annotation.service';
 
 @Module({
   imports: [
@@ -88,6 +90,7 @@ import { GroupService } from './services/group.service';
     CommentController,
     EntityController,
     GroupController,
+    AnnotationController
   ],
   providers: [
     SearchService,
@@ -110,6 +113,7 @@ import { GroupService } from './services/group.service';
     CompletionDurationRepository,
     GroupRepository,
     GroupService,
+    AnnotationService
   ],
 })
 export class AppModule implements NestModule {
