@@ -18,6 +18,7 @@ import 'game_reviews_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
+import 'main.dart';
 import 'reusable_widgets/custom_navigation_bar.dart';
 
 class GamePage extends StatefulWidget {
@@ -173,7 +174,12 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(context);
     recGameList = loadRecGames(userProvider, userProvider.token);
-    return SelectionArea(contextMenuBuilder:(context, editableTextState) {
+    return WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+      return false;
+    },
+    child: SelectionArea(contextMenuBuilder:(context, editableTextState) {
       final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
       buttonItems.insert(
         0,
@@ -189,6 +195,7 @@ class _GamePageState extends State<GamePage> {
         buttonItems: buttonItems,
       );
     },
+
       child: Scaffold(
       endDrawer: Drawer(
         child: Container(
@@ -735,6 +742,7 @@ class _GamePageState extends State<GamePage> {
 
       bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
     )
-);
+),
+    );
   }
 }
