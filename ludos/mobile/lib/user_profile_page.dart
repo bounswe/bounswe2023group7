@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:ludos_mobile_app/reusable_widgets/rec_games.dart';
-import 'package:provider/provider.dart';
 import 'edit_profile_page.dart';
 import 'game_page.dart';
 import 'helper/APIService.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:ludos_mobile_app/reusable_widgets/last_activity_summary.dart';
 
 class UserProfilePage extends StatefulWidget {
   final UserProvider userProvider;
@@ -21,13 +20,15 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage> {
   final APIService apiService = APIService();
   late Map<String, dynamic> userData = {};
-  //late Future<List<RecommendedGame>> recGameListforUser;
+  late String? userID = "";
+  late List<Map<String, dynamic>>? lastActivities = [];
 
   @override
-
   void initState() {
     super.initState();
     loadUserData();
+    retrieveUserID();
+    fetchLastActivities();
   }
 
   Future<void> loadUserData() async {
@@ -36,7 +37,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
       setState(() {
         if(response.statusCode == 200){
           userData = json.decode(response.body);
-          print(userData);
         }
         else{
           userData = {};
@@ -62,38 +62,61 @@ Future<void> _sendEmail(String emailAddress) async {
   }
 }
 
-  /*
-  Future<List<RecommendedGame>> loadRecGamesforUser(UserProvider userProvider, String? token) async {
-    final response = await apiService.getGameRecForUser(userProvider.token);
-    try {
-      if (response.statusCode == 200) {
-        final  List<dynamic> gamesList = json.decode(response.body);
-        return gamesList
-            .map((dynamic item) => RecommendedGame(
-            title: item['title'],
-            averageRating: (item['averageRating'] == null
-                ? 0
-                : item['averageRating'].toDouble()),
-            coverLink: item['coverLink'],
-            id: item['id'],
-            token: token,
-            userProvider: userProvider))
-            .toList();
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
-        throw Exception('Failed to load games');
+Future<void> retrieveUserID() async {
+  try {
+    var response = await apiService.search(widget.userProvider.token, widget.id!);
+      if(response.statusCode == 200){
+        userData = json.decode(response.body);
+        for (var i = 0; i < userData['users'].length; i++) {
+          if (userData['users'][i]['username'] == widget.id) {
+            userData = userData['users'][i];
+            break;
+          }
+        }
+        setState(() {
+          userID = userData['id'].toString();
+        });
+
+        //print(userData);
       }
-    } catch (error) {
-      print("Error: $error");
-      throw Exception('Failed to load games');
-    }
+      else{
+        userData = {};
+        print('Error loading user data: ${response.statusCode}');
+      }
+  } catch (e) {
+    print('Error loading user data: $e');
   }
-   */
+}
+
+Future<void> fetchLastActivities() async {
+  final response = await apiService.lastActivities(
+      widget.userProvider.token,
+      limit: 5,
+      ownerUserId: userID,
+  );
+  try {
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      //print(responseData);
+      for (var i = 0; i < responseData["items"].length; i++) {
+        if(responseData["items"][i]['user']['id'] == userID){
+          setState(() {
+            lastActivities!.add(responseData["items"][i]);
+          });
+        }
+      }
+    } else {
+      print("Error: ${response.statusCode} - ${response.body}");
+      throw Exception('Failed to load posts');
+    }
+  } catch (error) {
+    print("Error: $error");
+    throw Exception('Failed to load threads!');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
-    //var userProvider = Provider.of<UserProvider>(context);
-    //recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
     return Scaffold(
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
@@ -472,6 +495,48 @@ Future<void> _sendEmail(String emailAddress) async {
               endIndent: 25,
             ),
             const SizedBox(height: 10),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(width: 20),
+                Text(
+                  'Last Activities:',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: MyColors.white,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: lastActivities!.map<Widget>((activity) {
+                  return LastActivitySummary(
+                      gameID: activity['game']['id'].toString(),
+                      postID: activity['id'].toString(),
+                      gameTitle: activity['game']['title'].toString(),
+                      createdAt: activity['createdAt'].toString(),
+                      userID: activity['user']['id'].toString(),
+                      postTitle: activity['title'].toString(),
+                      postContent: activity['body'].toString(),
+                      gameCoverlink: activity['game']['coverLink'].toString(),
+                      userProvider: widget.userProvider);
+                }).toList(),
+              ),
+            ),
+            const SizedBox(height: 10),
+          const Divider(
+            height: 5,
+            color: MyColors.orange,
+            thickness: 2,
+            indent: 25,
+            endIndent: 25,
+          ),
+            const SizedBox(height: 10),
             // New Section
             Card(
               color: MyColors.blue,
@@ -520,44 +585,6 @@ Future<void> _sendEmail(String emailAddress) async {
                 ),
               ),
             ),
-
-          /*
-          const SizedBox(height: 20),
-          const Text(
-            'Check These Games!',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: MyColors.white,
-            ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FutureBuilder<List<RecommendedGame>>(
-                future: recGameListforUser,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    // Show a loading indicator while fetching data
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    // Handle errors
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    // Handle the case when there is no data
-                    return const Center(child: Text('No games available.'));
-                  } else {
-                    // Display the fetched data
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: snapshot.data!,
-                    );
-                  }
-                },
-              ),
-            ),
-          ),*/
         ],
       ),
     ),
