@@ -345,7 +345,15 @@ function ThreadComponent({
   }
 
   return (
-    <Grid style={{ display: "flex", flexDirection: "row" }}>
+    <Grid
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        border: "8px solid rgb(255,255,255)", // Blue border
+        borderRadius: "10px", // Rounded corners
+        boxShadow: "rgb(255 252 252) 0px 4px 8px",
+      }}
+    >
       <Grid
         style={{
           display: "flex",
@@ -354,8 +362,8 @@ function ThreadComponent({
           padding: "5px",
           maxWidth: "300px",
           width: "100%",
-          borderBottomLeftRadius: "10px",
-          borderTopLeftRadius: "10px",
+          //borderBottomLeftRadius: "10px",
+          //borderTopLeftRadius: "10px",
           paddingTop: "20px",
         }}
       >
@@ -397,8 +405,8 @@ function ThreadComponent({
           padding: "5px",
           maxWidth: "620px",
           width: "100%",
-          borderBottomRightRadius: "10px",
-          borderTopRightRadius: "10px",
+          //borderBottomRightRadius: "10px",
+          //borderTopRightRadius: "10px",
         }}
       >
         <Grid
