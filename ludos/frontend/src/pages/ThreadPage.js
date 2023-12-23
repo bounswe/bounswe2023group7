@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Recogito } from "@recogito/recogito-js";
+import "@recogito/recogito-js/dist/recogito.min.css";
 import { Grid, Box, Typography, TextField, Button } from "@mui/material";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
@@ -46,6 +48,29 @@ const ThreadPage = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
   //const [ownerId, setOwnerId] = useState("");
+  const onAnnotationCreated = async (annotation) => {
+    const postData = formatAnnotationData(annotation);
+    //await sendAnnotationData(postData, "create");
+  };
+
+  const formatAnnotationData = (annotation) => {
+    console.log("annotation start", annotation.start);
+    console.log("annotation end", annotation.end);
+    console.log("annotation", annotation);
+    console.log("source", window.location.href);
+    return {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      type: "Annotation",
+      body: annotation.body[0].value,
+      target: {
+        source: window.location.href,
+        selector: {
+          start: annotation.target.selector[1].start, // Adjust based on your specific requirements
+          end: annotation.target.selector[1].end, // Adjust based on your specific requirements
+        },
+      },
+    };
+  };
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -127,6 +152,20 @@ const ThreadPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const element = document.getElementById(`title-thread-${threadId}`);
+
+    if (element) {
+      console.log("!");
+      const annotator = new Recogito({
+        content: `title-thread-${threadId}`, // ID of the element that contains the text
+      });
+
+      annotator.on("createAnnotation", onAnnotationCreated);
+      //annotator.on("updateAnnotation", onAnnotationUpdated);
+      //annotator.on("deleteAnnotation", onAnnotationDeleted);
+
+      return () => annotator.destroy();
+    }
   }, []);
 
   //console.log(threadId);
@@ -246,6 +285,7 @@ const ThreadPage = () => {
           </Grid>
           <Typography
             variant="h4"
+            id={`title-thread-${threadId}`}
             component="div"
             style={{
               color: "white",
