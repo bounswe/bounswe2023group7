@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Recogito } from "@recogito/recogito-js";
+import "@recogito/recogito-js/dist/recogito.min.css";
 import { useNavigate } from "react-router-dom";
 import {
   Grid,
@@ -57,6 +59,53 @@ function ThreadComponent({
     height: "auto",
   };
 
+  const onAnnotationCreated = async (annotation) => {
+    const postData = formatAnnotationData(annotation);
+    await sendAnnotationData(postData, "create");
+  };
+
+  const onAnnotationUpdated = async (annotation) => {
+    const postData = formatAnnotationData(annotation);
+    await sendAnnotationData(postData, "update");
+  };
+
+  const onAnnotationDeleted = async (annotation) => {
+    const postData = formatAnnotationData(annotation);
+    await sendAnnotationData(postData, "delete");
+  };
+
+  const formatAnnotationData = (annotation) => {
+    return {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      type: "Annotation",
+      body: annotation.body[0].value,
+      target: {
+        source: window.location.href,
+        selector: {
+          start: annotation.start, // Adjust based on your specific requirements
+          end: annotation.end, // Adjust based on your specific requirements
+        },
+      },
+    };
+  };
+
+  const sendAnnotationData = async (data, method) => {
+    try {
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/post/${threadId}`;
+      const response = await axios.post({
+        url,
+        body: data,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(`Annotation ${method}d:`, response.data);
+    } catch (error) {
+      console.error(`Error ${method}ing annotation:`, error);
+    }
+  };
+
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -78,6 +127,16 @@ function ThreadComponent({
     };
 
     fetchUserId();
+
+    const annotator = new Recogito({
+      content: "content-element", // ID of the element that contains the text
+    });
+
+    annotator.on("createAnnotation", onAnnotationCreated);
+    annotator.on("updateAnnotation", onAnnotationUpdated);
+    annotator.on("deleteAnnotation", onAnnotationDeleted);
+
+    return () => annotator.destroy(); // Cleanup on component unmount
   }, []);
 
   const handleClick = (userId) => {
@@ -345,15 +404,18 @@ function ThreadComponent({
         )}
         <Typography
           variant="body2"
-          component="div"
+          component="p"
+          id="content-element" // This ID should match the one used in Recogito initialization
           style={{
             color: "white",
             marginTop: "3px",
             marginRight: "10px",
-            display: "flex",
+            //display: "flex",
             marginLeft: "10px",
             textAlign: "left",
             lineHeight: "1.7",
+            flexWrap: "wrap",
+            flexDirection: "column",
           }}
         >
           {content}
