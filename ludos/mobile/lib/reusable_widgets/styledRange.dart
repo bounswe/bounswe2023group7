@@ -7,4 +7,15 @@ class StyledRange {
   final TextStyle style;
 
   StyledRange(this.start, this.end, this.annotation, this.style);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StyledRange &&
+          runtimeType == other.runtimeType &&
+          start == other.start &&
+          end == other.end;
+
+  @override
+  int get hashCode => start.hashCode ^ end.hashCode;
 }

@@ -216,7 +216,9 @@ class _ThreadPageState extends State<ThreadPage>
     List<TextSpan> textSpans = [];
     styledRanges.sort((a, b) => a.start.compareTo(b.start));
     int currentIndex = 0;
-
+    
+    Set<StyledRange> uniqueRanges = styledRanges.toSet();
+    styledRanges = uniqueRanges.toList();
     for (var styledRange in styledRanges) {
       // Add the unstyled text before the current range
       textSpans.add(
@@ -273,7 +275,8 @@ class _ThreadPageState extends State<ThreadPage>
               item['target']['selector']['end'],
               item['body'],
               const TextStyle(
-                color: MyColors.lightBlue,
+                backgroundColor: MyColors.blue,
+                color: MyColors.white,
                 fontSize: 15,
               ));
         }).toList());

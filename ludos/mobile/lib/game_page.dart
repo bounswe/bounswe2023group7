@@ -337,6 +337,8 @@ class _GamePageState extends State<GamePage> {
     styledRanges.sort((a, b) => a.start.compareTo(b.start));
     int currentIndex = 0;
 
+    Set<StyledRange> uniqueRanges = styledRanges.toSet();
+    styledRanges = uniqueRanges.toList();
     for (var styledRange in styledRanges) {
       // Add the unstyled text before the current range
       textSpans.add(
@@ -395,7 +397,8 @@ class _GamePageState extends State<GamePage> {
               item['target']['selector']['end'],
               item['body'],
               const TextStyle(
-                color: MyColors.lightBlue,
+                backgroundColor: MyColors.blue,
+                color: MyColors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ));

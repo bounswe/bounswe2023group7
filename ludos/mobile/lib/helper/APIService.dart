@@ -811,4 +811,41 @@ class APIService {
     });
     return response;
   }
+
+
+  Future<http.Response> createAnnotationEntity(
+      String? authToken,
+      String entityID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/entity/$entityID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationEntity(
+      String? authToken, String entityID) async {
+    var uri = Uri.parse("$baseURL/annotation/entity/$entityID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
 }
