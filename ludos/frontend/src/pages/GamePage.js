@@ -228,19 +228,22 @@ function GamePage(id) {
     display: "flex",
   };
 
-  const annotatorRef = useRef(null);
+  const gameBioAnnotatorRef = useRef(null);
 
   useEffect(() => {
     if (game && game.gameBio) {
-      annotatorRef.current = new Recogito({
+      gameBioAnnotatorRef.current = new Recogito({
         content: "game-bio",
         // Other initialization...
       });
 
       fetchAnnotations();
-      annotatorRef.current.on("createAnnotation", handleCreateAnnotation);
+      gameBioAnnotatorRef.current.on(
+        "createAnnotation",
+        handleCreateAnnotation,
+      );
 
-      return () => annotatorRef.current.destroy();
+      return () => gameBioAnnotatorRef.current.destroy();
     }
   }, [game]);
 
@@ -286,18 +289,18 @@ function GamePage(id) {
       );
 
       if (response.data) {
-        displayAnnotations(response.data);
+        displayGameBioAnnotations(response.data);
       }
     } catch (error) {
       console.error("Error fetching annotations:", error);
     }
   };
 
-  const displayAnnotations = (gameBioAnnotations) => {
-    if (annotatorRef.current) {
+  const displayGameBioAnnotations = (gameBioAnnotations) => {
+    if (gameBioAnnotatorRef.current) {
       gameBioAnnotations.forEach((annotation) => {
         console.log("annotator annotation", annotation);
-        annotatorRef.current.addAnnotation({
+        gameBioAnnotatorRef.current.addAnnotation({
           "@context": "http://www.w3.org/ns/anno.jsonld",
           type: "Annotation",
           id: annotation.id,
