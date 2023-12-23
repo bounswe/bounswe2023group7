@@ -11,6 +11,8 @@ import {
   TextField,
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { Recogito } from "@recogito/recogito-js";
+import "@recogito/recogito-js/dist/recogito.min.css";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import axios from "axios";
@@ -68,6 +70,42 @@ function CommentComponent({
     navigate(`/profile-page/${userId}`);
   };
 
+  const formatAnnotationData = (annotation) => {
+    console.log("annotation start", annotation.start);
+    console.log("annotation end", annotation.end);
+    console.log("annotation", annotation);
+    console.log("source", window.location.href);
+    console.log("??????????");
+    return {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      type: "Annotation",
+      body: annotation.body[0].value,
+      target: {
+        source: window.location.href,
+        selector: {
+          start: annotation.target.selector[1].start, // Adjust based on your specific requirements
+          end: annotation.target.selector[1].end, // Adjust based on your specific requirements
+        },
+      },
+    };
+  };
+
+  const sendAnnotationData = async (data, method) => {
+    try {
+      const url = ``;
+      console.log(url);
+      const response = await axios.post(url, data);
+      console.log(`Annotation ${method}d:`, response.data);
+    } catch (error) {
+      console.error(`Error ${method}ing annotation:`, error);
+    }
+  };
+
+  const onAnnotationCreated = async (annotation) => {
+    const postData = formatAnnotationData(annotation);
+    //await sendAnnotationData(postData, "create");
+  };
+
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -89,6 +127,13 @@ function CommentComponent({
     };
 
     fetchUserId();
+    const annotator = new Recogito({
+      content: `comment-element-${commentId}`, // ID of the element that contains the text
+    });
+
+    annotator.on("createAnnotation", onAnnotationCreated);
+
+    return () => annotator.destroy();
   }, []);
 
   useEffect(() => {
@@ -400,11 +445,11 @@ function CommentComponent({
           <Typography
             variant="body2"
             component="div"
+            id={`comment-element-${commentId}`}
             style={{
               color: "white",
               marginTop: "3px",
               marginRight: "10px",
-              display: "flex",
               marginLeft: "10px",
               textAlign: "left",
               lineHeight: "1.7",

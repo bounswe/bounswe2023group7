@@ -108,7 +108,7 @@ function ThreadComponent({
     // Assuming 'annotations' is an array of annotation objects
     // and you have an instance of Recogito called 'annotator'
     const annotator = new Recogito({
-      content: "content-element", // ID of the element that contains the text
+      content: `content-element-${threadId}`, // ID of the element that contains the text
     });
     annotations.forEach((annotation) => {
       console.log("annotator annotation", annotation);
@@ -176,11 +176,11 @@ function ThreadComponent({
     };
 
     fetchUserId();
-    console.log("fetching annotation?");
+    //console.log("fetching annotation?");
     fetchAnnotations();
-    console.log("fetched annotation?");
+    //console.log("fetched annotation?");
     const annotator = new Recogito({
-      content: "content-element", // ID of the element that contains the text
+      content: `content-element-${threadId}`, // ID of the element that contains the text
     });
 
     annotator.on("createAnnotation", onAnnotationCreated);
@@ -194,7 +194,7 @@ function ThreadComponent({
 
   useEffect(() => {
     annotatorRef.current = new Recogito({
-      content: "content-element",
+      content: `content-element-${threadId}`,
       // Other initialization...
     });
 
@@ -477,7 +477,7 @@ function ThreadComponent({
         <Typography
           variant="body2"
           component="p"
-          id="content-element" // This ID should match the one used in Recogito initialization
+          id={`content-element-${threadId}`} // This ID should match the one used in Recogito initialization
           style={{
             color: "white",
             marginTop: "3px",
