@@ -167,4 +167,20 @@ export class AnnotationService {
     const response = await axios.get(`http://35.157.67.64:8090/post/${postId}`);
     return response.data;
   }
+
+  // Delete global annotation
+  async deleteAnnotationById(annotationId: string): Promise<void> {
+    try {
+      const response = await axios.delete(
+        `http://35.157.67.64:8090/${annotationId}`,
+      );
+      return response.data;
+    } catch (e) {
+      if (e?.response?.status === 404) {
+        throw new NotFoundException(
+          `Annotation with id ${annotationId} is not found.`,
+        );
+      }
+    }
+  }
 }
