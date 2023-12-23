@@ -110,8 +110,8 @@ class _HomeState extends State<Home> {
       }
     }
     catch (e) {
-      throw Exception('Failed to load user data');
-
+      return {};
+      //throw Exception('Failed to load user data');
     }
   }
   Future<List<RecommendedGame>> loadRecGamesforUser(UserProvider userProvider, String? token) async {
@@ -136,7 +136,8 @@ class _HomeState extends State<Home> {
       }
     } catch (error) {
       print("Error: $error");
-      throw Exception('Failed to load games');
+      return [];
+      // throw Exception('Failed to load games');
     }
   }
 
