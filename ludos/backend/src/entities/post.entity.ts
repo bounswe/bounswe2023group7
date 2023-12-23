@@ -77,6 +77,6 @@ export class Post {
 
   isDisliked: boolean;
 
-  @Column('jsonb')
+  @Column({ nullable: true, type: 'jsonb' })
   upcomingTitle: UpcomingTitleDto;
 }
