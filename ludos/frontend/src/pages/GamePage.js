@@ -228,19 +228,6 @@ function GamePage(id) {
     display: "flex",
   };
 
-  useEffect(() => {
-    // Ensure gameBio is loaded before initializing Recogito
-    if (game && game.gameBio) {
-      const annotator = new Recogito({
-        content: "game-bio",
-      });
-
-      fetchAnnotations();
-
-      return () => annotator.destroy();
-    }
-  }, [game]); // Depend on the 'game' state
-
   const annotatorRef = useRef(null);
 
   useEffect(() => {
@@ -255,7 +242,7 @@ function GamePage(id) {
 
       return () => annotatorRef.current.destroy();
     }
-  }, []);
+  }, [game]);
 
   const handleCreateAnnotation = async (annotation) => {
     // Prepare your API request body
@@ -307,39 +294,36 @@ function GamePage(id) {
   };
 
   const displayAnnotations = (gameBioAnnotations) => {
-    // Assuming 'annotations' is an array of annotation objects
-    // and you have an instance of Recogito called 'annotator'
-    const annotator = new Recogito({
-      content: "game-bio", // ID of the element that contains the text
-    });
-    gameBioAnnotations.forEach((annotation) => {
-      console.log("annotator annotation", annotation);
-      annotator.addAnnotation({
-        "@context": "http://www.w3.org/ns/anno.jsonld",
-        type: "Annotation",
-        id: annotation.id,
-        body: [
-          {
-            type: "TextualBody",
-            value: annotation.body,
-            purpose: "commenting",
-          },
-        ],
-        target: {
-          selector: [
+    if (annotatorRef.current) {
+      gameBioAnnotations.forEach((annotation) => {
+        console.log("annotator annotation", annotation);
+        annotatorRef.current.addAnnotation({
+          "@context": "http://www.w3.org/ns/anno.jsonld",
+          type: "Annotation",
+          id: annotation.id,
+          body: [
             {
-              type: "TextQuoteSelector",
-              exact: annotation.body,
-            },
-            {
-              type: "TextPositionSelector",
-              start: annotation.target.selector.start,
-              end: annotation.target.selector.end,
+              type: "TextualBody",
+              value: annotation.body,
+              purpose: "commenting",
             },
           ],
-        },
+          target: {
+            selector: [
+              {
+                type: "TextQuoteSelector",
+                exact: annotation.body,
+              },
+              {
+                type: "TextPositionSelector",
+                start: annotation.target.selector.start,
+                end: annotation.target.selector.end,
+              },
+            ],
+          },
+        });
       });
-    });
+    }
   };
 
   const handleFollowClick = () => {
