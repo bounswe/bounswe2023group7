@@ -618,7 +618,6 @@ class APIService {
     var uri = Uri.parse("$baseURL/entity/$gameId");
     Map<String, String> con = {};
     con['image'] = image;
-    con['description'] = contentmsg;
     for (int i = 0; i < nameControllers.length && i < valueControllers.length; i++) {
       String name = nameControllers[i].text;
       String value = valueControllers[i].text;
@@ -629,6 +628,7 @@ class APIService {
       'type': type,
       'name': name,
       'content': con,
+      'description': contentmsg,
       });
       print(body);
     final response = await http.post(uri, body: body, headers: {
