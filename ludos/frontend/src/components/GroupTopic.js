@@ -52,18 +52,20 @@ function GroupTopic(data) {
   };
 
   const boxStyle = {
-    backgroundColor: "rgba(204, 204, 255, 0.9)",
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
+    paddingBottom: "16px",
     borderRadius: "10px",
     paddingTop: "8px",
-    border: "4px solid rgba(51, 153, 255, 1)", // Çerçeve rengi ve genişliği
+    //border: "4px solid rgba(51, 153, 255, 1)", // Çerçeve rengi ve genişliği
     boxSizing: "border-box", // Kutu modelini içerir
     minHeight: "100px",
     fontFamily: "Trebuchet MS, sans-serif",
+    maxHeight: "200px",
   };
   const headerStyle = {
-    color: "black",
+    color: "white",
     fontFamily: "Trebuchet MS, sans-serif",
-    marginBottom: "10px",
+    // marginBottom: "10px",
   };
   const forumStyle = {
     color: "rgb(100, 70, 144)",
@@ -71,18 +73,19 @@ function GroupTopic(data) {
     fontFamily: "Trebuchet MS, sans-serif",
   };
   const gameStyle = {
-    backgroundColor: "rgba(120 ,63 ,183, 0.7)",
+    backgroundColor: "rgba(200 ,10 ,10, 1)",
     color: "white",
-    borderRadius: "4px",
+    borderRadius: "10px",
     padding: "2px",
     fontWeight: "bold",
     fontSize: "13px",
     width: "100%",
     marginBottom: "10px",
+    textDecoration: "none",
     fontFamily: "Trebuchet MS, sans-serif",
   };
   const userStyle = {
-    color: "black",
+    color: "white",
     fontFamily: "Trebuchet MS, sans-serif",
   };
 
@@ -90,7 +93,7 @@ function GroupTopic(data) {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(51, 153, 255, 1)",
+    backgroundColor: "rgb(50, 150, 30, 1)",
     color: "white",
     height: "6px",
     borderRadius: "10px",
@@ -118,10 +121,10 @@ function GroupTopic(data) {
       md={12}
       lg={12}
       style={{
-        gap: "16px",
+        //gap: "16px",
         display: "flex",
         flexDirection: "column",
-        marginBottom: "20px",
+        //marginBottom: "20px",
       }}
     >
       <Box p={5} style={boxStyle}>
@@ -170,6 +173,58 @@ function GroupTopic(data) {
                 @{data.topic.admin.username}
               </Link>
             </Typography>
+          </Grid>
+          <Grid style={{ display: "flex", justifyContent: "right" }}>
+            {data.topic &&
+              data.topic.tags?.map((tag1, index1) => (
+                <Typography
+                  variant="caption"
+                  component="div"
+                  style={tagBox}
+                  key={index1}
+                >
+                  {tag1}
+                </Typography>
+              ))}
+          </Grid>
+        </Grid>
+        <Typography
+          variant="h6"
+          component="div"
+          textAlign="left"
+          style={headerStyle}
+        >
+          <Link style={userStyle} to={`/group/${data.topic.id}`}>
+            {data.topic.name}
+          </Link>
+        </Typography>
+        {/** 
+        <Grid
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="h7"
+            component="div"
+            textAlign="left"
+            style={headerStyle}
+          >
+            {data.topic.description}
+          </Typography>
+        </Grid>
+        */}
+        <Grid style={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
             <AccessTimeIcon style={{ fontSize: "18px", marginRight: "3px" }} />
             <Typography
               variant="caption"
@@ -195,48 +250,6 @@ function GroupTopic(data) {
               {data.topic.maxNumberOfMembers}
             </Typography>
           </Grid>
-          <Grid style={{ display: "flex", justifyContent: "right" }}>
-            {data.topic &&
-              data.topic.tags?.map((tag1, index1) => (
-                <Typography
-                  variant="caption"
-                  component="div"
-                  style={tagBox}
-                  key={index1}
-                >
-                  {tag1}
-                </Typography>
-              ))}
-          </Grid>
-        </Grid>
-        <Typography
-          variant="h5"
-          component="div"
-          textAlign="left"
-          style={headerStyle}
-        >
-          <Link style={userStyle} to={`/group/${data.topic.id}`}>
-            {data.topic.name}
-          </Link>
-        </Typography>
-        <Grid
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            variant="h7"
-            component="div"
-            textAlign="left"
-            style={headerStyle}
-          >
-            {data.topic.description}
-          </Typography>
-        </Grid>
-        <Grid style={{ display: "flex", justifyContent: "right" }}>
           <Button
             variant="contained"
             color="primary"
@@ -247,7 +260,7 @@ function GroupTopic(data) {
               justifyContent: "flex-end",
               borderRadius: "10px",
               textTransform: "none",
-              backgroundColor: "rgba(120 ,63 ,183, 0.7)",
+              backgroundColor: "rgba(37 ,137 ,216, 0.7)",
             }}
           >
             {isUserJoined ? "Leave the Group" : "Join Us"}
