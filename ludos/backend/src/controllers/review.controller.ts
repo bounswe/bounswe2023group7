@@ -27,7 +27,6 @@ import { ReviewService } from '../services/review.service';
 import { ReviewEditDto } from '../dtos/review/request/edit.dto';
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiTags('review')
 @Controller('review')
 export class ReviewController {
@@ -107,14 +106,13 @@ export class ReviewController {
   @ApiOkResponse({ description: 'Review retrieved successfully', type: Review })
   @ApiNotFoundResponse({ description: 'Review is not found!' })
   @HttpCode(200)
-  @UseGuards(AuthGuard)
   @Get(':reviewId')
   public async getReviewById(
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
   ) {
     const review = await this.reviewService.getReviewById(
-      req.user.id,
+      req.user?.id,
       reviewId,
     );
     return review;
@@ -126,16 +124,16 @@ export class ReviewController {
   })
   @ApiNotFoundResponse({ description: 'Game is not found!' })
   @HttpCode(200)
-  @UseGuards(AuthGuard)
   @Get('game/:gameId')
   public async getReviewsByGameId(
     @Req() req: AuthorizedRequest,
     @Param('gameId') gameId: string,
   ) {
     const reviews = await this.reviewService.getReviewsByGameId(
-      req.user.id,
+      req.user?.id,
       gameId,
     );
     return reviews;
   }
+
 }

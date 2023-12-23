@@ -43,13 +43,12 @@ export class CommentController {
   })
   @HttpCode(200)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
   @Get(':commentId/info')
   public async getComment(
     @Req() req: AuthorizedRequest,
     @Param('commentId') commentId: string,
   ) {
-    return await this.commentService.getComment(req.user.id, commentId);
+    return await this.commentService.getComment(req.user?.id, commentId);
   }
 
   @ApiOperation({ summary: 'Get comments of post/comment/review' })
@@ -65,13 +64,12 @@ export class CommentController {
   })
   @HttpCode(200)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
   @Get(':parentId')
   public async getCommentDetails(
     @Req() req: AuthorizedRequest,
     @Param('parentId') parentId: string,
   ) {
-    return await this.commentService.getCommentsByParent(req.user.id, parentId);
+    return await this.commentService.getCommentsByParent(req.user?.id, parentId);
   }
 
   @ApiOperation({ summary: 'Comment on a post/comment/review' })
