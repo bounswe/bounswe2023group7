@@ -185,4 +185,12 @@ export class UserController {
     );
     return suggestedGames;
   }
+
+  @ApiOperation({ summary: 'Get User Id By Username' })
+  @ApiNotFoundResponse({ description: 'User is not found!' })
+  @Get('/:username')
+  public async getUserIdByUsername(@Param('userId') username: string) {
+    return await this.userService.getUserIdByUsername(username);
+  }
+
 }

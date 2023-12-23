@@ -25,4 +25,14 @@ export class EditUserInfoDto {
   @IsString()
   @IsOptional()
   steamUrl: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  associatedTeam: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  associatedCompany: string;
 }

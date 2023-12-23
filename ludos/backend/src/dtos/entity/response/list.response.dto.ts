@@ -13,4 +13,7 @@ export class EntityListResponseDto {
 
   @ApiProperty()
   name: string;
+
+  @ApiProperty()
+  description: string;
 }
