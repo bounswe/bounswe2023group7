@@ -4,6 +4,7 @@ import 'package:ludos_mobile_app/change_password.dart';
 import 'package:ludos_mobile_app/user_profile_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_thread.dart';
 import 'package:ludos_mobile_app/reusable_widgets/home_game_sum.dart';
+import '../group/groups.dart';
 import '../helper/APIService.dart';
 import '../login_page.dart';
 import '../games_page.dart';
@@ -36,6 +37,9 @@ class CustomNavigationBar extends StatelessWidget {
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => GroupsPage(token: userProvider.token, userProvider: userProvider),
+                  ));
                 },
                 icon: const Icon(Icons.group)),
             IconButton(

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 
+
 class APIService {
   var baseURL = "http://3.125.225.39:8080";
   String? token = "";
@@ -15,6 +16,7 @@ class APIService {
       'username': username,
       'password': password,
     });
+
     final response = await http
         .post(uri, body: body, headers: {'content-type': "application/json"});
     Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -740,6 +742,32 @@ class APIService {
     });
     return response;
   }
+
+  Future<http.Response> createGroup(
+      String? authToken,
+      String gameId,
+      String name,
+      String description,
+      String logoLink,
+      int maxNumber,
+      List<String> tags) async {
+    var uri = Uri.parse("$baseURL/group/");
+    final body = jsonEncode(<String, Object>{
+      'name': name,
+      'description': description,
+      'gameId': gameId,
+      'logo': logoLink,
+      'maxNumberOfMembers': maxNumber,
+      'tags': tags,
+    });
+
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
 
 
 }
