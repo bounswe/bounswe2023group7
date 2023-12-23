@@ -3,7 +3,9 @@ import {
   Controller,
   Get,
   Param,
-  Post
+  Post,
+  Delete,
+  HttpCode
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -113,5 +115,22 @@ export class AnnotationController {
   @Get(':type/:itemId/:date')
   public async getAnnotationByDate(@Param("type") type: string, @Param("itemId") itemId: string, @Param("date") date: number): Promise<AnnotationResponseDto> {
     return await this.annotationService.getAnnotationByTypeAndItemIdAndDate(type, itemId, date);
+  }
+  // Delete a global resource
+  @ApiOkResponse({
+    description: 'Annotation deleted successfully',
+    status: 204,
+  })
+  @Delete(':source/:type/:itemId/:date')
+  @HttpCode(204)
+  async deleteAnnotationById(
+    @Param('source') source: string,
+    @Param('type') type: string,
+    @Param('itemId') itemId: string,
+    @Param('date') date: number,
+  ): Promise<void> {
+      // Generate global resource id
+      const annotationId = `${source}/${type}/${itemId}/${date}`;
+      return this.annotationService.deleteAnnotationById(annotationId);
   }
 }
