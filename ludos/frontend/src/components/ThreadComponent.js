@@ -107,37 +107,36 @@ function ThreadComponent({
   const displayAnnotations = (annotations) => {
     // Assuming 'annotations' is an array of annotation objects
     // and you have an instance of Recogito called 'annotator'
-    const annotator = new Recogito({
-      content: `content-element-${threadId}`, // ID of the element that contains the text
-    });
-    annotations.forEach((annotation) => {
-      console.log("annotator annotation", annotation);
-      annotator.addAnnotation({
-        "@context": "http://www.w3.org/ns/anno.jsonld",
-        type: "Annotation",
-        id: annotation.id,
-        body: [
-          {
-            type: "TextualBody",
-            value: annotation.body,
-            purpose: "commenting",
-          },
-        ],
-        target: {
-          selector: [
+    if (annotatorRef.current) {
+      annotations.forEach((annotation) => {
+        console.log("annotator annotation", annotation);
+        annotatorRef.current.addAnnotation({
+          "@context": "http://www.w3.org/ns/anno.jsonld",
+          type: "Annotation",
+          id: annotation.id,
+          body: [
             {
-              type: "TextQuoteSelector",
-              exact: annotation.body,
-            },
-            {
-              type: "TextPositionSelector",
-              start: annotation.target.selector.start,
-              end: annotation.target.selector.end,
+              type: "TextualBody",
+              value: annotation.body,
+              purpose: "commenting",
             },
           ],
-        },
+          target: {
+            selector: [
+              {
+                type: "TextQuoteSelector",
+                exact: annotation.body,
+              },
+              {
+                type: "TextPositionSelector",
+                start: annotation.target.selector.start,
+                end: annotation.target.selector.end,
+              },
+            ],
+          },
+        });
       });
-    });
+    }
   };
 
   const fetchAnnotations = async () => {
@@ -177,17 +176,6 @@ function ThreadComponent({
 
     fetchUserId();
     //console.log("fetching annotation?");
-    fetchAnnotations();
-    //console.log("fetched annotation?");
-    const annotator = new Recogito({
-      content: `content-element-${threadId}`, // ID of the element that contains the text
-    });
-
-    annotator.on("createAnnotation", onAnnotationCreated);
-    //annotator.on("updateAnnotation", onAnnotationUpdated);
-    //annotator.on("deleteAnnotation", onAnnotationDeleted);
-
-    return () => annotator.destroy(); // Cleanup on component unmount
   }, []);
 
   const annotatorRef = useRef(null);
@@ -199,6 +187,7 @@ function ThreadComponent({
     });
 
     fetchAnnotations();
+    annotatorRef.current.on("createAnnotation", onAnnotationCreated);
 
     return () => annotatorRef.current.destroy();
   }, []);
