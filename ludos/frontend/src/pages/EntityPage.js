@@ -224,7 +224,7 @@ function EntityPage() {
         </Box>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
           <img
-            src="https://images.goodsmile.info/cgm/images/product/20230417/14270/114374/large/102cb907940dc66d46149e75ddfe9593.jpg"
+            src={entity?.content?.image}
             alt={entity?.name}
             style={{ height: 350, width: 250 }}
           />
