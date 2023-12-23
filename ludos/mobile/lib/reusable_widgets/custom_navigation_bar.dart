@@ -1,16 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:ludos_mobile_app/change_password.dart';
-import 'package:ludos_mobile_app/user_profile_page.dart';
-import 'package:ludos_mobile_app/reusable_widgets/forum_thread.dart';
-import 'package:ludos_mobile_app/reusable_widgets/home_game_sum.dart';
-import '../helper/APIService.dart';
-import '../login_page.dart';
 import '../games_page.dart';
+import '../upcoming_titles.dart';
 import '../userProvider.dart';
-import 'package:provider/provider.dart';
 import '../helper/colors.dart';
-import '../search_page.dart';
 import '../main.dart';
 import '../search_landing_page.dart';
 
@@ -50,16 +42,16 @@ class CustomNavigationBar extends StatelessWidget {
                 color: MyColors.white,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SearchLandingPage(userProvider: userProvider),
+                    builder: (context) => UpcomingTitlePage(userProvider: userProvider, token: userProvider.token),
                   ));
                 },
-                icon: const Icon(Icons.favorite)),
+                icon: const Icon(Icons.rocket)),
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     //builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
-                    builder: (context) => SearchPage(userProvider: userProvider),
+                    builder: (context) => SearchLandingPage(userProvider: userProvider),
                   ));
                 },
                 icon: const Icon(Icons.search_outlined)),
