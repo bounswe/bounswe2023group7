@@ -1,13 +1,118 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Container, Grid, Box, Typography } from "@mui/material";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import { Recogito } from "@recogito/recogito-js";
+
+const axiosInstance = axios.create({
+  baseURL: `http://${process.env.REACT_APP_API_URL}`,
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("accessToken"),
+  },
+});
+
 
 function EntityPage() {
   const [shortEntityFeatures, setShortEntityFeatures] = useState({});
   const [longEntityFeatures, setLongEntityFeatures] = useState({});
   const [entity, setEntity] = useState({});
   let { entityId } = useParams();
+
+  const entityAnnotatorRef = useRef(null);
+
+  useEffect(() => {
+    if (entity && entity.description) {
+      entityAnnotatorRef.current = new Recogito({
+        content: "entity-description",
+      });
+
+      fetchAnnotations();
+
+      entityAnnotatorRef.current.on(
+        "createAnnotation",
+        handleCreateAnnotation,
+      );
+
+    }
+  })
+
+  const handleCreateAnnotation = async (annotation) => {
+    // Prepare your API request body
+    const requestBody = {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      type: "Annotation",
+      body: annotation.body[0].value, // You might need to format this according to your backend expectations
+      tags: annotation.tags,
+      target: {
+        source: window.location.href,
+        selector: {
+          start: annotation.target.selector[1].start, // Starting character index
+          end: annotation.target.selector[1].end, // Ending character index
+        },
+      },
+    };
+
+    // Make the API call to your server
+    try {
+      const response = await axios.post(
+        `http://${process.env.REACT_APP_API_URL}/annotation/entity/${entity?.id}`,
+        requestBody,
+      );
+      console.log("Annotation saved:", response.data);
+    } catch (error) {
+      console.error("Error saving annotation:", error);
+    }
+  };
+
+  const fetchAnnotations = async () => {
+    try {
+      await axiosInstance.get(`/annotation/entity/${entityId}`)
+        .then((response) => {
+
+          if (response.data) {
+            displayEntityDescAnnotations(response.data);
+          }
+        })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  const displayEntityDescAnnotations = (entityDescAnnotation) => {
+    if (entityAnnotatorRef.current) {
+      entityDescAnnotation.forEach((annotation) => {
+        console.log("annotator annotation", annotation);
+        entityAnnotatorRef.current.addAnnotation({
+          "@context": "http://www.w3.org/ns/anno.jsonld",
+          type: "Annotation",
+          id: annotation.id,
+          body: [
+            {
+              type: "TextualBody",
+              value: annotation.body,
+              purpose: "commenting",
+            },
+          ],
+          target: {
+            selector: [
+              {
+                type: "TextQuoteSelector",
+                exact: annotation.body,
+              },
+              {
+                type: "TextPositionSelector",
+                start: annotation.target.selector.start,
+                end: annotation.target.selector.end,
+              },
+            ],
+          },
+        });
+      });
+    }
+  }
+
+
 
   useEffect(() => {
     const link = `http://${process.env.REACT_APP_API_URL}/entity/${entityId}`;
@@ -22,7 +127,7 @@ function EntityPage() {
         setEntity(response.data);
         let shorts = {};
         let longs = {};
-        Object.keys(response.data?.content).map((keyName, i) => {
+        Object.keys(response.data?.content).map((keyName) => {
           if (
             response.data.content[keyName].length < 50 &&
             keyName !== "image"
@@ -119,7 +224,7 @@ function EntityPage() {
         </Box>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
           <img
-            src={entity?.content?.["image"]}
+            src="https://images.goodsmile.info/cgm/images/product/20230417/14270/114374/large/102cb907940dc66d46149e75ddfe9593.jpg"
             alt={entity?.name}
             style={{ height: 350, width: 250 }}
           />
@@ -157,7 +262,30 @@ function EntityPage() {
           ))}
         </Grid>
         <Grid item xs={12} sm={8} md={8} lg={8} style={{ width: "100%" }}>
-          {Object.keys(longEntityFeatures).map((keyName, i) => (
+          <Typography
+            variant="h5"
+            color="gray"
+            align="left"
+            style={headerStyle}
+          >
+            Description
+          </Typography>
+          <Typography
+            variant="body1"
+            color="white"
+            align="left"
+            component="div"
+            id="entity-description"
+            style={{
+              marginBottom: "8px",
+              fontFamily: "Trebuchet MS, sans-serif",
+              marginLeft: "2%",
+            }}
+          >
+            {entity?.description}
+          </Typography>
+
+          {Object.keys(longEntityFeatures).map((keyName) => (
             <>
               <Typography
                 variant="h5"

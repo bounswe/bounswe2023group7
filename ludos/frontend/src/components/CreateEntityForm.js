@@ -7,6 +7,7 @@ import { Alert } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const axiosInstance = axios.create({
   baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -21,6 +22,7 @@ const CreateEntityForm = () => {
   const [nameEmpty, setNameEmpty] = useState(false);
   const [games, setGames] = useState([]);
   const [game, setGame] = useState("");
+  const [description, setDescription] = useState("");
   const [type, setType] = useState("");
   const [snackbar, setSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -29,11 +31,12 @@ const CreateEntityForm = () => {
     { name: "", value: "" },
   ]);
   const [defaultProperties, setDefaultProperties] = useState([
-    { name: "description", value: "" },
     { name: "image", value: "" },
   ]);
   const [imageError, setImageError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
+
+  const navigate = useNavigate();
 
   const types = ["Character", "Environment", "Item", "Package"];
 
@@ -82,14 +85,12 @@ const CreateEntityForm = () => {
     setImageError(false);
   };
 
-  const handleDescriptionChange = (index, field, value) => {
+  const handleDescriptionChange = (value) => {
     if (value === "" || value === null) {
       setDescriptionError(true);
     }
 
-    const newProperties = [...defaultProperties];
-    newProperties[index][field] = value;
-    setDefaultProperties(newProperties);
+    setDescription(value);
     console.log(defaultProperties);
     setDescriptionError(false);
   };
@@ -123,8 +124,7 @@ const CreateEntityForm = () => {
     }
 
     if (
-      defaultProperties[0].value === "" ||
-      defaultProperties[0].value === null
+      description === "" || description === null
     ) {
       setDescriptionError(true);
       setSnackbarMessage("Description cannot be empty!");
@@ -134,8 +134,8 @@ const CreateEntityForm = () => {
     }
 
     if (
-      defaultProperties[1].value === "" ||
-      defaultProperties[1].value === null
+      defaultProperties[0].value === "" ||
+      defaultProperties[0].value === null
     ) {
       setImageError(true);
       setSnackbarMessage("Image Link cannot be empty!");
@@ -151,6 +151,7 @@ const CreateEntityForm = () => {
       content: formatContentForSubmission(),
       name,
       gameId,
+      description,
     };
 
     axiosInstance
@@ -160,6 +161,7 @@ const CreateEntityForm = () => {
         setSnackbarMessage("Entity created successfully.");
         setServerError(false);
         setSnackbar(true);
+        navigate(`/entity/${response.data.id}`);
       })
       .catch((error) => {
         console.log(error);
@@ -257,7 +259,7 @@ const CreateEntityForm = () => {
                 multiline
                 minRows={4}
                 label="Description"
-                value={defaultProperties[0].value}
+                value={description}
                 onChange={(e) =>
                   handleDescriptionChange(0, "value", e.target.value)
                 }
@@ -286,9 +288,9 @@ const CreateEntityForm = () => {
                 fullWidth
                 required
                 label="Image Link"
-                value={defaultProperties[1].value}
+                value={defaultProperties[0].value}
                 onChange={(e) =>
-                  handleImageLinkChange(1, "value", e.target.value)
+                  handleImageLinkChange(0, "value", e.target.value)
                 }
                 error={imageError}
                 helperText={imageError ? "Image link cannot be empty." : ""}
