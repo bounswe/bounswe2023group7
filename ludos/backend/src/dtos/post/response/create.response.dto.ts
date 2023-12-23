@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { UpcomingTitleDto } from '../upcomingTitle.dto';
 
 export class PostCreateResponseDto {
   @ApiProperty()
@@ -26,8 +25,4 @@ export class PostCreateResponseDto {
   @ApiProperty()
   @Expose()
   createdAt: Date;
-
-  @Expose()
-  @ApiProperty()
-  upcomingTitle: UpcomingTitleDto;
 }
