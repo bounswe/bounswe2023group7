@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Recogito } from "@recogito/recogito-js";
 import "@recogito/recogito-js/dist/recogito.min.css";
 import { useNavigate } from "react-router-dom";
@@ -63,7 +63,7 @@ function ThreadComponent({
     const postData = formatAnnotationData(annotation);
     await sendAnnotationData(postData, "create");
   };
-
+  /*
   const onAnnotationUpdated = async (annotation) => {
     const postData = formatAnnotationData(annotation);
     await sendAnnotationData(postData, "update");
@@ -73,8 +73,12 @@ function ThreadComponent({
     const postData = formatAnnotationData(annotation);
     await sendAnnotationData(postData, "delete");
   };
-
+*/
   const formatAnnotationData = (annotation) => {
+    console.log("annotation start", annotation.start);
+    console.log("annotation end", annotation.end);
+    console.log("annotation", annotation);
+    console.log("source", window.location.href);
     return {
       "@context": "http://www.w3.org/ns/anno.jsonld",
       type: "Annotation",
@@ -82,8 +86,8 @@ function ThreadComponent({
       target: {
         source: window.location.href,
         selector: {
-          start: annotation.start, // Adjust based on your specific requirements
-          end: annotation.end, // Adjust based on your specific requirements
+          start: annotation.target.selector[1].start, // Adjust based on your specific requirements
+          end: annotation.target.selector[1].end, // Adjust based on your specific requirements
         },
       },
     };
@@ -92,17 +96,62 @@ function ThreadComponent({
   const sendAnnotationData = async (data, method) => {
     try {
       const url = `http://${process.env.REACT_APP_API_URL}/annotation/post/${threadId}`;
-      const response = await axios.post({
-        url,
-        body: data,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      console.log(url);
+      const response = await axios.post(url, data);
       console.log(`Annotation ${method}d:`, response.data);
     } catch (error) {
       console.error(`Error ${method}ing annotation:`, error);
+    }
+  };
+
+  const displayAnnotations = (annotations) => {
+    // Assuming 'annotations' is an array of annotation objects
+    // and you have an instance of Recogito called 'annotator'
+    const annotator = new Recogito({
+      content: "content-element", // ID of the element that contains the text
+    });
+    annotations.forEach((annotation) => {
+      console.log("annotator annotation", annotation);
+      annotator.addAnnotation({
+        "@context": "http://www.w3.org/ns/anno.jsonld",
+        type: "Annotation",
+        id: annotation.id,
+        body: [
+          {
+            type: "TextualBody",
+            value: annotation.body,
+            purpose: "commenting",
+          },
+        ],
+        target: {
+          selector: [
+            {
+              type: "TextQuoteSelector",
+              exact: annotation.body,
+            },
+            {
+              type: "TextPositionSelector",
+              start: annotation.target.selector.start,
+              end: annotation.target.selector.end,
+            },
+          ],
+        },
+      });
+    });
+  };
+
+  const fetchAnnotations = async () => {
+    try {
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/post/${threadId}`;
+      const response = await axios.get(url);
+
+      console.log(response.data);
+      if (response.data) {
+        // Process and display annotations
+        displayAnnotations(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching annotations:", error);
     }
   };
 
@@ -127,16 +176,31 @@ function ThreadComponent({
     };
 
     fetchUserId();
-
+    console.log("fetching annotation?");
+    fetchAnnotations();
+    console.log("fetched annotation?");
     const annotator = new Recogito({
       content: "content-element", // ID of the element that contains the text
     });
 
     annotator.on("createAnnotation", onAnnotationCreated);
-    annotator.on("updateAnnotation", onAnnotationUpdated);
-    annotator.on("deleteAnnotation", onAnnotationDeleted);
+    //annotator.on("updateAnnotation", onAnnotationUpdated);
+    //annotator.on("deleteAnnotation", onAnnotationDeleted);
 
     return () => annotator.destroy(); // Cleanup on component unmount
+  }, []);
+
+  const annotatorRef = useRef(null);
+
+  useEffect(() => {
+    annotatorRef.current = new Recogito({
+      content: "content-element",
+      // Other initialization...
+    });
+
+    fetchAnnotations();
+
+    return () => annotatorRef.current.destroy();
   }, []);
 
   const handleClick = (userId) => {
