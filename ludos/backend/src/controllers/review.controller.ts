@@ -44,6 +44,7 @@ export class ReviewController {
   })
   @HttpCode(201)
   @Post(':gameId')
+  @UseGuards(AuthGuard)
   public async createReview(
     @Req() req: AuthorizedRequest,
     @Param('gameId') gameId: string,
@@ -59,6 +60,7 @@ export class ReviewController {
 
   @HttpCode(200)
   @Post(':reviewId/like')
+  @UseGuards(AuthGuard)
   public async likeReview(
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
@@ -69,6 +71,7 @@ export class ReviewController {
 
   @HttpCode(200)
   @Post(':reviewId/dislike')
+  @UseGuards(AuthGuard)
   public async dislikeReview(
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
@@ -80,6 +83,7 @@ export class ReviewController {
   @ApiNotFoundResponse({ description: 'Review is not found!' })
   @HttpCode(204)
   @Delete(':reviewId')
+  @UseGuards(AuthGuard)
   public async deleteReview(
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
@@ -90,6 +94,7 @@ export class ReviewController {
 
   @HttpCode(200)
   @Put(':reviewId')
+  @UseGuards(AuthGuard)
   public async editReview(
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
