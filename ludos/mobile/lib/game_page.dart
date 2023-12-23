@@ -296,7 +296,7 @@ class _GamePageState extends State<GamePage> {
                   onRatingUpdate: (rating) {},
                 ),
                 Text(
-                  '${(gameData['averageRating'] == null ? 0 : gameData['averageRating'].toDouble())}/5'
+                  '${(gameData['averageRating'] == null ? 0 : gameData['averageRating'].toDouble().toStringAsFixed(5))}/5'
                       .padLeft(5),
                   style: const TextStyle(
                     color: MyColors.orange,
