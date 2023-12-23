@@ -30,7 +30,7 @@ const Footer = () => {
           <Typography variant="body1" sx={{ justifyContent: "center" }}>
             If you are a developer or e-sport player? Contact us at{" "}
             <a href="mailto:ludos@ludos.com.tr" style={{ color: "#fff" }}>
-              ludos@ludos.com.tr
+              ludos.game.platform@gmail.com
             </a>{" "}
             and we will change your user type!
             <br />
