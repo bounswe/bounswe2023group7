@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { CreateAnnotationDto } from "../dtos/annotation/request/create.dto";
-import { AnnotationResponseDto } from "../dtos/annotation/response/response.dto";
-import { Annotation } from "../entities/annotation.entity";
-import { AnnotationRepository } from "../repositories/annotation.repository";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateAnnotationDto } from '../dtos/annotation/request/create.dto';
+import { AnnotationResponseDto } from '../dtos/annotation/response/response.dto';
+import { Annotation } from '../entities/annotation.entity';
+import { AnnotationRepository } from '../repositories/annotation.repository';
 
 @Injectable()
 export class AnnotationService{
@@ -69,5 +69,12 @@ export class AnnotationService{
     }
     async getAnnotationByTypeAndItemIdAndDate(type: string, itemId: string, date: number): Promise<Annotation> {
       return await this.annotationRepository.getAnnotationByTypeAndItemIdAndDate(type, itemId, date);
+    }
+    async deleteAnnotationById(annotationId: string): Promise<void> {
+      const annotation = await this.annotationRepository.getAnnotationByAnnotationId(annotationId);
+      if (!annotation){
+        throw new NotFoundException('Annotation cannot be found.')
+      }
+      return this.annotationRepository.deleteAnnotation(annotation);
     }
 }

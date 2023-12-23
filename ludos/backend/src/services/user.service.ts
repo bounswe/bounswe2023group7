@@ -231,4 +231,16 @@ export class UserService {
 
     return suggestedGamesResponse;
   }
+
+  public async getUserIdByUsername(username: string): Promise<string | null> {
+    const user = await this.userRepository.findUserByUsername(username);
+
+    if (user) {
+      return user.id;
+    }
+    
+    return null;
+  }
+
+  
 }

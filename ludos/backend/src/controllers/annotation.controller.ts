@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -203,5 +203,25 @@ export class AnnotationController {
     @Param('postId') postId: string,
   ): Promise<AnnotationResponseDto[]> {
     return await this.annotationService.getAnnotationsForPost(postId);
+  }
+
+  @ApiOperation({ summary: 'Delete annotation with id' })
+  @ApiOkResponse({
+    description: 'Annotation is deleted successfully.',
+    status: 204,
+  })
+  @ApiNotFoundResponse({
+    description: 'Annotation with id not found',
+  })
+  @HttpCode(204)
+  @Delete(':source/:type/:itemId/:date')
+  public async deleteAnnotationById(
+    @Param('source') source: string,
+    @Param('type') type: string,
+    @Param('itemId') itemId: string,
+    @Param('date') date: number,
+  ) {
+    const annotationId = `${source}/${type}/${itemId}/${date}`;
+    return this.annotationService.deleteAnnotationById(annotationId);
   }
 }
