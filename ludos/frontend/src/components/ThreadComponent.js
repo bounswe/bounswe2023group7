@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Recogito } from "@recogito/recogito-js";
 import "@recogito/recogito-js/dist/recogito.min.css";
+import { Annotorious } from "@recogito/annotorious";
+import "@recogito/annotorious/dist/annotorious.min.css";
 import { useNavigate } from "react-router-dom";
 import {
   Grid,
@@ -192,6 +194,38 @@ function ThreadComponent({
     return () => annotatorRef.current.destroy();
   }, []);
 
+  const formatImageAnnotationData = (annotation, index) => {
+    console.log("ımage", annotation);
+    // Assuming annotation.target is defined and has the necessary properties
+    // Adjust according to the actual structure of the annotation object
+    return {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      type: "Annotation",
+      body: annotation.body[0].value,
+
+      target: {
+        source: JSON.parse(contentImg[index]).url, // Assuming this is the URL of the image
+        selector: {
+          start: "#" + annotation.target.selector.value,
+          end: null,
+        },
+      },
+    };
+  };
+
+  const sendImageAnnotationData = async (data, method) => {
+    try {
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/post/${threadId}`;
+      let response;
+
+      response = await axios.post(url, data);
+
+      console.log(`Annotation ${method}d:`, response.data);
+    } catch (error) {
+      console.error(`Error ${method}ing annotation:`, error);
+    }
+  };
+
   const handleClick = (userId) => {
     navigate(`/profile-page/${userId}`);
   };
@@ -334,225 +368,257 @@ function ThreadComponent({
   }
 
   return (
-    <Grid
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        border: "8px solid rgb(255,255,255)", // Blue border
-        borderRadius: "10px", // Rounded corners
-        boxShadow: "rgb(255 252 252) 0px 4px 8px",
-      }}
-    >
+    <div>
+      <script src="/annotorious.min.js"></script>
+
       <Grid
         style={{
           display: "flex",
-          flexDirection: "column",
-          backgroundColor: "rgb(200,200,200,0.6)",
-          padding: "5px",
-          maxWidth: "300px",
-          width: "100%",
-          //borderBottomLeftRadius: "10px",
-          //borderTopLeftRadius: "10px",
-          paddingTop: "20px",
-        }}
-      >
-        <Box
-          component="img"
-          onClick={() => handleClick(userId)}
-          style={{ cursor: "pointer" }}
-          sx={{
-            height: 96,
-            width: 96,
-            borderRadius: "50%",
-            alignSelf: "center",
-            paddingBottom: "10px",
-          }}
-          src={
-            imgsrc ||
-            "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"
-          }
-        />
-        <Typography
-          variant="subtitle1"
-          component="div"
-          onClick={() => handleClick(userId)}
-          style={{
-            color: "white",
-            marginTop: "3px",
-            cursor: "pointer",
-          }}
-        >
-          @{username}
-        </Typography>
-      </Grid>
-      <Grid
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          flexDirection: "column",
-          backgroundColor: "rgb(255,255,255,0.6)",
-          padding: "5px",
-          maxWidth: "620px",
-          width: "100%",
-          //borderBottomRightRadius: "10px",
-          //borderTopRightRadius: "10px",
+          flexDirection: "row",
+          border: "8px solid rgb(255,255,255)", // Blue border
+          borderRadius: "10px", // Rounded corners
+          boxShadow: "rgb(255 252 252) 0px 4px 8px",
         }}
       >
         <Grid
           style={{
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginRight: "20px",
+            flexDirection: "column",
+            backgroundColor: "rgb(200,200,200,0.6)",
+            padding: "5px",
+            maxWidth: "300px",
+            width: "100%",
+            //borderBottomLeftRadius: "10px",
+            //borderTopLeftRadius: "10px",
+            paddingTop: "20px",
           }}
         >
+          <Box
+            component="img"
+            onClick={() => handleClick(userId)}
+            style={{ cursor: "pointer" }}
+            sx={{
+              height: 96,
+              width: 96,
+              borderRadius: "50%",
+              alignSelf: "center",
+              paddingBottom: "10px",
+            }}
+            src={
+              imgsrc ||
+              "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"
+            }
+          />
           <Typography
-            variant="caption"
+            variant="subtitle1"
             component="div"
+            onClick={() => handleClick(userId)}
             style={{
               color: "white",
               marginTop: "3px",
-              marginRight: "10px",
-              display: "flex",
-              marginLeft: "10px",
-              marginBottom: "10px",
+              cursor: "pointer",
             }}
           >
-            {date}
+            @{username}
           </Typography>
-          {isOwner && (
-            <>
-              <IconButton
-                style={{ color: "rgb(255, 255, 255)", cursor: "pointer" }}
-                onClick={handleClick2}
-              >
-                <MoreHorizIcon />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleDeleteThread}>Delete Thread</MenuItem>
-                <MenuItem onClick={handleEditThread}>Edit Thread</MenuItem>
-                {/* You can add more options here as needed */}
-              </Menu>
-            </>
-          )}
         </Grid>
-        {contentImg && contentImg.length > 0 && (
-          <Grid container spacing={2} justifyContent="center">
-            {contentImg.map(
-              (imgSrc, index) =>
-                imgSrc &&
-                imgSrc.length > 0 &&
-                isValidJson(imgSrc) && (
-                  <Grid item key={index}>
-                    <img
-                      style={{
-                        maxHeight: "400px",
-                        maxWidth: "610px",
-                        borderRadius: "10px",
-                        marginBottom: "10px",
-                      }}
-                      src={JSON.parse(imgSrc).url}
-                      alt={`Image ${index + 1}`}
-                    />
-                  </Grid>
-                ),
-            )}
-          </Grid>
-        )}
-        <Typography
-          variant="body2"
-          component="p"
-          id={`content-element-${threadId}`} // This ID should match the one used in Recogito initialization
-          style={{
-            color: "white",
-            marginTop: "3px",
-            marginRight: "10px",
-            //display: "flex",
-            marginLeft: "10px",
-            textAlign: "left",
-            lineHeight: "1.7",
-            flexWrap: "wrap",
-            flexDirection: "column",
-          }}
-        >
-          {content}
-        </Typography>
         <Grid
           style={{
             display: "flex",
+            justifyContent: "space-between",
             flexDirection: "column",
-            justifyContent: "flex-end",
+            backgroundColor: "rgb(255,255,255,0.6)",
+            padding: "5px",
+            maxWidth: "620px",
+            width: "100%",
+            //borderBottomRightRadius: "10px",
+            //borderTopRightRadius: "10px",
           }}
         >
-          <div
-            style={{
-              width: "560px",
-              height: "1px",
-              color: "rgb(180, 180, 180)",
-              backgroundColor: "rgb(200, 200, 200)",
-              margin: "5% 5% 3% 5%",
-              alignSelf: "center",
-            }}
-          ></div>
           <Grid
             style={{
               display: "flex",
               flexDirection: "row",
-              gap: "15px",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
               marginRight: "20px",
             }}
           >
-            <Button
-              variant="contained"
-              style={upVoteButton}
-              onClick={handleLikeClick}
+            <Typography
+              variant="caption"
+              component="div"
+              style={{
+                color: "white",
+                marginTop: "3px",
+                marginRight: "10px",
+                display: "flex",
+                marginLeft: "10px",
+                marginBottom: "10px",
+              }}
             >
-              <ThumbUpIcon
-                style={{ color: liked ? "#008000" : "rgb(255, 255, 255)" }}
-              />
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                textAlign="left"
-                style={{
-                  color: "rgb(255, 255, 255)",
-                  marginLeft: "5px",
-                }}
-              >
-                {likes}
-              </Typography>
-            </Button>
+              {date}
+            </Typography>
+            {isOwner && (
+              <>
+                <IconButton
+                  style={{ color: "rgb(255, 255, 255)", cursor: "pointer" }}
+                  onClick={handleClick2}
+                >
+                  <MoreHorizIcon />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleDeleteThread}>
+                    Delete Thread
+                  </MenuItem>
+                  <MenuItem onClick={handleEditThread}>Edit Thread</MenuItem>
+                  {/* You can add more options here as needed */}
+                </Menu>
+              </>
+            )}
+          </Grid>
+          {contentImg && contentImg.length > 0 && (
+            <Grid container spacing={2} justifyContent="center">
+              {contentImg.map((imgSrc, index) => {
+                if (isValidJson(imgSrc)) {
+                  const parsedSrc = JSON.parse(imgSrc);
+                  const imageId = `image-${index}`;
 
-            <Button
-              variant="contained"
-              style={downVoteButton}
-              onClick={handleDislikeClick}
+                  // Initialize Annotorious for each image after rendering
+                  useEffect(() => {
+                    console.log("burada");
+                    const anno = new Annotorious({
+                      image: document.getElementById(imageId),
+                      widgets: ["COMMENT"],
+                      readOnly: false,
+                    });
+
+                    anno.on("createAnnotation", async (annotation) => {
+                      // Handle annotation creation
+                      const formattedData = formatImageAnnotationData(
+                        annotation,
+                        index,
+                      );
+                      console.log(formattedData);
+                      //await sendImageAnnotationData(formattedData, "create");
+                    });
+                  }, []); // Empty dependency array ensures this runs once after rendering
+
+                  return (
+                    <Grid item key={index}>
+                      <img
+                        id={imageId} // Unique ID for each image
+                        style={{
+                          maxHeight: "400px",
+                          maxWidth: "610px",
+                          borderRadius: "10px",
+                          marginBottom: "10px",
+                        }}
+                        src={parsedSrc.url}
+                        alt={`Image ${index + 1}`}
+                      />
+                    </Grid>
+                  );
+                } else {
+                  return null; // Return null if the image source is not valid
+                }
+              })}
+            </Grid>
+          )}
+
+          <Typography
+            variant="body2"
+            component="p"
+            id={`content-element-${threadId}`} // This ID should match the one used in Recogito initialization
+            style={{
+              color: "white",
+              marginTop: "3px",
+              marginRight: "10px",
+              //display: "flex",
+              marginLeft: "10px",
+              textAlign: "left",
+              lineHeight: "1.7",
+              flexWrap: "wrap",
+              flexDirection: "column",
+            }}
+          >
+            {content}
+          </Typography>
+          <Grid
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+            }}
+          >
+            <div
+              style={{
+                width: "560px",
+                height: "1px",
+                color: "rgb(180, 180, 180)",
+                backgroundColor: "rgb(200, 200, 200)",
+                margin: "5% 5% 3% 5%",
+                alignSelf: "center",
+              }}
+            ></div>
+            <Grid
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "15px",
+                justifyContent: "flex-end",
+                marginRight: "20px",
+              }}
             >
-              <ThumbDownAltIcon
-                style={{ color: disliked ? "#d20d0d" : "rgb(255, 255, 255)" }}
-              />
-
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                textAlign="left"
-                style={{
-                  color: "rgb(255, 255, 255)",
-                  marginLeft: "5px",
-                }}
+              <Button
+                variant="contained"
+                style={upVoteButton}
+                onClick={handleLikeClick}
               >
-                {dislikes}
-              </Typography>
-            </Button>
+                <ThumbUpIcon
+                  style={{ color: liked ? "#008000" : "rgb(255, 255, 255)" }}
+                />
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  textAlign="left"
+                  style={{
+                    color: "rgb(255, 255, 255)",
+                    marginLeft: "5px",
+                  }}
+                >
+                  {likes}
+                </Typography>
+              </Button>
+
+              <Button
+                variant="contained"
+                style={downVoteButton}
+                onClick={handleDislikeClick}
+              >
+                <ThumbDownAltIcon
+                  style={{ color: disliked ? "#d20d0d" : "rgb(255, 255, 255)" }}
+                />
+
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  textAlign="left"
+                  style={{
+                    color: "rgb(255, 255, 255)",
+                    marginLeft: "5px",
+                  }}
+                >
+                  {dislikes}
+                </Typography>
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </div>
   );
 }
 
