@@ -33,7 +33,7 @@ function Description(data) {
   };
 
   return (
-    <Grid container xs={8} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+    <Grid container xs={12} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
 
       <Grid item xs={12} >
         <Typography variant="h5" color="gray" align="left" style={headerStyle}>

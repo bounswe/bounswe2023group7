@@ -37,4 +37,12 @@ export class GroupListResponseDto {
   @ApiProperty()
   @Expose()
   isJoined: boolean;
+
+  @ApiProperty()
+  @Expose()
+  createdAt: Date;
+
+  @ApiProperty()
+  @Expose()
+  logo: string;
 }

@@ -215,6 +215,15 @@ function ThreadComponent({
 
   const isOwner = currentUserId === userId;
 
+  function isValidJson(str) {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   return (
     <Grid style={{ display: "flex", flexDirection: "row" }}>
       <Grid
@@ -345,7 +354,6 @@ function ThreadComponent({
             })}
           </Grid>
         )}
-
         <Typography
           variant="body2"
           component="div"

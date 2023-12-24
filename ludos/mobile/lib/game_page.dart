@@ -9,13 +9,16 @@ import 'package:ludos_mobile_app/edit_game.dart';
 import 'package:ludos_mobile_app/entities_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
+import 'package:ludos_mobile_app/reusable_widgets/rec_games.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'package:provider/provider.dart';
 import 'forum_page.dart';
 import 'game_properties.dart';
 import 'game_reviews_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
+import 'main.dart';
 import 'reusable_widgets/custom_navigation_bar.dart';
 
 class GamePage extends StatefulWidget {
@@ -36,6 +39,7 @@ class _GamePageState extends State<GamePage> {
   late List<Review> reviews = [];
   final APIService apiService = APIService();
   Map<String, dynamic> gameData = {};
+  late Future<List<RecommendedGame>> recGameList;
 
   @override
   initState() {
@@ -64,7 +68,31 @@ class _GamePageState extends State<GamePage> {
       print("Error initializing follow state: $error");
     }
   }
-
+  Future<List<RecommendedGame>> loadRecGames(UserProvider userProvider, String? token) async {
+    final response = await apiService.getGameRecommendation(widget.token,widget.id);
+    try {
+      if (response.statusCode == 200) {
+        final  List<dynamic> gamesList = json.decode(response.body);
+        return gamesList
+            .map((dynamic item) => RecommendedGame(
+            title: item['title'],
+            averageRating: (item['averageRating'] == null
+                ? 0
+                : item['averageRating'].toDouble()),
+            coverLink: item['coverLink'],
+            id: item['id'],
+            token: token,
+            userProvider: userProvider))
+            .toList();
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+        throw Exception('Failed to load games');
+      }
+    } catch (error) {
+      print("Error: $error");
+      throw Exception('Failed to load games');
+    }
+  }
   Future<bool> getFollowState() async {
     var response = await APIService().userInfo(widget.token);
     var bool = false;
@@ -115,9 +143,11 @@ class _GamePageState extends State<GamePage> {
               gameId: item['gameId'],
               userId: item['userId'],
               username: json.decode(userResponse.body)['username'],
-              thumbUps: item['likedUserCount'],
-              thumbDowns: item['dislikeUserCount'],
+              thumbUps: item['likedUserCount'] ?? 0,
+              thumbDowns: item['dislikedUserCount'] ?? 0,
               time: item['createdAt'],
+              isLiked: item['isLikedByUser'] ?? false,
+              isDisliked: item['isDislikedByUser'] ?? false,
             );
           } else {
             print(
@@ -144,7 +174,14 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SelectionArea(contextMenuBuilder:(context, editableTextState) {
+    var userProvider = Provider.of<UserProvider>(context);
+    recGameList = loadRecGames(userProvider, userProvider.token);
+    return WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+      return false;
+    },
+    child: SelectionArea(contextMenuBuilder:(context, editableTextState) {
       final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
       buttonItems.insert(
         0,
@@ -160,6 +197,7 @@ class _GamePageState extends State<GamePage> {
         buttonItems: buttonItems,
       );
     },
+
       child: Scaffold(
       endDrawer: Drawer(
         child: Container(
@@ -492,6 +530,42 @@ class _GamePageState extends State<GamePage> {
                 ),
               ),
             const SizedBox(height: 20),
+            const Text(
+              'Recommended Games',
+              style: TextStyle(
+                color: MyColors.orange,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: FutureBuilder<List<RecommendedGame>>(
+                  future: recGameList,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator while fetching data
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      // Handle errors
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      // Handle the case when there is no data
+                      return const Center(child: Text('No games available.'));
+                    } else {
+                      // Display the fetched data
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: snapshot.data!,
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -661,14 +735,16 @@ class _GamePageState extends State<GamePage> {
                 thickness: 4.0,
                 color: MyColors.lightBlue,
               ),
-              if(reviews.isNotEmpty)
+              if(!reviews.isEmpty)
                 reviews[0],
             ])
           ],
         ),
       ),
+
       bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
     )
-);
+),
+    );
   }
 }

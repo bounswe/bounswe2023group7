@@ -20,6 +20,7 @@ import IconButton from "@mui/joy/IconButton";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Check from "@mui/icons-material/Check";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloseIcon from "@mui/icons-material/Close";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
@@ -49,6 +50,7 @@ const CreateThreadPage = () => {
     launchingDate: "",
     demoLink: "",
   });
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const navigate = useNavigate();
 
@@ -93,7 +95,6 @@ const CreateThreadPage = () => {
       formData.append("file", file);
 
       try {
-        // Axios ile POST isteği yapılıyor
         const response = axiosInstance
           .post("/external/upload", formData, {
             headers: {
@@ -104,6 +105,9 @@ const CreateThreadPage = () => {
             setSnackbarMessage("Image uploaded successfully!");
             setSnackbar(true);
             setMedia((oldMedia) => [...oldMedia, response.data]);
+
+            const url = URL.createObjectURL(file);
+            setPreviewUrl(url);
           });
         console.log("File is successfully uploaded:", response.data);
       } catch (error) {
@@ -116,6 +120,11 @@ const CreateThreadPage = () => {
 
   const handleChange = (e) => {
     setCurrTag(e.target.value);
+  };
+
+  const handleRemoveImage = () => {
+    setMedia([]);
+    setPreviewUrl(null);
   };
 
   useEffect(() => {
@@ -421,6 +430,31 @@ const CreateThreadPage = () => {
               helperText={bodyEmpty ? "Body cannot be empty." : ""}
             />
           </FormControl>
+
+          {previewUrl && (
+            <div key={previewUrl} style={{ display: "inline-block" }}>
+              <h3 style={{ display: "flex", alignItems: "flex-start" }}>
+                Image:
+              </h3>
+              <img
+                src={previewUrl}
+                alt="preview"
+                style={{ maxHeight: "300px" }}
+              />
+              <Button
+                onClick={handleRemoveImage}
+                style={{
+                  display: "block",
+                  margin: "auto",
+                  marginTop: "10px",
+                  color: "white",
+                  backgroundColor: "red",
+                }}
+              >
+                Remove Image
+              </Button>
+            </div>
+          )}
         </Grid>
         <Grid
           item

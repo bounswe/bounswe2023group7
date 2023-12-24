@@ -180,7 +180,16 @@ export class UserController {
   @ApiNotFoundResponse({ description: 'User is not found!' })
   @Get('/suggested')
   public async getSuggestedGames(@Req() req: AuthorizedRequest) {
-    const suggestedGames = await this.userService.getSuggestedGames(req.user.id);
+    const suggestedGames = await this.userService.getSuggestedGames(
+      req.user.id,
+    );
     return suggestedGames;
+  }
+
+  @ApiOperation({ summary: 'Get User Id By Username' })
+  @ApiNotFoundResponse({ description: 'User is not found!' })
+  @Get('/:username')
+  public async getUserIdByUsername(@Param('userId') username: string) {
+    return await this.userService.getUserIdByUsername(username);
   }
 }

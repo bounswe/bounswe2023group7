@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
+import 'package:ludos_mobile_app/reusable_widgets/rec_games.dart';
 import 'package:ludos_mobile_app/user_profile_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_thread.dart';
 import 'package:ludos_mobile_app/reusable_widgets/home_game_sum.dart';
@@ -31,8 +32,7 @@ class _HomeState extends State<Home> {
   late Future<List<HomeGameSum>> games;
   late Future<List<ThreadSummary>> threads;
   late Future<Map<String, dynamic>> userData;
-
-
+  late Future<List<RecommendedGame>> recGameListforUser;
 
   Future<List<HomeGameSum>> fetchGameData(UserProvider userProvider, String? token) async {
     final response = await APIService().listGames(token, limit: 6);
@@ -79,8 +79,8 @@ class _HomeState extends State<Home> {
           gameId: item['game']['id'],
           userId: item['user']['id'],
           username: item['user']['username'],
-          thumbUps: item['numberOfLikes'],
-          thumbDowns: item['NumberOfDislikes'],
+          thumbUps: (item['numberOfLikes'] ?? 0),
+          thumbDowns: (item['numberOfDislikes'] ?? 0),
           time: item['createdAt'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
@@ -114,6 +114,31 @@ class _HomeState extends State<Home> {
 
     }
   }
+  Future<List<RecommendedGame>> loadRecGamesforUser(UserProvider userProvider, String? token) async {
+    final response = await APIService().getGameRecForUser(userProvider.token);
+    try {
+      if (response.statusCode == 200) {
+        final  List<dynamic> gamesList = json.decode(response.body);
+        return gamesList
+            .map((dynamic item) => RecommendedGame(
+            title: item['title'],
+            averageRating: (item['averageRating'] == null
+                ? 0
+                : item['averageRating'].toDouble()),
+            coverLink: item['coverLink'],
+            id: item['id'],
+            token: token,
+            userProvider: userProvider))
+            .toList();
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+        throw Exception('Failed to load games');
+      }
+    } catch (error) {
+      print("Error: $error");
+      throw Exception('Failed to load games');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +146,7 @@ class _HomeState extends State<Home> {
     games = fetchGameData(userProvider, userProvider.token);
     threads = fetchThreadData(userProvider, userProvider.token);
     userData = fetchUserData(userProvider, userProvider.token);
+    recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
     return Scaffold(
       drawer: Drawer(
         child: Container(
@@ -259,13 +285,6 @@ class _HomeState extends State<Home> {
         backgroundColor: MyColors.orange,
         centerTitle: true,
         title: const Text('Ludos'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            tooltip: 'Comment Icon',
-            onPressed: () {},
-          ) //IconButton
-        ],
       ),
       body: ListView(
         children: <Widget>[
@@ -273,7 +292,7 @@ class _HomeState extends State<Home> {
             children: [
               const SizedBox(height: 10),
               const Text(
-              "Favorite Games",
+              "Popular Games",
               style: TextStyle(
                   color: MyColors.orange,
                   fontSize: 30.0,
@@ -306,8 +325,45 @@ class _HomeState extends State<Home> {
                   },
                 ),
               ),
-              )
-
+              ),
+              const SizedBox(height: 10),
+              if (userProvider.isLoggedIn)
+              const Text(
+                "Recommended Games",
+                style: TextStyle(
+                  color: MyColors.orange,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (userProvider.isLoggedIn)
+                SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: FutureBuilder<List<RecommendedGame>>(
+                    future: recGameListforUser,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        // Show a loading indicator while fetching data
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        // Handle errors
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        // Handle the case when there is no data
+                        return const Center(child: Text('No games available.'));
+                      } else {
+                        // Display the fetched data
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: snapshot.data!,
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
             ]
           ),
           Column(

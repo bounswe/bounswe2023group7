@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:ludos_mobile_app/helper/EntityContent.dart';
 
 class APIService {
   var baseURL = "http://3.125.225.39:8080";
@@ -177,9 +177,6 @@ class APIService {
       'orderByKey': orderByKey,
     };
 
-    print("orderby: $orderByKey");
-    print("order: $order");
-
     // Add optional parameters if provided
     if (searchKey != null) queryParams['searchKey'] = searchKey;
     if (tags != null) queryParams['tags'] = tags;
@@ -285,7 +282,7 @@ class APIService {
 
   Future<http.Response> likeReview(String? authToken, String reviewId) async {
     var uri = Uri.parse("$baseURL/review/$reviewId/like");
-    final response = await http.put(uri, headers: {
+    final response = await http.post(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
@@ -295,11 +292,40 @@ class APIService {
   Future<http.Response> dislikeReview(
       String? authToken, String reviewId) async {
     var uri = Uri.parse("$baseURL/review/$reviewId/dislike");
-    final response = await http.put(uri, headers: {
+    final response = await http.post(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
     return response;
+  }
+
+  Future<http.Response> likeComment(String? authToken, String commentId) async {
+    var uri = Uri.parse("$baseURL/comment/$commentId/like-comment");
+    final response = await http.post(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to load entity data');
+    }
+  }
+
+  Future<http.Response> dislikeComment(
+      String? authToken, String commentId) async {
+    var uri = Uri.parse("$baseURL/comment/$commentId/dislike-comment");
+    final response = await http.post(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to load entity data');
+    }
   }
 
   Future<http.Response> listReviews(String? authToken, String gameId) async {
@@ -387,6 +413,142 @@ class APIService {
     });
 
     return response;
+  }
+
+  Future<http.Response> lastActivities(String? authToken,
+  {int page = 1,
+  int limit = 5,
+  String? searchKey,
+  String? tags,
+  String? gameId,
+  String? groupId,
+  String? ownerUserId,
+  bool isLiked = false,
+  bool isDisliked = false,
+  String order = "DESC",
+  String orderByKey = "createdAt"}) async {
+
+    final Map<String, String> queryParams = {
+      'page': page.toString(),
+      'limit': limit.toString(),
+      'order': order,
+      'isLiked': isLiked.toString(),
+      'isDisliked': isDisliked.toString(),
+      'orderByKey': orderByKey,
+    };
+
+    if (searchKey != null) queryParams['searchKey'] = searchKey;
+    if (tags != null) queryParams['tags'] = tags;
+    if (groupId != null) queryParams['groupId'] = groupId;
+    if (ownerUserId != null) queryParams['ownerUserId'] = ownerUserId;
+    if(gameId != null) queryParams['gameId'] = gameId;
+
+
+    var uri = Uri.parse("$baseURL/post").replace(queryParameters: queryParams);
+
+    // Make the HTTP request for each gameId
+    var res = await http.get(uri, headers: {
+      'content-type': 'application/json',
+      'Authorization': 'Bearer $authToken',
+      HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+    });
+    if (res.statusCode == 200) {
+      return res;
+    } else {
+      throw Exception('Failed to load threads');
+    }
+  }
+
+  Future<http.Response> listPosts(String? authToken,
+      {int page = 1,
+        int limit = 10,
+        String? searchKey,
+        String? tags,
+        List<String> gameId = const [],
+        String? groupId,
+        String? ownerUserId,
+        bool isLiked = false,
+        bool isDisliked = false,
+        String order = "DESC",
+        String orderByKey = "createdAt"}) async {
+
+    // Create a list to store individual responses
+    List<http.Response> individualResponses = [];
+
+    for (int i = 0; i < gameId.length; i++) {
+      // Create a map to store query parameters for each gameId
+      final Map<String, String> queryParams = {
+        'page': page.toString(),
+        'limit': limit.toString(),
+        'order': order,
+        'isLiked': isLiked.toString(),
+        'isDisliked': isDisliked.toString(),
+        'orderByKey': orderByKey,
+        'gameId': gameId[i],
+      };
+
+      // Add optional parameters if provided
+      if (searchKey != null) queryParams['searchKey'] = searchKey;
+      if (tags != null) queryParams['tags'] = tags;
+      if (groupId != null) queryParams['groupId'] = groupId;
+      if (ownerUserId != null) queryParams['ownerUserId'] = ownerUserId;
+
+      // Create the URI with query parameters
+      var uri = Uri.parse("$baseURL/post").replace(queryParameters: queryParams);
+
+      // Make the HTTP request for each gameId
+      var res = await http.get(uri, headers: {
+        'content-type': 'application/json',
+        'Authorization': 'Bearer $authToken',
+        HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+      });
+
+      if (res.statusCode == 200) {
+        // Add individual response to the list
+        //print("Individual Response: ${res.body}");
+        individualResponses.add(res);
+      } else {
+        throw Exception('Failed to load threads');
+      }
+    }
+
+    // Combine individual responses into a single response
+    http.Response combinedResponse = combineResponses(individualResponses);
+
+    print("Combined Response: ${combinedResponse.body}");
+    return combinedResponse;
+  }
+
+  http.Response combineResponses(List<http.Response> responses) {
+    // Initialize an empty list to store combined items
+    List<dynamic> combinedItems = [];
+
+    // Iterate through each response
+    for (var response in responses) {
+      // Parse the response body
+      Map<String, dynamic> responseBody = json.decode(utf8.decode(response.bodyBytes, allowMalformed: true));
+
+      // Extract the "items" array from the response
+      List<dynamic> items = responseBody['items'];
+
+      // Add the items to the combined list
+      combinedItems.addAll(items);
+
+      // Add the items to the combined list
+    }
+
+    // Create a combined response with the merged "items" list
+    Map<String, dynamic> combinedResponseBody = {'items': combinedItems};
+
+    String combinedResponseString = json.encode(combinedResponseBody);
+    //print("Combined Response String: $combinedResponseString");
+    // Create an HTTP response with the combined body
+    http.Response combinedResponse = http.Response(combinedResponseString, 200,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+        });
+
+    return combinedResponse;
   }
 
   Future<http.Response> search(String? authToken, String searchKey) async {
@@ -604,5 +766,24 @@ class APIService {
 
     return response;
   }
+
+  Future<http.Response> getGameRecommendation(String? authToken, String gameID) async {
+    var uri = Uri.parse("$baseURL/game/$gameID/related");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getGameRecForUser(String? authToken) async {
+    var uri = Uri.parse("$baseURL/user/suggested");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
 
 }

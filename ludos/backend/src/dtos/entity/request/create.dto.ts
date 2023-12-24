@@ -24,4 +24,8 @@ export class EntityCreateDto {
   @ApiProperty({ example: 'Alistar' })
   @IsString()
   name: string;
+
+  @ApiProperty({ example: 'A support character' })
+  @IsString()
+  description: string;
 }

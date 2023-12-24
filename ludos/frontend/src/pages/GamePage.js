@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { Recogito } from "@recogito/recogito-js";
+import "@recogito/recogito-js/dist/recogito.min.css";
 import {
   Container,
   Grid,
@@ -20,6 +22,7 @@ import RelatedGames from "../components/RelatedGamesTab.js";
 import EntityTab from "../components/EntityTab.js";
 import GameForum from "../components/GameForums.js";
 import { useNavigate } from "react-router-dom";
+import { FaIgloo } from "react-icons/fa";
 
 function GamePage(id) {
   const navigate = useNavigate();
@@ -223,6 +226,136 @@ function GamePage(id) {
     alignItems: "center",
     flexDirection: "column",
     display: "flex",
+  };
+
+  const gameBioAnnotatorRef = useRef(null);
+
+  useEffect(() => {
+    if (game && game.gameBio) {
+      gameBioAnnotatorRef.current = new Recogito({
+        content: "game-bio",
+        // Other initialization...
+      });
+
+      fetchAnnotations();
+      gameBioAnnotatorRef.current.on(
+        "createAnnotation",
+        handleCreateAnnotation,
+      );
+      gameBioAnnotatorRef.current.on(
+        "deleteAnnotation",
+        handleDeleteAnnotation,
+      );
+
+      return () => gameBioAnnotatorRef.current.destroy();
+    }
+  }, [game]);
+
+  const parseId = (id) => {
+    const parts = id.split("/");
+    return {
+      source: parts[0],
+      type: parts[1],
+      itemId: parts[2],
+      date: parts[3],
+    };
+  };
+
+  const handleDeleteAnnotation = async (annotation) => {
+    id = annotation.id;
+
+    try {
+      const { source, type, itemId, date } = parseId(id);
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/${source}/${type}/${itemId}/${date}`;
+
+      const response = await axios.delete(url);
+
+      console.log("Annotation deleted:", response.data);
+    } catch (error) {
+      console.error("Error deleting annotation:", error);
+    }
+  };
+
+  const handleCreateAnnotation = async (annotation) => {
+    // Prepare your API request body
+    const requestBody = {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      type: "Annotation",
+      body: annotation.body[0].value, // You might need to format this according to your backend expectations
+      target: {
+        source: window.location.href,
+        selector: {
+          start: annotation.target.selector[1].start, // Starting character index
+          end: annotation.target.selector[1].end, // Ending character index
+        },
+      },
+    };
+
+    // Make the API call to your server
+    try {
+      const response = await axios.post(
+        `http://${process.env.REACT_APP_API_URL}/annotation/gamebio/${id.gameId}`,
+        requestBody,
+      );
+      console.log("Annotation saved:", response.data);
+    } catch (error) {
+      console.error("Error saving annotation:", error);
+    }
+  };
+
+  // ... existing useEffect code for other functionalities
+
+  // Function to fetch annotations
+  const fetchAnnotations = async () => {
+    try {
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_API_URL}/annotation/gamebio/${id.gameId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        },
+      );
+
+      if (response.data) {
+        displayGameBioAnnotations(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching annotations:", error);
+    }
+  };
+
+  const displayGameBioAnnotations = (gameBioAnnotations) => {
+    if (gameBioAnnotatorRef.current) {
+      gameBioAnnotations.forEach((annotation) => {
+        console.log("annotator annotation", annotation);
+        gameBioAnnotatorRef.current.addAnnotation({
+          "@context": "http://www.w3.org/ns/anno.jsonld",
+          type: "Annotation",
+          id: annotation.id,
+          body: [
+            {
+              type: "TextualBody",
+              value: annotation.body,
+              purpose: "commenting",
+            },
+          ],
+          target: {
+            selector: [
+              {
+                type: "TextQuoteSelector",
+                exact: annotation.body,
+              },
+              {
+                type: "TextPositionSelector",
+                start: annotation.target.selector.start,
+                end: annotation.target.selector.end,
+              },
+            ],
+          },
+        });
+      });
+    }
   };
 
   const handleFollowClick = () => {
@@ -542,7 +675,8 @@ function GamePage(id) {
         <Grid item xs={12} sm={4} md={4} lg={4} style={{ marginLeft: "1%" }}>
           <Grid item xs={12} sm={12} md={12} lg={12} style={bioBoxStyle}>
             <Typography
-              component="legend"
+              component="div"
+              id="game-bio"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
               {game.gameBio}
@@ -664,6 +798,7 @@ function GamePage(id) {
               <TabPanel value="1">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
                   <DescriptionTab
+                    gameId={game.id}
                     story={game.gameStory}
                     guide={game.gameGuide}
                     trivia={game.trivia}
@@ -679,7 +814,14 @@ function GamePage(id) {
                 </Typography>
               </TabPanel>
               <TabPanel value="3">
-                <Typography style={{ fontSize: "15px", color: "white", display: 'flex', justifyContent: 'center' }}>
+                <Typography
+                  style={{
+                    fontSize: "15px",
+                    color: "white",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
                   <RelatedGames
                     predecessors={game.predecessors}
                     successors={game.successors}
@@ -689,12 +831,7 @@ function GamePage(id) {
               </TabPanel>
               <TabPanel value="4">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <EntityTab
-                    characters={game.characters}
-                    areas={game.areas}
-                    items={game.items}
-                    packages={game.packages}
-                  />
+                  <EntityTab gameId={game.id} auth={auth} />
                 </Typography>
               </TabPanel>
               <TabPanel value="5">
