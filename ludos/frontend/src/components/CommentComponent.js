@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Grid,
@@ -92,7 +92,7 @@ function CommentComponent({
 
   const sendAnnotationData = async (data, method) => {
     try {
-      const url = ``;
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/comment/${commentId}`;
       console.log(url);
       const response = await axios.post(url, data);
       console.log(`Annotation ${method}d:`, response.data);
@@ -103,7 +103,91 @@ function CommentComponent({
 
   const onAnnotationCreated = async (annotation) => {
     const postData = formatAnnotationData(annotation);
-    //await sendAnnotationData(postData, "create");
+    await sendAnnotationData(postData, "create");
+  };
+
+  const onAnnotationDeleted = async (annotation) => {
+    console.log("delete annotation", annotation);
+    const id = annotation.id;
+    //const postData = formatAnnotationData(annotation);
+    await deleteAnnotationData(id);
+  };
+
+  const parseId = (id) => {
+    const parts = id.split("/");
+    return {
+      source: parts[0],
+      type: parts[1],
+      itemId: parts[2],
+      date: parts[3],
+    };
+  };
+
+  const deleteAnnotationData = async (id) => {
+    try {
+      const { source, type, itemId, date } = parseId(id);
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/${source}/${type}/${itemId}/${date}`;
+
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Make sure accessToken is defined and valid
+        },
+      });
+
+      console.log("Annotation deleted:", response.data);
+    } catch (error) {
+      console.error("Error deleting annotation:", error);
+    }
+  };
+
+  const displayAnnotations = (annotations) => {
+    // Assuming 'annotations' is an array of annotation objects
+    // and you have an instance of Recogito called 'annotator'
+    if (annotatorRef.current) {
+      annotations.forEach((annotation) => {
+        console.log("annotator annotation", annotation);
+        annotatorRef.current.addAnnotation({
+          "@context": "http://www.w3.org/ns/anno.jsonld",
+          type: "Annotation",
+          id: annotation.id,
+          body: [
+            {
+              type: "TextualBody",
+              value: annotation.body,
+              purpose: "commenting",
+            },
+          ],
+          target: {
+            selector: [
+              {
+                type: "TextQuoteSelector",
+                exact: annotation.body,
+              },
+              {
+                type: "TextPositionSelector",
+                start: annotation.target.selector.start,
+                end: annotation.target.selector.end,
+              },
+            ],
+          },
+        });
+      });
+    }
+  };
+
+  const fetchAnnotations = async () => {
+    try {
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/comment/${commentId}`;
+      const response = await axios.get(url);
+
+      console.log(response.data);
+      if (response.data) {
+        // Process and display annotations
+        displayAnnotations(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching annotations:", error);
+    }
   };
 
   useEffect(() => {
@@ -127,14 +211,34 @@ function CommentComponent({
     };
 
     fetchUserId();
-    const annotator = new Recogito({
-      content: `comment-element-${commentId}`, // ID of the element that contains the text
-    });
-
-    annotator.on("createAnnotation", onAnnotationCreated);
-
-    return () => annotator.destroy();
   }, []);
+
+  const annotatorRef = useRef(null);
+  useEffect(() => {
+    // Ensure the element is available in the DOM
+    const contentElement = document.getElementById(
+      `content-element-${commentId}`,
+    );
+    console.log("?", contentElement);
+
+    if (contentElement) {
+      annotatorRef.current = new Recogito({
+        content: `content-element-${commentId}`,
+        // Other initialization...
+      });
+
+      fetchAnnotations();
+      annotatorRef.current.on("createAnnotation", onAnnotationCreated);
+      annotatorRef.current.on("deleteAnnotation", onAnnotationDeleted);
+
+      // Cleanup function
+      return () => {
+        if (annotatorRef.current) {
+          annotatorRef.current.destroy();
+        }
+      };
+    }
+  }, [commentId]);
 
   useEffect(() => {
     if (currentUserId) {
@@ -445,7 +549,7 @@ function CommentComponent({
           <Typography
             variant="body2"
             component="div"
-            id={`comment-element-${commentId}`}
+            id={`content-element-${commentId}`}
             style={{
               color: "white",
               marginTop: "3px",

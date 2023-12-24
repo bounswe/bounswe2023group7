@@ -227,6 +227,7 @@ function ThreadComponent({
     return () => annotatorRef.current.destroy();
   }, []);
 
+  const imgEl = useRef();
   const formatImageAnnotationData = (annotation, index) => {
     console.log("ımage", annotation);
     // Assuming annotation.target is defined and has the necessary properties
@@ -239,16 +240,19 @@ function ThreadComponent({
       target: {
         source: JSON.parse(contentImg[index]).url, // Assuming this is the URL of the image
         selector: {
-          start: "#" + annotation.target.selector.value,
-          end: null,
+          start: 0,
+          end: 0,
         },
+        type: "Image",
+        id: annotation.target.selector.value,
+        format: "image/jpeg",
       },
     };
   };
 
   const sendImageAnnotationData = async (data, method) => {
     try {
-      const url = `http://${process.env.REACT_APP_API_URL}/annotation/post/${threadId}`;
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/image`;
       let response;
 
       response = await axios.post(url, data);
@@ -257,6 +261,54 @@ function ThreadComponent({
     } catch (error) {
       console.error(`Error ${method}ing annotation:`, error);
     }
+  };
+
+  const fetchImageAnnotations = async (anno, imageUrl, imageId) => {
+    try {
+      const url = `http://${
+        process.env.REACT_APP_API_URL
+      }/annotation/image?imageUrl=${encodeURIComponent(imageUrl)}`;
+      const response = await axios.get(url);
+
+      if (response.data) {
+        displayImageAnnotations(anno, response.data, imageId);
+      }
+    } catch (error) {
+      console.error("Error fetching image annotations:", error);
+    }
+  };
+
+  const displayImageAnnotations = (anno, annotations, imageId) => {
+    anno.setVisible(true);
+    annotations.forEach((annotation) => {
+      console.log("anno", annotation);
+      console.log(annotation.target.id);
+      console.log(annotation.target.source);
+      console.log(annotation.body);
+      console.log(annotation.id);
+      anno.addAnnotation({
+        "@context": "http://www.w3.org/ns/anno.jsonld",
+        type: "Annotation",
+        id: annotation.id,
+        body: [
+          {
+            purpose: "commenting",
+            type: "TextualBody",
+            value: annotation.body,
+          },
+        ],
+        target: {
+          selector: [
+            {
+              type: "FragmentSelector",
+              conformsTo: "http://www.w3.org/TR/media-frags/",
+              value: annotation.target.id,
+            },
+          ],
+          source: annotation.target.source,
+        },
+      });
+    });
   };
 
   const handleClick = (userId) => {
@@ -535,14 +587,25 @@ function ThreadComponent({
                         index,
                       );
                       console.log(formattedData);
-                      //await sendImageAnnotationData(formattedData, "create");
+                      await sendImageAnnotationData(formattedData, "create");
                     });
-                  }, []); // Empty dependency array ensures this runs once after rendering
+
+                    anno.on("deleteAnnotation", onAnnotationDeleted);
+
+                    anno.on("clickAnnotation", function (annotation) {
+                      console.log("Clicked annotation:", annotation);
+                      // You can then display the annotation's body or other details
+                    });
+
+                    fetchImageAnnotations(anno, parsedSrc.url, imageId);
+                    return () => anno.destroy();
+                  }, [contentImg]); // Empty dependency array ensures this runs once after rendering
 
                   return (
                     <Grid item key={index}>
                       <img
                         id={imageId} // Unique ID for each image
+                        ref={imgEl}
                         style={{
                           maxHeight: "400px",
                           maxWidth: "610px",
