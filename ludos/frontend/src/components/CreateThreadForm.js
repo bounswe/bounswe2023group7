@@ -23,6 +23,12 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/lab";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 const CreateThreadPage = () => {
   const [tags, setTags] = useState([]);
@@ -41,6 +47,11 @@ const CreateThreadPage = () => {
   const [serverError, setServerError] = useState(false);
   const [titleEmpty, setTitleEmpty] = useState(false);
   const [bodyEmpty, setBodyEmpty] = useState(false);
+  const [upcomingTitle, setUpcomingTitle] = useState({
+    isUpcomingTitle: false,
+    launchingDate: "",
+    demoLink: "",
+  });
 
   const navigate = useNavigate();
 
@@ -50,6 +61,21 @@ const CreateThreadPage = () => {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
     },
   });
+
+  const handleUpcomingTitleChange = (event) => {
+    const isUpcoming = event.target.value === "yes";
+    setUpcomingTitle({ ...upcomingTitle, isUpcomingTitle: isUpcoming });
+  };
+
+  // Function to handle changes to the launching date
+  const handleLaunchingDateChange = (newValue) => {
+    setUpcomingTitle({ ...upcomingTitle, launchingDate: newValue });
+  };
+
+  // Function to handle changes to the demo link
+  const handleDemoLinkChange = (event) => {
+    setUpcomingTitle({ ...upcomingTitle, demoLink: event.target.value });
+  };
 
   const handleKeyUp = (e) => {
     if (e.keyCode == 13) {
@@ -147,7 +173,14 @@ const CreateThreadPage = () => {
     }
 
     let gameId = games.filter((game) => game.title === value)[0].id;
-
+    console.log("request body", {
+      title,
+      body,
+      gameId,
+      media,
+      tags,
+      upcomingTitle,
+    });
     axiosInstance
       .post("/post", {
         title,
@@ -155,6 +188,7 @@ const CreateThreadPage = () => {
         gameId,
         media,
         tags,
+        upcomingTitle,
       })
       .then((response) => {
         setSnackbarMessage("Thread created successfully!");
@@ -165,7 +199,7 @@ const CreateThreadPage = () => {
       .catch((error) => {
         setSnackbarMessage(
           "An error occurred while creating the thread!: " +
-          error.response.data.message,
+            error.response.data.message,
         );
         setServerError(true);
         console.log(error);
@@ -220,6 +254,70 @@ const CreateThreadPage = () => {
             renderInput={(params) => <TextField {...params} label="Forum" />}
           />
         </Grid>
+        {/** a section to choose "Is Upcoming Title? : (dot) yes (dot) no" */}
+        {/**If yes, it should open a section for choosing the launching date (date type) and below that a section to put demo link (string) */}
+        <Grid
+          item
+          xs={12}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "32px",
+            //alignItems: "flex-start",
+          }}
+        >
+          <h3>Is Upcoming Title?</h3>
+          <RadioGroup
+            row
+            value={upcomingTitle.isUpcomingTitle ? "yes" : "no"}
+            onChange={handleUpcomingTitleChange}
+          >
+            <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+            <FormControlLabel value="no" control={<Radio />} label="No" />
+          </RadioGroup>
+        </Grid>
+
+        {/** user role if check (only when developer) */}
+        {upcomingTitle.isUpcomingTitle && (
+          <>
+            <Grid
+              item
+              xs={12}
+              style={{ display: "flex", flexDirection: "row", gap: "32px" }}
+            >
+              <h3 style={{ display: "flex", alignItems: "flex-start" }}>
+                Launching Date:
+              </h3>
+              <TextField
+                type="date"
+                label="Launching Date"
+                value={upcomingTitle.launchingDate}
+                onChange={(event) => {
+                  setUpcomingTitle({
+                    ...upcomingTitle,
+                    launchingDate: event.target.value,
+                  });
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                //fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <h3 style={{ display: "flex", alignItems: "flex-start" }}>
+                Demo Link:
+              </h3>
+              <TextField
+                fullWidth
+                label="Demo Link"
+                value={upcomingTitle.demoLink}
+                onChange={handleDemoLinkChange}
+              />
+            </Grid>
+          </>
+        )}
         <Grid item xs={12} spacing={1}>
           <h3 style={{ display: "flex", alignItems: "flex-start" }}>Tags:</h3>
           <FormControl

@@ -131,6 +131,10 @@ const Homepage = () => {
         forumGame: topic.game.title,
         id: topic.id,
         userId: topic.user.id,
+        isUpcomingTitle:
+          topic.upcomingTitle != null
+            ? topic.upcomingTitle.isUpcomingTitle
+            : false,
       }));
       console.log("Trending Topics: ", formattedTopics);
 

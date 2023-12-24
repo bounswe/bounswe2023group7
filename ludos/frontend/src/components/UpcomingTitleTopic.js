@@ -1,28 +1,12 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Box, Typography, Grid } from "@mui/material";
 import Person2Icon from "@mui/icons-material/Person2";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-//import MapsUgcIcon from "@mui/icons-material/MapsUgc";
+import MapsUgcIcon from "@mui/icons-material/MapsUgc";
 import { Link } from "react-router-dom";
 
 function ForumTopic(data) {
-  const navigate = useNavigate();
-
-  const handleClick = (userId) => {
-    navigate(`/profile-page/${userId}`);
-  };
-
-  const convertToSlug = (text) => {
-    return text
-      ?.toString()
-      .toLowerCase()
-      .trim()
-      .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
-      .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
-      .replace(/--+/g, "-"); // Replace multiple dashes with single dash
-  };
-
+  const directLink = `/profile-page/${data.topic.user.id}`;
   const tagBox = {
     display: "flex",
     justifyContent: "center",
@@ -31,19 +15,18 @@ function ForumTopic(data) {
     color: "white",
     height: "6px",
     borderRadius: "10px",
-    padding: "10px",
+    padding: "5px",
     marginRight: "5px",
-    lineHeight: "1",
   };
   const forumStyle = {
     backgroundColor: "rgb(200, 10, 10)",
     color: "white",
     borderRadius: "10px",
-    padding: "3px",
+    padding: "2px",
     marginBottom: "8px",
     fontWeight: "bold",
-    lineHeight: "1",
   };
+  const userStyle = { color: "rgb(255, 255, 255)", marginRight: "2%" };
 
   useEffect(() => {}, []);
 
@@ -58,7 +41,8 @@ function ForumTopic(data) {
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        maxHeight: "150px",
+        minHeight: "90px",
+        marginBottom: "10px",
       }}
     >
       <Grid
@@ -67,68 +51,43 @@ function ForumTopic(data) {
           flexDirection: "column",
           backgroundColor: "rgb(200,200,200,0.6)",
           width: "160px",
-          justifyContent: "space-evenly",
+          justifyContent: "center",
           borderBottomLeftRadius: "10px",
           borderTopLeftRadius: "10px",
-          paddingTop: "0px", // Remove padding at the top
-          //paddingBottom: "32.25px",
-          // paddingLeft: "40px",
-          //paddingRight: "40px",
+          paddingTop: "20px",
+          padding: "32.25px 40px 32.25px",
           alignItems: "center",
         }}
       >
-        {data.topic.isUpcomingTitle && (
-          <Typography
-            variant="caption"
-            style={{
-              paddingRight: "3px",
-              paddingLeft: "3px",
-              marginTop: "-21px",
-              backgroundColor: "#570080",
-              color: "white",
-              display: "flex",
-              borderRadius: "5px",
-              //marginBottom: "20px",
-              alignSelf: "flex-start",
-            }}
-          >
-            Upcoming Title
-          </Typography>
-        )}
-
-        <Grid>
-          <Box
-            onClick={() => handleClick(data.topic.userId)}
-            style={{ cursor: "pointer" }}
-            component="img"
-            sx={{
-              height: 48,
-              width: 48,
-              borderRadius: "50%",
-              alignSelf: "center",
-              paddingBottom: "10px",
-            }}
-            src={
-              data.topic.imgsrc ||
-              "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"
-            }
-          />
-          <Typography
-            onClick={() => handleClick(data.topic.userId)}
-            variant="caption"
-            component="div"
-            style={{
-              color: "white",
-              marginTop: "3px",
-              textAlign: "center",
-              cursor: "pointer",
-            }}
-          >
-            @{data.topic.userOpened}
-          </Typography>
-        </Grid>
+        <Box
+          component="img"
+          sx={{
+            height: 48,
+            width: 48,
+            borderRadius: "50%",
+            alignSelf: "center",
+            paddingBottom: "10px",
+          }}
+          src={
+            data.topic.user.avatar ||
+            "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"
+          }
+        />
+        <Typography
+          variant="caption"
+          component="div"
+          style={{
+            color: "white",
+            marginTop: "3px",
+            textAlign: "center",
+          }}
+        >
+          @
+          <Link to={directLink} style={userStyle}>
+            {data.topic.user.username}
+          </Link>
+        </Typography>
       </Grid>
-
       <Grid
         style={{
           display: "flex",
@@ -149,29 +108,23 @@ function ForumTopic(data) {
           lg={12}
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <a
-            href={`/game/${convertToSlug(data.topic.forumGame)}`}
-            style={{ textDecoration: "none" }}
-          >
-            <Typography variant="caption" component="div" style={forumStyle}>
-              {data.topic.forumGame}
-            </Typography>
-          </a>
+          <Typography variant="caption" component="div" style={forumStyle}>
+            {data.topic.game.title}
+          </Typography>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
-            {data?.topic &&
-              data.topic?.forumTags?.map((tag1, index1) => (
+            {data.topic &&
+              data.topic.tags.map((tag1, index1) => (
                 <Typography
                   variant="caption"
                   component="div"
                   style={tagBox}
                   key={index1}
                 >
-                  {tag1?.toString()}
+                  {tag1.toString()}
                 </Typography>
               ))}
           </Grid>
         </Grid>
-
         <Typography
           variant="body2"
           component="div"
@@ -183,16 +136,13 @@ function ForumTopic(data) {
             marginLeft: "10px",
             textAlign: "center",
             lineHeight: "1.7",
+            fontSize: "20px",
           }}
         >
-          <Link
-            to={`/thread/${data.topic.id}`}
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
+          <Link to={`/thread/${data.topic.id}`} style={userStyle}>
             {data.topic.title}
           </Link>
         </Typography>
-
         <Grid
           style={{
             display: "flex",
@@ -207,7 +157,7 @@ function ForumTopic(data) {
               height: "1px",
               color: "rgb(180, 180, 180)",
               backgroundColor: "rgb(200, 200, 200)",
-              margin: "5% 5% 3% 5%",
+              margin: "5% 5% 1% 5%",
               alignSelf: "center",
             }}
           ></div>
@@ -219,22 +169,18 @@ function ForumTopic(data) {
               marginRight: "20px",
             }}
           >
-            <Person2Icon
-              onClick={() => handleClick(data.topic.userId)}
-              style={{ cursor: "pointer" }}
-            />
+            <Person2Icon />
             <Typography
-              onClick={() => handleClick(data.topic.userId)}
               variant="caption"
               component="div"
               style={{
                 color: "white",
                 marginTop: "3px",
-                marginRight: "5px",
-                cursor: "pointer",
+                marginLeft: "3px",
+                marginRight: "3px",
               }}
             >
-              @{data.topic.userOpened}
+              @{data.topic.user.username}
             </Typography>
             <AccessTimeIcon />
             <Typography
@@ -243,14 +189,16 @@ function ForumTopic(data) {
               style={{
                 color: "white",
                 marginTop: "3px",
-
+                marginRight: "3px",
                 display: "flex",
+                marginLeft: "3px",
                 marginBottom: "10px",
               }}
             >
-              {data.topic.whenOpened}
+              {data.topic.createdAt.split("T")[0]}{" "}
+              {data.topic.createdAt.split("T")[1].split(".")[0]}
             </Typography>
-            {/** <MapsUgcIcon />
+            <MapsUgcIcon />
             <Typography
               variant="caption"
               component="div"
@@ -261,7 +209,7 @@ function ForumTopic(data) {
               }}
             >
               {data.topic.numOfReplies}
-            </Typography>*/}
+            </Typography>
           </Grid>
         </Grid>
       </Grid>

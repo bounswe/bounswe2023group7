@@ -45,6 +45,9 @@ const ThreadPage = () => {
   const [numDislikes, setNumDislikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
+  const [isUpcomingTitle, setIsUpcomingTitle] = useState(false);
+  const [launchingDate, setLaunchingDate] = useState("");
+  const [demoLink, setDemoLink] = useState("");
   //const [ownerId, setOwnerId] = useState("");
 
   useEffect(() => {
@@ -147,9 +150,20 @@ const ThreadPage = () => {
         setNumDislikes(response.data.numberOfDislikes);
         setIsDisliked(response.data.isDisliked);
         setIsLiked(response.data.isLiked);
+
+        if (response.data.upcomingTitle != null) {
+          setIsUpcomingTitle(response.data.upcomingTitle.isUpcomingTitle);
+          setDemoLink(response.data.upcomingTitle.demoLink);
+          setLaunchingDate(response.data.upcomingTitle.launchingDate);
+          //console.log("upcoming", response.data.upcomingTitle.isUpcomingTitle);
+        } else {
+          setIsUpcomingTitle(false);
+        }
+
         //setOwnerId(response.data.user.id);
         console.log(response.data);
-        setLoading(false); // Set loading to false when data is fetched
+        setLoading(false); // Set loading to false when data is fetched}
+
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching thread details:", error);
@@ -161,7 +175,7 @@ const ThreadPage = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Display a loading message while fetching data
+    return <h1 style={{ color: "white" }}>Loading...</h1>; // Display a loading message while fetching data
   }
 
   if (!threadDetails) {
@@ -195,6 +209,16 @@ const ThreadPage = () => {
     padding: "5px",
     marginBottom: "8px",
     fontWeight: "bold",
+  };
+
+  const upcomingStyle = {
+    backgroundColor: "green",
+    color: "white",
+    borderRadius: "10px",
+    padding: "3px",
+    marginBottom: "8px",
+    fontWeight: "bold",
+    alignSelf: "flex-start",
   };
   const sortedComments = comments.slice().sort((a, b) => {
     const dateA = new Date(a.timestamp);
@@ -230,6 +254,7 @@ const ThreadPage = () => {
                 {threadDetails?.game?.title}
               </Typography>
             </a>
+
             <Grid style={{ display: "flex" }}>
               {threadDetails?.tags &&
                 threadDetails?.tags.map((data1, index1) => (
@@ -256,6 +281,65 @@ const ThreadPage = () => {
           >
             {threadDetails?.title}
           </Typography>
+
+          {isUpcomingTitle && (
+            <>
+              <Typography variant="body2" component="div" style={upcomingStyle}>
+                Upcoming Title
+              </Typography>
+              <Grid
+                spacing={2}
+                style={{
+                  paddingBottom: "1rem",
+                  alignItems: "center",
+                  display: "flex",
+                  gap: "16px",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <Grid item xs={12}>
+                  <Typography
+                    variant="body1"
+                    component="div"
+                    style={{ color: "green", fontWeight: "600" }}
+                  >
+                    Launching Date:{" "}
+                    <span style={{ color: "white" }}>
+                      {" "}
+                      {new Date(launchingDate).toLocaleDateString(
+                        "en-US",
+                        options,
+                      )}
+                    </span>
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <a
+                    href={demoLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      textDecoration: "none",
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      component="div"
+                      style={{
+                        color: "white",
+                        fontWeight: "600",
+                        padding: "4px",
+                        backgroundColor: "green",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      View Demo
+                    </Typography>
+                  </a>
+                </Grid>
+              </Grid>
+            </>
+          )}
           <Grid
             style={{
               display: "flex",
@@ -335,6 +419,9 @@ const ThreadPage = () => {
               threadId={threadId}
               isLiked={isLiked}
               isDisliked={isDisliked}
+              isUpcomingTitle={isUpcomingTitle}
+              launchingDate={launchingDate}
+              demoLink={demoLink}
             />
 
             {/* Display comments */}

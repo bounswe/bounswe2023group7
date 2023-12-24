@@ -27,6 +27,9 @@ function ThreadComponent({
   threadId,
   isLiked,
   isDisliked,
+  isUpcomingTitle = false,
+  launchingDate = null,
+  demoLink = null,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -313,20 +316,33 @@ function ThreadComponent({
         </Grid>
         {contentImg && contentImg.length > 0 && (
           <Grid container spacing={2} justifyContent="center">
-            {contentImg.map((imgSrc, index) => (
-              <Grid item key={index}>
-                <img
-                  style={{
-                    maxHeight: "400px",
-                    maxWidth: "610px",
-                    borderRadius: "10px",
-                    marginBottom: "10px",
-                  }}
-                  src={JSON.parse(imgSrc).url}
-                  alt={`Image ${index + 1}`}
-                />
-              </Grid>
-            ))}
+            {contentImg.map((imgSrc, index) => {
+              // Check if imgSrc is a valid JSON string
+              let imgUrl;
+              try {
+                const parsedImgSrc = JSON.parse(imgSrc);
+                imgUrl = parsedImgSrc.url;
+              } catch (error) {
+                console.error("Error parsing image source:", error);
+                // Handle the error or continue to the next iteration
+                return null;
+              }
+
+              return (
+                <Grid item key={index}>
+                  <img
+                    style={{
+                      maxHeight: "400px",
+                      maxWidth: "610px",
+                      borderRadius: "10px",
+                      marginBottom: "10px",
+                    }}
+                    src={imgUrl}
+                    alt={`Image ${index + 1}`}
+                  />
+                </Grid>
+              );
+            })}
           </Grid>
         )}
 
