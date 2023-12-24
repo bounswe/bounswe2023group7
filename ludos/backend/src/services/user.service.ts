@@ -24,7 +24,6 @@ import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
-import { GameGetResponseDto } from '../dtos/game/response/get.response';
 import { Game } from '../entities/game.entity';
 
 @Injectable()
@@ -213,23 +212,9 @@ export class UserService {
 
   public async getSuggestedGames(
     userId: string,
-  ): Promise<GameGetResponseDto[]> {
+  ): Promise<Game[]> {
     const suggestedGames = await this.userRepository.getSuggestedGames(userId);
-
-    const suggestedGamesResponse: GameGetResponseDto[] = suggestedGames.map(
-      (relatedGame: Game) => ({
-        id: relatedGame.id,
-        title: relatedGame.title,
-        coverLink: relatedGame.coverLink,
-        gameBio: relatedGame.gameBio,
-        releaseDate: relatedGame.releaseDate,
-        developer: relatedGame.developer,
-        userCompletionDuration: relatedGame.userCompletionDuration,
-        averageCompletionDuration: relatedGame.averageCompletionDuration,
-      }),
-    );
-
-    return suggestedGamesResponse;
+    return suggestedGames;
   }
 
   public async getUserIdByUsername(username: string): Promise<string | null> {
