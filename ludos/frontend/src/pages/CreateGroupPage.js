@@ -20,18 +20,16 @@ import IconButton from "@mui/joy/IconButton";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Check from "@mui/icons-material/Check";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import CloseIcon from "@mui/icons-material/Close";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
 
-const CreateThreadPage = () => {
+const CreateGroupPage = () => {
   const [tags, setTags] = useState([]);
   const [currTag, setCurrTag] = useState("");
   const [games, setGames] = useState([]);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [media, setMedia] = useState([]);
   const [value, setValue] = useState("");
   const [searchKey, setSearchKey] = useState("");
   const [italic, setItalic] = useState(false);
@@ -42,7 +40,10 @@ const CreateThreadPage = () => {
   const [serverError, setServerError] = useState(false);
   const [titleEmpty, setTitleEmpty] = useState(false);
   const [bodyEmpty, setBodyEmpty] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [member, setMember] = useState(0);
+  const [memberCheck, setMemberCheck] = useState(false);
+  const [logo, setLogo] = useState("");
+  const [logoEmpty, setLogoEmpty] = useState(false);
 
   const navigate = useNavigate();
 
@@ -64,45 +65,14 @@ const CreateThreadPage = () => {
     setSnackbar(false);
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const response = axiosInstance
-          .post("/external/upload", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((response) => {
-            setSnackbarMessage("Image uploaded successfully!");
-            setSnackbar(true);
-            setMedia((oldMedia) => [...oldMedia, response.data]);
-
-            const url = URL.createObjectURL(file);
-            setPreviewUrl(url);
-          });
-        console.log("File is successfully uploaded:", response.data);
-      } catch (error) {
-        console.error("Error while uploading:", error);
-        setSnackbarMessage("An error occurred while uploading the image!");
-        setServerError(true);
-      }
-    }
+  const HandleMemberChange = (event) => {
+    setMemberCheck(false);
+    setMember(event.target.value);
   };
 
   const handleChange = (e) => {
     setCurrTag(e.target.value);
   };
-
-  const handleRemoveImage = () => {
-    setMedia([]);
-    setPreviewUrl(null);
-  }
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -131,54 +101,63 @@ const CreateThreadPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     if (title.length === 0 || title === "") {
       setSnackbarMessage("Title cannot be empty!");
       setServerError(true);
       setTitleEmpty(true);
       setSnackbar(true);
       return;
-    }
-
-    if (body.length === 0 || body === "") {
-      setSnackbarMessage("Body cannot be empty!");
+    } else if (body.length === 0 || body === "") {
+      setSnackbarMessage("Description cannot be empty!");
       setServerError(true);
       setBodyEmpty(true);
       setSnackbar(true);
       return;
-    }
-
-    if (!value || value.length === 0 || value === "") {
+    } else if (!value || value.length === 0 || value === "") {
       setSnackbarMessage("Game cannot be empty!");
       setServerError(true);
       setSnackbar(true);
       return;
+    } else if (parseInt(member) <= 1 || isNaN(parseInt(member))) {
+      setSnackbarMessage("Max number of members must be greater than 1!");
+      setServerError(true);
+      setSnackbar(true);
+      setMemberCheck(true);
+    } else if (!logo || logo.length === 0 || logo === "") {
+      setSnackbarMessage("Logo link cannot be empty!");
+      setServerError(true);
+      setSnackbar(true);
+      return;
+    } else {
+      let gameId = games.filter((game) => game.title === value)[0].id;
+      const maxNumberOfMembers = parseInt(member);
+      const description = body;
+      const name = title;
+
+      axiosInstance
+        .post("/group", {
+          gameId,
+          maxNumberOfMembers,
+          description,
+          name,
+          logo,
+          tags,
+        })
+        .then((response) => {
+          setSnackbarMessage("Group created successfully!");
+          setSnackbar(true);
+          navigate(`/group/${response.data.id}`);
+          console.log(response);
+        })
+        .catch((error) => {
+          setSnackbarMessage(
+            "An error occurred while creating the group!: " +
+              error.response.data.message,
+          );
+          setServerError(true);
+          console.log(error);
+        });
     }
-
-    let gameId = games.filter((game) => game.title === value)[0].id;
-
-    axiosInstance
-      .post("/post", {
-        title,
-        body,
-        gameId,
-        media,
-        tags,
-      })
-      .then((response) => {
-        setSnackbarMessage("Thread created successfully!");
-        setSnackbar(true);
-        navigate(`/thread/${response.data.id}`);
-        console.log(response);
-      })
-      .catch((error) => {
-        setSnackbarMessage(
-          "An error occurred while creating the thread!: " +
-          error.response.data.message,
-        );
-        setServerError(true);
-        console.log(error);
-      });
   };
 
   return (
@@ -196,7 +175,7 @@ const CreateThreadPage = () => {
             justifyContent: "center",
           }}
         >
-          Create Thread
+          Create Group
         </h1>
         <Grid item xs={12} spacing={1}>
           <h3 style={{ display: "flex", alignItems: "flex-start" }}>Title:</h3>
@@ -215,6 +194,41 @@ const CreateThreadPage = () => {
           />
         </Grid>
         <Grid item xs={12} spacing={1}>
+          <h3 style={{ display: "flex", alignItems: "flex-start" }}>
+            Max Number of Members:
+          </h3>
+          <TextField
+            label="Max Number of Members"
+            required
+            fullWidth
+            margin="auto"
+            id="title"
+            onChange={HandleMemberChange}
+            error={memberCheck}
+            helperText={
+              titleEmpty ? "Max number of members must be greater than 1." : ""
+            }
+          />
+        </Grid>
+        <Grid item xs={12} spacing={1}>
+          <h3 style={{ display: "flex", alignItems: "flex-start" }}>
+            Logo Link:
+          </h3>
+          <TextField
+            label="Logo Link"
+            required
+            fullWidth
+            margin="auto"
+            id="title"
+            onChange={(event) => {
+              setLogo(event.target.value);
+              setLogoEmpty(false);
+            }}
+            error={logoEmpty}
+            helperText={logoEmpty ? "Logo link must be given." : ""}
+          />
+        </Grid>
+        <Grid item xs={12} spacing={1}>
           <h3 style={{ display: "flex", alignItems: "flex-start" }}>Game:</h3>
           <Autocomplete
             value={value}
@@ -226,7 +240,7 @@ const CreateThreadPage = () => {
               setSearchKey(newInputValue);
             }}
             required
-            renderInput={(params) => <TextField {...params} label="Forum" />}
+            renderInput={(params) => <TextField {...params} label="Game" />}
           />
         </Grid>
         <Grid item xs={12} spacing={1}>
@@ -262,11 +276,11 @@ const CreateThreadPage = () => {
         </Grid>
         <Grid item xs={12} spacing={1}>
           <h3 style={{ display: "flex", alignItems: "flex-start" }}>
-            Content:
+            Description:
           </h3>
           <FormControl fullWidth>
             <Textarea
-              placeholder="Content"
+              placeholder="Description"
               minRows={5}
               endDecorator={
                 <Box
@@ -335,52 +349,13 @@ const CreateThreadPage = () => {
               helperText={bodyEmpty ? "Body cannot be empty." : ""}
             />
           </FormControl>
-
-          {previewUrl && (
-            <div key={previewUrl} style={{ display: 'inline-block' }}>
-              <h3 style={{ display: "flex", alignItems: "flex-start" }}>
-                Image:
-              </h3>
-              <img src={previewUrl} alt="preview" style={{ maxHeight: '300px' }} />
-              <Button
-                onClick={handleRemoveImage}
-                style={{
-                  display: "block",
-                  margin: "auto",
-                  marginTop: "10px",
-                  color: "white",
-                  backgroundColor: "red",
-                }}
-              >
-                Remove Image
-              </Button>
-            </div>
-          )}
         </Grid>
         <Grid
           item
           xs={12}
           spacing={1}
-          sx={{ display: "flex", justifyContent: "space-between" }}
+          sx={{ display: "flex", justifyContent: "right" }}
         >
-          <Button
-            component="label"
-            variant="secondary"
-            sx={{
-              height: "40px",
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "flex-end",
-            }}
-            startIcon={<CloudUploadIcon />}
-          >
-            Upload file
-            <input
-              type="file"
-              onChange={handleImageUpload}
-              style={{ display: "none" }}
-            />
-          </Button>
           <Button
             variant="contained"
             color="secondary"
@@ -410,4 +385,4 @@ const CreateThreadPage = () => {
   );
 };
 
-export default CreateThreadPage;
+export default CreateGroupPage;

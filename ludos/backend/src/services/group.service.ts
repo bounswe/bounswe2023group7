@@ -37,6 +37,7 @@ export class GroupService {
       name: input.name,
       description: input.description,
       tags: input.tags,
+      logo: input.logo,
     });
     return group;
   }

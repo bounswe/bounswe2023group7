@@ -6,6 +6,7 @@ import 'helper/APIService.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'main.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserProfilePage extends StatefulWidget {
   final UserProvider userProvider;
@@ -44,6 +45,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
       print('Error loading user data: $e');
     }
   }
+
+// Function to open email app
+Future<void> _sendEmail(String emailAddress) async {
+  final Uri emailLaunchUri = Uri(
+    scheme: 'mailto',
+    path: emailAddress,
+  );
+
+  try {
+    await launchUrl(emailLaunchUri);
+  } catch (e) {
+    throw 'Could not launch $emailAddress';
+  }
+}
+
   /*
   Future<List<RecommendedGame>> loadRecGamesforUser(UserProvider userProvider, String? token) async {
     final response = await apiService.getGameRecForUser(userProvider.token);
@@ -449,6 +465,64 @@ class _UserProfilePageState extends State<UserProfilePage> {
               }).toList(),
             ),
           ),
+          const SizedBox(height: 20),
+            const Divider(
+              height: 5,
+              color: MyColors.orange,
+              thickness: 2,
+              indent: 25,
+              endIndent: 25,
+            ),
+            const SizedBox(height: 10),
+            // New Section
+            Card(
+              color: MyColors.blue,
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: InkWell(
+                onTap: () => _sendEmail('ludos.game.platform@gmail.com'),
+                child: const Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info,
+                        color: MyColors.white,
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Get in touch with us for applying for e-sport or developer accounts: ',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: MyColors.white,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'ludos.game.platform@gmail.com',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: MyColors.white,
+                                  decoration: TextDecoration.underline,
+                                  fontStyle: FontStyle.italic
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
           /*
           const SizedBox(height: 20),
           const Text(

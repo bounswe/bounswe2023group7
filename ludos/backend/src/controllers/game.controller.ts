@@ -264,7 +264,6 @@ export class GameController {
     return HttpStatus.OK;
   }
 
-  
   @ApiOperation({ summary: 'Get Related Games Endpoint' })
   @ApiNotFoundResponse({ description: 'Game is not found!' })
   @Get(':gameId/related')

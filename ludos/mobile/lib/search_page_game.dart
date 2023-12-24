@@ -70,8 +70,6 @@ class _SearchPageGameState extends State<SearchPageGame> {
         orderByKey: widget.criteria ?? '',
         tags: widget.tags ?? '');
     try {
-      print("criteria: ${widget.criteria}");
-      //print(json.decode(response.body));
       if (response.statusCode == 200) {
         print("Success: ${response.statusCode} - ${response.body}");
         final Map<String, dynamic> responseData = json.decode(response.body);

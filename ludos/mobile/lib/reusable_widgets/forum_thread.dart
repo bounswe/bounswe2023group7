@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:ludos_mobile_app/reusable_widgets/like_dislike_button.dart';
 import '../game_page.dart';
 import '../helper/APIService.dart';
 import '../login_page.dart';
@@ -19,11 +20,11 @@ class ThreadSummary extends StatefulWidget {
   final String title;
   final String userId;
   final String username;
-   int? thumbUps;
-   int? thumbDowns;
+  final int thumbUps;
+  final int thumbDowns;
   final String time;
-  bool isLiked;
-  bool isDisliked;
+  final bool isLiked;
+  final bool isDisliked;
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
@@ -73,17 +74,15 @@ class ThreadSummary extends StatefulWidget {
 }
 
 class _ThreadSummaryState extends State<ThreadSummary> {
-  bool isLikedIn = false;
-  bool isDislikedIn = false;
-  bool isLiked;
-  bool isDisliked;
+  final bool isLiked;
+  final bool isDisliked;
   final String game;
   final String gameId;
   final String title;
   final String userId;
   final String username;
-   int? thumbUps;
-   int? thumbDowns;
+  final int thumbUps;
+  final int thumbDowns;
   final String time;
   final Color textColor;
   final Color backgroundColor;
@@ -115,9 +114,6 @@ class _ThreadSummaryState extends State<ThreadSummary> {
   void initState()
   {
     super.initState();
-      isLikedIn = isLiked;
-      isDislikedIn = isDisliked;
-      setState(() { });
   }
 
   String timeAgo(String timestamp) {
@@ -143,64 +139,6 @@ class _ThreadSummaryState extends State<ThreadSummary> {
     } else {
       return 'Just now';
     }
-  }
-
-  Future<void> userPressed(bool like) async {
-    if (like && isDislikedIn) {
-      try {
-        await APIService().likeThread(
-            widget.token, widget.threadId);
-      } catch (e) {
-        throw Exception('Failed to like thread');
-      }
-      isDislikedIn = false;
-      isLikedIn = true;
-    } else if (!like && isDislikedIn) {
-      try {
-        await APIService().dislikeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to dislike thread');
-      }
-      isLikedIn = false;
-      isDislikedIn = false;
-    } else if (!like && isLikedIn) {
-      try {
-        await APIService().dislikeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to dislike thread');
-      }
-      isLikedIn = false;
-      isDislikedIn = true;
-    } else if (like && isLikedIn) {
-      try {
-         await APIService().likeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to like thread');
-      }
-      isLikedIn = false;
-      isDislikedIn = false;
-    } else if (like) {
-      try {
-        await APIService().likeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to like thread');
-      }
-      isLikedIn = true;
-    } else {
-      try {
-          await APIService().dislikeThread(
-              widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to dislike thread');
-      }
-      isDislikedIn = true;
-    }
-    setState(() {
-    });
   }
 
   @override
@@ -289,43 +227,13 @@ class _ThreadSummaryState extends State<ThreadSummary> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    IconButton(
-                      onPressed: () => setState(() {
-                      if(!widget.userProvider.isLoggedIn){
-                        CustomWidgets.needLoginSnackbar(context, "Please log in to like a thread! ");
-                      } else {
-                        userPressed(true);
-
-                      }
-                      }),
-                      icon: Icon(
-                        Icons.thumb_up,
-                        color: isLikedIn ? Colors.green : Colors.white,
-                        ),
-                  ),
+                    LikeDislikeButton(numberOfLikes: (thumbUps - thumbDowns), isLiked: isLiked, isDisliked: isDisliked, userProvider: userProvider, id: threadId, token: token),
                     Text(
-                        thumbUps.toString()
+                      timeAgo(time),
+                      style: TextStyle(color: Colors.white),
                     ),
-                    IconButton(
-                      onPressed: () => setState(() {
-                        if(!widget.userProvider.isLoggedIn){
-                          CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a thread! ");
-                          } else {
-                            userPressed(false);
-                          }
-                          }),
-                      icon: Icon(
-                        Icons.thumb_down,
-                        color: isDislikedIn ? Colors.red : Colors.white,
-                    ),
-                  ),
-                    Icon(Icons.comment),
-                  Text(
-                    timeAgo(time),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
+                  ],
+                ),
             ],
           ),
         ),

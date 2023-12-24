@@ -21,13 +21,10 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController searchInputController = TextEditingController();
-  Color gamesButtonColor = MyColors.red;
-  Color postsButtonColor = MyColors.red;
-  Color usersButtonColor = MyColors.red;
   bool showResult = false;
   String searchText = '';
+  int page_number = 1;
 
-  Key searchGameKey = UniqueKey();
   Key searchUserKey = UniqueKey();
 
   @override
@@ -49,7 +46,7 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
         title: const Text(
-          'Search',
+          'Search User',
           style: TextStyle(
             color: MyColors.white,
             fontSize: 20,
@@ -72,21 +69,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   obscureText: false,
                   decoration: InputDecoration(
-                    suffixIcon: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconButton(
-                        icon: const Icon(Icons.search),
-                        color: MyColors.darkBlue,
-                        onPressed: () {
-                          setState(() {
-                            searchText = searchInputController.text;
-                            updateShowState();
-                            setState(() {});
-                          });
-                        },
-                      ),
-                    ),
-                    hintText: 'Search for games',
+                    hintText: 'Search users by username',
                     filled: true,
                     fillColor: MyColors.blue2,
                     //labelText: 'Search',
@@ -112,39 +95,48 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
             const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  searchText = searchInputController.text;
+                  updateShowState();
+                  searchUserKey = UniqueKey();
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                primary: MyColors.lightBlue, // Change the background color as needed
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12), // Optional: adjust the border radius
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.search,
+                      color: Colors.black, // Change the icon color as needed
+                      size: 25.0, // Adjust the icon size as needed
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             SingleChildScrollView(
               child: Column(
                 children: [
-                  //if (isGamesSelected != true && showResult == true)
-                  if (showResult == true)
-                    Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(width: 20),
-                            Text(
-                              'Games',
-                              style: TextStyle(
-                                color: MyColors.lightBlue,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SearchPageGame(
-                          page : 1,
-                          isFollowed: false,
-                          key: searchGameKey, // Use the unique key
-                          searchKey: searchText,
-                          userProvider: widget.userProvider,
-                          token: widget.userProvider.token,
-                        ),
-                      ],
+                  if (showResult)
+                    SearchPageUser(
+                      token: widget.userProvider.token,
+                      key: searchUserKey,
+                      userProvider: widget.userProvider,
+                      searchKey: searchText,
                     ),
+                  const SizedBox(height: 20),
                 ],
-              )
+              ),
             ),
           ],
         ),

@@ -679,7 +679,14 @@ function GamePage(id) {
                 </Typography>
               </TabPanel>
               <TabPanel value="3">
-                <Typography style={{ fontSize: "15px", color: "white", display: 'flex', justifyContent: 'center' }}>
+                <Typography
+                  style={{
+                    fontSize: "15px",
+                    color: "white",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
                   <RelatedGames
                     predecessors={game.predecessors}
                     successors={game.successors}
@@ -689,12 +696,7 @@ function GamePage(id) {
               </TabPanel>
               <TabPanel value="4">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
-                  <EntityTab
-                    characters={game.characters}
-                    areas={game.areas}
-                    items={game.items}
-                    packages={game.packages}
-                  />
+                  <EntityTab gameId={game.id} auth={auth} />
                 </Typography>
               </TabPanel>
               <TabPanel value="5">
