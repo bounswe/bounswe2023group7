@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/reusable_widgets/upcoming_title_post.dart';
 import 'package:provider/provider.dart';
 import 'helper/APIService.dart';
 import 'helper/colors.dart';
@@ -18,7 +19,7 @@ class UpcomingTitlePage extends StatefulWidget {
 
 class _UpcomingTitlePageState extends State<UpcomingTitlePage> {
   bool ifSearched = false;
-  late Future<List<ThreadSummary>> threads;
+  late Future<List<UpcomingThread>> threads;
   late Future<List<ThreadSummary>> threadsSearch;
   final TextEditingController searchInputController = TextEditingController();
   String searchText = '';
@@ -30,7 +31,7 @@ class _UpcomingTitlePageState extends State<UpcomingTitlePage> {
   }
 
 
-  Future<List<ThreadSummary>> fetchThreadData(UserProvider userProvider,
+  Future<List<UpcomingThread>> fetchThreadData(UserProvider userProvider,
       String? token) async {
     final response = await APIService().listAllThreads(token);
     try {
@@ -40,9 +41,11 @@ class _UpcomingTitlePageState extends State<UpcomingTitlePage> {
         List<dynamic> postLists = responseData['items'];
 
         return postLists
-            .where((item) => item['upcomingTitle']['isUpcomingTitle'] == true)
+            .where((item) =>
+            item['upcomingTitle'] != null &&
+            item['upcomingTitle']['isUpcomingTitle'] == true)
             .map((dynamic item) =>
-            ThreadSummary(
+            UpcomingThread(
               token: token,
               userProvider: userProvider,
               threadId: item['id'],
@@ -54,9 +57,9 @@ class _UpcomingTitlePageState extends State<UpcomingTitlePage> {
               thumbUps: item['numberOfLikes'],
               thumbDowns: item['NumberOfDislikes'],
               time: item['createdAt'],
-              isUpcomingTitle: item['upcomingTitle']['isUpcomingTitle'],
-              launchingDate: item['upcomingTitle']['launchingDate'],
-              demoLink: item['upcomingTitle']['demoLink'],
+              isUpcomingTitle: item['upcomingTitle']['isUpcomingTitle'] ?? false,
+              launchingDate: item['upcomingTitle']['launchingDate'] ?? '',
+              demoLink: item['upcomingTitle']['demoLink'] ?? '',
               isLiked: (item['isLiked'] ?? false),
               isDisliked: (item['isDisliked'] ?? false),
               textColor: MyColors.white,
@@ -68,7 +71,9 @@ class _UpcomingTitlePageState extends State<UpcomingTitlePage> {
         throw Exception('Failed to load posts');
       }
     } catch (error) {
-      print("Error: $error");
+      print(response.statusCode);
+
+          print("Error: $error");
       throw Exception('Failed to load threads!');
     }
   }
@@ -94,7 +99,7 @@ class _UpcomingTitlePageState extends State<UpcomingTitlePage> {
                 scrollDirection: Axis.vertical,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: FutureBuilder<List<ThreadSummary>>(
+                  child: FutureBuilder<List<UpcomingThread>>(
                     future: threads,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
