@@ -219,7 +219,7 @@ class _GroupSummaryState extends State<GroupSummary> {
                       //join&leave functionality
                     },
                     child: Text(
-                      isJoined ? "JOIN" : "LEAVE",
+                      isJoined ? "LEAVE" : "JOIN",
                       style: const TextStyle(color: MyColors.white),
                     ))
               ],
