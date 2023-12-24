@@ -9,6 +9,7 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ForumTopic from "../components/ForumTopic";
 
 const gameHighlight = [
   {
@@ -102,6 +103,7 @@ export default function GamesPage() {
   const [searchKey, setSearchKey] = useState("");
   const [games, setGames] = useState([]);
   const [suggestedGames, setSuggestedGames] = useState([]);
+  const [upcomingTitles, setUpcomingTitles] = useState([]);
 
 
   const axiosInstance = axios.create({
@@ -127,6 +129,53 @@ export default function GamesPage() {
       .catch((error) => {
         console.log(error);
       });
+  }, []);
+
+  useEffect(() => {
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
+    };
+
+    axiosInstance
+      .get("/post?isLiked=false&isDisliked=false&isUpcomingTitle=true&order=ASC&orderByKey=numberOfLikes")
+      .then((response) => {
+        const formattedTopics = response.data.items.map((topic) => ({
+          title: topic?.title,
+          numOfReplies: topic?.numOfReplies,
+          userOpened: topic?.user.username,
+          imgsrc: topic?.user.avatar,
+          whenOpened: new Date(topic?.createdAt).toLocaleDateString(
+            "en-US",
+            options,
+          ),
+          forumTags: topic?.tags,
+          forumGame: topic?.game.title,
+          id: topic?.id,
+          userId: topic?.user.id,
+          isUpcomingTitle:
+            topic?.upcomingTitle != null
+              ? topic?.upcomingTitle?.isUpcomingTitle
+              : false,
+        }));
+        console.log("formattedTopics:")
+        console.log(formattedTopics);
+        setUpcomingTitles(formattedTopics);
+        console.log("upcomingTitles:");
+        console.log(upcomingTitles);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+
+
+
   }, []);
 
 
@@ -324,14 +373,17 @@ export default function GamesPage() {
               fontWeight: "bold",
             }}
           >
-            Trending Games
+            Upcoming Titles
           </Typography>
           {/* Render your forum topics below */}
           <div>
             <div
               style={{ gap: "16px", display: "flex", flexDirection: "column" }}
             >
-              <TrendingGames games={trendingGames} />
+              {upcomingTitles.map((topic, index) => {
+                return <ForumTopic key={index} topic={topic} />
+              })}
+
             </div>
           </div>
         </Container>

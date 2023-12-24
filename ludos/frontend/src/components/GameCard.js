@@ -93,7 +93,7 @@ export default function GameCard({ game }) {
                     </Box>
                 </Grid>
 
-                <Grid item xs={12} sm={6} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'stretch', flexGrow: 1 }}>
                     <Box sx={{ marginRight: '16px', borderRadius: '20px' }}>
                         <img
                             src={game.coverLink}
@@ -110,13 +110,14 @@ export default function GameCard({ game }) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-
+                        width: '100%',
                     }}>
-                        <Typography sx={{ width: '500px', color: 'white' }}>
+                        <Typography sx={{ color: 'white', width: '100%' }}>
                             {game.gameBio.slice(0, 300)}...
                         </Typography>
                     </Box>
                 </Grid>
+
                 <Grid item xs={12} sx={{
                     display: 'flex',
                     flexDirection: 'row',
