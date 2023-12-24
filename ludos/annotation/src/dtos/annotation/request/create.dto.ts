@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {Expose, Type} from "class-transformer";
-import {IsString, ValidateNested, IsNumber} from "class-validator";
+import {IsString, ValidateNested, IsNumber, IsOptional} from "class-validator";
 
 
 class AnnotationTargetSelectorDto {
@@ -24,7 +24,26 @@ class AnnotationTargetDto {
   @Expose()
   @Type(() => AnnotationTargetSelectorDto)
   @ValidateNested()
-  selector: AnnotationTargetSelectorDto;
+  @IsOptional()
+  selector?: AnnotationTargetSelectorDto;
+
+  @ApiProperty()
+  @Expose()
+  @IsString()
+  @IsOptional()
+  type?: string;
+
+  @ApiProperty()
+  @Expose()
+  @IsString()
+  @IsOptional()
+  id?: string;
+
+  @ApiProperty()
+  @Expose()
+  @IsString()
+  @IsOptional()
+  format?: string;
 }
 export class CreateAnnotationDto {
   @ApiProperty()

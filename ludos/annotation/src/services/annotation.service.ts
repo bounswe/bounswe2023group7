@@ -49,6 +49,16 @@ export class AnnotationService{
         ...input,
       });
     }
+    async createAnnotationForImage(input: CreateAnnotationDto): Promise<AnnotationResponseDto> {
+      const id = "35.157.67.64:8090/image/" + stringToHash(input.target.source) + "/" + Date.now();
+      return await this.annotationRepository.createAnnotation({
+        id,
+        ...input,
+      });
+    }
+    async getAnnotationsForImage(imageUrl: string): Promise<AnnotationResponseDto[]> {
+      return await this.annotationRepository.getAnnotationsByTypeAndItemId("image", stringToHash(imageUrl).toString());
+    }
     async getAnnotationsForGameBio(gameId: string): Promise<AnnotationResponseDto[]> {
       return await this.annotationRepository.getAnnotationsByTypeAndItemId("gamebio", gameId);
     }
@@ -88,4 +98,20 @@ export class AnnotationService{
         ...input,
       });
     }
+}
+
+
+function stringToHash(string: string) {
+ 
+  let hash = 0;
+
+  if (string.length == 0) return hash;
+
+  for (let i = 0; i < string.length; i++) {
+      const char = string.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+  }
+
+  return hash;
 }
