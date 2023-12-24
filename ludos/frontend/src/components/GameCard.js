@@ -27,7 +27,6 @@ export default function GameCard({ game }) {
     }
 
     const [averageRating, setAverageRating] = useState(0);
-    const [tags, setTags] = useState([]);
 
     const axiosInstance = axios.create({
         baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -44,19 +43,6 @@ export default function GameCard({ game }) {
             year: 'numeric',
         }).format(date);
     };
-
-    useEffect(() => {
-        axiosInstance.get(`/game/${game.id}`)
-            .then((response) => {
-                if (response.data.averageRating) {
-                    setAverageRating(response.data.averageRating.toFixed(1));
-                    setTags(response.data.tags);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }, [])
 
     const replaceImage = (error) => {
         error.target.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Video-Game-Controller-Icon-D-Edit.svg/2048px-Video-Game-Controller-Icon-D-Edit.svg.png";
@@ -108,8 +94,7 @@ export default function GameCard({ game }) {
                         </Typography>
                     </Box>
                 </Grid>
-
-                <Grid item xs={12} sm={6} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <Box sx={{ marginRight: '16px', borderRadius: '20px' }}>
                         <img
                             src={game.coverLink}
@@ -126,9 +111,9 @@ export default function GameCard({ game }) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-
+                        width: '100%',
                     }}>
-                        <Typography sx={{ width: '500px', color: 'white' }}>
+                        <Typography sx={{ width: 'auto', color: 'white' }}>
                             {game.gameBio.slice(0, 300)}...
                         </Typography>
                     </Box>
@@ -140,7 +125,7 @@ export default function GameCard({ game }) {
                     justifyContent: 'space-between',
                 }}>
                     <div>
-                        {tags.map((tag, index) => (
+                        {game?.tags?.map((tag, index) => (
                             <Chip
                                 key={index}
                                 label={tag}
@@ -149,17 +134,6 @@ export default function GameCard({ game }) {
                             />
                         ))}
                     </div>
-                    <Typography variant="h5" component="div" sx={{
-                        color: '#003049',
-                        backgroundColor: '#63B0CD',
-                        borderRadius: '20px',
-                        padding: '12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}>
-                        {averageRating}
-                        <StarRateRoundedIcon sx={{ marginLeft: '5px', color: '#F77F00', width: '35px', height: '35px' }} />
-                    </Typography>
                 </Grid>
             </Grid>
         </Card >
