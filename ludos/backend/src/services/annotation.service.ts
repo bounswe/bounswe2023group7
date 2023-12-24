@@ -209,7 +209,7 @@ export class AnnotationService {
       throw new NotFoundException(`Comment with id ${commentId} not found`);
     }
     const response = await axios.post(
-      `http://35.157.67.64:8090:8090/comment/${commentId}`,
+      `http://35.157.67.64:8090/comment/${commentId}`,
       input,
     );
     return response.data;
