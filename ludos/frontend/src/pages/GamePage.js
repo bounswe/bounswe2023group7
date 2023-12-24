@@ -772,6 +772,7 @@ function GamePage(id) {
                     story={game.gameStory}
                     guide={game.gameGuide}
                     trivia={game.trivia}
+                    id={game.id}
                   />
                 </Typography>
               </TabPanel>
