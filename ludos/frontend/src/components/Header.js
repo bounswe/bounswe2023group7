@@ -1,19 +1,18 @@
 import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import InputBase from "@mui/material/InputBase";
 import Button from "@mui/material/Button";
-import SearchIcon from "@mui/icons-material/Search";
 import logo from "../assets/logo.png";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MyGamesIcon from "../assets/my_games.png";
 import MyGroupsIcon from "../assets/my_groups.png";
-import { Autocomplete, Box, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, TextField } from "@mui/material";
 import { useState } from "react";
 import { useEffect } from "react";
 import PersonIcon from '@mui/icons-material/Person';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import GroupsIcon from '@mui/icons-material/Groups';
 import axios from "axios";
 
 const convertToSlug = (text) => {
@@ -50,6 +49,9 @@ const Header = ({ userLoggedIn }) => {
     if (datas.posts) {
       datas.posts.map((post) => options.push("Thread: " + post.title));
     }
+    if (datas.groups) {
+      datas.groups.map((group) => options.push("Group: " + group.name));
+    }
 
 
     return options;
@@ -73,6 +75,11 @@ const Header = ({ userLoggedIn }) => {
       info = info.replace("Thread: ", "");
       let specPost = datas.posts.find((post) => post.title === info);
       path = `/thread/${specPost.id}`;
+    }
+    else if (info.includes("Group: ")) {
+      info = info.replace("Group: ", "");
+      let specGroup = datas.grups.find((group) => group.name === info);
+      path = `/group/${specGroup.id}`;
     }
     navigate(path);
     window.location.reload(false);
@@ -173,6 +180,14 @@ const Header = ({ userLoggedIn }) => {
                   <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                     <QuestionAnswerIcon margin={5} />
                     {option.split("Thread: ")[1]}
+                  </Box>
+                );
+              }
+              else if (option.includes("Group: ")) {
+                return (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <GroupsIcon margin={5} />
+                    {option.split("Group: ")[1]}
                   </Box>
                 );
               }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Sidebar from "./components/sidebar"; // Import your Sidebar component
 import Header from "./components/Header"; // Import your Header component
+import Footer from "./components/Footer";
 
 const Layout = ({ children }) => {
   const [auth, setAuth] = useState(false);
@@ -25,6 +26,7 @@ const Layout = ({ children }) => {
         <Box sx={{ flex: 1 }}>
           <Header userLoggedIn={auth} />
           <div className="content">{children}</div>
+          <Footer />
         </Box>
       </Box>
     </Box>
