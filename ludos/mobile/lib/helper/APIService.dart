@@ -3,8 +3,6 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:ludos_mobile_app/helper/EntityContent.dart';
-
 class APIService {
   var baseURL = "http://3.125.225.39:8080";
   String? token = "";
@@ -103,6 +101,7 @@ class APIService {
       String content,
       List<String> media,
       List<String> tags,
+      Map<String, dynamic> upcomingTitle,
       String gameid) async {
     var uri = Uri.parse("$baseURL/post");
     final body = jsonEncode(<String, Object>{
@@ -111,6 +110,7 @@ class APIService {
       'gameId': gameid,
       'media': media,
       'tags': tags,
+      'upcomingTitle': upcomingTitle
     });
     final response = await http.post(uri, body: body, headers: {
       'content-type': "application/json",

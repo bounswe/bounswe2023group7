@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
-import 'games_page.dart';
 import 'helper/APIService.dart';
 import 'helper/colors.dart';
-import 'main.dart';
 import 'reusable_widgets/forum_thread.dart';
 import 'dart:convert';
 import 'package:ludos_mobile_app/userProvider.dart';
@@ -57,6 +55,9 @@ class _ForumPageState extends State<ForumPage> {
           thumbUps: item['numberOfLikes'],
           thumbDowns: item['NumberOfDislikes'],
           time: item['createdAt'],
+          isUpcomingTitle: item['upcomingTitle']['isUpcomingTitle'],
+          launchingDate: item['upcomingTitle']['launchingDate'],
+          demoLink: item['upcomingTitle']['demoLink'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
           textColor: MyColors.white,
@@ -94,6 +95,9 @@ class _ForumPageState extends State<ForumPage> {
           thumbUps: item['numberOfLikes'],
           thumbDowns: item['NumberOfDislikes'],
           time: item['createdAt'],
+          isUpcomingTitle: item['upcomingTitle']['isUpcomingTitle'],
+          launchingDate: item['upcomingTitle']['launchingDate'],
+          demoLink: item['upcomingTitle']['demoLink'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
           textColor: MyColors.white,

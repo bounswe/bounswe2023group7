@@ -82,6 +82,9 @@ class _HomeState extends State<Home> {
           thumbUps: item['numberOfLikes'],
           thumbDowns: item['NumberOfDislikes'],
           time: item['createdAt'],
+          isUpcomingTitle: item['upcomingTitle']['isUpcomingTitle'],
+          launchingDate: item['upcomingTitle']['launchingDate'],
+          demoLink: item['upcomingTitle']['demoLink'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
           textColor: MyColors.white,
@@ -231,7 +234,7 @@ class _HomeState extends State<Home> {
                   style: TextStyle(color: MyColors.white),
                 ),
                 onTap: () {
-                  userProvider.setLoggedIn(false, '', '');
+                  userProvider.setLoggedIn(false, '', '','');
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => LoginPage(),
                   ));

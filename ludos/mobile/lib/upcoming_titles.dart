@@ -39,7 +39,9 @@ class _UpcomingTitlePageState extends State<UpcomingTitlePage> {
 
         List<dynamic> postLists = responseData['items'];
 
-        return postLists.map((dynamic item) =>
+        return postLists
+            .where((item) => item['upcomingTitle']['isUpcomingTitle'] == true)
+            .map((dynamic item) =>
             ThreadSummary(
               token: token,
               userProvider: userProvider,
@@ -52,6 +54,9 @@ class _UpcomingTitlePageState extends State<UpcomingTitlePage> {
               thumbUps: item['numberOfLikes'],
               thumbDowns: item['NumberOfDislikes'],
               time: item['createdAt'],
+              isUpcomingTitle: item['upcomingTitle']['isUpcomingTitle'],
+              launchingDate: item['upcomingTitle']['launchingDate'],
+              demoLink: item['upcomingTitle']['demoLink'],
               isLiked: (item['isLiked'] ?? false),
               isDisliked: (item['isDisliked'] ?? false),
               textColor: MyColors.white,

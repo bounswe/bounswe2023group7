@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -62,6 +63,9 @@ Widget getbox(String hintText, TextEditingController controller,
     ],
   );
 }
+String formatDate(DateTime dateTime) {
+  return "${dateTime.year}-${dateTime.month}-${dateTime.day}";
+}
 
 class CreateThreadPage extends StatefulWidget {
   final String? token;
@@ -92,6 +96,9 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
   final TextEditingController bodyController = TextEditingController();
   final TextEditingController tagsController = TextEditingController();
   final TextEditingController coverLinkController = TextEditingController();
+  final TextEditingController demoLinkController = TextEditingController();
+  final TextEditingController launchingDateController = TextEditingController();
+  bool isUpcomingTitleController = false;
 
   @override
   Widget build(BuildContext context)
@@ -171,17 +178,58 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
+                  Row(
+                      children:[
+                        const Text('It is upcoming title!',
+                            style: TextStyle(
+                                color: MyColors.lightBlue,
+                                fontWeight: FontWeight.bold
+                            )
+                        ),
+                        Switch(
+                          value: isUpcomingTitleController,
+                          onChanged: (value) {
+                            setState(() {
+                              isUpcomingTitleController = value;
+                            });
+                          },
+                        ),
+                      ]
+
+                  ),
+                  if(widget.userProvider.userType == "developer" && isUpcomingTitleController)
+                    getbox("Demo Link", demoLinkController, true, false),
+                  const SizedBox(height: 20),
+                  if(widget.userProvider.userType == "developer" && isUpcomingTitleController)
+                    SizedBox(
+                      height: 200,
+                      child: CupertinoDatePicker(
+                        mode: CupertinoDatePickerMode.date,
+                        initialDateTime: DateTime(2023, 12, 26),
+                        onDateTimeChanged: (DateTime newDateTime) {
+                          launchingDateController.text = formatDate(newDateTime);
+                        },
+                      ),
+                    ),
+                  const SizedBox(height: 20),
+
                   TextButton(
                       style: TextButton.styleFrom(
                         backgroundColor: MyColors.lightBlue,
                       ),
                       onPressed: () async {
+                        final Map<String, dynamic> upcomingTitle = {
+                          "demoLink": demoLinkController.text,
+                          "launchingDate": launchingDateController.text,
+                          "isUpcomingTitle": isUpcomingTitleController
+                        };
                         http.Response token = await APIService().createThread(
                             widget.token,
                             titleController.text,
                             bodyController.text,
                             [coverLinkController.text],
                             tagValues,
+                            upcomingTitle,
                             widget.gameid);
                         if (token.statusCode == 201) {
                           ScaffoldMessenger.of(context)
