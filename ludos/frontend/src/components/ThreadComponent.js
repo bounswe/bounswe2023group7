@@ -70,12 +70,41 @@ function ThreadComponent({
     const postData = formatAnnotationData(annotation);
     await sendAnnotationData(postData, "update");
   };
-
-  const onAnnotationDeleted = async (annotation) => {
-    const postData = formatAnnotationData(annotation);
-    await sendAnnotationData(postData, "delete");
-  };
 */
+  const onAnnotationDeleted = async (annotation) => {
+    console.log("delete annotation", annotation);
+    const id = annotation.id;
+    //const postData = formatAnnotationData(annotation);
+    await deleteAnnotationData(id);
+  };
+
+  const parseId = (id) => {
+    const parts = id.split("/");
+    return {
+      source: parts[0],
+      type: parts[1],
+      itemId: parts[2],
+      date: parts[3],
+    };
+  };
+
+  const deleteAnnotationData = async (id) => {
+    try {
+      const { source, type, itemId, date } = parseId(id);
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/${source}/${type}/${itemId}/${date}`;
+
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Make sure accessToken is defined and valid
+        },
+      });
+
+      console.log("Annotation deleted:", response.data);
+    } catch (error) {
+      console.error("Error deleting annotation:", error);
+    }
+  };
+
   const formatAnnotationData = (annotation) => {
     console.log("annotation start", annotation.start);
     console.log("annotation end", annotation.end);
@@ -190,6 +219,7 @@ function ThreadComponent({
 
     fetchAnnotations();
     annotatorRef.current.on("createAnnotation", onAnnotationCreated);
+    annotatorRef.current.on("deleteAnnotation", onAnnotationDeleted);
 
     return () => annotatorRef.current.destroy();
   }, []);
