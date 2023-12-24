@@ -20,26 +20,26 @@ class AnnotationTargetDto {
   @IsString()
   source: string;
   
-  @ApiProperty()
+  @ApiProperty({required: false})
   @Expose()
   @Type(() => AnnotationTargetSelectorDto)
   @ValidateNested()
   @IsOptional()
   selector?: AnnotationTargetSelectorDto;
 
-  @ApiProperty()
+  @ApiProperty({required: false})
   @Expose()
   @IsString()
   @IsOptional()
   type?: string;
 
-  @ApiProperty()
+  @ApiProperty({required: false})
   @Expose()
   @IsString()
   @IsOptional()
   id?: string;
 
-  @ApiProperty()
+  @ApiProperty({required: false})
   @Expose()
   @IsString()
   @IsOptional()
