@@ -286,36 +286,6 @@ class _VisitUserPageState extends State<VisitUserPage> {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.darkBlue,
-                  ),
-                  onPressed: () {},
-                  child: ClipOval(// Set your desired height
-
-                    child: Image.asset(
-                      'assets/images/ealogo800.jpg',
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover, // You can adjust the fit property based on your needs
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.darkBlue,
-                  ),
-                  onPressed: () {},
-                  child: ClipOval(// Set your desired height
-
-                    child: Image.asset(
-                      'assets/images/Epic-Games-Emblem.png',
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover, // You can adjust the fit property based on your needs
-                    ),
-                  ),
-                ),
                 const SizedBox(width: 15),
               ],
             ),
