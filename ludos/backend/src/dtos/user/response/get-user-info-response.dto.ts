@@ -26,4 +26,10 @@ export class GetUserInfoResponseDto {
   aboutMe: string;
   @ApiProperty()
   steamUrl: string;
+
+  @ApiProperty()
+  associatedTeam: string;
+
+  @ApiProperty()
+  associatedCompany: string;
 }

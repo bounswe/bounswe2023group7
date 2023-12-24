@@ -5,6 +5,7 @@ import 'game_page.dart';
 import 'helper/APIService.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
+import 'main.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ludos_mobile_app/reusable_widgets/last_activity_summary.dart';
 
@@ -113,11 +114,17 @@ Future<void> fetchLastActivities() async {
     print("Error: $error");
     throw Exception('Failed to load threads!');
   }
-}
-
+   */
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    //var userProvider = Provider.of<UserProvider>(context);
+    //recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
+    return WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+      return false;
+    },
+    child: Scaffold(
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         title: Text('${widget.id}'),
@@ -588,7 +595,7 @@ Future<void> fetchLastActivities() async {
         ],
       ),
     ),
-    );
+    ),);
   }
 }
 

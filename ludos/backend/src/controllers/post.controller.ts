@@ -215,6 +215,8 @@ export class PostController {
     isLiked?: boolean,
     @Query('isDisliked', new DefaultValuePipe(false), ParseBoolPipe)
     isDisliked?: boolean,
+    @Query('isUpcomingTitle', new DefaultValuePipe(false), ParseBoolPipe)
+    isUpcomingTitle?: boolean,
     @Query('orderByKey') orderByKey?: keyof PostEntity,
     @Query('order') order?: 'ASC' | 'DESC',
   ) {
@@ -229,6 +231,7 @@ export class PostController {
       req.user && req.user.id,
       isLiked,
       isDisliked,
+      isUpcomingTitle,
       orderByKey,
       order,
     );

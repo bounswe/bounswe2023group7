@@ -17,4 +17,7 @@ export class EntityGetResponseDto {
 
   @ApiProperty()
   name: string;
+
+  @ApiProperty()
+  description: string;
 }
