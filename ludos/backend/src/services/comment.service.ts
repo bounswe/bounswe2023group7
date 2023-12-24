@@ -14,16 +14,18 @@ export class CommentService {
   ) {}
 
   public async getComment(
-    userId: string,
+    userId: string | null,
     commentId: string,
   ): Promise<GetCommentResponseDto> {
-    const user = await this.userRepository.findUserById(userId);
+    if (!userId) {
+      const user = await this.userRepository.findUserById(userId);
 
-    if (!user) {
-      throw new HttpException(
-        'No user found with this id',
-        HttpStatus.FORBIDDEN,
-      );
+      if (!user) {
+        throw new HttpException(
+          'No user found with this id',
+          HttpStatus.FORBIDDEN,
+        );
+      }
     }
 
     const comment = await this.commentRepository.findCommentById(commentId);
@@ -38,7 +40,7 @@ export class CommentService {
     const checkLike = (comment: Comment) => {
       let isLiked = false;
       comment.likedUsers.forEach((likedUser) => {
-        if (likedUser.id == userId) {
+        if (userId && likedUser.id == userId) {
           isLiked = true;
         }
       });
@@ -48,7 +50,7 @@ export class CommentService {
     const checkDisLike = (comment: Comment) => {
       let isDisliked = false;
       comment.dislikedUsers.forEach((dislikedUser) => {
-        if (dislikedUser.id == userId) {
+        if (userId && dislikedUser.id == userId) {
           isDisliked = true;
         }
       });
@@ -63,28 +65,30 @@ export class CommentService {
       parentId: comment.parentId,
       likeCount: comment.likedUsers.length,
       dislikeCount: comment.dislikedUsers.length,
-      isLiked: checkLike(comment),
-      isDisLiked: checkDisLike(comment),
+      isLiked: userId && checkLike(comment),
+      isDisLiked: userId && checkDisLike(comment),
     };
   }
 
   public async getCommentsByParent(
-    userId: string,
+    userId: string | null,
     parentId: string,
   ): Promise<GetCommentResponseDto[]> {
-    const user = await this.userRepository.findUserById(userId);
+    if (!userId) {
+      const user = await this.userRepository.findUserById(userId);
 
-    if (!user) {
-      throw new HttpException(
-        'No user found with this id',
-        HttpStatus.FORBIDDEN,
-      );
+      if (!user) {
+        throw new HttpException(
+          'No user found with this id',
+          HttpStatus.FORBIDDEN,
+        );
+      }
     }
 
     const checkLike = (comment: Comment) => {
       let isLiked = false;
       comment.likedUsers.forEach((likedUser) => {
-        if (likedUser.id == userId) {
+        if (userId && likedUser.id == userId) {
           isLiked = true;
         }
       });
@@ -94,7 +98,7 @@ export class CommentService {
     const checkDisLike = (comment: Comment) => {
       let isDisliked = false;
       comment.dislikedUsers.forEach((dislikedUser) => {
-        if (dislikedUser.id == userId) {
+        if (userId && dislikedUser.id == userId) {
           isDisliked = true;
         }
       });
@@ -106,8 +110,8 @@ export class CommentService {
         return {
           likeCount: comment.likedUsers.length,
           dislikeCount: comment.dislikedUsers.length,
-          isLiked: checkLike(comment),
-          isDisLiked: checkDisLike(comment),
+          isLiked: userId && checkLike(comment),
+          isDisLiked: userId && checkDisLike(comment),
           ...comment,
         };
       },

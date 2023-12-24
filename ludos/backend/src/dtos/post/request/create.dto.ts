@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
+import { UpcomingTitleDto } from '../upcomingTitle.dto';
 
 export class PostCreateDto {
   @ApiProperty({
@@ -47,4 +48,9 @@ export class PostCreateDto {
   @IsArray()
   @IsOptional()
   tags: string[];
+
+  @ApiProperty({
+    description: 'Upcoming Title',
+  })
+  upcomingTitle: UpcomingTitleDto;
 }
