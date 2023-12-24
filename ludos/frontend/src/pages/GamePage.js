@@ -242,10 +242,39 @@ function GamePage(id) {
         "createAnnotation",
         handleCreateAnnotation,
       );
+      gameBioAnnotatorRef.current.on(
+        "deleteAnnotation",
+        handleDeleteAnnotation,
+      );
 
       return () => gameBioAnnotatorRef.current.destroy();
     }
   }, [game]);
+
+  const parseId = (id) => {
+    const parts = id.split("/");
+    return {
+      source: parts[0],
+      type: parts[1],
+      itemId: parts[2],
+      date: parts[3],
+    };
+  };
+
+  const handleDeleteAnnotation = async (annotation) => {
+    id = annotation.id;
+
+    try {
+      const { source, type, itemId, date } = parseId(id);
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/${source}/${type}/${itemId}/${date}`;
+
+      const response = await axios.delete(url);
+
+      console.log("Annotation deleted:", response.data);
+    } catch (error) {
+      console.error("Error deleting annotation:", error);
+    }
+  };
 
   const handleCreateAnnotation = async (annotation) => {
     // Prepare your API request body
