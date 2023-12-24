@@ -83,7 +83,7 @@ function ForumTopic(data) {
             style={{
               paddingRight: "3px",
               paddingLeft: "3px",
-              marginTop: "-21px",
+              marginTop: "-20px",
               backgroundColor: "#570080",
               color: "white",
               display: "flex",

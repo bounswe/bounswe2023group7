@@ -17,6 +17,8 @@ function ForumTopic(data) {
     borderRadius: "10px",
     padding: "5px",
     marginRight: "5px",
+    //height: "fit-content",
+    width: "max-content",
   };
   const forumStyle = {
     backgroundColor: "rgb(200, 10, 10)",
@@ -25,6 +27,21 @@ function ForumTopic(data) {
     padding: "2px",
     marginBottom: "8px",
     fontWeight: "bold",
+    alignItems: "center",
+    display: "flex",
+  };
+
+  const upcomingStyle = {
+    backgroundColor: "rgb(87, 0, 126)",
+    height: "6px",
+    color: "white",
+    borderRadius: "5px",
+    padding: "5px",
+    marginBottom: "8px",
+    fontWeight: "bold",
+    alignItems: "center",
+    display: "flex",
+    marginRight: "5px",
   };
   const userStyle = { color: "rgb(255, 255, 255)", marginRight: "2%" };
 
@@ -142,9 +159,25 @@ function ForumTopic(data) {
           lg={12}
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Typography variant="caption" component="div" style={forumStyle}>
-            {data.topic.game.title}
-          </Typography>
+          <Grid
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "16px",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography variant="caption" component="div" style={forumStyle}>
+              {data.topic.game.title}
+            </Typography>
+            <Typography variant="caption" component="div" style={upcomingStyle}>
+              Upcoming Title
+            </Typography>
+          </Grid>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
             {data.topic &&
               data.topic.tags.map((tag1, index1) => (
