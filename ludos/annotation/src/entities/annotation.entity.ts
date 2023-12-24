@@ -1,10 +1,13 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 export interface AnnotationTarget {
   source: string;
-  selector: {
+  selector?: {
     start: number;
     end: number;
-  }
+  };
+  type?: string;
+  id?: string;
+  format?: string;
 }
 @Entity("annotations")
 export class Annotation {

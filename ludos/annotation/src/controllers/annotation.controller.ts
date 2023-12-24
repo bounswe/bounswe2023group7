@@ -5,7 +5,8 @@ import {
   Param,
   Post,
   Delete,
-  HttpCode
+  HttpCode,
+  Query
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -66,6 +67,21 @@ export class AnnotationController {
   @Post('post/:postId')
   public async createAnnotationForPost(@Body() input: CreateAnnotationDto, @Param("postId") postId: string): Promise<AnnotationResponseDto> {
     return await this.annotationService.createAnnotationForPost(input, postId);
+  }
+  @ApiOkResponse({
+    description: 'Annotation created successfully',
+    type: AnnotationResponseDto,
+  })
+  @Post('image')
+  public async createAnnotationForImage(@Body() input: CreateAnnotationDto): Promise<AnnotationResponseDto> {
+    return await this.annotationService.createAnnotationForImage(input);
+  }
+  @ApiOkResponse({
+    type: [AnnotationResponseDto],
+  })
+  @Get('image')
+  public async getAnnotationsForImage(@Query("imageUrl") imageUrl: string): Promise<AnnotationResponseDto[]> {
+    return await this.annotationService.getAnnotationsForImage(imageUrl);
   }
   @ApiOkResponse({
     type: [AnnotationResponseDto],

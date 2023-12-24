@@ -90,10 +90,12 @@ export class PostRepository extends Repository<Post> {
       queryBuilder.andWhere('posts.userId = :ownerUserId', { ownerUserId });
     }
     if (isUpcomingTitle) {
-      console.log("seeeennnn");
-      queryBuilder.andWhere('posts."upcomingTitle"->>\'isUpcomingTitle\' = :isUpcomingTitle', {
-        isUpcomingTitle: isUpcomingTitle.toString(),
-      });
+      queryBuilder.andWhere(
+        'posts."upcomingTitle"->>\'isUpcomingTitle\' = :isUpcomingTitle',
+        {
+          isUpcomingTitle: isUpcomingTitle.toString(),
+        },
+      );
     }
     if (userId && isLiked) {
       const subQuery = this.createQueryBuilder()
