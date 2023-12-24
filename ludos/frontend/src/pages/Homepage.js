@@ -123,6 +123,7 @@ const Homepage = () => {
         title: topic.title,
         numOfReplies: topic.numOfReplies,
         userOpened: topic.user.username,
+        imgsrc: topic.user.avatar,
         whenOpened: new Date(topic.createdAt).toLocaleDateString(
           "en-US",
           options,

@@ -26,9 +26,6 @@ import { useNavigate } from "react-router-dom";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { DatePicker } from "@mui/x-date-pickers";
-import { LocalizationProvider } from "@mui/lab";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 const CreateThreadPage = () => {
   const [tags, setTags] = useState([]);
