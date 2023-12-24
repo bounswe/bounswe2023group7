@@ -79,6 +79,7 @@ class _HomeState extends State<Home> {
           gameId: item['game']['id'],
           userId: item['user']['id'],
           username: item['user']['username'],
+          userAvatar: item['user']['avatar'],
           thumbUps: (item['numberOfLikes'] ?? 0),
           thumbDowns: (item['numberOfDislikes'] ?? 0),
           time: item['createdAt'],

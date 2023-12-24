@@ -20,6 +20,7 @@ class ThreadSummary extends StatefulWidget {
   final String title;
   final String userId;
   final String username;
+  final String userAvatar;
   final int thumbUps;
   final int thumbDowns;
   final String time;
@@ -41,6 +42,7 @@ class ThreadSummary extends StatefulWidget {
     required this.userId,
     required this.title,
     required this.username,
+    required this.userAvatar,
     required this.thumbUps,
     required this.thumbDowns,
     required this.time,
@@ -54,23 +56,24 @@ class ThreadSummary extends StatefulWidget {
 
   @override
   State<ThreadSummary> createState() => _ThreadSummaryState(
-    game: game,
-    gameId: gameId,
-    title: title,
-    userId: userId,
-    username: username,
-    thumbUps: thumbUps,
-    thumbDowns: thumbDowns,
-    time: time,
-    isLiked: isLiked,
-    isDisliked: isDisliked,
-    textColor: textColor,
-    backgroundColor: backgroundColor,
-    fontSize: fontSize,
-    userProvider: userProvider,
-    token: token,
-    threadId: threadId,
-  );
+        game: game,
+        gameId: gameId,
+        title: title,
+        userId: userId,
+        username: username,
+        userAvatar: userAvatar,
+        thumbUps: thumbUps,
+        thumbDowns: thumbDowns,
+        time: time,
+        isLiked: isLiked,
+        isDisliked: isDisliked,
+        textColor: textColor,
+        backgroundColor: backgroundColor,
+        fontSize: fontSize,
+        userProvider: userProvider,
+        token: token,
+        threadId: threadId,
+      );
 }
 
 class _ThreadSummaryState extends State<ThreadSummary> {
@@ -81,6 +84,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
   final String title;
   final String userId;
   final String username;
+  final String userAvatar;
   final int thumbUps;
   final int thumbDowns;
   final String time;
@@ -99,6 +103,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
     required this.title,
     required this.userId,
     required this.username,
+    required this.userAvatar,
     required this.thumbUps,
     required this.thumbDowns,
     required this.time,
@@ -111,8 +116,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
   });
 
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
   }
 
@@ -147,7 +151,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
+              backgroundColor: backgroundColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               )),
@@ -155,85 +159,114 @@ class _ThreadSummaryState extends State<ThreadSummary> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ThreadPage(threadId: widget.threadId, token: widget.token, userProvider: widget.userProvider),
+                builder: (context) => ThreadPage(
+                    threadId: widget.threadId,
+                    token: widget.token,
+                    userProvider: widget.userProvider),
               ),
             );
           },
           child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:
-                  [
-                    TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            MyColors.darkBlue),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => GamePage(
-                                id: gameId,
-                                token: widget.token,
-                                userProvider: widget.userProvider,
-                                onRefresh: () {},
-                            ),
+            children: [
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(MyColors.darkBlue),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GamePage(
+                            id: gameId,
+                            token: widget.token,
+                            userProvider: widget.userProvider,
+                            onRefresh: () {},
                           ),
-                        );
-                      },
-                      child: Text(
-                          game,
-                          style: TextStyle(color: MyColors.white, fontSize: 15.0,)
-                      ),
-                    ),
-                    SizedBox(width: 5.0),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            MyColors.darkBlue),
-                      ),
-                      child: Text(
-                        '@$username', //may need to navigate also the user
-                        style: const TextStyle(
-                          color: MyColors.orange,
+                        ),
+                      );
+                    },
+                    child: Text(game,
+                        style: TextStyle(
+                          color: MyColors.white,
                           fontSize: 15.0,
-                        ),
-                      ),
-                      onPressed: () { Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => VisitUserPage(userProvider: userProvider, username: widget.username, id: widget.userId ),
-                      )); },
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                        title,
-                        softWrap: true,
-                        style: const TextStyle(
-                          color: MyColors.darkBlue,
-                          fontSize: 20.0,
-                        ),
-                      ),
+                        )),
                   ),
-                const Divider(
-                  height: 3.0,
-                  thickness: 3.0,
-                  color: MyColors.darkBlue,
+                  SizedBox(width: 5.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(MyColors.darkBlue),
+                        ),
+                        child: Text(
+                          '@$username', //may need to navigate also the user
+                          style: const TextStyle(
+                            color: MyColors.orange,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => VisitUserPage(
+                                userProvider: userProvider,
+                                username: widget.username,
+                                id: widget.userId),
+                          ));
+                        },
+                      ),
+                      CircleAvatar(
+                                radius: 30,
+                                backgroundColor: MyColors.darkBlue,
+                                child: CircleAvatar(
+                                  radius: 28,
+                                  backgroundImage: userAvatar != ""
+                                      ? NetworkImage(userAvatar!)
+                                      : const AssetImage('assets/images/ludos_transparent.png') as ImageProvider,
+                                ),
+                              ),
+                    ],
+                  )
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.all(15.0),
+                child: Text(
+                  title,
+                  softWrap: true,
+                  style: const TextStyle(
+                    color: MyColors.darkBlue,
+                    fontSize: 20.0,
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    LikeDislikeButton(numberOfLikes: (thumbUps - thumbDowns), isLiked: isLiked, isDisliked: isDisliked, userProvider: userProvider, id: threadId, token: token),
-                    Text(
-                      timeAgo(time),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
+              ),
+              const Divider(
+                height: 3.0,
+                thickness: 3.0,
+                color: MyColors.darkBlue,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  LikeDislikeButton(
+                      numberOfLikes: (thumbUps - thumbDowns),
+                      isLiked: isLiked,
+                      isDisliked: isDisliked,
+                      userProvider: userProvider,
+                      id: threadId,
+                      token: token),
+                  Text(
+                    timeAgo(time),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -241,7 +274,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
           color: MyColors.darkBlue,
           child: const SizedBox(height: 20.0),
         ),
-    ],
+      ],
     );
   }
 }

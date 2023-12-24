@@ -29,6 +29,7 @@ class Comment extends StatefulWidget {
   final UserProvider userProvider;
   final String? token;
   final String commentId;
+  final String userAvatar;
 
   Comment({
     Key? key,
@@ -36,6 +37,7 @@ class Comment extends StatefulWidget {
     required this.threadId,
     required this.parentId,
     required this.username,
+    required this.userAvatar,
     required this.content,
     required this.thumbUps,
     required this.thumbDowns,
@@ -56,6 +58,7 @@ class Comment extends StatefulWidget {
         threadId: threadId,
         parentId: parentId,
         username: username,
+        userAvatar: userAvatar,
         content: content,
         thumbUps: thumbUps,
         thumbDowns: thumbDowns,
@@ -82,6 +85,7 @@ class _CommentState extends State<Comment> {
   final String parentId;
   final String content;
   final String username;
+  final String userAvatar;
   final int thumbUps;
   final int thumbDowns;
   final String time;
@@ -102,6 +106,7 @@ class _CommentState extends State<Comment> {
     required this.parentId,
     required this.content,
     required this.username,
+    required this.userAvatar,
     required this.thumbUps,
     required this.thumbDowns,
     required this.time,
@@ -130,7 +135,7 @@ class _CommentState extends State<Comment> {
         setState(() {
           numberOfComments = responseData.length;
         });
-        
+        print(responseData);
         return responseData
             .map((dynamic item) => Comment(
                   token: widget.token,
@@ -141,6 +146,7 @@ class _CommentState extends State<Comment> {
                   content: item['text'],
                   isDisliked: item['isDisLiked'] ?? false,
                   isLiked: item['isLiked'] ?? false,
+                  userAvatar: item['author']['avatar'] ?? "",
                   userId: item['author']['id'],
                   username: item['author']['username'],
                   thumbUps: item['likeCount'],
@@ -297,26 +303,45 @@ class _CommentState extends State<Comment> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              MyColors.darkBlue),
-                        ),
-                        child: Text(
-                          '@$username', //may need to navigate also the user
-                          style: const TextStyle(
-                            color: MyColors.orange,
-                            fontSize: 15.0,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children : [
+                          Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundColor: MyColors.darkBlue,
+                                child: CircleAvatar(
+                                  radius: 28,
+                                  backgroundImage: userAvatar != ""
+                                      ? NetworkImage(userAvatar!)
+                                      : const AssetImage('assets/images/ludos_transparent.png') as ImageProvider,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => VisitUserPage(
-                                userProvider: userProvider,
-                                username: widget.username,
-                                id: widget.userId),
-                          ));
-                        },
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  MyColors.darkBlue),
+                            ),
+                            child: Text(
+                              '@$username', //may need to navigate also the user
+                              style: const TextStyle(
+                                color: MyColors.orange,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => VisitUserPage(
+                                    userProvider: userProvider,
+                                    username: widget.username,
+                                    id: widget.userId),
+                              ));
+                            },
+                          ),
+                        ]
                       ),
                       if (isBelongtoUser())
                         Row(

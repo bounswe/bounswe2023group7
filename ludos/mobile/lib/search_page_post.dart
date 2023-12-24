@@ -142,6 +142,7 @@ class _SearchPagePostState extends State<SearchPagePost> {
           gameId: item['game']['id'],
           userId: item['user']['id'],
           username: item['user']['username'],
+          userAvatar: item['user']['avatar'],
           thumbUps: item['numberOfLikes'],
           thumbDowns: item['NumberOfDislikes'],
           time: item['createdAt'],
