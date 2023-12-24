@@ -46,6 +46,7 @@ class _GamePageState extends State<GamePage> {
     loadGameData();
     initializeFollowState();
     ToList(fetchReviewData(widget.token));
+    recGameList = loadRecGames(widget.userProvider, widget.token);
     print("getlisted");
   }
 
@@ -173,8 +174,6 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    var userProvider = Provider.of<UserProvider>(context);
-    recGameList = loadRecGames(userProvider, userProvider.token);
     return SelectionArea(contextMenuBuilder:(context, editableTextState) {
       final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
       buttonItems.insert(
@@ -296,7 +295,7 @@ class _GamePageState extends State<GamePage> {
                   onRatingUpdate: (rating) {},
                 ),
                 Text(
-                  '${(gameData['averageRating'] == null ? 0 : gameData['averageRating'].toDouble().toStringAsFixed(5))}/5'
+                    '${(gameData['averageRating'] == null ? 0 : gameData['averageRating'].toDouble().toStringAsFixed(2))}/5.00'
                       .padLeft(5),
                   style: const TextStyle(
                     color: MyColors.orange,

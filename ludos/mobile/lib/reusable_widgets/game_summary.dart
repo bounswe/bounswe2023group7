@@ -174,7 +174,7 @@ class _GameSummaryState extends State<GameSummary> {
                                         children: [
                                           const Icon(Icons.favorite,
                                               size: 25, color: MyColors.orange),
-                                          Text("+$numOfFollowers favorites",
+                                          Text("+$numOfFollowers followers",
                                               style: const TextStyle(
                                                 color: MyColors.orange,
                                                 fontWeight: FontWeight.bold,
