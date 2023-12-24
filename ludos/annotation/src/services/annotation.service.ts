@@ -67,6 +67,9 @@ export class AnnotationService{
     async getAnnotationsForPost(postId: string): Promise<AnnotationResponseDto[]> {
       return await this.annotationRepository.getAnnotationsByTypeAndItemId("post", postId);
     }
+    async getAnnotationsForComment(commentId: string): Promise<AnnotationResponseDto[]> {
+      return await this.annotationRepository.getAnnotationsByTypeAndItemId("comment", commentId);
+    }
     async getAnnotationByTypeAndItemIdAndDate(type: string, itemId: string, date: number): Promise<Annotation> {
       return await this.annotationRepository.getAnnotationByTypeAndItemIdAndDate(type, itemId, date);
     }
@@ -76,5 +79,13 @@ export class AnnotationService{
         throw new NotFoundException('Annotation cannot be found.')
       }
       return this.annotationRepository.deleteAnnotation(annotation);
+    }
+    
+    async createCommentAnnotation(input: CreateAnnotationDto, commentId: string): Promise<AnnotationResponseDto> {
+      const id = `35.157.67.64:8090/comment/${commentId}/${Date.now()}`;
+      return await this.annotationRepository.createCommentAnnotation({
+        id,
+        ...input,
+      });
     }
 }
