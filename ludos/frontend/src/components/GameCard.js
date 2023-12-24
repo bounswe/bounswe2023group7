@@ -44,20 +44,21 @@ export default function GameCard({ game }) {
       year: "numeric",
     }).format(date);
   };
-  /*
-    useEffect(() => {
-        axiosInstance.get(`/game/${game.id}`)
-            .then((response) => {
-                if (response.data.averageRating) {
-                    setAverageRating(response.data.averageRating.toFixed(1));
-                    setTags(response.data.tags);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }, [])
-*/
+
+  useEffect(() => {
+    axiosInstance
+      .get(`/game/${game.id}`)
+      .then((response) => {
+        if (response.data.averageRating) {
+          setAverageRating(response.data.averageRating.toFixed(1));
+          setTags(response.data.tags);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const replaceImage = (error) => {
     error.target.src =
       "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Video-Game-Controller-Icon-D-Edit.svg/2048px-Video-Game-Controller-Icon-D-Edit.svg.png";
