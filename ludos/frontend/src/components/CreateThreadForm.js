@@ -51,6 +51,7 @@ const CreateThreadPage = () => {
     demoLink: "",
   });
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [userType, setUserType] = useState("gamer");
 
   const navigate = useNavigate();
 
@@ -144,6 +145,22 @@ const CreateThreadPage = () => {
       fetchGames();
     }
   }, [searchKey]);
+
+  useEffect(() => {
+    axiosInstance
+      .get(`/user/info`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        setUserType(response.data.userType);
+        console.log(response.data.userType);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleDeleteTag = (item, index) => {
     let arr = [...tags];
@@ -262,68 +279,71 @@ const CreateThreadPage = () => {
         </Grid>
         {/** a section to choose "Is Upcoming Title? : (dot) yes (dot) no" */}
         {/**If yes, it should open a section for choosing the launching date (date type) and below that a section to put demo link (string) */}
-        <Grid
-          item
-          xs={12}
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "32px",
-            //alignItems: "flex-start",
-          }}
-        >
-          <h3>Is Upcoming Title?</h3>
-          <RadioGroup
-            row
-            value={upcomingTitle.isUpcomingTitle ? "yes" : "no"}
-            onChange={handleUpcomingTitleChange}
-          >
-            <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-            <FormControlLabel value="no" control={<Radio />} label="No" />
-          </RadioGroup>
-        </Grid>
-
-        {/** user role if check (only when developer) */}
-        {upcomingTitle.isUpcomingTitle && (
+        {userType == "developer" && (
           <>
             <Grid
               item
               xs={12}
-              style={{ display: "flex", flexDirection: "row", gap: "32px" }}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "32px",
+                //alignItems: "flex-start",
+              }}
             >
-              <h3 style={{ display: "flex", alignItems: "flex-start" }}>
-                Launching Date:
-              </h3>
-              <TextField
-                type="date"
-                label="Launching Date"
-                value={upcomingTitle.launchingDate}
-                onChange={(event) => {
-                  setUpcomingTitle({
-                    ...upcomingTitle,
-                    launchingDate: event.target.value,
-                  });
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                //fullWidth
-              />
+              <h3>Is Upcoming Title?</h3>
+              <RadioGroup
+                row
+                value={upcomingTitle.isUpcomingTitle ? "yes" : "no"}
+                onChange={handleUpcomingTitleChange}
+              >
+                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="no" control={<Radio />} label="No" />
+              </RadioGroup>
             </Grid>
+            {upcomingTitle.isUpcomingTitle && (
+              <>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ display: "flex", flexDirection: "row", gap: "32px" }}
+                >
+                  <h3 style={{ display: "flex", alignItems: "flex-start" }}>
+                    Launching Date:
+                  </h3>
+                  <TextField
+                    type="date"
+                    label="Launching Date"
+                    value={upcomingTitle.launchingDate}
+                    onChange={(event) => {
+                      setUpcomingTitle({
+                        ...upcomingTitle,
+                        launchingDate: event.target.value,
+                      });
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    //fullWidth
+                  />
+                </Grid>
 
-            <Grid item xs={12}>
-              <h3 style={{ display: "flex", alignItems: "flex-start" }}>
-                Demo Link:
-              </h3>
-              <TextField
-                fullWidth
-                label="Demo Link"
-                value={upcomingTitle.demoLink}
-                onChange={handleDemoLinkChange}
-              />
-            </Grid>
+                <Grid item xs={12}>
+                  <h3 style={{ display: "flex", alignItems: "flex-start" }}>
+                    Demo Link:
+                  </h3>
+                  <TextField
+                    fullWidth
+                    label="Demo Link"
+                    value={upcomingTitle.demoLink}
+                    onChange={handleDemoLinkChange}
+                  />
+                </Grid>
+              </>
+            )}
           </>
         )}
+
         <Grid item xs={12} spacing={1}>
           <h3 style={{ display: "flex", alignItems: "flex-start" }}>Tags:</h3>
           <FormControl
