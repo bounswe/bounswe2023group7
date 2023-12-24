@@ -24,7 +24,6 @@ import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
-import { GameGetResponseDto } from '../dtos/game/response/get.response';
 import { Game } from '../entities/game.entity';
 
 @Injectable()

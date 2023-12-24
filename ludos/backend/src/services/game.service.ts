@@ -13,7 +13,6 @@ import { GameRepository } from '../repositories/game.repository';
 import { RatingRepository } from '../repositories/rating.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { CompletionDurationRepository } from '../repositories/completion-duration.repository';
-import { GameGetResponseDto } from '../dtos/game/response/get.response';
 
 @Injectable()
 export class GameService {
