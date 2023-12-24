@@ -213,23 +213,9 @@ export class UserService {
 
   public async getSuggestedGames(
     userId: string,
-  ): Promise<GameGetResponseDto[]> {
+  ): Promise<Game[]> {
     const suggestedGames = await this.userRepository.getSuggestedGames(userId);
-
-    const suggestedGamesResponse: GameGetResponseDto[] = suggestedGames.map(
-      (relatedGame: Game) => ({
-        id: relatedGame.id,
-        title: relatedGame.title,
-        coverLink: relatedGame.coverLink,
-        gameBio: relatedGame.gameBio,
-        releaseDate: relatedGame.releaseDate,
-        developer: relatedGame.developer,
-        userCompletionDuration: relatedGame.userCompletionDuration,
-        averageCompletionDuration: relatedGame.averageCompletionDuration,
-      }),
-    );
-
-    return suggestedGamesResponse;
+    return suggestedGames;
   }
 
   public async getUserIdByUsername(username: string): Promise<string | null> {
