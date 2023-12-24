@@ -415,6 +415,50 @@ class APIService {
     return response;
   }
 
+  Future<http.Response> lastActivities(String? authToken,
+  {int page = 1,
+  int limit = 5,
+  String? searchKey,
+  String? tags,
+  String? gameId,
+  String? groupId,
+  String? ownerUserId,
+  bool isLiked = false,
+  bool isDisliked = false,
+  String order = "DESC",
+  String orderByKey = "createdAt"}) async {
+
+    final Map<String, String> queryParams = {
+      'page': page.toString(),
+      'limit': limit.toString(),
+      'order': order,
+      'isLiked': isLiked.toString(),
+      'isDisliked': isDisliked.toString(),
+      'orderByKey': orderByKey,
+    };
+
+    if (searchKey != null) queryParams['searchKey'] = searchKey;
+    if (tags != null) queryParams['tags'] = tags;
+    if (groupId != null) queryParams['groupId'] = groupId;
+    if (ownerUserId != null) queryParams['ownerUserId'] = ownerUserId;
+    if(gameId != null) queryParams['gameId'] = gameId;
+
+
+    var uri = Uri.parse("$baseURL/post").replace(queryParameters: queryParams);
+
+    // Make the HTTP request for each gameId
+    var res = await http.get(uri, headers: {
+      'content-type': 'application/json',
+      'Authorization': 'Bearer $authToken',
+      HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+    });
+    if (res.statusCode == 200) {
+      return res;
+    } else {
+      throw Exception('Failed to load threads');
+    }
+  }
+
   Future<http.Response> listPosts(String? authToken,
       {int page = 1,
         int limit = 10,
@@ -461,7 +505,7 @@ class APIService {
 
       if (res.statusCode == 200) {
         // Add individual response to the list
-        print("Individual Response: ${res.body}");
+        //print("Individual Response: ${res.body}");
         individualResponses.add(res);
       } else {
         throw Exception('Failed to load threads');
