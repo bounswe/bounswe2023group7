@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/upcoming_title_thread_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../game_page.dart';
 import '../helper/APIService.dart';
-import '../thread_page.dart';
 import '../userProvider.dart';
 import '../visit_user_page.dart';
 import '/helper/colors.dart';
@@ -131,7 +132,11 @@ class _UpcomingThreadState extends State<UpcomingThread> {
     isDislikedIn = isDisliked;
     setState(() { });
   }
-
+  Future<void> _launchUrl(url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
   String timeAgo(String timestamp) {
     DateTime currentTime = DateTime.now();
     DateTime previousTime = DateTime.parse(timestamp);
@@ -229,12 +234,22 @@ class _UpcomingThreadState extends State<UpcomingThread> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ThreadPage(threadId: widget.threadId, token: widget.token, userProvider: widget.userProvider),
+                builder: (context) => UpcomingTitleThreadPage(threadId: widget.threadId, token: widget.token, userProvider: widget.userProvider),
               ),
             );
           },
+
           child: Column(
             children: [
+              const SizedBox(height: 10),
+              Text(
+                "Planned Release Date: $launchingDate",
+                style: const TextStyle(
+                  color: MyColors.darkBlue,
+                  fontSize: 18,
+
+                ),
+              ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -282,14 +297,7 @@ class _UpcomingThreadState extends State<UpcomingThread> {
                   ),
                 ],
               ),
-              Text(
-                "Launching Date: ", semanticsLabel: launchingDate,
-                style: const TextStyle(
-                    color: Colors.red,
-                    fontSize: 20,
 
-                ),
-              ),
               Container(
                 padding: const EdgeInsets.all(15.0),
                 child: Text(
@@ -301,10 +309,20 @@ class _UpcomingThreadState extends State<UpcomingThread> {
                   ),
                 ),
               ),
-              Text(
-                "Demo Link: ", semanticsLabel: demoLink,
-                style: const TextStyle(color: Colors.white),
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      MyColors.darkBlue),
+                ),
+                onPressed: () {
+                  _launchUrl(Uri.parse(demoLink));
+                },
+                child: const Text(
+                    "Demo",
+                    style: TextStyle(color: MyColors.white, fontSize: 15.0,)
+                ),
               ),
+              const SizedBox(height: 10),
               const Divider(
                 height: 3.0,
                 thickness: 3.0,
@@ -348,6 +366,7 @@ class _UpcomingThreadState extends State<UpcomingThread> {
                     timeAgo(time),
                     style: const TextStyle(color: Colors.white),
                   ),
+                  const SizedBox(width: 5.0),
                 ],
               ),
             ],
