@@ -99,6 +99,20 @@ export class AnnotationService {
     );
     return response.data;
   }
+  async createAnnotationForImage(
+    input: CreateAnnotationDto,
+  ): Promise<AnnotationResponseDto> {
+    const response = await axios.post(`http://35.157.67.64:8090/image`, input);
+    return response.data;
+  }
+  async getAnnotationsForImage(
+    imageUrl: string,
+  ): Promise<AnnotationResponseDto[]> {
+    const response = await axios.get(
+      `http://35.157.67.64:8090/image?imageUrl=${imageUrl}`,
+    );
+    return response.data;
+  }
   async getAnnotationsForGameBio(
     gameId: string,
   ): Promise<AnnotationResponseDto[]> {
@@ -209,7 +223,9 @@ export class AnnotationService {
       throw new NotFoundException(`comment with id ${commentId} not found`);
     }
 
-    const response = await axios.get(`http://35.157.67.64:8090/comment/${commentId}`);
+    const response = await axios.get(
+      `http://35.157.67.64:8090/comment/${commentId}`,
+    );
     return response.data;
   }
 }

@@ -49,7 +49,6 @@ export class PostCreateDto {
   @IsOptional()
   tags: string[];
 
-
   @ApiProperty({
     description: 'Upcoming Title',
   })

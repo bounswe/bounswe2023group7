@@ -210,9 +210,7 @@ export class UserService {
     return response;
   }
 
-  public async getSuggestedGames(
-    userId: string,
-  ): Promise<Game[]> {
+  public async getSuggestedGames(userId: string): Promise<Game[]> {
     const suggestedGames = await this.userRepository.getSuggestedGames(userId);
     return suggestedGames;
   }
@@ -223,9 +221,7 @@ export class UserService {
     if (user) {
       return user.id;
     }
-    
+
     return null;
   }
-
-  
 }

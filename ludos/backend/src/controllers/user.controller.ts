@@ -192,5 +192,4 @@ export class UserController {
   public async getUserIdByUsername(@Param('userId') username: string) {
     return await this.userService.getUserIdByUsername(username);
   }
-
 }
