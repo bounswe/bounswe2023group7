@@ -178,6 +178,7 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
+                if(widget.userProvider.userType == "developer")
                   Row(
                       children:[
                         const Text('It is upcoming title!',
