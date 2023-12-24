@@ -104,6 +104,7 @@ const ForumsPage = () => {
         title: topic.title,
         numOfReplies: topic.numOfReplies,
         userOpened: topic.user.username,
+        imgsrc: topic.user.avatar,
         whenOpened: new Date(topic.createdAt).toLocaleDateString(
           "en-US",
           options,
@@ -112,6 +113,10 @@ const ForumsPage = () => {
         forumGame: topic.game.title,
         id: topic.id,
         userId: topic.user.id,
+        isUpcomingTitle:
+          topic.upcomingTitle != null
+            ? topic.upcomingTitle.isUpcomingTitle
+            : false,
       }));
       console.log(formattedTopics);
 
@@ -142,6 +147,7 @@ const ForumsPage = () => {
         title: topic.title,
         numOfReplies: topic.numOfReplies,
         userOpened: topic.user.username,
+        imgsrc: topic.user.avatar,
         whenOpened: new Date(topic.createdAt).toLocaleDateString(
           "en-US",
           options,

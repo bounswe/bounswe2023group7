@@ -200,6 +200,7 @@ const Homepage = () => {
         title: topic.title,
         numOfReplies: topic.numOfReplies,
         userOpened: topic.user.username,
+        imgsrc: topic.user.avatar,
         whenOpened: new Date(topic.createdAt).toLocaleDateString(
           "en-US",
           options,
@@ -208,6 +209,10 @@ const Homepage = () => {
         forumGame: topic.game.title,
         id: topic.id,
         userId: topic.user.id,
+        isUpcomingTitle:
+          topic.upcomingTitle != null
+            ? topic.upcomingTitle.isUpcomingTitle
+            : false,
       }));
       console.log("Trending Topics: ", formattedTopics);
 

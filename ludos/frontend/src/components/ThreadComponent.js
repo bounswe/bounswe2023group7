@@ -31,6 +31,9 @@ function ThreadComponent({
   threadId,
   isLiked,
   isDisliked,
+  isUpcomingTitle = false,
+  launchingDate = null,
+  demoLink = null,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 

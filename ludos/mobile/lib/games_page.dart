@@ -4,7 +4,6 @@ import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/search_game.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
-import 'login_page.dart';
 import 'main.dart';
 import 'reusable_widgets/game_summary.dart';
 import 'helper/APIService.dart';
@@ -71,7 +70,12 @@ class _GamesPageState extends State<GamesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+      return false;
+    },
+    child: Scaffold(
 
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
@@ -183,6 +187,7 @@ class _GamesPageState extends State<GamesPage> {
         ),
       ),
       bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
+    ),
     );
   }
 }

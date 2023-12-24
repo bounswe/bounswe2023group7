@@ -285,13 +285,6 @@ class _HomeState extends State<Home> {
         backgroundColor: MyColors.orange,
         centerTitle: true,
         title: const Text('Ludos'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            tooltip: 'Comment Icon',
-            onPressed: () {},
-          ) //IconButton
-        ],
       ),
       body: ListView(
         children: <Widget>[
