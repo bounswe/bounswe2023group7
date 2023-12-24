@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'package:ludos_mobile_app/user_profile_page.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'helper/APIService.dart';
 import 'helper/colors.dart';
-import 'main.dart';
 
 
 class EditProfilePage extends StatefulWidget {
@@ -171,7 +174,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
 
                   ElevatedButton(
-
                     onPressed: () async {
                       if(fullNameController.text == ""){
                         fullNameController.text = userData['fullName'];
@@ -190,27 +192,55 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           userProvider.token, fullNameController.text, isNotificationEnabledController, avatarController.text, aboutMeController.text, steamUrlController.text);
                       int status = token.statusCode;
                       if (status == 200) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text(
-                                  'The profile page successfully edited!')
-                          ),
-                        );
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => (const Home()),
-                        ));
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                            SnackBar(
+                              content: const Row(
+                                children: [
+                                  Icon(
+                                    Icons.check_circle_outline,
+                                    color: MyColors.blue,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      'Your profile is updated successfully. You will be redirected to the your profile.',
+                                      style: TextStyle(
+                                        color: MyColors.blue,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              backgroundColor: MyColors.blue2,
+                              duration: const Duration(seconds: 5),
+                              action: SnackBarAction(
+                                label: 'OK',
+                                textColor: MyColors.blue,
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => UserProfilePage(id: userProvider.username,userProvider: userProvider),
+                                      ));
+                                },
+                              ),
+                            ),
+                          )
+                          .closed
+                          .then((reason) => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => UserProfilePage(id: userProvider.username,userProvider: userProvider))
+                          ));
+
+                      }else {
+                      CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
                       }
-                      if (status == 400 || status == 401) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text(
-                                  'Something went wrong!')
-                          ),
-                        );
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => (const Home()),
-                        ));
-                      }
+
                     },
                     child: const Text('Save'),
                   ),
