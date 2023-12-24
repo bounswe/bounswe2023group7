@@ -5,6 +5,7 @@ import { AnnotationResponseDto } from '../dtos/annotation/response/response.dto'
 import { EntityRepository } from '../repositories/entity.repository';
 import { GameRepository } from '../repositories/game.repository';
 import { PostRepository } from '../repositories/post.repository';
+import { CommentRepository } from '../repositories/comment.repository';
 
 @Injectable()
 export class AnnotationService {
@@ -12,6 +13,7 @@ export class AnnotationService {
     private readonly gameRepository: GameRepository,
     private readonly entityRepository: EntityRepository,
     private readonly postRepository: PostRepository,
+    private readonly commentRepository: CommentRepository,
   ) {}
   async createAnnotationForGameBio(
     input: CreateAnnotationDto,
@@ -182,5 +184,32 @@ export class AnnotationService {
         );
       }
     }
+  }
+
+  async createAnnotationForComment(
+    input: CreateAnnotationDto,
+    commentId: string,
+  ): Promise<AnnotationResponseDto> {
+    const comment = await this.commentRepository.findCommentById(commentId);
+    if (!comment) {
+      throw new NotFoundException(`Comment with id ${commentId} not found`);
+    }
+    const response = await axios.post(
+      `http://35.157.67.64:8090:8090/comment/${commentId}`,
+      input,
+    );
+    return response.data;
+  }
+
+  async getAnnotationsForComment(
+    commentId: string,
+  ): Promise<AnnotationResponseDto[]> {
+    const comment = await this.commentRepository.findCommentById(commentId);
+    if (!comment) {
+      throw new NotFoundException(`comment with id ${commentId} not found`);
+    }
+
+    const response = await axios.get(`http://35.157.67.64:8090/comment/${commentId}`);
+    return response.data;
   }
 }

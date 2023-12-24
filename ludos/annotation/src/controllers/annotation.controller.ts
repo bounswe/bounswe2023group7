@@ -18,7 +18,7 @@ import { AnnotationResponseDto } from '../dtos/annotation/response/response.dto'
 @ApiTags()
 @Controller()
 export class AnnotationController {
-  constructor(private readonly annotationService: AnnotationService) {}
+  constructor(private readonly annotationService: AnnotationService) { }
   @ApiOkResponse({
     description: 'Annotation created successfully',
     type: AnnotationResponseDto,
@@ -129,8 +129,26 @@ export class AnnotationController {
     @Param('itemId') itemId: string,
     @Param('date') date: number,
   ): Promise<void> {
-      // Generate global resource id
-      const annotationId = `${source}/${type}/${itemId}/${date}`;
-      return this.annotationService.deleteAnnotationById(annotationId);
+    // Generate global resource id
+    const annotationId = `${source}/${type}/${itemId}/${date}`;
+    return this.annotationService.deleteAnnotationById(annotationId);
+  }
+
+  @ApiOkResponse({
+    description: 'Annotation created successfully',
+    type: AnnotationResponseDto,
+  })
+
+  @Post('comment/:commentId')
+  public async createCommentAnnotation(@Body() input: CreateAnnotationDto, @Param('commentId') commentId: string): Promise<AnnotationResponseDto> {
+    return await this.annotationService.createCommentAnnotation(input, commentId);
+  }
+
+  @ApiOkResponse({
+    type: [AnnotationResponseDto],
+  })
+  @Get('comment/:commentId')
+  public async getAnnotationsForComment(@Param("commentId") commentId: string): Promise<AnnotationResponseDto[]> {
+    return await this.annotationService.getAnnotationsForComment(commentId);
   }
 }
