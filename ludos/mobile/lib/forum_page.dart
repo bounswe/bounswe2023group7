@@ -14,7 +14,14 @@ class ForumPage extends StatefulWidget {
   final String? token;
   final UserProvider userProvider;
   final String gameid;
-  const ForumPage({Key? key, required this.gameid, required this.token, required this.userProvider}) : super(key: key);
+  final String gameName;
+  const ForumPage(
+      {Key? key,
+      required this.gameName,
+      required this.gameid,
+      required this.token,
+      required this.userProvider}
+      ): super(key: key);
 
   @override
   State<ForumPage> createState() => _ForumPageState();
@@ -33,36 +40,39 @@ class _ForumPageState extends State<ForumPage> {
     threads = fetchData(widget.token);
   }
 
-  void searched(){
+  void searched() {
     threadsSearch = fetchDataSearch(widget.token);
   }
 
   Future<List<ThreadSummary>> fetchData(String? token) async {
-    final response = await APIService().listThreads(widget.gameid, widget.token);
+    final response =
+        await APIService().listThreads(widget.gameid, widget.token);
     try {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> postLists = responseData['items'];
 
-        return postLists.map((dynamic item) => ThreadSummary(
-          token: widget.token,
-          userProvider: widget.userProvider,
-          threadId: item['id'],
-          title: item['title'],
-          game: item['game']['title'],
-          gameId: item['game']['id'],
-          userId: item['user']['id'],
-          username: item['user']['username'],
-          thumbUps: (item['numberOfLikes'] ?? 0),
-          thumbDowns: (item['numberOfDislikes'] ?? 0),
-          time: item['createdAt'],
-          isLiked: (item['isLiked'] ?? false),
-          isDisliked: (item['isDisliked'] ?? false),
-          textColor: MyColors.white,
-          backgroundColor: MyColors.blue,
-          fontSize: 20,
-        )).toList();
+        return postLists
+            .map((dynamic item) => ThreadSummary(
+                  token: widget.token,
+                  userProvider: widget.userProvider,
+                  threadId: item['id'],
+                  title: item['title'],
+                  game: item['game']['title'],
+                  gameId: item['game']['id'],
+                  userId: item['user']['id'],
+                  username: item['user']['username'],
+                  thumbUps: (item['numberOfLikes'] ?? 0),
+                  thumbDowns: (item['numberOfDislikes'] ?? 0),
+                  time: item['createdAt'],
+                  isLiked: (item['isLiked'] ?? false),
+                  isDisliked: (item['isDisliked'] ?? false),
+                  textColor: MyColors.white,
+                  backgroundColor: MyColors.blue,
+                  fontSize: 20,
+                ))
+            .toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
@@ -74,7 +84,8 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Future<List<ThreadSummary>> fetchDataSearch(String? token) async {
-    final response = await APIService().listThreadsBySearch(searchText, widget.gameid, widget.token);
+    final response = await APIService()
+        .listThreadsBySearch(searchText, widget.gameid, widget.token);
     try {
       print("here");
       if (response.statusCode == 200) {
@@ -82,24 +93,26 @@ class _ForumPageState extends State<ForumPage> {
 
         List<dynamic> postLists = responseData['items'];
         print(postLists);
-        return postLists.map((dynamic item) => ThreadSummary(
-          token: widget.token,
-          userProvider: widget.userProvider,
-          threadId: item['id'],
-          title: item['title'],
-          game: item['game']['title'],
-          gameId: item['game']['id'],
-          userId: item['user']['id'],
-          username: item['user']['username'],
-          thumbUps: item['numberOfLikes'],
-          thumbDowns: item['NumberOfDislikes'],
-          time: item['createdAt'],
-          isLiked: (item['isLiked'] ?? false),
-          isDisliked: (item['isDisliked'] ?? false),
-          textColor: MyColors.white,
-          backgroundColor: MyColors.blue,
-          fontSize: 20,
-        )).toList();
+        return postLists
+            .map((dynamic item) => ThreadSummary(
+                  token: widget.token,
+                  userProvider: widget.userProvider,
+                  threadId: item['id'],
+                  title: item['title'],
+                  game: item['game']['title'],
+                  gameId: item['game']['id'],
+                  userId: item['user']['id'],
+                  username: item['user']['username'],
+                  thumbUps: item['numberOfLikes'],
+                  thumbDowns: item['NumberOfDislikes'],
+                  time: item['createdAt'],
+                  isLiked: (item['isLiked'] ?? false),
+                  isDisliked: (item['isDisliked'] ?? false),
+                  textColor: MyColors.white,
+                  backgroundColor: MyColors.blue,
+                  fontSize: 20,
+                ))
+            .toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
@@ -116,16 +129,21 @@ class _ForumPageState extends State<ForumPage> {
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
-        title: const Text('Forum'),
+        title: Text('${widget.gameName} Forum'),
         actions: [
           TextButton(
             onPressed: () {
               if (widget.userProvider.isLoggedIn) {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => CreateThreadPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider),
+                  builder: (context) => CreateThreadPage(
+                      gameName: widget.gameName,
+                      gameid: widget.gameid,
+                      token: widget.token,
+                      userProvider: widget.userProvider),
                 ));
               } else {
-                CustomWidgets.needLoginSnackbar(context, "Please log in to add the thread! ");
+                CustomWidgets.needLoginSnackbar(
+                    context, "Please log in to add the thread! ");
               }
             },
             child: const Icon(
@@ -155,11 +173,11 @@ class _ForumPageState extends State<ForumPage> {
                           color: MyColors.lightBlue,
                           fontWeight: FontWeight.bold),
                       border: UnderlineInputBorder(
-                          borderSide:
-                          BorderSide(color: MyColors.lightBlue, width: 2.0)),
+                          borderSide: BorderSide(
+                              color: MyColors.lightBlue, width: 2.0)),
                       focusedBorder: UnderlineInputBorder(
                         borderSide:
-                        BorderSide(color: MyColors.lightBlue, width: 2.0),
+                            BorderSide(color: MyColors.lightBlue, width: 2.0),
                       ),
                     ),
                     cursorColor: MyColors.lightBlue,
@@ -185,7 +203,7 @@ class _ForumPageState extends State<ForumPage> {
               ],
             ),
             //const SafeArea(child: SizedBox(height: 10)),
-            if(!ifSearched)
+            if (!ifSearched)
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: FutureBuilder<List<ThreadSummary>>(
@@ -211,7 +229,7 @@ class _ForumPageState extends State<ForumPage> {
                   },
                 ),
               ),
-            if(ifSearched)
+            if (ifSearched)
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: FutureBuilder<List<ThreadSummary>>(
@@ -240,15 +258,15 @@ class _ForumPageState extends State<ForumPage> {
           ],
         ),
       ),
-      bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
+      bottomNavigationBar:
+          CustomNavigationBar(userProvider: widget.userProvider),
     );
   }
 }
 
-
-Future<List<ThreadSummary>> appendElements(ThreadSummary item, Future<List<ThreadSummary>> posts) async {
+Future<List<ThreadSummary>> appendElements(
+    ThreadSummary item, Future<List<ThreadSummary>> posts) async {
   final list = await posts;
   list.add(item);
   return list;
 }
-

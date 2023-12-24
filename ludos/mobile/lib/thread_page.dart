@@ -249,7 +249,7 @@ class _ThreadPageState extends State<ThreadPage>
                               ),
                               IconButton(
                                 onPressed: () {
-                                  CustomWidgets.deleteConfirmDialogThread(widget.userProvider, context, threadData['game']['id'] ,"thread",  widget.threadId);
+                                  CustomWidgets.deleteConfirmDialogThread(widget.userProvider, context,threadData['game']['title'], threadData['game']['id'] ,"thread",  widget.threadId);
                                 },
                                 icon: const Icon(Icons.delete, color: MyColors.orange),
                               ),

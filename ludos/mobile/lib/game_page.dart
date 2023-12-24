@@ -419,6 +419,7 @@ class _GamePageState extends State<GamePage> {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ForumPage(
+                          gameName: gameData['title'],
                           gameid: widget.id,
                           token: widget.token,
                           userProvider: widget.userProvider),
