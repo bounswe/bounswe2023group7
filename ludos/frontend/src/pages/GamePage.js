@@ -798,6 +798,7 @@ function GamePage(id) {
               <TabPanel value="1">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
                   <DescriptionTab
+                    gameId={game.id}
                     story={game.gameStory}
                     guide={game.gameGuide}
                     trivia={game.trivia}
