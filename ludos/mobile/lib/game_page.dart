@@ -72,6 +72,7 @@ class _GamePageState extends State<GamePage> {
       print("Error initializing follow state: $error");
     }
   }
+  
   Future<List<RecommendedGame>> loadRecGames(UserProvider userProvider, String? token) async {
     final response = await apiService.getGameRecommendation(widget.token,widget.id);
     try {
