@@ -331,6 +331,7 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
           content: item['text'],
           userId: item['author']['id'],
           username: item['author']['username'],
+          userAvatar: item['author']['avatar'] ?? "",
           isDisliked: item['isDisLiked'] ?? false,
           isLiked: item['isLiked'] ?? false,
           thumbUps: item['likeCount'],
@@ -392,7 +393,7 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
-        title: const Text('Thread'),
+        title: (threadData.isNotEmpty) ? Text('${threadData['user']['username']}\'s Thread') : const Text('Thread'),
       ),
 
       body: FutureBuilder(
@@ -448,20 +449,35 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
                                 ),
                           ),
                           SizedBox(width: 5.0),
-                          TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(MyColors.darkBlue),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => VisitUserPage(userProvider: widget.userProvider, username: threadData['user']['username'], id: threadData['user']['id']),
-                              ));
-                            },
-                            child: Text(
-                                '@${threadData['user']['username']}',
-                                style: const TextStyle(color: MyColors.orange)
-                            ),
-                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(MyColors.darkBlue),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => VisitUserPage(userProvider: widget.userProvider, username: threadData['user']['username'], id: threadData['user']['id']),
+                                  ));
+                                },
+                                child: Text(
+                                    '@${threadData['user']['username']}',
+                                    style: const TextStyle(color: MyColors.orange)
+                                ),
+                              ),
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundColor: MyColors.darkBlue,
+                                child: CircleAvatar(
+                                  radius: 28,
+                                  backgroundImage: threadData['user']['avatar'] != null
+                                      ? NetworkImage(threadData['user']['avatar'])
+                                      : const AssetImage('assets/images/ludos_transparent.png') as ImageProvider,
+                                ),
+                              ),
+                            ]
+                          )
                         ],
                       ),
                       if(isBelongtoUser())
@@ -484,7 +500,7 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  CustomWidgets.deleteConfirmDialogThread(widget.userProvider, context, threadData['game']['id'] ,"thread",  widget.threadId);
+                                  CustomWidgets.deleteConfirmDialogThread(widget.userProvider, context,threadData['game']['title'], threadData['game']['id'] ,"thread",  widget.threadId);
                                 },
                                 icon: const Icon(Icons.delete, color: MyColors.orange),
                               ),

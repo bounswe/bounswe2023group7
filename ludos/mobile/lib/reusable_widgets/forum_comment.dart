@@ -29,6 +29,7 @@ class Comment extends StatefulWidget {
   final UserProvider userProvider;
   final String? token;
   final String commentId;
+  final String userAvatar;
 
   Comment({
     Key? key,
@@ -36,6 +37,7 @@ class Comment extends StatefulWidget {
     required this.threadId,
     required this.parentId,
     required this.username,
+    required this.userAvatar,
     required this.content,
     required this.thumbUps,
     required this.thumbDowns,
@@ -52,23 +54,24 @@ class Comment extends StatefulWidget {
 
   @override
   State<Comment> createState() => _CommentState(
-    userId: userId,
-    threadId: threadId,
-    parentId: parentId,
-    username: username,
-    content: content,
-    thumbUps: thumbUps,
-    thumbDowns: thumbDowns,
-    isLiked: isLiked,
-    isDisliked: isDisliked,
-    time: time,
-    textColor: textColor,
-    backgroundColor: backgroundColor,
-    fontSize: fontSize,
-    userProvider: userProvider,
-    token: token,
-    commentId: commentId,
-  );
+        userId: userId,
+        threadId: threadId,
+        parentId: parentId,
+        username: username,
+        userAvatar: userAvatar,
+        content: content,
+        thumbUps: thumbUps,
+        thumbDowns: thumbDowns,
+        isLiked: isLiked,
+        isDisliked: isDisliked,
+        time: time,
+        textColor: textColor,
+        backgroundColor: backgroundColor,
+        fontSize: fontSize,
+        userProvider: userProvider,
+        token: token,
+        commentId: commentId,
+      );
 }
 
 class _CommentState extends State<Comment> {
@@ -82,6 +85,7 @@ class _CommentState extends State<Comment> {
   final String parentId;
   final String content;
   final String username;
+  final String userAvatar;
   final int thumbUps;
   final int thumbDowns;
   final String time;
@@ -92,6 +96,7 @@ class _CommentState extends State<Comment> {
   final String? token;
   final String commentId;
   int numberOfLikes = 0;
+  int numberOfComments = 0;
 
   _CommentState({
     required this.isLiked,
@@ -101,6 +106,7 @@ class _CommentState extends State<Comment> {
     required this.parentId,
     required this.content,
     required this.username,
+    required this.userAvatar,
     required this.thumbUps,
     required this.thumbDowns,
     required this.time,
@@ -120,30 +126,37 @@ class _CommentState extends State<Comment> {
     setState(() {});
   }
 
-
   Future<List<Comment>> fetchData(String? token) async {
-    final response = await APIService().listComments(widget.commentId, widget.token);
+    final response =
+        await APIService().listComments(widget.commentId, widget.token);
     try {
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
-        return responseData.map((dynamic item) => Comment(
-          token: widget.token,
-          userProvider: widget.userProvider,
-          threadId: widget.threadId,
-          parentId: widget.commentId,
-          commentId: item['id'],
-          content: item['text'],
-          isDisliked: item['isDisLiked'] ?? false,
-          isLiked: item['isLiked'] ?? false,
-          userId: item['author']['id'],
-          username: item['author']['username'],
-          thumbUps: item['likeCount'],
-          thumbDowns: item['dislikeCount'],
-          time: item['timestamp'],
-          textColor: MyColors.white,
-          backgroundColor: MyColors.blue,
-          fontSize: 20,
-        )).toList();
+        setState(() {
+          numberOfComments = responseData.length;
+        });
+        print(responseData);
+        return responseData
+            .map((dynamic item) => Comment(
+                  token: widget.token,
+                  userProvider: widget.userProvider,
+                  threadId: widget.threadId,
+                  parentId: widget.commentId,
+                  commentId: item['id'],
+                  content: item['text'],
+                  isDisliked: item['isDisLiked'] ?? false,
+                  isLiked: item['isLiked'] ?? false,
+                  userAvatar: item['author']['avatar'] ?? "",
+                  userId: item['author']['id'],
+                  username: item['author']['username'],
+                  thumbUps: item['likeCount'],
+                  thumbDowns: item['dislikeCount'],
+                  time: item['timestamp'],
+                  textColor: MyColors.white,
+                  backgroundColor: MyColors.blue,
+                  fontSize: 20,
+                ))
+            .toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load comments');
@@ -168,7 +181,7 @@ class _CommentState extends State<Comment> {
   }
 
   bool isBelongtoUser() {
-    if (widget.userProvider.username ==  widget.username){
+    if (widget.userProvider.username == widget.username) {
       return true;
     } else {
       return false;
@@ -178,8 +191,7 @@ class _CommentState extends State<Comment> {
   Future<void> userPressed(bool like) async {
     if (like && isDisliked) {
       try {
-        await APIService().likeComment(
-            widget.token, widget.commentId);
+        await APIService().likeComment(widget.token, widget.commentId);
       } catch (e) {
         throw Exception('Failed to likee comment.');
       }
@@ -190,9 +202,8 @@ class _CommentState extends State<Comment> {
       });
     } else if (!like && isDisliked) {
       try {
-        await APIService().dislikeComment(
-            widget.token, widget.commentId);
-      } catch(e) {
+        await APIService().dislikeComment(widget.token, widget.commentId);
+      } catch (e) {
         throw Exception('Failed to dislike comment.');
       }
       isDisliked = false;
@@ -201,9 +212,8 @@ class _CommentState extends State<Comment> {
       });
     } else if (!like && isLiked) {
       try {
-        await APIService().dislikeComment(
-            widget.token, widget.commentId);
-      } catch(e) {
+        await APIService().dislikeComment(widget.token, widget.commentId);
+      } catch (e) {
         throw Exception('Failed to dislike comment.');
       }
       isLiked = false;
@@ -214,9 +224,8 @@ class _CommentState extends State<Comment> {
       });
     } else if (like && isLiked) {
       try {
-        await APIService().likeComment(
-            widget.token, widget.commentId);
-      } catch(e) {
+        await APIService().likeComment(widget.token, widget.commentId);
+      } catch (e) {
         throw Exception('Failed to like comment.');
       }
       isLiked = false;
@@ -226,20 +235,18 @@ class _CommentState extends State<Comment> {
       });
     } else if (like) {
       try {
-        await APIService().likeComment(
-            widget.token, widget.commentId);
-      } catch(e) {
+        await APIService().likeComment(widget.token, widget.commentId);
+      } catch (e) {
         throw Exception('Failed to like comment.');
       }
       isLiked = true;
       setState(() {
         numberOfLikes = numberOfLikes! + 1;
       });
-    } else if(!like) {
+    } else if (!like) {
       try {
-        await APIService().dislikeComment(
-            widget.token, widget.commentId);
-      } catch(e) {
+        await APIService().dislikeComment(widget.token, widget.commentId);
+      } catch (e) {
         throw Exception('Failed to dislike comment.');
       }
       isDisliked = true;
@@ -281,23 +288,38 @@ class _CommentState extends State<Comment> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-          Column(
-            children: [
-              Container(
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                      color: MyColors.blue.withOpacity(0.15),
-                      border: Border.all(
+        Column(
+          children: [
+            Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                    color: MyColors.blue.withOpacity(0.15),
+                    border: Border.all(
                       color: MyColors.blue,
                       width: 5.0,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(20))
-                  ),
-                  child: Column(
-                    children:[
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(20))),
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children : [
+                          Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundColor: MyColors.darkBlue,
+                                child: CircleAvatar(
+                                  radius: 28,
+                                  backgroundImage: userAvatar != ""
+                                      ? NetworkImage(userAvatar!)
+                                      : const AssetImage('assets/images/ludos_transparent.png') as ImageProvider,
+                                ),
+                              ),
+                            ],
+                          ),
                           ElevatedButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
@@ -309,71 +331,82 @@ class _CommentState extends State<Comment> {
                                 color: MyColors.orange,
                                 fontSize: 15.0,
                               ),
-                          ),
-                            onPressed: () { Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => VisitUserPage(userProvider: userProvider, username: widget.username, id: widget.userId ),
-                          )); },
-                          ),
-                          if(isBelongtoUser())
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children : [
-                                IconButton(
-                                  onPressed: () {
-                                    editModeOpen();
-                                  },
-                                  icon: const Icon(Icons.edit, color: MyColors.orange),
-                                ),
-
-                                IconButton(
-                                  onPressed: () {
-                                    CustomWidgets.deleteConfirmDialogComment(widget.userProvider, context, widget.threadId, widget.commentId);
-                                  },
-                                  icon: const Icon(Icons.delete, color: MyColors.orange),
-                                ),
-                              ]
-                            )
-                        ],
-                      ),
-                      if(!editMode)
-                        Container(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Text(
-                            content,
-                            softWrap: true,
-                            style: const TextStyle(
-                              color: MyColors.white,
-                              fontSize: 15.0,
                             ),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => VisitUserPage(
+                                    userProvider: userProvider,
+                                    username: widget.username,
+                                    id: widget.userId),
+                              ));
+                            },
+                          ),
+                        ]
+                      ),
+                      if (isBelongtoUser())
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  editModeOpen();
+                                },
+                                icon: const Icon(Icons.edit,
+                                    color: MyColors.orange),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  CustomWidgets.deleteConfirmDialogComment(
+                                      widget.userProvider,
+                                      context,
+                                      widget.threadId,
+                                      widget.commentId);
+                                },
+                                icon: const Icon(Icons.delete,
+                                    color: MyColors.orange),
+                              ),
+                            ])
+                    ],
+                  ),
+                  if (!editMode)
+                    Container(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        content,
+                        softWrap: true,
+                        style: const TextStyle(
+                          color: MyColors.white,
+                          fontSize: 15.0,
+                        ),
+                      ),
+                    ),
+                  if (editMode)
+                    Row(
+                      children: [
+                        const SizedBox(width: 10.0),
+                        Expanded(
+                          child: TextFormField(
+                            controller: contentController,
+                            obscureText: false,
+                            style: const TextStyle(
+                                height: 1.0, color: MyColors.white),
+                            cursorColor: MyColors.lightBlue,
                           ),
                         ),
-                      if(editMode)
-                        Row(
-                          children: [
-                            const SizedBox(width: 10.0),
-                            Expanded(
-                              child: TextFormField(
-                                controller: contentController,
-                                obscureText: false,
-                                style: const TextStyle(
-                                    height: 1.0,
-                                    color: MyColors.white
-                                ),
-                                cursorColor: MyColors.lightBlue,
-                              ),
-                            ),
-                            IconButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor: MyColors.lightBlue,
-                              ),
-                              onPressed: () async {
-                                http.Response token = await APIService().editComment(
-                                    widget.token,
-                                    widget.commentId,
-                                    contentController.text,);
-                                if (token.statusCode == 200) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(
+                        IconButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: MyColors.lightBlue,
+                          ),
+                          onPressed: () async {
+                            http.Response token =
+                                await APIService().editComment(
+                              widget.token,
+                              widget.commentId,
+                              contentController.text,
+                            );
+                            if (token.statusCode == 200) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(
                                     SnackBar(
                                       content: const Row(
                                         children: [
@@ -404,126 +437,136 @@ class _CommentState extends State<Comment> {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId),
+                                                builder: (context) =>
+                                                    ThreadPage(
+                                                        token: widget.token,
+                                                        userProvider:
+                                                            widget.userProvider,
+                                                        threadId:
+                                                            widget.threadId),
                                               ));
                                         },
                                       ),
                                     ),
                                   )
-                                      .closed
-                                      .then((reason) => Navigator.push(
+                                  .closed
+                                  .then((reason) => Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId))
-                                  ));
-                                } else {
-                                  CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
-                                }
-                              },
-                              icon: const Icon(
-                                Icons.save,
-                                color: MyColors.orange,
-                              ),
-                            ),
-                          ],
+                                          builder: (context) => ThreadPage(
+                                              token: widget.token,
+                                              userProvider: widget.userProvider,
+                                              threadId: widget.threadId))));
+                            } else {
+                              CustomWidgets.statusNotOkay(
+                                  context, json.decode(token.body)["message"]);
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.save,
+                            color: MyColors.orange,
+                          ),
                         ),
-                      const Divider(
-                        height: 3.0,
-                        thickness: 3.0,
-                        color: MyColors.blue,
+                      ],
+                    ),
+                  const Divider(
+                    height: 3.0,
+                    thickness: 3.0,
+                    color: MyColors.blue,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        onPressed: () => setState(() {
+                          if (!widget.userProvider.isLoggedIn) {
+                            CustomWidgets.needLoginSnackbar(
+                                context, "Please log in to like a comment! ");
+                          } else {
+                            userPressed(true);
+                          }
+                        }),
+                        icon: Icon(
+                          Icons.thumb_up,
+                          color: isLiked ? Colors.green : Colors.white,
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            onPressed: () => setState(() {
-                              if(!widget.userProvider.isLoggedIn){
-                                CustomWidgets.needLoginSnackbar(context, "Please log in to like a comment! ");
-                              } else {
-                                userPressed(true);
-                              }
-                            }),
-                            icon: Icon(
-                              Icons.thumb_up,
-                              color: isLiked ? Colors.green : Colors.white,
-                            ),
-                          ),
-                          Text(numberOfLikes.toString(),
-                          style: TextStyle(
-                            color: Colors.white
-                          )
-                          ),
-                          IconButton(
-                            onPressed: () => setState(() {
-                              if(!widget.userProvider.isLoggedIn){
-                                CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a comment! ");
-                              } else {
-                                userPressed(false);
-                              }
-                            }),
-                            icon: Icon(
-                              Icons.thumb_down,
-                              color: isDisliked ? Colors.red : Colors.white,
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.comment, color: Colors.white,),
-                            onPressed: () {
-                              if(!widget.userProvider.isLoggedIn){
-                                CustomWidgets.needLoginSnackbar(context, "Please log in to reply a comment! ");
-                              } else {
-                                toggleFormVisibility();
-                              }
-                            },
-                          ),
-                          const SizedBox(width: 10.0),
-                          Text(
-                            timeAgo(time),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
+                      Text(numberOfLikes.toString(),
+                          style: TextStyle(color: Colors.white)),
+                      IconButton(
+                        onPressed: () => setState(() {
+                          if (!widget.userProvider.isLoggedIn) {
+                            CustomWidgets.needLoginSnackbar(context,
+                                "Please log in to dislike a comment! ");
+                          } else {
+                            userPressed(false);
+                          }
+                        }),
+                        icon: Icon(
+                          Icons.thumb_down,
+                          color: isDisliked ? Colors.red : Colors.white,
+                        ),
                       ),
-                      if(showForm)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const SizedBox(width: 10.0),
-                            Expanded(
-                              child: TextFormField(
-                                controller: commentInputController,
-                                obscureText: false,
-                                style: const TextStyle(
-                                    height: 1.0,
-                                    color: MyColors.white
-                                ),
-                                decoration: const InputDecoration(
-                                  labelText: 'Add a reply',
-                                  labelStyle: TextStyle(
-                                      color: MyColors.lightBlue,
-                                      fontWeight: FontWeight.bold),
-                                  border: UnderlineInputBorder(
-                                      borderSide:
-                                      BorderSide(color: MyColors.lightBlue, width: 2.0)),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                    BorderSide(color: MyColors.lightBlue, width: 2.0),
-                                  ),
-                                ),
-                                cursorColor: MyColors.lightBlue,
+                      Text(numberOfComments.toString(),
+                          style: TextStyle(color: Colors.white)),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.comment,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          if (!widget.userProvider.isLoggedIn) {
+                            CustomWidgets.needLoginSnackbar(
+                                context, "Please log in to reply a comment! ");
+                          } else {
+                            toggleFormVisibility();
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 10.0),
+                      Text(
+                        timeAgo(time),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  if (showForm)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const SizedBox(width: 10.0),
+                        Expanded(
+                          child: TextFormField(
+                            controller: commentInputController,
+                            obscureText: false,
+                            style: const TextStyle(
+                                height: 1.0, color: MyColors.white),
+                            decoration: const InputDecoration(
+                              labelText: 'Add a reply',
+                              labelStyle: TextStyle(
+                                  color: MyColors.lightBlue,
+                                  fontWeight: FontWeight.bold),
+                              border: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: MyColors.lightBlue, width: 2.0)),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: MyColors.lightBlue, width: 2.0),
                               ),
                             ),
-
-                            Container(
-                              child: IconButton(
-                                onPressed: () async {
-                                  http.Response token = await APIService().createComment(
-                                      widget.token,
-                                      widget.commentId,
-                                      commentInputController.text
-                                  );
-                                  if (token.statusCode == 200) {
-                                    print("status is ok");
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                            cursorColor: MyColors.lightBlue,
+                          ),
+                        ),
+                        Container(
+                          child: IconButton(
+                            onPressed: () async {
+                              http.Response token = await APIService()
+                                  .createComment(widget.token, widget.commentId,
+                                      commentInputController.text);
+                              if (token.statusCode == 200) {
+                                print("status is ok");
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
                                       SnackBar(
                                         content: const Row(
                                           children: [
@@ -554,36 +597,44 @@ class _CommentState extends State<Comment> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId)),
+                                                  builder: (context) =>
+                                                      ThreadPage(
+                                                          token: widget.token,
+                                                          userProvider: widget
+                                                              .userProvider,
+                                                          threadId:
+                                                              widget.threadId)),
                                             );
                                           },
                                         ),
                                       ),
                                     ) //ScaffoldMessager
-                                        .closed
-                                        .then((reason) => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ThreadPage(token: widget.token, userProvider: widget.userProvider, threadId: widget.threadId)),
-                                    ));
-                                  }
-                                  else {
-                                    CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
-                                  }
-                                },
-                                icon: const Icon(Icons.reply, color: MyColors.white),
-                              ),
-                            ),
-                          ],
+                                    .closed
+                                    .then((reason) => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ThreadPage(
+                                                  token: widget.token,
+                                                  userProvider:
+                                                      widget.userProvider,
+                                                  threadId: widget.threadId)),
+                                        ));
+                              } else {
+                                CustomWidgets.statusNotOkay(context,
+                                    json.decode(token.body)["message"]);
+                              }
+                            },
+                            icon:
+                                const Icon(Icons.reply, color: MyColors.white),
+                          ),
                         ),
-                    ]
-                  )
-              )
-            ],
-          ),
-
+                      ],
+                    ),
+                ]))
+          ],
+        ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 0 ,10),
+          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
           child: FutureBuilder<List<Comment>>(
             future: comments,
             builder: (context, snapshot) {

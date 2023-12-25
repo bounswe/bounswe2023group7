@@ -67,12 +67,14 @@ class CreateThreadPage extends StatefulWidget {
   final String? token;
   final UserProvider userProvider;
   final String gameid;
-  const CreateThreadPage(
-    {Key? key,
+  final String gameName;
+  const CreateThreadPage({
+    Key? key,
+    required this.gameName,
     required this.gameid,
     required this.token,
     required this.userProvider,
-    }) : super(key: key);
+  }) : super(key: key);
 
   @override
   State<CreateThreadPage> createState() => _CreateThreadPageState();
@@ -94,8 +96,7 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
   final TextEditingController coverLinkController = TextEditingController();
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
@@ -103,11 +104,11 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
         title: const Text('Create Thread'),
       ),
       backgroundColor: MyColors.darkBlue,
-      body : SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 20),
                 getbox("Title", titleController, true, false),
@@ -172,77 +173,85 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
                   ),
                   const SizedBox(height: 20),
                   TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: MyColors.lightBlue,
-                      ),
-                      onPressed: () async {
-                        http.Response token = await APIService().createThread(
-                            widget.token,
-                            titleController.text,
-                            bodyController.text,
-                            [coverLinkController.text],
-                            tagValues,
-                            widget.gameid);
-                        if (token.statusCode == 201) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(
-                            SnackBar(
-                              content: const Row(
-                                children: [
-                                  Icon(
-                                    Icons.check_circle_outline,
-                                    color: MyColors.blue,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      'Your thread is created successfully. You will be redirected to the Forum.',
-                                      style: TextStyle(
-                                        color: MyColors.blue,
-                                        fontSize: 16,
+                    style: TextButton.styleFrom(
+                      backgroundColor: MyColors.lightBlue,
+                    ),
+                    onPressed: () async {
+                      http.Response token = await APIService().createThread(
+                          widget.token,
+                          titleController.text,
+                          bodyController.text,
+                          [coverLinkController.text],
+                          tagValues,
+                          widget.gameid);
+                      if (token.statusCode == 201) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                              SnackBar(
+                                content: const Row(
+                                  children: [
+                                    Icon(
+                                      Icons.check_circle_outline,
+                                      color: MyColors.blue,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        'Your thread is created successfully. You will be redirected to the Forum.',
+                                        style: TextStyle(
+                                          color: MyColors.blue,
+                                          fontSize: 16,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
+                                backgroundColor: MyColors.blue2,
+                                duration: const Duration(seconds: 5),
+                                action: SnackBarAction(
+                                  label: 'OK',
+                                  textColor: MyColors.blue,
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ForumPage(
+                                              gameName: widget.gameName,
+                                              gameid: widget.gameid,
+                                              token: widget.token,
+                                              userProvider: widget.userProvider)
+                                              ),
+                                    );
+                                  },
+                                ),
                               ),
-                              backgroundColor: MyColors.blue2,
-                              duration: const Duration(seconds: 5),
-                              action: SnackBarAction(
-                                label: 'OK',
-                                textColor: MyColors.blue,
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ForumPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider)),
-                                  );
-                                },
-                              ),
-                            ),
-                          )
-                              .closed
-                              .then((reason) => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ForumPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider)),
-                          ));
-                        } else {
-                          CustomWidgets.statusNotOkay(context, json.decode(token.body)["message"]);
-                        }
-                      },
+                            )
+                            .closed
+                            .then((reason) => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ForumPage(
+                                          gameName: widget.gameName,
+                                          gameid: widget.gameid,
+                                          token: widget.token,
+                                          userProvider: widget.userProvider)),
+                                ));
+                      } else {
+                        CustomWidgets.statusNotOkay(
+                            context, json.decode(token.body)["message"]);
+                      }
+                    },
                     child: const Text(
                       'Save Thread',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ]),
-            ]
-          ),
+              ]),
         ),
       ),
-
     );
   }
 }
@@ -274,4 +283,3 @@ class _Chip extends StatelessWidget {
     );
   }
 }
-

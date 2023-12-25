@@ -85,26 +85,25 @@ class _HomeState extends State<Home> {
 
         List<dynamic> postLists = responseData['items'];
 
-        return postLists
-            .map((dynamic item) => ThreadSummary(
-                  token: token,
-                  userProvider: userProvider,
-                  threadId: item['id'],
-                  title: item['title'],
-                  game: item['game']['title'],
-                  gameId: item['game']['id'],
-                  userId: item['user']['id'],
-                  username: item['user']['username'],
-                  thumbUps: (item['numberOfLikes'] ?? 0),
-                  thumbDowns: (item['numberOfDislikes'] ?? 0),
-                  time: item['createdAt'],
-                  isLiked: (item['isLiked'] ?? false),
-                  isDisliked: (item['isDisliked'] ?? false),
-                  textColor: MyColors.white,
-                  backgroundColor: MyColors.blue,
-                  fontSize: 20,
-                ))
-            .toList();
+        return postLists.map((dynamic item) => ThreadSummary(
+          token: token,
+          userProvider: userProvider,
+          threadId: item['id'],
+          title: item['title'],
+          game: item['game']['title'],
+          gameId: item['game']['id'],
+          userId: item['user']['id'],
+          username: item['user']['username'],
+          userAvatar: item['user']['avatar'],
+          thumbUps: (item['numberOfLikes'] ?? 0),
+          thumbDowns: (item['numberOfDislikes'] ?? 0),
+          time: item['createdAt'],
+          isLiked: (item['isLiked'] ?? false),
+          isDisliked: (item['isDisliked'] ?? false),
+          textColor: MyColors.white,
+          backgroundColor: MyColors.blue,
+          fontSize: 20,
+        )).toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
