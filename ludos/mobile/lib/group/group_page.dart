@@ -116,7 +116,7 @@ class _GroupPageState extends State<GroupPage> {
                         //edit group page
                       } else {
                         CustomWidgets.needLoginSnackbar(
-                            context, "Please log in to edit the game! ");
+                            context, "Please log in to edit the game! ", widget.userProvider);
                       }
                     },
                   ),
@@ -280,7 +280,7 @@ class _GroupPageState extends State<GroupPage> {
                   onPressed: () {
                     if (!widget.userProvider.isLoggedIn) {
                       CustomWidgets.needLoginSnackbar(
-                          context, "Please log in to join a group!");
+                          context, "Please log in to join a group!", widget.userProvider);
                     } else {
                       bool state = false;
                       Future<bool> executeAsyncActions() async {

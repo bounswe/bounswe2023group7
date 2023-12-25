@@ -249,7 +249,7 @@ class _GroupSummaryState extends State<GroupSummary> {
                   onPressed: () {
                     if (!widget.userProvider.isLoggedIn) {
                       CustomWidgets.needLoginSnackbar(
-                          context, "Please log in to join a group!");
+                          context, "Please log in to join a group!", widget.userProvider);
                     } else {
                       bool state = false;
                       Future<bool> executeAsyncActions() async {
