@@ -44,7 +44,7 @@ List<Widget> createTextWidgets(Map<String, dynamic> entityData) {
 
   if (entityData.isNotEmpty) {
     entityData.forEach((key, value) {
-      if (key != "image" && key != "description") {
+      if (key != "image" && key != "description" && key != "Image Link") {
         // Create a row with two boxes for key and value
         list.add(Container(
           margin: const EdgeInsets.only(
@@ -156,11 +156,11 @@ List<Widget> createTextWidgets(Map<String, dynamic> entityData) {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 if (entityData['content'] != null &&
-                    entityData['content']['image'] != null)
+                    (entityData['content']['image'] != null || entityData['content']['Image Link'] != null))
                   Image.network(
+                    entityData['content']['image'] ?? entityData['content']['Image Link'] ?? "",
                     width: 200,
                     height: 200,
-                    entityData['content']['image'].toString(),
                     errorBuilder: (BuildContext context, Object exception,
                         StackTrace? stackTrace) {
                       return const Text('');
@@ -168,10 +168,9 @@ List<Widget> createTextWidgets(Map<String, dynamic> entityData) {
                     fit: BoxFit.fill,
                   ),
                 const SizedBox(height: 20.0),
-                if (entityData['content'] != null &&
-                    entityData['content']['description'] != null)
+                if (entityData['description'] != null)
                   Text(
-                    entityData['content']['description'].toString(),
+                    entityData['description'].toString(),
                     style: const TextStyle(
                       color: MyColors.white,
                       fontWeight: FontWeight.bold,

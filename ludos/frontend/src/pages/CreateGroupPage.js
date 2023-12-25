@@ -236,8 +236,11 @@ const CreateGroupPage = () => {
               setValue(newValue);
             }}
             options={games.map((game) => game.title)}
-            onInputChange={(event, newInputValue) => {
-              setSearchKey(newInputValue);
+            onInputChange={(event, newInputValue, reason) => {
+              if (reason === "input") {
+                setSearchKey(newInputValue);
+                console.log("on input change");
+              }
             }}
             required
             renderInput={(params) => <TextField {...params} label="Game" />}
