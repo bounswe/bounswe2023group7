@@ -261,7 +261,7 @@ const CreateEntityForm = () => {
                 label="Description"
                 value={description}
                 onChange={(e) =>
-                  handleDescriptionChange(0, "value", e.target.value)
+                  handleDescriptionChange(e.target.value)
                 }
                 error={descriptionError}
                 helperText={
