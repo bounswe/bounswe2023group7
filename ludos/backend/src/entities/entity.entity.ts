@@ -23,6 +23,9 @@ export class Entity {
   @Column({ type: 'json', default: {} })
   content: object;
 
+  @Column({ nullable: true })
+  description: string;
+
   @Column()
   name: string;
 }

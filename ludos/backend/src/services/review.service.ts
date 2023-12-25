@@ -223,17 +223,12 @@ export class ReviewService {
   }
 
   public async getReviewById(
-    userId: string,
+    userId: string | null,
     reviewId: string,
   ): Promise<ReviewGetInfoResponseDto> {
     const review = await this.reviewRepository.findReviewInfoById(reviewId);
     if (!review) {
       throw new NotFoundException('Review Not Found!');
-    }
-
-    const loggedUser = await this.userRepository.findUserById(userId);
-    if (!loggedUser) {
-      throw new NotFoundException('User Not Found!');
     }
 
     const likedUserCount = review.likedUsers.length;
@@ -245,27 +240,25 @@ export class ReviewService {
       rating: review.rating,
       createdAt: review.createdAt,
       userId: review.user.id,
+      username: review.user.username,
       gameId: review.game.id,
       likedUserCount: likedUserCount,
       dislikedUserCount: dislikedUserCount,
-      isBelongToUser: review.user.id == loggedUser.id,
-      isLikedByUser: review.likedUsers.some((user) => user.id === userId),
-      isDislikedByUser: review.dislikedUsers.some((user) => user.id === userId),
+      isBelongToUser: userId && review.user.id == userId,
+      isLikedByUser:
+        userId && review.likedUsers.some((user) => user.id === userId),
+      isDislikedByUser:
+        userId && review.dislikedUsers.some((user) => user.id === userId),
     };
   }
 
   public async getReviewsByGameId(
-    userId: string,
+    userId: string | null,
     gameId: string,
   ): Promise<ReviewGetInfoResponseDto[]> {
     const game = await this.gameRepository.findGameById(gameId);
     if (!game) {
       throw new NotFoundException('Game Not Found!');
-    }
-
-    const loggedUser = await this.userRepository.findUserById(userId);
-    if (!loggedUser) {
-      throw new NotFoundException('User Not Found!');
     }
 
     const reviews = await this.reviewRepository.findReviewsByGame(game);
@@ -276,12 +269,15 @@ export class ReviewService {
       rating: review.rating,
       createdAt: review.createdAt,
       userId: review.user.id,
+      username: review.user.username,
       gameId: review.game.id,
       likedUserCount: review.likedUsers.length,
       dislikedUserCount: review.dislikedUsers.length,
-      isBelongToUser: review.user.id == loggedUser.id,
-      isLikedByUser: review.likedUsers.some((user) => user.id === userId),
-      isDislikedByUser: review.dislikedUsers.some((user) => user.id === userId),
+      isBelongToUser: userId && review.user.id == userId,
+      isLikedByUser:
+        userId && review.likedUsers.some((user) => user.id === userId),
+      isDislikedByUser:
+        userId && review.dislikedUsers.some((user) => user.id === userId),
     }));
     return mappedReviews;
   }
