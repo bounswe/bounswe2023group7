@@ -24,6 +24,7 @@ class Home extends StatefulWidget {
   final UserProvider userProvider;
   const Home({Key? key, required this.userProvider}) : super(key: key);
 
+
   @override
   State<Home> createState() => _HomeState();
 }
@@ -33,6 +34,7 @@ class _HomeState extends State<Home> {
   late Future<List<ThreadSummary>> threads;
   late Future<Map<String, dynamic>> userData;
   late Future<List<RecommendedGame>> recGameListforUser;
+
 
   @override
   initState() {
@@ -115,47 +117,50 @@ class _HomeState extends State<Home> {
 
   Future<Map<String, dynamic>> fetchUserData(
       UserProvider userProvider, String? token) async {
-    final response = await APIService().userInfo(userProvider.token!);
-    try {
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> userData = json.decode(response.body);
-        return userData;
-      } else {
+    if (userProvider.isLoggedIn) {
+      final response = await APIService().userInfo(userProvider.token!);
+      try {
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> userData = json.decode(response.body);
+          return userData;
+        } else {
+          throw Exception('Failed to load user data');
+        }
+      } catch (e) {
         throw Exception('Failed to load user data');
       }
     }
-    catch (e) {
-      return {};
-      //throw Exception('Failed to load user data');
-    }
+    return {};
   }
 
   Future<List<RecommendedGame>> loadRecGamesforUser(
       UserProvider userProvider, String? token) async {
-    final response = await APIService().getGameRecForUser(userProvider.token);
-    try {
-      if (response.statusCode == 200) {
-        final List<dynamic> gamesList = json.decode(response.body);
-        return gamesList
-            .map((dynamic item) => RecommendedGame(
-                title: item['title'],
-                averageRating: (item['averageRating'] == null
-                    ? 0
-                    : item['averageRating'].toDouble()),
-                coverLink: item['coverLink'],
-                id: item['id'],
-                token: token,
-                userProvider: userProvider))
-            .toList();
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
+    if (userProvider.isLoggedIn) {
+      final response = await APIService().getGameRecForUser(userProvider.token);
+      try {
+        if (response.statusCode == 200) {
+          final List<dynamic> gamesList = json.decode(response.body);
+          return gamesList
+              .map((dynamic item) => RecommendedGame(
+                  title: item['title'],
+                  averageRating: (item['averageRating'] == null
+                      ? 0
+                      : item['averageRating'].toDouble()),
+                  coverLink: item['coverLink'],
+                  id: item['id'],
+                  token: token,
+                  userProvider: userProvider))
+              .toList();
+        } else {
+          print("Error: ${response.statusCode} - ${response.body}");
+          throw Exception('Failed to load games');
+        }
+      } catch (error) {
+        print("Error: $error");
         throw Exception('Failed to load games');
       }
-    } catch (error) {
-      print("Error: $error");
-      return [];
-      // throw Exception('Failed to load games');
     }
+    return [];
   }
 
   @override

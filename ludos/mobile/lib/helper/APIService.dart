@@ -24,6 +24,8 @@ class APIService {
     print("token");
     print(token);
     print("token");
+
+    print("APICALL: login called");
     return res;
   }
 
@@ -37,6 +39,7 @@ class APIService {
     });
     final response = await http
         .post(uri, body: body, headers: {'content-type': "application/json"});
+    print("APICALL: signUp called");
     return response;
   }
 
@@ -51,6 +54,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: change password called");
     return response;
   }
 
@@ -93,7 +97,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: create game called");
     return response;
   }
 
@@ -116,7 +120,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: create thread called");
     return response;
   }
 
@@ -127,7 +131,7 @@ class APIService {
     });
     final response = await http
         .post(uri, body: body, headers: {'content-type': "application/json"});
-
+    print("APICALL: reset password called");
     return response;
   }
 
@@ -141,7 +145,7 @@ class APIService {
     });
     final response = await http
         .post(uri, body: body, headers: {'content-type': "application/json"});
-
+    print("APICALL: verify code called");
     return response;
   }
 
@@ -192,7 +196,7 @@ class APIService {
       'content-type': 'application/json',
       'Authorization': 'Bearer $authToken',
     });
-
+    print("APICALL: list games called");
     return response;
   }
 
@@ -204,6 +208,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: list search games called");
     return response;
   }
 
@@ -213,6 +218,8 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+
+    print("APICALL: list threads called");
     if (response.statusCode == 200) {
       return response;
     } else {
@@ -226,6 +233,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: follow game called");
     return response;
   }
 
@@ -235,6 +243,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: unfollow game called");
     return response;
   }
 
@@ -244,6 +253,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: userinfo called");
     return response;
   }
 
@@ -253,6 +263,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: userbyid called");
     return response;
   }
 
@@ -262,6 +273,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: get game called");
     if (response.statusCode == 200) {
       return json.decode(response.body) as Map<String, dynamic>;
     } else {
@@ -278,7 +290,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: create review called");
     return response;
   }
 
@@ -288,6 +300,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: like review called");
     return response;
   }
 
@@ -298,6 +311,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: dislike review called");
     return response;
   }
 
@@ -307,7 +321,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: like comment called");
     if (response.statusCode == 200) {
       return response;
     } else {
@@ -323,6 +337,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: dislike commnet called");
     if (response.statusCode == 200) {
       return response;
     } else {
@@ -336,7 +351,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: list reviews called");
     return response;
   }
 
@@ -346,6 +361,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: user info by id  called");
     return response;
   }
 
@@ -356,6 +372,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: get thread called");
     if (response.statusCode == 200) {
       return json.decode(response.body) as Map<String, dynamic>;
     } else {
@@ -369,6 +386,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: like thread called");
     return response;
   }
 
@@ -379,6 +397,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: dislike thread called");
     return response;
   }
 
@@ -393,6 +412,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: create comment called");
     return response;
   }
 
@@ -402,7 +422,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: list comments called");
     return response;
   }
 
@@ -413,7 +433,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: listallthreads called");
     return response;
   }
 
@@ -504,6 +524,7 @@ class APIService {
         'Authorization': 'Bearer $authToken',
         HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
       });
+      print("APICALL: list posts called");
 
       if (res.statusCode == 200) {
         // Add individual response to the list
@@ -560,7 +581,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: search called");
     return response;
   }
 
@@ -606,6 +627,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: edit game called");
     return response;
   }
 
@@ -616,6 +638,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: list treads by search called");
     if (response.statusCode == 200) {
       return response;
     } else {
@@ -642,6 +665,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: edit profile called");
     return response;
   }
 
@@ -653,7 +677,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: create rate called");
     return response;
   }
 
@@ -685,7 +709,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: create entity called");
     return response;
   }
 
@@ -696,7 +720,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: list entities by game called");
     return response;
   }
 
@@ -706,6 +730,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: get entity called");
     if (response.statusCode == 200) {
       return json.decode(response.body) as Map<String, dynamic>;
     } else {
@@ -719,7 +744,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: delete thread called");
     return response;
   }
 
@@ -743,7 +768,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: edit thread called");
     return response;
   }
 
@@ -753,7 +778,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: delete comment called");
     return response;
   }
 
@@ -767,7 +792,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: edit comment called");
     return response;
   }
 
@@ -778,6 +803,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: getgamerecc called");
     return response;
   }
 
@@ -787,6 +813,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: get game rec for the user called");
     return response;
   }
   
@@ -929,4 +956,5 @@ class APIService {
     });
     return response;
   }
+
 }
