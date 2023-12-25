@@ -393,6 +393,7 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
     return  WillPopScope(
         onWillPop: () async {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ForumPage(
+        gameName: threadData['game']['title'],
         gameid: threadData['game']['id'],
         token: widget.token,
         userProvider: widget.userProvider,
