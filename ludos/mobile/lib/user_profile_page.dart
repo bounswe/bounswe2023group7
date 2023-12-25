@@ -123,7 +123,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return WillPopScope(
       onWillPop: () async {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => Home(userProvider: widget.userProvider)));
         return false;
       },
       child: Scaffold(

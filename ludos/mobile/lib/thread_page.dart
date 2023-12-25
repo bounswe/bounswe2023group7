@@ -45,7 +45,6 @@ class _ThreadPageState extends State<ThreadPage>
   void initState()
   {
     super.initState();
-    fetchThreadData();
     comments = fetchCommentData(widget.token);
   }
 
