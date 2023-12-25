@@ -61,6 +61,11 @@ class _VisitUserPageState extends State<VisitUserPage> {
             });
           }
         }
+        /*
+        for (var i = 0; i < lastActivities!.length; i++) {
+          print(lastActivities![i]);
+        }
+        */
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
