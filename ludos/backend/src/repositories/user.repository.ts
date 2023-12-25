@@ -58,7 +58,7 @@ export class UserRepository extends Repository<User> {
       searchKey = searchKey.trim().replace(/ /g, ':* & ');
       searchKey += ':*';
       queryBuilder.andWhere(
-        `(to_tsvector(\'english\', users.username) @@ to_tsquery('${searchKey}') OR to_tsvector(\'english\', users.fullName) @@ to_tsquery('${searchKey}'))`,
+        `(to_tsvector(\'english\', users.username) @@ to_tsquery(\'english\','${searchKey}') OR to_tsvector(\'english\', users.fullName) @@ to_tsquery(\'english\','${searchKey}'))`,
       );
     }
     if (orderByKey) {
