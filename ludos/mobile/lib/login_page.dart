@@ -103,11 +103,11 @@ class LoginPageState extends State<LoginPage> {
                       userData = json.decode(userT.body);
                       typeOfUser = userData['userType'].toString();
                     }
-                    Provider.of<UserProvider>(context, listen: false)
+                    var userPrpvider = Provider.of<UserProvider>(context, listen: false)
                         .setLoggedIn(true, emailController.text, token.$1, typeOfUser);
 
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Home(),
+                      builder: (context) => Home(userProvider: userProvider),
                     ));
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

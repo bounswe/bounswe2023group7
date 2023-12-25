@@ -3,13 +3,44 @@ import TrendingGamesSlider from "../components/TrendingGamesSlider";
 import Game1 from "../assets/witcher3.jpg";
 import Game2 from "../assets/sims4.png";
 import Game3 from "../assets/Tekken5Cover.jpg";
-import { Typography, Container } from "@mui/material";
+import { Typography, Container, Grid } from "@mui/material";
 import ForumTopic from "../components/ForumTopic";
 import GroupTopic from "../components/GroupTopic";
 import axios from "axios";
 
+const convertToSlug = (text) => {
+  return text
+    ?.toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+    .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+    .replace(/--+/g, "-"); // Replace multiple dashes with single dash
+};
+
 const Homepage = () => {
   const [trendingTopics, setTrendingTopics] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [suggestedGames, setSuggestedGames] = useState([]);
+  useEffect(() => {
+    fetchTrendingTopics();
+    fetchSuggestedGames();
+    const link = `http://${process.env.REACT_APP_API_URL}/group?limit=3&page=1&order=DESC&orderByKey=maxNumberOfMembers`;
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data.items);
+        setGroups(response.data.items);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   /*
   const trendTopics = [
     {
@@ -45,6 +76,24 @@ const Homepage = () => {
     // Add more topics as needed...
   ];
 */
+
+  const mockSuggestedGames = [
+    {
+      title: "Sims 3",
+      coverLink:
+        "https://upload.wikimedia.org/wikipedia/tr/6/6f/Sims3cover.jpg",
+    },
+    {
+      title: "Undertale",
+      coverLink:
+        "https://cdn.cloudflare.steamstatic.com/steam/apps/391540/capsule_616x353.jpg?t=1579096091",
+    },
+    {
+      title: "Super Mario",
+      coverLink:
+        "https://upload.wikimedia.org/wikipedia/en/a/a9/MarioNSMBUDeluxe.png",
+    },
+  ];
   const groupTopics = [
     {
       title: "GameZone Guild",
@@ -103,6 +152,34 @@ const Homepage = () => {
     },
   });
 
+  const fetchSuggestedGames = async () => {
+    try {
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_API_URL}/user/suggested`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        },
+      );
+      let suggestedGamesData = response.data;
+
+      // Check if there are more than 3 suggested games, then select 3 randomly
+      if (suggestedGamesData.length > 3) {
+        const shuffledGames = suggestedGamesData.sort(
+          () => Math.random() - 0.5,
+        );
+        suggestedGamesData = shuffledGames.slice(0, 3);
+      }
+
+      // Update suggestedGames state with the selected 3 games
+      setSuggestedGames(suggestedGamesData);
+      console.log(suggestedGamesData);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
   const fetchTrendingTopics = async () => {
     const options = {
       year: "numeric",
@@ -123,6 +200,7 @@ const Homepage = () => {
         title: topic.title,
         numOfReplies: topic.numOfReplies,
         userOpened: topic.user.username,
+        imgsrc: topic.user.avatar,
         whenOpened: new Date(topic.createdAt).toLocaleDateString(
           "en-US",
           options,
@@ -131,6 +209,10 @@ const Homepage = () => {
         forumGame: topic.game.title,
         id: topic.id,
         userId: topic.user.id,
+        isUpcomingTitle:
+          topic.upcomingTitle != null
+            ? topic.upcomingTitle.isUpcomingTitle
+            : false,
       }));
       console.log("Trending Topics: ", formattedTopics);
 
@@ -141,15 +223,142 @@ const Homepage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchTrendingTopics();
-  }, []);
-
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
       {/* Other homepage content */}
 
       <TrendingGamesSlider games={games} />
+      {/* Suggested Games Grid */}
+      <Grid
+        style={{
+          backgroundColor: "rgba(30, 30, 30, 0.9)",
+          padding: "20px",
+        }}
+      >
+        <Typography
+          variant="h3"
+          gutterBottom
+          align="center"
+          style={{
+            fontWeight: "bold",
+            color: "white",
+            fontFamily: "Trebuchet MS, sans-serif",
+          }}
+        >
+          Suggested Games for You!
+        </Typography>
+        <Grid
+          container
+          justifyContent="center"
+          style={{
+            padding: "20px",
+          }}
+        >
+          {suggestedGames && suggestedGames.length > 0
+            ? suggestedGames.map((game, index) => (
+                <Grid
+                  item
+                  key={index}
+                  xs={12}
+                  sm={4}
+                  md={4}
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    borderRadius: "10px",
+                    padding: "10px",
+                    margin: "10px",
+                    textAlign: "center",
+                    maxWidth: "25%",
+                    justifyContent: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <a
+                    href={`/game/${convertToSlug(game.title)}`}
+                    style={{
+                      textDecoration: "none",
+                      maxWidth: "33.33%",
+                      color: "inherit",
+                    }}
+                  >
+                    <img
+                      src={game.coverLink}
+                      alt={game.title}
+                      style={{
+                        maxWidth: "100%",
+                        height: "150px",
+                        marginBottom: "10px",
+                      }}
+                    />
+                  </a>
+                  <a
+                    href={`/game/${convertToSlug(game.title)}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
+                    <Typography variant="h6" style={{ color: "#fff" }}>
+                      {game.title}
+                    </Typography>
+                  </a>
+                </Grid>
+              ))
+            : mockSuggestedGames.map((game, index) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  md={4}
+                  key={index}
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    borderRadius: "10px",
+                    padding: "10px",
+                    margin: "10px",
+                    textAlign: "center",
+                    maxWidth: "25%",
+                    justifyContent: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <a
+                    href={`/game/${convertToSlug(game.title)}`}
+                    style={{
+                      textDecoration: "none",
+                      maxWidth: "33.33%",
+                      color: "inherit",
+                    }}
+                  >
+                    <img
+                      src={game.coverLink}
+                      alt={game.title}
+                      style={{
+                        maxWidth: "100%",
+                        height: "150px",
+                        marginBottom: "10px",
+                      }}
+                    />
+                  </a>
+                  <a
+                    href={`/game/${convertToSlug(game.title)}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
+                    <Typography variant="h6" style={{ color: "#fff" }}>
+                      {game.title}
+                    </Typography>
+                  </a>
+                </Grid>
+              ))}
+        </Grid>
+      </Grid>
       {/* Other sections */}
       <div
         style={{
@@ -218,7 +427,7 @@ const Homepage = () => {
             <div
               style={{ gap: "16px", display: "flex", flexDirection: "column" }}
             >
-              {groupTopics.map((topic, index) => (
+              {groups.map((topic, index) => (
                 <GroupTopic key={index} topic={topic} />
               ))}
             </div>

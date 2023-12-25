@@ -62,7 +62,7 @@ export class GameRepository extends Repository<Game> {
       searchKey = searchKey.trim().replace(/ /g, ':* & ');
       searchKey += ':*';
       queryBuilder.andWhere(
-        `to_tsvector(\'english\', games.title) @@ to_tsquery('${searchKey}')`,
+        `to_tsvector(\'english\', games.title) @@ to_tsquery(\'english\','${searchKey}')`,
       );
     }
     if (tags) {
@@ -89,6 +89,7 @@ export class GameRepository extends Repository<Game> {
     if (orderByKey) {
       queryBuilder.orderBy(`games_${orderByKey}`, order);
     }
+    console.log(queryBuilder.getQuery());
     const paginationResult = await paginate<Game>(queryBuilder, {
       page,
       limit,
@@ -128,10 +129,11 @@ export class GameRepository extends Repository<Game> {
     return this.metadata.relations.map((relation) => relation.propertyName);
   }
 
-
-  public async getRelatedGames(gameId: string, tags: string[]): Promise<Game[]> {
-    
-    const tagArray = tags.map(tag => `'${tag}'`).join(',');
+  public async getRelatedGames(
+    gameId: string,
+    tags: string[],
+  ): Promise<Game[]> {
+    const tagArray = tags.map((tag) => `'${tag}'`).join(',');
     const query = `
       SELECT *,
         (SELECT COUNT(*) FROM UNNEST(games.tags) tag WHERE tag = ANY(ARRAY[${tagArray}])) AS match_count

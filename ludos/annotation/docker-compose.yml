@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  annotation:
+    image: ludos-annotation
+    build: .
+    command: "npm run start:dev"
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 8090:8090
+    links:
+      - postgres
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 45432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=annotation
+volumes:
+  postgres:

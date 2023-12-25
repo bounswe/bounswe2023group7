@@ -1,12 +1,118 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Container, Grid, Box, Typography } from "@mui/material";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { Recogito } from "@recogito/recogito-js";
+
+const axiosInstance = axios.create({
+  baseURL: `http://${process.env.REACT_APP_API_URL}`,
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("accessToken"),
+  },
+});
+
 
 function EntityPage() {
+  const [shortEntityFeatures, setShortEntityFeatures] = useState({});
+  const [longEntityFeatures, setLongEntityFeatures] = useState({});
   const [entity, setEntity] = useState({});
   let { entityId } = useParams();
-  console.log(entity);
+
+  const entityAnnotatorRef = useRef(null);
+
+  useEffect(() => {
+    if (entity && entity.description) {
+      entityAnnotatorRef.current = new Recogito({
+        content: "entity-description",
+      });
+
+      fetchAnnotations();
+
+      entityAnnotatorRef.current.on(
+        "createAnnotation",
+        handleCreateAnnotation,
+      );
+
+    }
+  })
+
+  const handleCreateAnnotation = async (annotation) => {
+    // Prepare your API request body
+    const requestBody = {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      type: "Annotation",
+      body: annotation.body[0].value, // You might need to format this according to your backend expectations
+      tags: annotation.tags,
+      target: {
+        source: window.location.href,
+        selector: {
+          start: annotation.target.selector[1].start, // Starting character index
+          end: annotation.target.selector[1].end, // Ending character index
+        },
+      },
+    };
+
+    // Make the API call to your server
+    try {
+      const response = await axios.post(
+        `http://${process.env.REACT_APP_API_URL}/annotation/entity/${entity?.id}`,
+        requestBody,
+      );
+      console.log("Annotation saved:", response.data);
+    } catch (error) {
+      console.error("Error saving annotation:", error);
+    }
+  };
+
+  const fetchAnnotations = async () => {
+    try {
+      await axiosInstance.get(`/annotation/entity/${entityId}`)
+        .then((response) => {
+
+          if (response.data) {
+            displayEntityDescAnnotations(response.data);
+          }
+        })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  const displayEntityDescAnnotations = (entityDescAnnotation) => {
+    if (entityAnnotatorRef.current) {
+      entityDescAnnotation.forEach((annotation) => {
+        console.log("annotator annotation", annotation);
+        entityAnnotatorRef.current.addAnnotation({
+          "@context": "http://www.w3.org/ns/anno.jsonld",
+          type: "Annotation",
+          id: annotation.id,
+          body: [
+            {
+              type: "TextualBody",
+              value: annotation.body,
+              purpose: "commenting",
+            },
+          ],
+          target: {
+            selector: [
+              {
+                type: "TextQuoteSelector",
+                exact: annotation.body,
+              },
+              {
+                type: "TextPositionSelector",
+                start: annotation.target.selector.start,
+                end: annotation.target.selector.end,
+              },
+            ],
+          },
+        });
+      });
+    }
+  }
+
+
 
   useEffect(() => {
     const link = `http://${process.env.REACT_APP_API_URL}/entity/${entityId}`;
@@ -19,12 +125,42 @@ function EntityPage() {
       })
       .then((response) => {
         setEntity(response.data);
-        console.log(response.data);
+        let shorts = {};
+        let longs = {};
+        Object.keys(response.data?.content).map((keyName) => {
+          if (
+            response.data.content[keyName].length < 50 &&
+            keyName !== "image"
+          ) {
+            shorts = {
+              ...shorts,
+              [keyName]: response.data?.content[keyName],
+            };
+          } else if (keyName !== "image") {
+            longs = {
+              ...longs,
+              [keyName]: response.data?.content[keyName],
+            };
+          }
+          setShortEntityFeatures(shorts);
+          setLongEntityFeatures(longs);
+          setEntity(response.data);
+        });
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+
+  const convertToSlug = (text) => {
+    return text
+      ?.toString()
+      ?.toLowerCase()
+      ?.trim()
+      ?.replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+      ?.replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+      ?.replace(/--+/g, "-"); // Replace multiple dashes with single dash
+  };
 
   const headerStyle = {
     marginBottom: "8px",
@@ -92,62 +228,88 @@ function EntityPage() {
             alt={entity?.name}
             style={{ height: 350, width: 250 }}
           />
-          {entity?.content &&
-            Object.keys(entity?.content).map((keyName, i) =>
-              keyName === "image" ? null : (
-                <Box style={smallBoxStyle} key={i}>
-                  <Typography
-                    component="legend"
-                    style={{ fontFamily: "Trebuchet MS, sans-serif" }}
-                  >
-                    {keyName}: {entity?.content[keyName]}
-                  </Typography>
-                </Box>
-              ),
-            )}
+          <Box style={smallBoxStyle}>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              <Link
+                style={{ color: smallBoxStyle.color, textDecoration: "none" }}
+                to={`/game/${convertToSlug(entity.game?.title)}`}
+              >
+                Game: {entity.game?.title}
+              </Link>
+            </Typography>
+          </Box>
+          <Box style={smallBoxStyle}>
+            <Typography
+              component="legend"
+              style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+            >
+              Entity Type:{" "}
+              {entity.type?.charAt(0).toUpperCase() + entity.type?.slice(1)}
+            </Typography>
+          </Box>
+          {Object.keys(shortEntityFeatures).map((keyName, i) => (
+            <Box style={smallBoxStyle} key={i}>
+              <Typography
+                component="legend"
+                style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+              >
+                {keyName}: {shortEntityFeatures[keyName]}
+              </Typography>
+            </Box>
+          ))}
         </Grid>
         <Grid item xs={12} sm={8} md={8} lg={8} style={{ width: "100%" }}>
-          <Typography
-            variant="body1"
-            color="white"
-            align="left"
-            style={{
-              marginBottom: "8px",
-              fontFamily: "Trebuchet MS, sans-serif",
-              marginLeft: "2%",
-            }}
-          >
-            {entity.bio}
-            {
-              "Nina Williams (ニーナ・ウィリアムズ Nīna Wiriamuzu?) is a cold-blooded Irish assassin that made her first appearance in the original Tekken game and has appeared in every Tekken game since. Nina has a lethal fighting style, consisting of throws, grapples, and holds. She has an infamous rivalry with her younger sister, Anna Williams."
-            }
-          </Typography>
           <Typography
             variant="h5"
             color="gray"
             align="left"
             style={headerStyle}
           >
-            STORY
+            Description
           </Typography>
           <Typography
             variant="body1"
             color="white"
             align="left"
+            component="div"
+            id="entity-description"
             style={{
               marginBottom: "8px",
               fontFamily: "Trebuchet MS, sans-serif",
               marginLeft: "2%",
             }}
           >
-            Nina and her younger sister are from a family of assassins hailing
-            from the Republic of Ireland. Nina was trained in assassination arts
-            by her father and in aikido by her mother. Anna was trained
-            alongside Nina, and the two developed a deadly rivalry, often
-            attempting to humiliate or kill one another.
+            {entity?.description}
           </Typography>
+
+          {Object.keys(longEntityFeatures).map((keyName) => (
+            <>
+              <Typography
+                variant="h5"
+                color="gray"
+                align="left"
+                style={headerStyle}
+              >
+                {keyName}
+              </Typography>
+              <Typography
+                variant="body1"
+                color="white"
+                align="left"
+                style={{
+                  marginBottom: "8px",
+                  fontFamily: "Trebuchet MS, sans-serif",
+                  marginLeft: "2%",
+                }}
+              >
+                {longEntityFeatures[keyName]}
+              </Typography>
+            </>
+          ))}
         </Grid>
-        <Grid style={{ width: "100%" }}></Grid>
       </Grid>
     </Container>
   );

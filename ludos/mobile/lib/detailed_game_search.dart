@@ -46,19 +46,19 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
     super.initState();
   }
 
-  void updateCriteria(){
-    setState((){
-      if (orderByFollowers == true){
-        criteria = 'followers';
-      }
-      else if (orderByRatings == true){
-        criteria = 'ratings';
-      }
-      else {
-        criteria = '';
-      }
-    });
-  }
+    void updateCriteria(){
+      setState((){
+        if (orderByFollowers == true){
+          criteria = 'followers';
+        }
+        else if (orderByRatings == true){
+          criteria = 'ratings';
+        }
+        else {
+          criteria = '';
+        }
+      });
+    }
 
   void updateShowState() {
     setState(() {
@@ -66,25 +66,6 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
     });
   }
 
-  /*
-  Future<void> _performSearch() async {
-    // Extract values from TextEditingControllers
-    String tags = tagsController.text;
-    String platforms = platformsController.text;
-    String publisher = publisherController.text;
-    String developer = developerController.text;
-
-    // Call the listGames method with the parameters
-    await listGames(
-      widget.userProvider.token,
-      searchKey: searchText,
-      tags: tags,
-      platforms: platforms,
-      publisher: publisher,
-      developer: developer,
-    );
-  }
-*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +73,7 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
         title: const Text(
-          'Search',
+          'Search Games',
           style: TextStyle(
             color: MyColors.white,
             fontSize: 20,
@@ -256,10 +237,9 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
 
                       onChanged: (value) {
                         setState(() {
-                          print(widget.userProvider.username);
                           if(widget.userProvider.username == ''){
                             SnackBar snackBar = SnackBar(
-                              content: Text('You must be logged in to use this feature'),
+                              content: const Text('You must be logged in to use this feature'),
                               backgroundColor: MyColors.red,
                             );
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);

@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:ludos_mobile_app/reusable_widgets/like_dislike_button.dart';
 import '../game_page.dart';
 import '../helper/APIService.dart';
 import '../thread_page.dart';
@@ -16,11 +18,12 @@ class ThreadSummary extends StatefulWidget {
   final String title;
   final String userId;
   final String username;
-   int? thumbUps;
-   int? thumbDowns;
+  final String userAvatar;
+  final int thumbUps;
+  final int thumbDowns;
   final String time;
-  bool isLiked;
-  bool isDisliked;
+  final bool isLiked;
+  final bool isDisliked;
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
@@ -37,6 +40,7 @@ class ThreadSummary extends StatefulWidget {
     required this.userId,
     required this.title,
     required this.username,
+    required this.userAvatar,
     required this.thumbUps,
     required this.thumbDowns,
     required this.time,
@@ -50,37 +54,37 @@ class ThreadSummary extends StatefulWidget {
 
   @override
   State<ThreadSummary> createState() => _ThreadSummaryState(
-    game: game,
-    gameId: gameId,
-    title: title,
-    userId: userId,
-    username: username,
-    thumbUps: thumbUps,
-    thumbDowns: thumbDowns,
-    time: time,
-    isLiked: isLiked,
-    isDisliked: isDisliked,
-    textColor: textColor,
-    backgroundColor: backgroundColor,
-    fontSize: fontSize,
-    userProvider: userProvider,
-    token: token,
-    threadId: threadId,
-  );
+        game: game,
+        gameId: gameId,
+        title: title,
+        userId: userId,
+        username: username,
+        userAvatar: userAvatar,
+        thumbUps: thumbUps,
+        thumbDowns: thumbDowns,
+        time: time,
+        isLiked: isLiked,
+        isDisliked: isDisliked,
+        textColor: textColor,
+        backgroundColor: backgroundColor,
+        fontSize: fontSize,
+        userProvider: userProvider,
+        token: token,
+        threadId: threadId,
+      );
 }
 
 class _ThreadSummaryState extends State<ThreadSummary> {
-  bool isLikedIn = false;
-  bool isDislikedIn = false;
-  bool isLiked;
-  bool isDisliked;
+  final bool isLiked;
+  final bool isDisliked;
   final String game;
   final String gameId;
   final String title;
   final String userId;
   final String username;
-   int? thumbUps;
-   int? thumbDowns;
+  final String userAvatar;
+  final int thumbUps;
+  final int thumbDowns;
   final String time;
   final Color textColor;
   final Color backgroundColor;
@@ -97,6 +101,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
     required this.title,
     required this.userId,
     required this.username,
+    required this.userAvatar,
     required this.thumbUps,
     required this.thumbDowns,
     required this.time,
@@ -109,12 +114,8 @@ class _ThreadSummaryState extends State<ThreadSummary> {
   });
 
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
-      isLikedIn = isLiked;
-      isDislikedIn = isDisliked;
-      setState(() { });
   }
 
   String timeAgo(String timestamp) {
@@ -142,71 +143,13 @@ class _ThreadSummaryState extends State<ThreadSummary> {
     }
   }
 
-  Future<void> userPressed(bool like) async {
-    if (like && isDislikedIn) {
-      try {
-        await APIService().likeThread(
-            widget.token, widget.threadId);
-      } catch (e) {
-        throw Exception('Failed to like thread');
-      }
-      isDislikedIn = false;
-      isLikedIn = true;
-    } else if (!like && isDislikedIn) {
-      try {
-        await APIService().dislikeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to dislike thread');
-      }
-      isLikedIn = false;
-      isDislikedIn = false;
-    } else if (!like && isLikedIn) {
-      try {
-        await APIService().dislikeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to dislike thread');
-      }
-      isLikedIn = false;
-      isDislikedIn = true;
-    } else if (like && isLikedIn) {
-      try {
-         await APIService().likeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to like thread');
-      }
-      isLikedIn = false;
-      isDislikedIn = false;
-    } else if (like) {
-      try {
-        await APIService().likeThread(
-            widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to like thread');
-      }
-      isLikedIn = true;
-    } else {
-      try {
-          await APIService().dislikeThread(
-              widget.token, widget.threadId);
-      } catch(e) {
-        throw Exception('Failed to dislike thread');
-      }
-      isDislikedIn = true;
-    }
-    setState(() {
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
+              backgroundColor: backgroundColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               )),
@@ -214,109 +157,108 @@ class _ThreadSummaryState extends State<ThreadSummary> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ThreadPage(threadId: widget.threadId, token: widget.token, userProvider: widget.userProvider),
+                builder: (context) => ThreadPage(
+                    threadId: widget.threadId,
+                    token: widget.token,
+                    userProvider: widget.userProvider),
               ),
             );
           },
           child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:
-                  [
-                    TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            MyColors.darkBlue),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => GamePage(
-                                id: gameId,
-                                token: widget.token,
-                                userProvider: widget.userProvider,
-                                onRefresh: () {},
-                            ),
+            children: [
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(MyColors.darkBlue),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GamePage(
+                            id: gameId,
+                            token: widget.token,
+                            userProvider: widget.userProvider,
+                            onRefresh: () {},
                           ),
-                        );
-                      },
-                      child: Text(
-                          game,
-                          style: TextStyle(color: MyColors.white, fontSize: 15.0,)
-                      ),
-                    ),
-                    SizedBox(width: 5.0),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            MyColors.darkBlue),
-                      ),
-                      child: Text(
-                        '@$username', //may need to navigate also the user
-                        style: const TextStyle(
-                          color: MyColors.orange,
+                        ),
+                      );
+                    },
+                    child: Text(game,
+                        style: TextStyle(
+                          color: MyColors.white,
                           fontSize: 15.0,
+                        )),
+                  ),
+                  SizedBox(width: 5.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(MyColors.darkBlue),
                         ),
+                        child: Text(
+                          '@$username', //may need to navigate also the user
+                          style: const TextStyle(
+                            color: MyColors.orange,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => VisitUserPage(
+                                userProvider: userProvider,
+                                username: widget.username,
+                                id: widget.userId),
+                          ));
+                        },
                       ),
-                      onPressed: () { Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => VisitUserPage(userProvider: userProvider, username: widget.username, id: widget.userId ),
-                      )); },
-                    ),
-                  ],
+                      CircleAvatar(
+                                radius: 30,
+                                backgroundColor: MyColors.darkBlue,
+                                child: CircleAvatar(
+                                  radius: 28,
+                                  backgroundImage: userAvatar != ""
+                                      ? NetworkImage(userAvatar!)
+                                      : const AssetImage('assets/images/ludos_transparent.png') as ImageProvider,
+                                ),
+                              ),
+                    ],
+                  )
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.all(15.0),
+                child: Text(
+                  title,
+                  softWrap: true,
+                  style: const TextStyle(
+                    color: MyColors.darkBlue,
+                    fontSize: 20.0,
+                  ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                        title,
-                        softWrap: true,
-                        style: const TextStyle(
-                          color: MyColors.darkBlue,
-                          fontSize: 20.0,
-                        ),
-                      ),
-                  ),
-                const Divider(
-                  height: 3.0,
-                  thickness: 3.0,
-                  color: MyColors.darkBlue,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      onPressed: () => setState(() {
-                      if(!widget.userProvider.isLoggedIn){
-                        CustomWidgets.needLoginSnackbar(context, "Please log in to like a thread! ");
-                      } else {
-                        userPressed(true);
-
-                      }
-                      }),
-                      icon: Icon(
-                        Icons.thumb_up,
-                        color: isLikedIn ? Colors.green : Colors.white,
-                        ),
-                  ),
-                    Text(
-                        thumbUps.toString()
-                    ),
-                    IconButton(
-                      onPressed: () => setState(() {
-                        if(!widget.userProvider.isLoggedIn){
-                          CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a thread! ");
-                          } else {
-                            userPressed(false);
-                          }
-                          }),
-                      icon: Icon(
-                        Icons.thumb_down,
-                        color: isDislikedIn ? Colors.red : Colors.white,
-                    ),
-                  ),
-                    Icon(Icons.comment),
+              ),
+              const Divider(
+                height: 3.0,
+                thickness: 3.0,
+                color: MyColors.darkBlue,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  LikeDislikeButton(
+                      numberOfLikes: (thumbUps - thumbDowns),
+                      isLiked: isLiked,
+                      isDisliked: isDisliked,
+                      userProvider: userProvider,
+                      id: threadId,
+                      token: token),
                   Text(
                     timeAgo(time),
                     style: TextStyle(color: Colors.white),
@@ -330,7 +272,7 @@ class _ThreadSummaryState extends State<ThreadSummary> {
           color: MyColors.darkBlue,
           child: const SizedBox(height: 20.0),
         ),
-    ],
+      ],
     );
   }
 }

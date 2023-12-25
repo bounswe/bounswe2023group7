@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Recogito } from "@recogito/recogito-js";
+import "@recogito/recogito-js/dist/recogito.min.css";
 import { Grid, Box, Typography, TextField, Button } from "@mui/material";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
@@ -45,7 +47,33 @@ const ThreadPage = () => {
   const [numDislikes, setNumDislikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
+  const [isUpcomingTitle, setIsUpcomingTitle] = useState(false);
+  const [launchingDate, setLaunchingDate] = useState("");
+  const [demoLink, setDemoLink] = useState("");
   //const [ownerId, setOwnerId] = useState("");
+  const onAnnotationCreated = async (annotation) => {
+    const postData = formatAnnotationData(annotation);
+    //await sendAnnotationData(postData, "create");
+  };
+
+  const formatAnnotationData = (annotation) => {
+    console.log("annotation start", annotation.start);
+    console.log("annotation end", annotation.end);
+    console.log("annotation", annotation);
+    console.log("source", window.location.href);
+    return {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      type: "Annotation",
+      body: annotation.body[0].value,
+      target: {
+        source: window.location.href,
+        selector: {
+          start: annotation.target.selector[1].start, // Adjust based on your specific requirements
+          end: annotation.target.selector[1].end, // Adjust based on your specific requirements
+        },
+      },
+    };
+  };
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -127,6 +155,20 @@ const ThreadPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const element = document.getElementById(`title-thread-${threadId}`);
+
+    if (element) {
+      console.log("!");
+      const annotator = new Recogito({
+        content: `title-thread-${threadId}`, // ID of the element that contains the text
+      });
+
+      annotator.on("createAnnotation", onAnnotationCreated);
+      //annotator.on("updateAnnotation", onAnnotationUpdated);
+      //annotator.on("deleteAnnotation", onAnnotationDeleted);
+
+      return () => annotator.destroy();
+    }
   }, []);
 
   //console.log(threadId);
@@ -147,9 +189,20 @@ const ThreadPage = () => {
         setNumDislikes(response.data.numberOfDislikes);
         setIsDisliked(response.data.isDisliked);
         setIsLiked(response.data.isLiked);
+
+        if (response.data.upcomingTitle != null) {
+          setIsUpcomingTitle(response.data.upcomingTitle.isUpcomingTitle);
+          setDemoLink(response.data.upcomingTitle.demoLink);
+          setLaunchingDate(response.data.upcomingTitle.launchingDate);
+          //console.log("upcoming", response.data.upcomingTitle.isUpcomingTitle);
+        } else {
+          setIsUpcomingTitle(false);
+        }
+
         //setOwnerId(response.data.user.id);
         console.log(response.data);
-        setLoading(false); // Set loading to false when data is fetched
+        setLoading(false); // Set loading to false when data is fetched}
+
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching thread details:", error);
@@ -161,7 +214,7 @@ const ThreadPage = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Display a loading message while fetching data
+    return <h1 style={{ color: "white" }}>Loading...</h1>; // Display a loading message while fetching data
   }
 
   if (!threadDetails) {
@@ -195,6 +248,16 @@ const ThreadPage = () => {
     padding: "5px",
     marginBottom: "8px",
     fontWeight: "bold",
+  };
+
+  const upcomingStyle = {
+    backgroundColor: "green",
+    color: "white",
+    borderRadius: "10px",
+    padding: "3px",
+    marginBottom: "8px",
+    fontWeight: "bold",
+    alignSelf: "flex-start",
   };
   const sortedComments = comments.slice().sort((a, b) => {
     const dateA = new Date(a.timestamp);
@@ -230,6 +293,7 @@ const ThreadPage = () => {
                 {threadDetails?.game?.title}
               </Typography>
             </a>
+
             <Grid style={{ display: "flex" }}>
               {threadDetails?.tags &&
                 threadDetails?.tags.map((data1, index1) => (
@@ -246,6 +310,7 @@ const ThreadPage = () => {
           </Grid>
           <Typography
             variant="h4"
+            id={`title-thread-${threadId}`}
             component="div"
             style={{
               color: "white",
@@ -256,6 +321,65 @@ const ThreadPage = () => {
           >
             {threadDetails?.title}
           </Typography>
+
+          {isUpcomingTitle && (
+            <>
+              <Typography variant="body2" component="div" style={upcomingStyle}>
+                Upcoming Title
+              </Typography>
+              <Grid
+                spacing={2}
+                style={{
+                  paddingBottom: "1rem",
+                  alignItems: "center",
+                  display: "flex",
+                  gap: "16px",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <Grid item xs={12}>
+                  <Typography
+                    variant="body1"
+                    component="div"
+                    style={{ color: "green", fontWeight: "600" }}
+                  >
+                    Launching Date:{" "}
+                    <span style={{ color: "white" }}>
+                      {" "}
+                      {new Date(launchingDate).toLocaleDateString(
+                        "en-US",
+                        options,
+                      )}
+                    </span>
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <a
+                    href={demoLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      textDecoration: "none",
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      component="div"
+                      style={{
+                        color: "white",
+                        fontWeight: "600",
+                        padding: "4px",
+                        backgroundColor: "green",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      View Demo
+                    </Typography>
+                  </a>
+                </Grid>
+              </Grid>
+            </>
+          )}
           <Grid
             style={{
               display: "flex",
@@ -335,6 +459,9 @@ const ThreadPage = () => {
               threadId={threadId}
               isLiked={isLiked}
               isDisliked={isDisliked}
+              isUpcomingTitle={isUpcomingTitle}
+              launchingDate={launchingDate}
+              demoLink={demoLink}
             />
 
             {/* Display comments */}

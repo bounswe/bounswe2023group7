@@ -19,6 +19,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import Gamer from "../assets/gamer.png";
 import Developer from "../assets/developer.png";
 import EsportPlayer from "../assets/esportplayer.png";
+import GroupTopic from "../components/GroupTopic";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -125,15 +126,11 @@ function ProfilePage() {
           },
         })
         .then((response) => {
-          console.log("BUGCHECK");
-          console.log(username);
-          console.log(response.data.id);
           if (response.data.id === username || username === undefined) {
             setMyProfile(true);
             setProfile(response.data);
             setAvatarImage(response.data.avatar);
             setUserType(response.data.userType);
-            setGroups(response.data.groups);
             setFormData({
               fullName: response.data.fullName,
               steamUrl: response.data.steamUrl,
@@ -144,8 +141,20 @@ function ProfilePage() {
             } else {
               setFavGames(response.data.followedGames);
             }
-            console.log(favGames);
-            console.log(response.data);
+            const link3 = `http://${process.env.REACT_APP_API_URL}/group?page=1&adminId=${response.data.id}`;
+            axios
+              .get(link3, {
+                headers: {
+                  Authorization:
+                    "Bearer " + localStorage.getItem("accessToken"),
+                },
+              })
+              .then((response) => {
+                setGroups(response.data.items);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           } else {
             const link1 = `http://${process.env.REACT_APP_API_URL}/user/byId/${username}`;
 
@@ -159,7 +168,6 @@ function ProfilePage() {
               .then((response1) => {
                 setProfile(response1.data);
                 setUserType(response1.data.userType);
-                setGroups(response.data.groups);
                 setAvatarImage(response1.data.avatar);
                 setFormData({
                   fullName: response1.data.fullName,
@@ -171,6 +179,20 @@ function ProfilePage() {
                 } else {
                   setFavGames(response1.data.followedGames);
                 }
+                const link3 = `http://${process.env.REACT_APP_API_URL}/group?page=1&adminId=${response1.data.id}`;
+                axios
+                  .get(link3, {
+                    headers: {
+                      Authorization:
+                        "Bearer " + localStorage.getItem("accessToken"),
+                    },
+                  })
+                  .then((response) => {
+                    setGroups(response.data.items);
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
               })
               .catch((error) => {
                 console.log(error);
@@ -306,6 +328,19 @@ function ProfilePage() {
     borderRadius: "15px",
     width: "auto",
     height: "73%",
+    marginTop: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    display: "flex",
+    padding: "10px", // Add padding to give some space between the content and the border
+  };
+  const genreBoxStyleOther = {
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    color: "rgb(0, 150, 255)",
+    borderRadius: "15px",
+    width: "auto",
+    height: "85%",
     marginTop: "10px",
     justifyContent: "center",
     alignItems: "center",
@@ -758,7 +793,11 @@ function ProfilePage() {
                 My Groups
               </Typography>
             </Grid>
-            {/** Groups will be displayed with group topics */}
+            <Grid style={{ width: "98%", marginLeft: "1%" }}>
+              {groups.map((group, index1) => (
+                <GroupTopic key={index1} topic={group} />
+              ))}
+            </Grid>
           </Grid>
         </Container>
       ) : (
@@ -940,7 +979,14 @@ function ProfilePage() {
                   }}
                 ></Grid>
               </Grid>
-              <Grid item xs={12} sm={12} md={12} lg={12} style={genreBoxStyle}>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
+                style={genreBoxStyleOther}
+              >
                 <Typography
                   component="legend"
                   style={{
@@ -1012,9 +1058,12 @@ function ProfilePage() {
                   src={game.coverLink}
                 />
                 <Typography
-                  component="legend"
                   onClick={() => handleClick(game.title)}
-                  style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+                  component="legend"
+                  style={{
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    cursor: "pointer",
+                  }}
                   color="white"
                 >
                   {game.title}
@@ -1042,7 +1091,11 @@ function ProfilePage() {
                 Groups of the User
               </Typography>
             </Grid>
-            {/** Groups will be displayed with group topics */}
+            <Grid style={{ width: "98%", marginLeft: "1%" }}>
+              {groups.map((group, index1) => (
+                <GroupTopic key={index1} topic={group} />
+              ))}
+            </Grid>
           </Grid>
         </Container>
       )}
