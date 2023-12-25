@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 class APIService {
-  var baseURL = "http://3.125.225.39:8080";
+  var baseURL = "http://10.0.2.2:8080";
   String? token = "";
   Future<(String?, int)> login(String username, String password) async {
     var uri = Uri.parse("$baseURL/user/login");
@@ -780,5 +780,19 @@ class APIService {
       'Authorization': 'Bearer $authToken'
     });
     return response;
+  }
+
+  Future<Map<String, dynamic>> getGroup(String id, String? authToken) async {
+    var uri = Uri.parse("$baseURL/group/$id");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    print("APICALL: get group called");
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to load group data');
+    }
   }
 }

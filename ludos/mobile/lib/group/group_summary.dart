@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ludos_mobile_app/group/group_page.dart';
 import 'package:ludos_mobile_app/helper/colors.dart';
 
 import '../game_page.dart';
@@ -116,7 +117,9 @@ class _GroupSummaryState extends State<GroupSummary> {
                   borderRadius: BorderRadius.circular(15.0),
                 )),
             onPressed: () {
-              //navigate to the group page
+              Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => GroupPage(userProvider: userProvider, token: token, groupId: groupId, onRefresh: () {},),
+                        ));
             },
             child: Column(
               children: [
@@ -219,7 +222,7 @@ class _GroupSummaryState extends State<GroupSummary> {
                       //join&leave functionality
                     },
                     child: Text(
-                      isJoined ? "JOIN" : "LEAVE",
+                      isJoined ? "LEAVE" : "JOIN",
                       style: const TextStyle(color: MyColors.white),
                     ))
               ],
