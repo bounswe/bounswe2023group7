@@ -6,6 +6,13 @@ import GameCard from "./GameCard";
 import { Link } from "react-router-dom";
 
 function Description(data) {
+  const handleClick = (param) => {
+    // Reload the page
+    window.location.reload();
+
+    // Navigate to the specified URL
+    window.location.href = `/game/${convertToSlug(param)}`;
+  };
   const convertToSlug = (text) => {
     return text
       .toString()
@@ -74,7 +81,7 @@ function Description(data) {
             >
               <Link
                 style={{ color: "white", textDecoration: "none" }}
-                to={`/game/${convertToSlug(predecessor)}`}
+                onClick={() => handleClick(predecessor)}
               >
                 {predecessor}{" "}
               </Link>
@@ -108,7 +115,7 @@ function Description(data) {
             >
               <Link
                 style={{ color: "white", textDecoration: "none" }}
-                to={`/game/${convertToSlug(successor)}`}
+                onClick={() => handleClick(successor)}
               >
                 {successor}{" "}
               </Link>
@@ -127,7 +134,7 @@ function Description(data) {
           >
             SUGGESTED GAMES
           </Typography>
-          {suggestedGames.map((game, index) => (
+          {suggestedGames?.map((game, index) => (
             <div key={index} style={{ marginTop: "10px" }}>
               <GameCard game={game} />
             </div>
