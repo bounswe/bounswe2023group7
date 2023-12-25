@@ -16,6 +16,11 @@ import "@recogito/recogito-js/dist/recogito.min.css";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import axios from "axios";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 //import ReplyIcon from "@mui/icons-material/Reply";
 
 function CommentComponent({
@@ -53,6 +58,8 @@ function CommentComponent({
   const [disliked, setDisliked] = useState(isDisliked);
   const [showMenu, setShowMenu] = useState(false);
   const [currentUserId, setCurrentUserId] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [editContent, setEditContent] = useState(content);
   const accessToken = localStorage.getItem("accessToken");
   const upVoteButton = {
     backgroundColor: "transparent",
@@ -342,6 +349,15 @@ function CommentComponent({
     }
   };
 
+  const handleModalOpen = () => {
+    setEditContent(content);
+    setOpenModal(true);
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
   const handleMoreHorizClick = () => {
     setShowMenu(!showMenu);
   };
@@ -377,7 +393,7 @@ function CommentComponent({
   };
 
   const handleUpdate = () => {
-    setEditing(true);
+    handleModalOpen();
     handleClose();
   };
 
@@ -386,7 +402,7 @@ function CommentComponent({
       const response = await axios.put(
         `http://${process.env.REACT_APP_API_URL}/comment/${commentId}/edit-comment`,
         {
-          newText: newContent,
+          newText: editContent,
         },
         {
           headers: {
@@ -397,9 +413,10 @@ function CommentComponent({
       );
 
       if (response.status == 200) {
-        // Update the content and set editing to false after successful update
         setEditing(false);
-        setContentText(newContent);
+        setContentText(editContent);
+        handleModalClose(); // Close the modal after updating
+        window.location.reload();
       } else {
         console.error("Failed to update the comment:", response.status);
       }
@@ -530,47 +547,47 @@ function CommentComponent({
           </Grid>
         )}
 
-        {editing ? (
-          <TextField
-            value={newContent}
-            onChange={(e) => setNewContent(e.target.value)}
-            rows={3}
-            cols={50}
-            multiline
-            style={{
-              color: "white",
-              backgroundColor: "rgb(200,200,200,0.6)",
-              borderRadius: "10px",
-              marginBottom: "10px",
-              height: "100%",
-            }}
-          />
-        ) : (
-          <Typography
-            variant="body2"
-            component="div"
-            id={`content-element-${commentId}`}
-            style={{
-              color: "white",
-              marginTop: "3px",
-              marginRight: "10px",
-              marginLeft: "10px",
-              textAlign: "left",
-              lineHeight: "1.7",
-            }}
-          >
-            {contentText}
-          </Typography>
-        )}
-        {editing && (
-          <Button
-            variant="contained"
-            onClick={handleUpdateComment}
-            style={{ marginTop: "10px", alignSelf: "flex-end" }}
-          >
-            Edit Comment
-          </Button>
-        )}
+        <Typography
+          variant="body2"
+          component="div"
+          id={`content-element-${commentId}`}
+          style={{
+            color: "white",
+            marginTop: "3px",
+            marginRight: "10px",
+            marginLeft: "10px",
+            textAlign: "left",
+            lineHeight: "1.7",
+          }}
+        >
+          {contentText}
+        </Typography>
+
+        <Dialog open={openModal} onClose={handleModalClose}>
+          <DialogTitle>Edit Comment</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              You can edit your comment here.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Edit Comment"
+              type="text"
+              fullWidth
+              multiline
+              minRows={4}
+              variant="outlined"
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleModalClose}>Cancel</Button>
+            <Button onClick={handleUpdateComment}>Edit</Button>
+          </DialogActions>
+        </Dialog>
         <Grid
           style={{
             display: "flex",
