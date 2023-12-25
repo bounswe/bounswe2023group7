@@ -61,6 +61,11 @@ class _VisitUserPageState extends State<VisitUserPage> {
             });
           }
         }
+        /*
+        for (var i = 0; i < lastActivities!.length; i++) {
+          print(lastActivities![i]);
+        }
+        */
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
@@ -234,6 +239,65 @@ class _VisitUserPageState extends State<VisitUserPage> {
                 'No about me provided.',
                 style: TextStyle(
                   fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+          ),
+          const SizedBox(height: 20),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 20),
+              Text(
+                'Associated Teams & Companies:',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.white,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 5),
+          Container(
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+              child: (userData['associatedTeam'] != null) ?
+              Text(
+                userData['associatedTeam'].toString(),
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+                  :
+              const Text(
+                '',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+          ),
+          const SizedBox(height: 5),
+          Container(
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+              child: (userData['associatedCompany'] != null) ?
+              Text(
+                userData['associatedCompany'].toString(),
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+                  :
+              const Text(
+                '',
+                style: TextStyle(
+                  fontSize: 10,
                   fontWeight: FontWeight.bold,
                   color: MyColors.blue2,
                 ),

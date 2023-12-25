@@ -29,7 +29,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   void initState() {
     super.initState();
     loadUserData();
-    retrieveUserID();
+    // retrieveUserID();
     fetchLastActivities();
   }
 
@@ -63,12 +63,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
     }
   }
 
-  Future<void> retrieveUserID() async {
+
+  Future<void> fetchLastActivities() async {
     try {
       var response =
-          await apiService.search(widget.userProvider.token, widget.id!);
+      await apiService.search(widget.userProvider.token, widget.id!);
       if (response.statusCode == 200) {
         userData = json.decode(response.body);
+        //print(userData['users']);
         for (var i = 0; i < userData['users'].length; i++) {
           if (userData['users'][i]['username'] == widget.id) {
             userData = userData['users'][i];
@@ -87,9 +89,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     } catch (e) {
       print('Error loading user data: $e');
     }
-  }
-
-  Future<void> fetchLastActivities() async {
     final response = await apiService.lastActivities(
       widget.userProvider.token,
       limit: 5,
@@ -98,7 +97,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     try {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        //print(responseData);
+        // print(responseData);
         for (var i = 0; i < responseData["items"].length; i++) {
           if (responseData["items"][i]['user']['id'] == userID) {
             setState(() {
@@ -274,88 +273,131 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 indent: 25,
                 endIndent: 25,
               ),
-              const SizedBox(height: 10),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(width: 20),
-                  Text(
-                    'About Me:',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: MyColors.white,
-                    ),
+          const SizedBox(height: 5,),
+          Container(
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+              child: (userData['aboutMe'] != null) ?
+              Text(
+                userData['aboutMe'].toString(),
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+                  :
+              const Text(
+                'No about me provided.',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+          ),
+          const SizedBox(height: 20),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 20),
+              Text(
+                'Associated Teams & Companies:',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.white,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 5),
+          Container(
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+              child: (userData['associatedTeam'] != null) ?
+              Text(
+                userData['associatedTeam'].toString(),
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+                  :
+              const Text(
+                '',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+          ),
+          const SizedBox(height: 5),
+          Container(
+            padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+            child: (userData['associatedCompany'] != null) ?
+              Text(
+                userData['associatedCompany'].toString(),
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+              :
+              const Text(
+                '',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+          ),
+          const SizedBox(height: 20),
+          const Divider(
+            height: 5,
+            color: MyColors.orange,
+            thickness: 2,
+            indent: 25,
+            endIndent: 25,
+          ),
+          const SizedBox(height: 10),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 20),
+              Text(
+                'Connected Platforms:',
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.white,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                const SizedBox(width: 15),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: MyColors.darkBlue,
                   ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              Container(
-                  padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                  child: (userData['aboutMe'] != null)
-                      ? Text(
-                          userData['aboutMe'].toString(),
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: MyColors.blue2,
-                          ),
-                        )
-                      : const Text(
-                          'No about me provided.',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: MyColors.blue2,
-                          ),
-                        )),
-              const SizedBox(height: 20),
-              const Divider(
-                height: 5,
-                color: MyColors.orange,
-                thickness: 2,
-                indent: 25,
-                endIndent: 25,
-              ),
-              const SizedBox(height: 10),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(width: 20),
-                  Text(
-                    'Connected Platforms:',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: MyColors.white,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    const SizedBox(width: 15),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColors.darkBlue,
-                      ),
-                      onPressed: () {
-                        // Can go to steam profile page
-                      },
-                      child: ClipOval(
-                        // Set your desired height
+                  onPressed: () {
+                    // Can go to steam profile page
+                  },
+                  child: ClipOval(// Set your desired height
 
-                        child: Image.asset(
-                          'assets/images/steam-logo-black-transparent.png',
-                          height: 100,
-                          width: 100,
-                          fit: BoxFit
-                              .cover, // You can adjust the fit property based on your needs
+                    child: Image.asset(
+                      'assets/images/steam-logo-black-transparent.png',
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover, // You can adjust the fit property based on your needs
                         ),
                       ),
                     ),
@@ -582,9 +624,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   ),
                 ),
               ),
-            ],
-          ),
+          ],
         ),
+      )
       ),
     );
   }

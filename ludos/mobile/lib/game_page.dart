@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:core';
 import 'dart:ui';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +13,6 @@ import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/reusable_widgets/rec_games.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
-import 'package:provider/provider.dart';
 import 'forum_page.dart';
 import 'game_properties.dart';
 import 'game_reviews_page.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
 import 'main.dart';
 import 'reusable_widgets/custom_navigation_bar.dart';
+import 'reusable_widgets/styledRange.dart';
 
 class GamePage extends StatefulWidget {
   final VoidCallback onRefresh;
@@ -37,6 +39,7 @@ class _GamePageState extends State<GamePage> {
   bool showForm = false;
   double rating = 0.0;
   late List<Review> reviews = [];
+  late List<StyledRange> annotations = [];
   final APIService apiService = APIService();
   Map<String, dynamic> gameData = {};
   late Future<List<RecommendedGame>> recGameList;
@@ -46,6 +49,7 @@ class _GamePageState extends State<GamePage> {
     super.initState();
     loadGameData();
     initializeFollowState();
+    ToListAnnotation(getStyledRanges());
     recGameList = loadRecGames(widget.userProvider, widget.userProvider.token);
     print("getlisted");
   }
@@ -122,6 +126,252 @@ class _GamePageState extends State<GamePage> {
     });
   }
 
+  Future<void> ToListAnnotation(Future<List<StyledRange>> annotationList) async {
+    annotations = await annotationList;
+  }
+
+  void showAnnotation(BuildContext context, String annotationText) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: MyColors.darkBlue,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                20.0,
+              ),
+            ),
+          ),
+          contentPadding: const EdgeInsets.only(
+            top: 10.0,
+          ),
+          title: const Text(
+            "Annotation",
+            style: TextStyle(fontSize: 20.0, color: MyColors.white),
+          ),
+          content: Container(
+            height: 140,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      annotationText,
+                      style:
+                          const TextStyle(fontSize: 15, color: MyColors.white),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyColors.red,
+                        ),
+                        child: const Text("Close",
+                            style: TextStyle(color: MyColors.white)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void createAnnotation(
+      BuildContext context, String annotatedText, int start, int end) {
+    String annotationText =
+        ""; // Add a variable to store the text from the TextFormField
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: MyColors.darkBlue,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                20.0,
+              ),
+            ),
+          ),
+          contentPadding: const EdgeInsets.only(
+            top: 10.0,
+          ),
+          title: const Text(
+            "Annotate the Text",
+            style: TextStyle(fontSize: 20.0, color: MyColors.white),
+          ),
+          content: Container(
+            height: 180,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      onChanged: (value) {
+                        annotationText = value;
+                      },
+                      style:
+                          const TextStyle(fontSize: 15, color: MyColors.white),
+                      decoration: InputDecoration(
+                        hintText: "Enter annotation",
+                        hintStyle:
+                            TextStyle(color: MyColors.white.withOpacity(0.5)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyColors.red,
+                        ),
+                        child: const Text("Cancel",
+                            style: TextStyle(color: MyColors.white)),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Call the API to create the annotation
+                          apiService.createAnnotationGameBio(
+                              widget.token,
+                              widget.id,
+                              annotatedText,
+                              start,
+                              end,
+                              annotationText);
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyColors.green,
+                        ),
+                        child: const Text("Annotate",
+                            style: TextStyle(color: MyColors.white)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
+  List<TextSpan> textSpans = [];
+  styledRanges.sort((a, b) => a.start.compareTo(b.start));
+  int currentIndex = 0;
+  
+  Set<StyledRange> uniqueRanges = styledRanges.toSet();
+  styledRanges = uniqueRanges.toList();
+  for (var i = 0; i < styledRanges.length; i++) {
+    var styledRange = styledRanges[i];
+
+    // Check for overlapping ranges
+    if (styledRange.start < currentIndex) {
+      continue; // Skip overlapping ranges
+    }
+
+    // Add the unstyled text before the current range
+    textSpans.add(
+      TextSpan(
+        text: text.substring(currentIndex, styledRange.start),
+        style: const TextStyle(
+          color: MyColors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+    );
+
+    // Add the styled text within the current range
+    textSpans.add(
+      TextSpan(
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            showAnnotation(context, styledRange.annotation);
+          },
+        text: text.substring(styledRange.start, styledRange.end),
+        style: styledRange.style,
+      ),
+    );
+
+    // Update the current index
+    currentIndex = styledRange.end;
+  }
+
+  // Add any remaining unstyled text after the last range
+  if (currentIndex < text.length) {
+    textSpans.add(
+      TextSpan(
+        text: text.substring(currentIndex),
+        style: const TextStyle(
+          color: MyColors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  return textSpans;
+}
+
+  Future<List<StyledRange>> getStyledRanges() async {
+    final response =
+        await APIService().getAnnotationGameBio(widget.token, widget.id);
+    try {
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        return Future.wait(
+            responseData.map<Future<StyledRange>>((dynamic item) async {
+          return StyledRange(
+              item['target']['selector']['start'],
+              item['target']['selector']['end'],
+              item['body'],
+              const TextStyle(
+                backgroundColor: MyColors.blue,
+                color: MyColors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ));
+        }).toList());
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+        return [];
+      }
+    } catch (error) {
+      print("Error: $error");
+      return [];
+    }
+  }
+
   final TextEditingController contentController = TextEditingController();
   final TextEditingController rateController = TextEditingController();
 
@@ -132,24 +382,7 @@ class _GamePageState extends State<GamePage> {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(userProvider: widget.userProvider)));
       return false;
     },
-    child: SelectionArea(contextMenuBuilder:(context, editableTextState) {
-      final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
-      buttonItems.insert(
-        0,
-        ContextMenuButtonItem(
-          label: 'Annotate',
-          onPressed: () {
-            // Annotation code    
-          },
-        ),
-      );
-      return AdaptiveTextSelectionToolbar.buttonItems(
-        anchors: editableTextState.contextMenuAnchors,
-        buttonItems: buttonItems,
-      );
-    },
-
-      child: Scaffold(
+    child: Scaffold(
       endDrawer: Drawer(
         child: Container(
           color: MyColors.darkBlue, // Drawer background color
@@ -170,7 +403,7 @@ class _GamePageState extends State<GamePage> {
                       ),
                     ));
                   } else {
-                    CustomWidgets.needLoginSnackbar(context, "Please log in to edit the game! ");
+                    CustomWidgets.needLoginSnackbar(context, "Please log in to edit the game! ", widget.userProvider);
                   }
                 },
               ),
@@ -254,7 +487,7 @@ class _GamePageState extends State<GamePage> {
                   onRatingUpdate: (rating) {},
                 ),
                 Text(
-                  '${(gameData['averageRating'] == null ? 0 : gameData['averageRating'].toDouble())}/5'
+                    '${(gameData['averageRating'] == null ? 0 : gameData['averageRating'].toDouble().toStringAsFixed(2))}/5.00'
                       .padLeft(5),
                   style: const TextStyle(
                     color: MyColors.orange,
@@ -377,6 +610,7 @@ class _GamePageState extends State<GamePage> {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ForumPage(
+                          gameName: gameData['title'],
                           gameid: widget.id,
                           token: widget.token,
                           userProvider: widget.userProvider),
@@ -401,7 +635,7 @@ class _GamePageState extends State<GamePage> {
                   ),
                   onPressed: () {
                     if (!widget.userProvider.isLoggedIn) {
-                      CustomWidgets.needLoginSnackbar(context, "Please log in to follow a game! ");
+                      CustomWidgets.needLoginSnackbar(context, "Please log in to follow a game! ", widget.userProvider);
                         }else{
                           bool state = false;
                           Future<bool> executeAsyncActions() async {
@@ -462,13 +696,39 @@ class _GamePageState extends State<GamePage> {
             ),
             const SizedBox(height: 20),
             if (gameData['gameBio'] != null)
-              Text(
-                gameData['gameBio'].toString(),
+              SelectableText.rich(
+                TextSpan(
+                    children: buildStyledText(
+                        gameData['gameBio'].toString(), annotations)),
                 style: const TextStyle(
                   color: MyColors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
+                contextMenuBuilder: (context, editableTextState) {
+                  final List<ContextMenuButtonItem> buttonItems =
+                      editableTextState.contextMenuButtonItems;
+                  buttonItems.insert(
+                    0,
+                    ContextMenuButtonItem(
+                      label: 'Annotate',
+                      onPressed: () {
+                        // Annotation code
+                        TextSelection text =
+                            editableTextState.textEditingValue.selection;
+                        String annotatedText = editableTextState
+                            .textEditingValue.text
+                            .substring(text.baseOffset, text.extentOffset);
+                        createAnnotation(context, annotatedText,
+                            text.baseOffset, text.extentOffset);
+                      },
+                    ),
+                  );
+                  return AdaptiveTextSelectionToolbar.buttonItems(
+                    anchors: editableTextState.contextMenuAnchors,
+                    buttonItems: buttonItems,
+                  );
+                },
               ),
             const SizedBox(height: 20),
             if (gameData['averageUserCompilationDuration'] != null)
@@ -552,7 +812,7 @@ class _GamePageState extends State<GamePage> {
                           if (widget.userProvider.isLoggedIn) {
                             toggleFormVisibility();
                           } else {
-                            CustomWidgets.needLoginSnackbar(context, "Please log in to add a review! ");
+                            CustomWidgets.needLoginSnackbar(context, "Please log in to add a review! ", widget.userProvider);
                           }
                         },
                         child: const Text(
@@ -686,7 +946,6 @@ class _GamePageState extends State<GamePage> {
 
       bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
     )
-),
     );
   }
 }

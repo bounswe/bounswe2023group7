@@ -27,7 +27,7 @@ import EmptyPage from "./pages/EmptyPage.js";
 
 function App() {
   const [games, setGames] = useState([]);
-  const limit = 50; // Set the desired limit (number of games per request)
+  const limit = 70; // Set the desired limit (number of games per request)
   const link = `http://${process.env.REACT_APP_API_URL}/game/?limit=${limit}`;
 
   const convertToSlug = (text) => {

@@ -22,9 +22,12 @@ const Homepage = () => {
   const [trendingTopics, setTrendingTopics] = useState([]);
   const [groups, setGroups] = useState([]);
   const [suggestedGames, setSuggestedGames] = useState([]);
+  const [games, setGames] = useState([]);
+
   useEffect(() => {
     fetchTrendingTopics();
     fetchSuggestedGames();
+    fetchTrendingGames();
     const link = `http://${process.env.REACT_APP_API_URL}/group?limit=3&page=1&order=DESC&orderByKey=maxNumberOfMembers`;
     axios
       .get(link, {
@@ -122,7 +125,7 @@ const Homepage = () => {
     // Add more topics as needed...
   ];
 
-  // Replace this with your actual game data
+  /*
   const games = [
     {
       title: "The Witcher 3",
@@ -144,6 +147,8 @@ const Homepage = () => {
     },
     // Add more game objects as needed
   ];
+*/
+  //console.log("mock games", games);
 
   const axiosInstance = axios.create({
     baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -152,6 +157,25 @@ const Homepage = () => {
     },
   });
 
+  const fetchTrendingGames = async () => {
+    try {
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_API_URL}/game?limit=3&order=DESC&orderByKey=followers`,
+      );
+
+      if (response.data) {
+        const formattedGames = response.data.items.map((game) => ({
+          title: game.title,
+          image: game.coverLink,
+          content: game.gameBio,
+        }));
+        setGames(formattedGames);
+        console.log("formatted games", formattedGames);
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
   const fetchSuggestedGames = async () => {
     try {
       const response = await axios.get(
@@ -226,8 +250,11 @@ const Homepage = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
       {/* Other homepage content */}
-
-      <TrendingGamesSlider games={games} />
+      {games.length > 0 ? (
+        <TrendingGamesSlider games={games} />
+      ) : (
+        <div>Loading trending games...</div> // Placeholder for loading state
+      )}
       {/* Suggested Games Grid */}
       <Grid
         style={{

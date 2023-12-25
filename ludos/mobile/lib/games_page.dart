@@ -90,7 +90,7 @@ class _GamesPageState extends State<GamesPage> {
                       token: widget.token, userProvider: widget.userProvider),
                 ));
               } else {
-                CustomWidgets.needLoginSnackbar(context, "Please log in to create a game! ");
+                CustomWidgets.needLoginSnackbar(context, "Please log in to create a game! ", widget.userProvider);
               }
             },
             child: const Icon(

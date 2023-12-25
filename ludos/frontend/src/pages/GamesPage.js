@@ -1,5 +1,17 @@
-import React, { useState } from "react";
-import { Typography } from "@mui/material";
+import React, { useState, useRef } from "react";
+import {
+  Button,
+  Typography,
+  Chip,
+  FormControl,
+  Grid,
+  Input,
+  Select,
+  MenuItem,
+  Checkbox,
+  FormControlLabel,
+  Pagination,
+} from "@mui/material";
 import Container from "@mui/material/Container";
 import TrendingGamesSlider from "../components/TrendingGamesSlider";
 import GameCard from "../components/GameCard";
@@ -9,7 +21,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ForumTopic from "../components/ForumTopic";
-
+/*
 const gameHighlight = [
   {
     title: "Baldur's Gate 3",
@@ -32,6 +44,7 @@ const gameHighlight = [
       "Take on the role of a football manager in Football Manager 2024, where every decision you make shapes the destiny of your team. Immerse yourself in the world of football, filled with tactics, transfers, and morally complex choices as you strive for victory on the pitch.",
   },
 ];
+*/
 
 const convertToSlug = (text) => {
   return text
@@ -44,11 +57,27 @@ const convertToSlug = (text) => {
 };
 
 export default function GamesPage() {
+  const myComponentRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
   const [searchKey, setSearchKey] = useState("");
   const [games, setGames] = useState([]);
   const [suggestedGames, setSuggestedGames] = useState([]);
   const [upcomingTitles, setUpcomingTitles] = useState([]);
+  const [detailSearch, setDetailSearch] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [tags, setTags] = useState([]);
+  const [currTag, setCurrTag] = useState("");
+  const [developer, setDeveloper] = useState("");
+  const [sortBy, setSortBy] = useState("title");
+  const [sortOrder, setSortOrder] = useState("ASC");
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [page, setPage] = useState(1);
+  const [refresh, setRefresh] = useState(false);
+  const [auth, setAuth] = useState(false);
+  const [detailGames, setDetailGames] = useState([]);
+  const [pageCount, setPageCount] = useState(1);
+
+  const [gameHighlight, setGameHighlight] = useState([]);
 
   const axiosInstance = axios.create({
     baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -59,11 +88,107 @@ export default function GamesPage() {
 
   const navigate = useNavigate();
 
+  const handleDetailSearch = () => {
+    if (detailSearch) {
+      setDetailSearch(false);
+    } else {
+      setDetailSearch(true);
+    }
+  };
+
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const handleDeveloperInputChange = (event) => {
+    setDeveloper(event.target.value);
+  };
+  const handleTagsChange = (e) => {
+    setCurrTag(e.target.value);
+  };
+
+  const handleKeyUp = (e) => {
+    if (e.keyCode == 13) {
+      setTags((oldState) => [...oldState, e.target.value]);
+      setCurrTag("");
+    }
+  };
+
+  const handleDeleteTag = (item, index) => {
+    let arr = [...tags];
+    arr.splice(index, 1);
+    console.log(item);
+    setTags(arr);
+  };
+
+  const handleSortByChange = (event) => {
+    setSortBy(event.target.value);
+  };
+
+  const handleSortOrderChange = (event) => {
+    setSortOrder(event.target.value);
+  };
+
+  const handleIsFollowedChange = (event) => {
+    setIsFollowed(event.target.checked);
+  };
+
+  const handleFilterButtonClick = () => {
+    setPage(1);
+    setRefresh(!refresh);
+    console.log("girdim");
+  };
+
   const handleGameRoute = (value) => {
     navigate(`/game/${convertToSlug(value)}`);
   };
 
   useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      const link1 = `http://${process.env.REACT_APP_API_URL}/user/info`;
+      axios
+        .get(link1, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        })
+        .then(() => {
+          setAuth(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          setAuth(false);
+        });
+    } else {
+      setAuth(false);
+    }
+    const tagsString = tags.join("%2C");
+    const link = `http://${process.env.REACT_APP_API_URL}/game?page=${page}&searchKey=${searchInput}&tags=${tagsString}&developer=${developer}&order=${sortOrder}&isFollowed=${isFollowed}&orderByKey=${sortBy}`;
+    console.log(link);
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data.items);
+        setDetailGames(response.data.items);
+        setPageCount(response.data.meta.totalPages);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [refresh]);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    setRefresh(!refresh);
+  };
+
+  useEffect(() => {
+    fetchTrendingGames();
+
     axiosInstance
       .get(`/user/suggested`)
       .then((response) => {
@@ -74,6 +199,26 @@ export default function GamesPage() {
         console.log(error);
       });
   }, []);
+
+  const fetchTrendingGames = async () => {
+    try {
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_API_URL}/game?limit=3&order=DESC&orderByKey=followers`,
+      );
+
+      if (response.data) {
+        const formattedGames = response.data.items.map((game) => ({
+          title: game.title,
+          image: game.coverLink,
+          content: game.gameBio,
+        }));
+        setGameHighlight(formattedGames);
+        console.log("formatted games", formattedGames);
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
 
   useEffect(() => {
     const options = {
@@ -138,6 +283,16 @@ export default function GamesPage() {
     }
   }, [searchKey]);
 
+  const paginStyle = {
+    backgroundColor: "rgba(204, 204, 255, 0.9)",
+    borderRadius: "10px",
+    border: "4px solid rgba(51, 153, 255, 1)", // Çerçeve rengi ve genişliği
+    boxSizing: "border-box", // Kutu modelini içerir
+    fontFamily: "Trebuchet MS, sans-serif",
+    width: "auto",
+    marginTop: "10px",
+  };
+
   return (
     <div
       style={{
@@ -179,7 +334,11 @@ export default function GamesPage() {
         </Typography>
       </div>
 
-      <TrendingGamesSlider games={gameHighlight} />
+      {gameHighlight.length > 0 ? (
+        <TrendingGamesSlider games={gameHighlight} />
+      ) : (
+        <div>Loading trending games...</div> // Placeholder for loading state
+      )}
       {/* Other sections */}
       <div
         style={{
@@ -253,6 +412,251 @@ export default function GamesPage() {
             borderRadius: "40px",
           }}
         />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            marginLeft: "20px",
+            marginBottom: "10px",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="secondary"
+            style={{ borderRadius: "40px", alignItems: "flex-start" }}
+            onClick={handleDetailSearch}
+          >
+            Detailed Search
+          </Button>
+
+          {detailSearch ? (
+            <div style={{ padding: "10px" }}>
+              <Grid
+                item
+                xs={12}
+                style={{
+                  backgroundColor: "rgba(151, 153, 255)",
+                  height: `${myComponentRef?.current?.clientHeight + 520}px`,
+                  borderRadius: "10px",
+                  paddingRight: "10px",
+                  marginTop: "10px",
+                  padding: "10px",
+                }}
+              >
+                {/* Search Input */}
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Game Title:
+                </Typography>
+                <TextField
+                  type="text"
+                  label="Search the GameTitle"
+                  placeholder="Search..."
+                  value={searchInput}
+                  onChange={handleSearchInputChange}
+                  variant="outlined"
+                  fullWidth
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                  }}
+                />
+
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Filter with Tags:
+                </Typography>
+                <div ref={myComponentRef}>
+                  <FormControl
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "20px",
+                      flexWrap: "wrap",
+                      flexDirection: "row",
+                      border: "2px solid lightgray",
+                      padding: 1,
+                      borderRadius: "4px",
+                      backgroundColor: "white",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <div className={"container"}>
+                      {tags.map((item, index) => (
+                        <Chip
+                          key={index}
+                          size="small"
+                          onDelete={() => handleDeleteTag(item, index)}
+                          label={item}
+                        />
+                      ))}
+                    </div>
+                    <Input
+                      value={currTag}
+                      onChange={handleTagsChange}
+                      onKeyDown={handleKeyUp}
+                    />
+                  </FormControl>
+                </div>
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Filter with Developer:
+                </Typography>
+                <TextField
+                  type="text"
+                  label="Search the Developer"
+                  placeholder="Search..."
+                  value={developer}
+                  onChange={handleDeveloperInputChange}
+                  variant="outlined"
+                  fullWidth
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                  }}
+                />
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Sort By:
+                </Typography>
+                <Select
+                  labelId="sort-by-label"
+                  id="sort-by"
+                  value={sortBy}
+                  onChange={handleSortByChange}
+                  label="Sort By Field"
+                  placeholder="Sort By Field"
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    width: "100%",
+                    borderRadius: "10px",
+                  }}
+                >
+                  {[
+                    { value: "title", label: "Title" },
+                    {
+                      value: "followers",
+                      label: "Followers",
+                    },
+                    {
+                      value: "id",
+                      label: "Id",
+                    },
+                    // Add other sorting options as needed
+                  ].map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Sort Order:
+                </Typography>
+                <Select
+                  labelId="sortTypeLabel"
+                  id="sortType"
+                  value={sortOrder}
+                  onChange={handleSortOrderChange}
+                  label="Sort By Field"
+                  placeholder="Sort By Field"
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    width: "100%",
+                    borderRadius: "10px",
+                  }}
+                >
+                  {[
+                    { value: "ASC", label: "Ascending" },
+                    { value: "DESC", label: "Descending" },
+                    // Add other sorting options as needed
+                  ].map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isFollowed}
+                      onChange={handleIsFollowedChange}
+                      name="isFollowed"
+                    />
+                  }
+                  label="Show followed games only"
+                />
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleFilterButtonClick}
+                  style={{
+                    backgroundColor: "pink",
+                    color: "white",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Filter
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} sm={9} md={9} lg={9}>
+                {detailGames?.map((game, index) => (
+                  <GameCard key={index} game={game} />
+                ))}
+                <Pagination
+                  count={pageCount}
+                  color="secondary"
+                  page={page}
+                  onChange={handlePageChange}
+                  style={paginStyle}
+                />
+              </Grid>
+            </div>
+          ) : (
+            <div />
+          )}
+        </div>
       </div>
 
       <div

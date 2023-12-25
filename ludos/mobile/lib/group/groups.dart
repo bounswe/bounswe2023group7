@@ -79,7 +79,7 @@ class _GroupsPageState extends State<GroupsPage> {
                 ));
               } else {
                 CustomWidgets.needLoginSnackbar(
-                    context, "Please log in to create a group!");
+                    context, "Please log in to create a group!",widget.userProvider);
               }
             },
             child: const Icon(
