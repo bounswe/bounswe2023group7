@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
+import 'package:ludos_mobile_app/reusable_widgets/upcoming_title_post.dart';
 import 'package:ludos_mobile_app/reusable_widgets/rec_games.dart';
 import 'package:ludos_mobile_app/user_profile_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_thread.dart';
@@ -32,6 +33,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late Future<List<HomeGameSum>> games;
   late Future<List<ThreadSummary>> threads;
+  late Future<List<UpcomingThread>> threads2;
   late Future<Map<String, dynamic>> userData;
   late Future<List<RecommendedGame>> recGameListforUser;
 
@@ -42,6 +44,7 @@ class _HomeState extends State<Home> {
     var userProvider = widget.userProvider;
     games = fetchGameData(userProvider, userProvider.token);
     threads = fetchThreadData(userProvider, userProvider.token);
+    threads2 = fetchDataUpc(userProvider, userProvider.token);
     userData = fetchUserData(userProvider, userProvider.token);
     recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
     print("getlisted");
@@ -85,7 +88,11 @@ class _HomeState extends State<Home> {
 
         List<dynamic> postLists = responseData['items'];
 
-        return postLists.map((dynamic item) => ThreadSummary(
+         return postLists
+            .where((item) =>
+            item['upcomingTitle'] == null ||
+            item['upcomingTitle']['isUpcomingTitle'] == false)
+            .map((dynamic item) => ThreadSummary(
           token: token,
           userProvider: userProvider,
           threadId: item['id'],
@@ -104,6 +111,50 @@ class _HomeState extends State<Home> {
           backgroundColor: MyColors.blue,
           fontSize: 20,
         )).toList();
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+        throw Exception('Failed to load posts');
+      }
+    } catch (error) {
+      print("Error: $error");
+      throw Exception('Failed to load threads!');
+    }
+  }
+
+  Future<List<UpcomingThread>> fetchDataUpc(UserProvider userProvider, String? token) async {
+    final response = await APIService().listAllThreads(token, limit: "3");
+    try {
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        List<dynamic> postLists = responseData['items'];
+
+        return postLists
+            .where((item) =>
+            item['upcomingTitle'] != null &&
+            item['upcomingTitle']['isUpcomingTitle'] == true)
+            .map((dynamic item) =>
+            UpcomingThread(
+              token: token,
+              userProvider: userProvider,
+              threadId: item['id'],
+              title: item['title'],
+              game: item['game']['title'],
+              gameId: item['game']['id'],
+              userId: item['user']['id'],
+              username: item['user']['username'],
+              thumbUps: item['numberOfLikes'],
+              thumbDowns: item['NumberOfDislikes'],
+              time: item['createdAt'],
+              isUpcomingTitle: item['upcomingTitle']['isUpcomingTitle'] ?? false,
+              launchingDate: item['upcomingTitle']['launchingDate'] ?? '',
+              demoLink: item['upcomingTitle']['demoLink'] ?? '',
+              isLiked: (item['isLiked'] ?? false),
+              isDisliked: (item['isDisliked'] ?? false),
+              textColor: MyColors.white,
+              backgroundColor: MyColors.blue,
+              fontSize: 20,
+            )).toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
@@ -276,7 +327,7 @@ class _HomeState extends State<Home> {
                     style: TextStyle(color: MyColors.white),
                   ),
                   onTap: () {
-                    userProvider.setLoggedIn(false, '', '');
+                    userProvider.setLoggedIn(false, '', '', '');
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => LoginPage(),
                     ));
@@ -407,7 +458,43 @@ class _HomeState extends State<Home> {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       // Handle the case when there is no data
-                      return const Center(child: Text('No games available.'));
+                      return const Center(child: Text('No threads available.'));
+                      } else {
+                        // Display the fetched data
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: snapshot.data!,
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Upcoming Titles ",
+                style: TextStyle(
+                  color: MyColors.orange,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: FutureBuilder<List<UpcomingThread>>(
+                    future: threads2,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        // Show a loading indicator while fetching data
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        // Handle errors
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        // Handle the case when there is no data
+                        return const Center(child: Text('No upcoming title available.'));
                     } else {
                       // Display the fetched data
                       return Column(

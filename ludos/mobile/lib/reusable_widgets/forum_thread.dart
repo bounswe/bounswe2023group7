@@ -1,11 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:ludos_mobile_app/reusable_widgets/like_dislike_button.dart';
 import '../game_page.dart';
 import '../helper/APIService.dart';
-import '../login_page.dart';
 import '../thread_page.dart';
 import '../userProvider.dart';
 import '../visit_user_page.dart';

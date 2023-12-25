@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
-import 'games_page.dart';
 import 'helper/APIService.dart';
 import 'helper/colors.dart';
-import 'main.dart';
 import 'reusable_widgets/forum_thread.dart';
 import 'dart:convert';
 import 'package:ludos_mobile_app/userProvider.dart';
@@ -54,26 +52,29 @@ class _ForumPageState extends State<ForumPage> {
         List<dynamic> postLists = responseData['items'];
 
         return postLists
+            .where((item) =>
+            item['upcomingTitle'] == null ||
+            item['upcomingTitle']['isUpcomingTitle'] == false)
             .map((dynamic item) => ThreadSummary(
-                  token: widget.token,
-                  userProvider: widget.userProvider,
-                  threadId: item['id'],
-                  title: item['title'],
-                  game: item['game']['title'],
-                  gameId: item['game']['id'],
-                  userId: item['user']['id'],
-                  username: item['user']['username'],
-                  userAvatar: item['user']['avatar'],
-                  thumbUps: (item['numberOfLikes'] ?? 0),
-                  thumbDowns: (item['numberOfDislikes'] ?? 0),
-                  time: item['createdAt'],
-                  isLiked: (item['isLiked'] ?? false),
-                  isDisliked: (item['isDisliked'] ?? false),
-                  textColor: MyColors.white,
-                  backgroundColor: MyColors.blue,
-                  fontSize: 20,
-                ))
-            .toList();
+          token: widget.token,
+          userProvider: widget.userProvider,
+          threadId: item['id'],
+          title: item['title'],
+          game: item['game']['title'],
+          gameId: item['game']['id'],
+          userId: item['user']['id'],
+          username: item['user']['username'],
+          userAvatar: item['user']['avatar'],
+          thumbUps: item['numberOfLikes'],
+          thumbDowns: item['numberOfDislikes'],
+          time: item['createdAt'],
+          isLiked: (item['isLiked'] ?? false),
+          isDisliked: (item['isDisliked'] ?? false),
+          textColor: MyColors.white,
+          backgroundColor: MyColors.blue,
+          fontSize: 20,
+        )).toList();
+
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
@@ -88,33 +89,33 @@ class _ForumPageState extends State<ForumPage> {
     final response = await APIService()
         .listThreadsBySearch(searchText, widget.gameid, widget.token);
     try {
-      print("here");
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> postLists = responseData['items'];
-        print(postLists);
         return postLists
+            .where((item) =>
+            item['upcomingTitle'] == null ||
+            item['upcomingTitle']['isUpcomingTitle'] == false)
             .map((dynamic item) => ThreadSummary(
-                  token: widget.token,
-                  userProvider: widget.userProvider,
-                  threadId: item['id'],
-                  title: item['title'],
-                  game: item['game']['title'],
-                  gameId: item['game']['id'],
-                  userId: item['user']['id'],
-                  username: item['user']['username'],
-                  userAvatar: item['user']['avatar'],
-                  thumbUps: item['numberOfLikes'],
-                  thumbDowns: item['NumberOfDislikes'],
-                  time: item['createdAt'],
-                  isLiked: (item['isLiked'] ?? false),
-                  isDisliked: (item['isDisliked'] ?? false),
-                  textColor: MyColors.white,
-                  backgroundColor: MyColors.blue,
-                  fontSize: 20,
-                ))
-            .toList();
+          token: widget.token,
+          userProvider: widget.userProvider,
+          threadId: item['id'],
+          title: item['title'],
+          game: item['game']['title'],
+          gameId: item['game']['id'],
+          userId: item['user']['id'],
+          username: item['user']['username'],
+          userAvatar: item['user']['avatar'],
+          thumbUps: item['numberOfLikes'],
+          thumbDowns: item['numberOfDislikes'],
+          time: item['createdAt'],
+          isLiked: (item['isLiked'] ?? false),
+          isDisliked: (item['isDisliked'] ?? false),
+          textColor: MyColors.white,
+          backgroundColor: MyColors.blue,
+          fontSize: 20,
+        )).toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
