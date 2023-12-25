@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 class APIService {
-  var baseURL = "http://10.0.2.2:8080";
+  var baseURL = "http://164.92.195.35:8080";
   String? token = "";
   Future<(String?, int)> login(String username, String password) async {
     var uri = Uri.parse("$baseURL/user/login");
@@ -795,4 +795,78 @@ class APIService {
       throw Exception('Failed to load group data');
     }
   }
+
+  Future<http.Response> joinGroup(String? authToken, String groupID) async {
+    var uri = Uri.parse("$baseURL/group/join/$groupID");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> leaveGroup(String? authToken, String groupID) async {
+    var uri = Uri.parse("$baseURL/group/leave/$groupID");
+    final response = await http.put(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> createGroupThread(
+      String? authToken,
+      String title,
+      String content,
+      List<String> media,
+      List<String> tags,
+      String gameid,
+      String groupId) async {
+    var uri = Uri.parse("$baseURL/post");
+    final body = jsonEncode(<String, Object>{
+      'title': title,
+      'body': content,
+      'gameId': gameid,
+      'media': media,
+      'tags': tags,
+      'groupId': groupId
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    print("APICALL: group post called");
+    return response;
+  }
+
+  Future<http.Response> listGroupThreads(String groupId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/post?groupId=$groupId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+
+    print("APICALL: group post list called");
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to load threads');
+    }
+  }
+
+  Future<http.Response> listGroupThreadsBySearch(
+      String searchKey, String groupId, String? authToken) async {
+      var uri = Uri.parse("$baseURL/post?groupId=$groupId&searchKey=$searchKey");
+      final response = await http.get(uri, headers: {
+        'content-type': "application/json",
+        'Authorization': 'Bearer $authToken'
+      });
+      print("APICALL: group post list searchh called");
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        throw Exception('Failed to load threads');
+      }
+  }
+
 }
