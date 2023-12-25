@@ -17,7 +17,8 @@ import {
   Input,
 
 } from "@mui/material";
-import ForumTopic from "../components/ForumTopicForGame";
+import ForumTopicForGame from "../components/ForumTopicForGame";
+import ForumTopic from "../components/ForumTopic";
 import Autocomplete from "@mui/material/Autocomplete";
 import axios from "axios";
 
@@ -874,7 +875,7 @@ const ForumsPage = () => {
                 </Button>
                 {/* Main Content */}
                 {detailThreads.map((topic, index) => (
-                  <ForumTopic key={index} topic={topic} />
+                  <ForumTopicForGame key={index} topic={topic} />
                 ))}
                 <Pagination
                   count={pageCount}
