@@ -13,7 +13,6 @@ import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/reusable_widgets/rec_games.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
-import 'package:provider/provider.dart';
 import 'forum_page.dart';
 import 'game_properties.dart';
 import 'game_reviews_page.dart';
@@ -404,7 +403,7 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
                       ),
                     ));
                   } else {
-                    CustomWidgets.needLoginSnackbar(context, "Please log in to edit the game! ");
+                    CustomWidgets.needLoginSnackbar(context, "Please log in to edit the game! ", widget.userProvider);
                   }
                 },
               ),
@@ -635,7 +634,7 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
                   ),
                   onPressed: () {
                     if (!widget.userProvider.isLoggedIn) {
-                      CustomWidgets.needLoginSnackbar(context, "Please log in to follow a game! ");
+                      CustomWidgets.needLoginSnackbar(context, "Please log in to follow a game! ", widget.userProvider);
                         }else{
                           bool state = false;
                           Future<bool> executeAsyncActions() async {
@@ -812,7 +811,7 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
                           if (widget.userProvider.isLoggedIn) {
                             toggleFormVisibility();
                           } else {
-                            CustomWidgets.needLoginSnackbar(context, "Please log in to add a review! ");
+                            CustomWidgets.needLoginSnackbar(context, "Please log in to add a review! ", widget.userProvider);
                           }
                         },
                         child: const Text(

@@ -13,7 +13,7 @@ import '../thread_page.dart';
 class CustomWidgets{
   CustomWidgets._();
 
-  static needLoginSnackbar(BuildContext context, String message) {
+  static needLoginSnackbar(BuildContext context, String message, UserProvider userprovider) {
     ScaffoldMessenger.of(context)
         .showSnackBar(
         SnackBar(
@@ -43,7 +43,7 @@ class CustomWidgets{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => LoginPage()),
+                    builder: (context) => LoginPage(userProvider: userprovider)),
               );
             },
           ),

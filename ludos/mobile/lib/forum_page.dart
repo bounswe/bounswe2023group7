@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/game_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
-import 'games_page.dart';
 import 'helper/APIService.dart';
 import 'helper/colors.dart';
-import 'main.dart';
 import 'reusable_widgets/forum_thread.dart';
 import 'dart:convert';
 import 'package:ludos_mobile_app/userProvider.dart';
@@ -112,7 +111,17 @@ class _ForumPageState extends State<ForumPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GamePage(
+        id: widget.gameid,
+        token: widget.token,
+        userProvider: widget.userProvider,
+        onRefresh: () {},
+      ),));
+      return false;
+    },
+    child: Scaffold(
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
@@ -125,7 +134,7 @@ class _ForumPageState extends State<ForumPage> {
                   builder: (context) => CreateThreadPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider),
                 ));
               } else {
-                CustomWidgets.needLoginSnackbar(context, "Please log in to add the thread! ");
+                CustomWidgets.needLoginSnackbar(context, "Please log in to add the thread! ", widget.userProvider);
               }
             },
             child: const Icon(
@@ -241,6 +250,7 @@ class _ForumPageState extends State<ForumPage> {
         ),
       ),
       bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
+    ),
     );
   }
 }

@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 
 import '../helper/APIService.dart';
 import '../helper/colors.dart';
-import '../login_page.dart';
 import '../thread_page.dart';
 import '../userProvider.dart';
 import '../visit_user_page.dart';
@@ -438,7 +437,7 @@ class _CommentState extends State<Comment> {
                           IconButton(
                             onPressed: () => setState(() {
                               if(!widget.userProvider.isLoggedIn){
-                                CustomWidgets.needLoginSnackbar(context, "Please log in to like a comment! ");
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to like a comment! ", userProvider);
                               } else {
                                 userPressed(true);
                               }
@@ -456,7 +455,7 @@ class _CommentState extends State<Comment> {
                           IconButton(
                             onPressed: () => setState(() {
                               if(!widget.userProvider.isLoggedIn){
-                                CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a comment! ");
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a comment! ", userProvider);
                               } else {
                                 userPressed(false);
                               }
@@ -470,7 +469,7 @@ class _CommentState extends State<Comment> {
                             icon: const Icon(Icons.comment, color: Colors.white,),
                             onPressed: () {
                               if(!widget.userProvider.isLoggedIn){
-                                CustomWidgets.needLoginSnackbar(context, "Please log in to reply a comment! ");
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to reply a comment! ", userProvider);
                               } else {
                                 toggleFormVisibility();
                               }
