@@ -73,7 +73,7 @@ class _GroupsPageState extends State<GroupsPage> {
                   adminName: item['admin']['username'],
                   title: item['name'],
                   maxNumbers: item['maxNumberOfMembers'],
-                  isJoined: item['isJoined'] ?? true,
+                  isJoined: item['isJoined'] ?? false,
                   tags: item['tags'],
                   onRefresh: () {},
                 ))
@@ -107,7 +107,7 @@ class _GroupsPageState extends State<GroupsPage> {
                   adminName: item['admin']['username'],
                   title: item['name'],
                   maxNumbers: item['maxNumberOfMembers'],
-                  isJoined: item['isJoined'] ?? true,
+                  isJoined: item['isJoined'] ?? false,
                   tags: item['tags'],
                   onRefresh: () {},
                 ))
