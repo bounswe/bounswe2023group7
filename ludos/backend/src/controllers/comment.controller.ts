@@ -69,7 +69,10 @@ export class CommentController {
     @Req() req: AuthorizedRequest,
     @Param('parentId') parentId: string,
   ) {
-    return await this.commentService.getCommentsByParent(req.user?.id, parentId);
+    return await this.commentService.getCommentsByParent(
+      req.user?.id,
+      parentId,
+    );
   }
 
   @ApiOperation({ summary: 'Comment on a post/comment/review' })

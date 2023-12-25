@@ -4,6 +4,7 @@ import 'game_page.dart';
 import 'helper/APIService.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
+import 'reusable_widgets/last_activity_summary.dart';
 
 class VisitUserPage extends StatefulWidget {
   final String? username;
@@ -18,11 +19,13 @@ class VisitUserPage extends StatefulWidget {
 class _VisitUserPageState extends State<VisitUserPage> {
   final APIService apiService = APIService();
   late Map<String, dynamic> userData = {};
+  late List<Map<String, dynamic>>? lastActivities = [];
 
   @override
   void initState() {
     super.initState();
     loadUserData();
+    fetchLastActivities();
   }
 
   Future<void> loadUserData() async {
@@ -31,7 +34,6 @@ class _VisitUserPageState extends State<VisitUserPage> {
       setState(() {
         if(response.statusCode == 200){
           userData = json.decode(response.body);
-          print(userData);
         }
         else{
           userData = {};
@@ -42,6 +44,33 @@ class _VisitUserPageState extends State<VisitUserPage> {
       print('Error loading game data: $e');
     }
   }
+
+  Future<void> fetchLastActivities() async {
+    final response = await apiService.lastActivities(
+      widget.userProvider.token,
+      limit: 5,
+      ownerUserId: widget.id,
+    );
+    try {
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        for (var i = 0; i < responseData["items"].length; i++) {
+          if(responseData["items"][i]['user']['id'] == widget.id){
+            setState(() {
+              lastActivities!.add(responseData["items"][i]);
+            });
+          }
+        }
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+        throw Exception('Failed to load posts');
+      }
+    } catch (error) {
+      print("Error: $error");
+      throw Exception('Failed to load threads!');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -211,6 +240,65 @@ class _VisitUserPageState extends State<VisitUserPage> {
               )
           ),
           const SizedBox(height: 20),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 20),
+              Text(
+                'Associated Teams & Companies:',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.white,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 5),
+          Container(
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+              child: (userData['associatedTeam'] != null) ?
+              Text(
+                userData['associatedTeam'].toString(),
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+                  :
+              const Text(
+                '',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+          ),
+          const SizedBox(height: 5),
+          Container(
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+              child: (userData['associatedCompany'] != null) ?
+              Text(
+                userData['associatedCompany'].toString(),
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+                  :
+              const Text(
+                '',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.blue2,
+                ),
+              )
+          ),
+          const SizedBox(height: 20),
           const Divider(
             height: 5,
             color: MyColors.orange,
@@ -251,36 +339,6 @@ class _VisitUserPageState extends State<VisitUserPage> {
 
                     child: Image.asset(
                       'assets/images/steam-logo-black-transparent.png',
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover, // You can adjust the fit property based on your needs
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.darkBlue,
-                  ),
-                  onPressed: () {},
-                  child: ClipOval(// Set your desired height
-
-                    child: Image.asset(
-                      'assets/images/ealogo800.jpg',
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover, // You can adjust the fit property based on your needs
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.darkBlue,
-                  ),
-                  onPressed: () {},
-                  child: ClipOval(// Set your desired height
-
-                    child: Image.asset(
-                      'assets/images/Epic-Games-Emblem.png',
                       height: 100,
                       width: 100,
                       fit: BoxFit.cover, // You can adjust the fit property based on your needs
@@ -401,7 +459,57 @@ class _VisitUserPageState extends State<VisitUserPage> {
               }).toList(),
             ),
           ),
-
+          const SizedBox(height: 20),
+          const Divider(
+            height: 5,
+            color: MyColors.orange,
+            thickness: 2,
+            indent: 25,
+            endIndent: 25,
+          ),
+          const SizedBox(height: 10),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 20),
+              Text(
+                'Last Activities:',
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.white,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: lastActivities!.map<Widget>((activity) {
+                return LastActivitySummary(
+                    gameID: activity['game']['id'].toString(),
+                    postID: activity['id'].toString(),
+                    gameTitle: activity['game']['title'].toString(),
+                    createdAt: activity['createdAt'].toString(),
+                    userID: activity['user']['id'].toString(),
+                    postTitle: activity['title'].toString(),
+                    postContent: activity['body'].toString(),
+                    gameCoverlink: activity['game']['coverLink'].toString(),
+                    userProvider: widget.userProvider);
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Divider(
+            height: 5,
+            color: MyColors.orange,
+            thickness: 2,
+            indent: 25,
+            endIndent: 25,
+          ),
+          const SizedBox(height: 10),
         ],
       ),
       ),

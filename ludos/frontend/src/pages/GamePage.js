@@ -242,10 +242,39 @@ function GamePage(id) {
         "createAnnotation",
         handleCreateAnnotation,
       );
+      gameBioAnnotatorRef.current.on(
+        "deleteAnnotation",
+        handleDeleteAnnotation,
+      );
 
       return () => gameBioAnnotatorRef.current.destroy();
     }
   }, [game]);
+
+  const parseId = (id) => {
+    const parts = id.split("/");
+    return {
+      source: parts[0],
+      type: parts[1],
+      itemId: parts[2],
+      date: parts[3],
+    };
+  };
+
+  const handleDeleteAnnotation = async (annotation) => {
+    id = annotation.id;
+
+    try {
+      const { source, type, itemId, date } = parseId(id);
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/${source}/${type}/${itemId}/${date}`;
+
+      const response = await axios.delete(url);
+
+      console.log("Annotation deleted:", response.data);
+    } catch (error) {
+      console.error("Error deleting annotation:", error);
+    }
+  };
 
   const handleCreateAnnotation = async (annotation) => {
     // Prepare your API request body
@@ -547,7 +576,7 @@ function GamePage(id) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {game.averageRating}/5
+              {averageRating.toFixed(2)}/5
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
@@ -577,7 +606,7 @@ function GamePage(id) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {game.averageCompletionDuration}
+              {game.averageCompletionDuration.toFixed(2)} Hours
             </Typography>
           </Grid>
         </Grid>
@@ -769,6 +798,7 @@ function GamePage(id) {
               <TabPanel value="1">
                 <Typography style={{ fontSize: "15px", color: "white" }}>
                   <DescriptionTab
+                    gameId={game.id}
                     story={game.gameStory}
                     guide={game.gameGuide}
                     trivia={game.trivia}
