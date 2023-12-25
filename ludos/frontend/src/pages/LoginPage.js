@@ -15,12 +15,11 @@ import axios from "axios";
 import MuiAlert from "@mui/material/Alert";
 import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate } from "react-router-dom";
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -31,7 +30,7 @@ const backgroundImage = require("../assets/logo.png");
 export default function Login() {
   useEffect(() => {
     window.scrollTo(0, 0);
-}, []);
+  }, []);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -118,6 +117,8 @@ export default function Login() {
             flexDirection: "column",
             alignItems: "center",
             backgroundColor: "#0C1929",
+            maxHeight: "100%",
+            justifyContent: "center",
           }}
         >
           <Box
@@ -204,9 +205,11 @@ export default function Login() {
                     variant="outlined"
                     required
                     fullWidth
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     error={passwordEmpty}
-                    helperText={passwordEmpty ? "Password cannot be empty." : ""}
+                    helperText={
+                      passwordEmpty ? "Password cannot be empty." : ""
+                    }
                     onChange={(e) => {
                       setPasswordEmpty(false);
                       setPassword(e.target.value);
@@ -249,7 +252,11 @@ export default function Login() {
                     xs
                     sx={{ display: "flex", alignItems: "flex-start" }}
                   >
-                    <Link href="/forgot-password" variant="body2" color="#F49A32">
+                    <Link
+                      href="/forgot-password"
+                      variant="body2"
+                      color="#F49A32"
+                    >
                       Forgot password?
                     </Link>
                   </Grid>
