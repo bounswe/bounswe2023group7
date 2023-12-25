@@ -46,7 +46,7 @@ class _GamePageState extends State<GamePage> {
     super.initState();
     loadGameData();
     initializeFollowState();
-    ToList(fetchReviewData(widget.token));
+    recGameList = loadRecGames(widget.userProvider, widget.userProvider.token);
     print("getlisted");
   }
 
@@ -122,63 +122,14 @@ class _GamePageState extends State<GamePage> {
     });
   }
 
-  Future<List<Review>> fetchReviewData(String? token) async {
-    final response = await APIService().listReviews(widget.token, widget.id);
-    try {
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
-        return Future.wait(
-            responseData.map<Future<Review>>((dynamic item) async {
-          final userResponse =
-              await APIService().userInfoById(item['userId'], widget.token);
-
-          if (userResponse.statusCode == 200) {
-            setState(() {});
-            return Review(
-              token: widget.token,
-              userProvider: widget.userProvider,
-              reviewId: item['reviewId'],
-              content: item['content'],
-              rating: item['rating'].toDouble(),
-              gameId: item['gameId'],
-              userId: item['userId'],
-              username: json.decode(userResponse.body)['username'],
-              thumbUps: item['likedUserCount'] ?? 0,
-              thumbDowns: item['dislikedUserCount'] ?? 0,
-              time: item['createdAt'],
-              isLiked: item['isLikedByUser'] ?? false,
-              isDisliked: item['isDislikedByUser'] ?? false,
-            );
-          } else {
-            print(
-                "Error fetching user info: ${userResponse.statusCode} - ${userResponse.body}");
-            throw Exception('Failed to load user info!');
-          }
-        }).toList());
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
-        throw Exception('Failed to load reviews!');
-      }
-    } catch (error) {
-      print("Error: $error");
-      throw Exception('Failed to load reviews from API!');
-    }
-  }
-
-  Future<void> ToList(Future<List<Review>> reviewList) async {
-    reviews = await reviewList;
-  }
-
   final TextEditingController contentController = TextEditingController();
   final TextEditingController rateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    var userProvider = Provider.of<UserProvider>(context);
-    recGameList = loadRecGames(userProvider, userProvider.token);
     return WillPopScope(
         onWillPop: () async {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(userProvider: widget.userProvider)));
       return false;
     },
     child: SelectionArea(contextMenuBuilder:(context, editableTextState) {
@@ -729,15 +680,6 @@ class _GamePageState extends State<GamePage> {
                     ),
                   ]),
                 ),
-            Column(children: [
-              const Divider(
-                height: 4.0,
-                thickness: 4.0,
-                color: MyColors.lightBlue,
-              ),
-              if(!reviews.isEmpty)
-                reviews[0],
-            ])
           ],
         ),
       ),

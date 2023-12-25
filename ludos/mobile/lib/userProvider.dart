@@ -9,11 +9,11 @@ class UserProvider extends ChangeNotifier {
   String get username => _username;
   String? get token => _token;
 
-  void setLoggedIn(bool value, String username, String? token) {
+  UserProvider setLoggedIn(bool value, String username, String? token) {
     _isLoggedIn = value;
     _username = username;
     _token = token;
     notifyListeners();
+    return this;
   }
-
 }
