@@ -869,4 +869,13 @@ class APIService {
       }
   }
 
+    Future<http.Response> listGroupsSearch(String gameId, String? authToken) async {
+    var uri = Uri.parse("$baseURL/group?gameId=$gameId");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
 }

@@ -182,13 +182,16 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   popupProps: PopupProps.menu(
                     showSearchBox: true,
                   ),
-                  dropdownButtonProps: DropdownButtonProps(color: Colors.blue,),
+                  dropdownButtonProps: DropdownButtonProps(color: MyColors.darkBlue,),
                   dropdownDecoratorProps: DropDownDecoratorProps(
                     textAlignVertical: TextAlignVertical.center,
                     dropdownSearchDecoration: InputDecoration(
-                        border: OutlineInputBorder(
+                      filled: true,  // Set to true to fill the background
+                      fillColor: Colors.white, 
+                      border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(50),
-                        )),
+                      )
+                    ),
                   ),
                   onChanged: (value) {
                     setState(() {

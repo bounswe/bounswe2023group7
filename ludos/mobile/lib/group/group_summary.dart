@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:ludos_mobile_app/group/group_page.dart';
+import 'package:ludos_mobile_app/helper/APIService.dart';
 import 'package:ludos_mobile_app/helper/colors.dart';
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 
 import '../game_page.dart';
 import '../userProvider.dart';
@@ -19,6 +22,7 @@ class GroupSummary extends StatefulWidget {
   final int maxNumbers;
   final bool isJoined;
   final List<dynamic> tags;
+  final VoidCallback onRefresh;
 
   const GroupSummary(
       {Key? key,
@@ -32,7 +36,8 @@ class GroupSummary extends StatefulWidget {
       required this.title,
       required this.maxNumbers,
       required this.isJoined,
-      required this.tags})
+      required this.tags,
+      required this.onRefresh})
       : super(key: key);
 
   @override
@@ -47,7 +52,8 @@ class GroupSummary extends StatefulWidget {
       title: title,
       maxNumbers: maxNumbers,
       isJoined: isJoined,
-      tags: tags);
+      tags: tags,
+      onRefresh: onRefresh);
 }
 
 class _GroupSummaryState extends State<GroupSummary> {
@@ -62,6 +68,9 @@ class _GroupSummaryState extends State<GroupSummary> {
   final int maxNumbers;
   final bool isJoined;
   final List<dynamic> tags;
+  final VoidCallback onRefresh;
+
+  bool joinState = false;
 
   _GroupSummaryState(
       {required this.userProvider,
@@ -74,11 +83,19 @@ class _GroupSummaryState extends State<GroupSummary> {
       required this.title,
       required this.maxNumbers,
       required this.isJoined,
-      required this.tags});
+      required this.tags,
+      required this.onRefresh});
 
   @override
   void initState() {
     super.initState();
+    joinState = isJoined;
+  }
+
+  Future<bool> getJoinState() async {
+    var response = await APIService().getGroup(widget.groupId, widget.token);
+    var bool = response['isJoined'];
+    return bool;
   }
 
   String timeAgo(String timestamp) {
@@ -118,8 +135,13 @@ class _GroupSummaryState extends State<GroupSummary> {
                 )),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => GroupPage(userProvider: userProvider, token: token, groupId: groupId, onRefresh: () {},),
-                        ));
+                builder: (context) => GroupPage(
+                  userProvider: userProvider,
+                  token: token,
+                  groupId: groupId,
+                  onRefresh: () {},
+                ),
+              ));
             },
             child: Column(
               children: [
@@ -213,18 +235,56 @@ class _GroupSummaryState extends State<GroupSummary> {
                   ),
                 ),
                 ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColors.darkBlue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        )),
-                    onPressed: () {
-                      //join&leave functionality
-                    },
-                    child: Text(
-                      isJoined ? "LEAVE" : "JOIN",
-                      style: const TextStyle(color: MyColors.white),
-                    ))
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.teal),
+                  ),
+                  onPressed: () {
+                    if (!widget.userProvider.isLoggedIn) {
+                      CustomWidgets.needLoginSnackbar(
+                          context, "Please log in to join a group!");
+                    } else {
+                      bool state = false;
+                      Future<bool> executeAsyncActions() async {
+                        bool state = false;
+                        try {
+                          if (joinState) {
+                            http.Response token = await APIService()
+                                .leaveGroup(widget.token, widget.groupId);
+                            if (token.statusCode == 200) {
+                              state = false;
+                              widget.onRefresh();
+                              print("Left!");
+                            } else {
+                              print("Error: ${token.statusCode}");
+                            }
+                          } else {
+                            http.Response token = await APIService()
+                                .joinGroup(widget.token, widget.groupId);
+                            if (token.statusCode == 200) {
+                              state = true;
+                              widget.onRefresh();
+                              print("Joined");
+                            } else {
+                              print("Error: ${token.statusCode}");
+                            }
+                          }
+                        } catch (error) {
+                          print("Error: $error");
+                        }
+                        bool joinleave = await getJoinState();
+                        return state;
+                      }
+
+                      executeAsyncActions().then((bool value) {
+                        setState(() {
+                          joinState = value;
+                        });
+                      });
+                    }
+                  },
+                  child: Text(joinState ? "Leave" : "Join"),
+                ),
               ],
             )),
         Container(
