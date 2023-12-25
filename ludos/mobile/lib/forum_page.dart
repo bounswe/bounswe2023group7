@@ -53,8 +53,8 @@ class _ForumPageState extends State<ForumPage> {
 
         return postLists
             .where((item) =>
-            item['upcomingTitle'] != null &&
-            item['upcomingTitle']['isUpcomingTitle'] == true)
+            item['upcomingTitle'] == null ||
+            item['upcomingTitle']['isUpcomingTitle'] == false)
             .map((dynamic item) => ThreadSummary(
           token: widget.token,
           userProvider: widget.userProvider,
@@ -66,7 +66,7 @@ class _ForumPageState extends State<ForumPage> {
           username: item['user']['username'],
           userAvatar: item['user']['avatar'],
           thumbUps: item['numberOfLikes'],
-          thumbDowns: item['NumberOfDislikes'],
+          thumbDowns: item['numberOfDislikes'],
           time: item['createdAt'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
@@ -108,7 +108,7 @@ class _ForumPageState extends State<ForumPage> {
           username: item['user']['username'],
           userAvatar: item['user']['avatar'],
           thumbUps: item['numberOfLikes'],
-          thumbDowns: item['NumberOfDislikes'],
+          thumbDowns: item['numberOfDislikes'],
           time: item['createdAt'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
