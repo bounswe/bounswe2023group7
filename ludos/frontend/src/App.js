@@ -23,10 +23,11 @@ import CreateEntityPage from "./pages/CreateEntityPage.js";
 import GroupPage from "./pages/GroupPage.js";
 import GroupsPage from "./pages/GroupsPage.js";
 import CreateGroupPage from "./pages/CreateGroupPage.js";
+import EmptyPage from "./pages/EmptyPage.js";
 
 function App() {
   const [games, setGames] = useState([]);
-  const limit = 50; // Set the desired limit (number of games per request)
+  const limit = 70; // Set the desired limit (number of games per request)
   const link = `http://${process.env.REACT_APP_API_URL}/game/?limit=${limit}`;
 
   const convertToSlug = (text) => {
@@ -522,6 +523,14 @@ function App() {
             element={
               <Layout>
                 <CreateGroupPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Layout>
+                <EmptyPage />
               </Layout>
             }
           />

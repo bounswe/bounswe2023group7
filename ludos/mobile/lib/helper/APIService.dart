@@ -6,6 +6,7 @@ import 'dart:io';
 
 class APIService {
   var baseURL = "http://164.92.195.35:8080";
+
   String? token = "";
   Future<(String?, int)> login(String username, String password) async {
     var uri = Uri.parse("$baseURL/user/login");
@@ -24,6 +25,8 @@ class APIService {
     print("token");
     print(token);
     print("token");
+
+    print("APICALL: login called");
     return res;
   }
 
@@ -37,6 +40,7 @@ class APIService {
     });
     final response = await http
         .post(uri, body: body, headers: {'content-type': "application/json"});
+    print("APICALL: signUp called");
     return response;
   }
 
@@ -51,6 +55,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: change password called");
     return response;
   }
 
@@ -93,7 +98,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: create game called");
     return response;
   }
 
@@ -103,6 +108,7 @@ class APIService {
       String content,
       List<String> media,
       List<String> tags,
+      Map<String, dynamic> upcomingTitle,
       String gameid) async {
     var uri = Uri.parse("$baseURL/post");
     final body = jsonEncode(<String, Object>{
@@ -111,12 +117,13 @@ class APIService {
       'gameId': gameid,
       'media': media,
       'tags': tags,
+      'upcomingTitle': upcomingTitle
     });
     final response = await http.post(uri, body: body, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: create thread called");
     return response;
   }
 
@@ -127,7 +134,7 @@ class APIService {
     });
     final response = await http
         .post(uri, body: body, headers: {'content-type': "application/json"});
-
+    print("APICALL: reset password called");
     return response;
   }
 
@@ -141,7 +148,7 @@ class APIService {
     });
     final response = await http
         .post(uri, body: body, headers: {'content-type': "application/json"});
-
+    print("APICALL: verify code called");
     return response;
   }
 
@@ -192,7 +199,7 @@ class APIService {
       'content-type': 'application/json',
       'Authorization': 'Bearer $authToken',
     });
-
+    print("APICALL: list games called");
     return response;
   }
 
@@ -204,6 +211,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: list search games called");
     return response;
   }
 
@@ -213,6 +221,8 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+
+    print("APICALL: list threads called");
     if (response.statusCode == 200) {
       return response;
     } else {
@@ -226,6 +236,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: follow game called");
     return response;
   }
 
@@ -235,6 +246,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: unfollow game called");
     return response;
   }
 
@@ -244,6 +256,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: userinfo called");
     return response;
   }
 
@@ -253,6 +266,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: userbyid called");
     return response;
   }
 
@@ -262,6 +276,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: get game called");
     if (response.statusCode == 200) {
       return json.decode(response.body) as Map<String, dynamic>;
     } else {
@@ -278,7 +293,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: create review called");
     return response;
   }
 
@@ -288,6 +303,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: like review called");
     return response;
   }
 
@@ -298,6 +314,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: dislike review called");
     return response;
   }
 
@@ -307,7 +324,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: like comment called");
     if (response.statusCode == 200) {
       return response;
     } else {
@@ -323,6 +340,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: dislike commnet called");
     if (response.statusCode == 200) {
       return response;
     } else {
@@ -336,7 +354,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: list reviews called");
     return response;
   }
 
@@ -346,6 +364,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: user info by id  called");
     return response;
   }
 
@@ -356,6 +375,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: get thread called");
     if (response.statusCode == 200) {
       return json.decode(response.body) as Map<String, dynamic>;
     } else {
@@ -369,6 +389,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: like thread called");
     return response;
   }
 
@@ -379,6 +400,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: dislike thread called");
     return response;
   }
 
@@ -393,6 +415,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: create comment called");
     return response;
   }
 
@@ -402,7 +425,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: list comments called");
     return response;
   }
 
@@ -413,8 +436,52 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: listallthreads called");
     return response;
+  }
+
+  Future<http.Response> lastActivities(String? authToken,
+  {int page = 1,
+  int limit = 5,
+  String? searchKey,
+  String? tags,
+  String? gameId,
+  String? groupId,
+  String? ownerUserId,
+  bool isLiked = false,
+  bool isDisliked = false,
+  String order = "DESC",
+  String orderByKey = "createdAt"}) async {
+
+    final Map<String, String> queryParams = {
+      'page': page.toString(),
+      'limit': limit.toString(),
+      'order': order,
+      'isLiked': isLiked.toString(),
+      'isDisliked': isDisliked.toString(),
+      'orderByKey': orderByKey,
+    };
+
+    if (searchKey != null) queryParams['searchKey'] = searchKey;
+    if (tags != null) queryParams['tags'] = tags;
+    if (groupId != null) queryParams['groupId'] = groupId;
+    if (ownerUserId != null) queryParams['ownerUserId'] = ownerUserId;
+    if(gameId != null) queryParams['gameId'] = gameId;
+
+
+    var uri = Uri.parse("$baseURL/post").replace(queryParameters: queryParams);
+
+    // Make the HTTP request for each gameId
+    var res = await http.get(uri, headers: {
+      'content-type': 'application/json',
+      'Authorization': 'Bearer $authToken',
+      HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+    });
+    if (res.statusCode == 200) {
+      return res;
+    } else {
+      throw Exception('Failed to load threads');
+    }
   }
 
   Future<http.Response> listPosts(String? authToken,
@@ -460,10 +527,11 @@ class APIService {
         'Authorization': 'Bearer $authToken',
         HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
       });
+      print("APICALL: list posts called");
 
       if (res.statusCode == 200) {
         // Add individual response to the list
-        print("Individual Response: ${res.body}");
+        //print("Individual Response: ${res.body}");
         individualResponses.add(res);
       } else {
         throw Exception('Failed to load threads');
@@ -516,7 +584,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: search called");
     return response;
   }
 
@@ -562,6 +630,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: edit game called");
     return response;
   }
 
@@ -572,6 +641,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: list treads by search called");
     if (response.statusCode == 200) {
       return response;
     } else {
@@ -598,6 +668,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: edit profile called");
     return response;
   }
 
@@ -609,7 +680,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: create rate called");
     return response;
   }
 
@@ -625,10 +696,7 @@ class APIService {
     var uri = Uri.parse("$baseURL/entity/$gameId");
     Map<String, String> con = {};
     con['image'] = image;
-    con['description'] = contentmsg;
-    for (int i = 0;
-        i < nameControllers.length && i < valueControllers.length;
-        i++) {
+    for (int i = 0; i < nameControllers.length && i < valueControllers.length; i++) {
       String name = nameControllers[i].text;
       String value = valueControllers[i].text;
       con[name] = value;
@@ -637,13 +705,14 @@ class APIService {
       'type': type,
       'name': name,
       'content': con,
-    });
-    print(body);
+      'description': contentmsg,
+      });
+      print(body);
     final response = await http.post(uri, body: body, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: create entity called");
     return response;
   }
 
@@ -654,7 +723,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: list entities by game called");
     return response;
   }
 
@@ -664,6 +733,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: get entity called");
     if (response.statusCode == 200) {
       return json.decode(response.body) as Map<String, dynamic>;
     } else {
@@ -677,7 +747,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: delete thread called");
     return response;
   }
 
@@ -701,7 +771,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: edit thread called");
     return response;
   }
 
@@ -711,7 +781,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: delete comment called");
     return response;
   }
 
@@ -725,7 +795,7 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
-
+    print("APICALL: edit comment called");
     return response;
   }
 
@@ -736,11 +806,119 @@ class APIService {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
     });
+    print("APICALL: getgamerecc called");
     return response;
   }
 
   Future<http.Response> getGameRecForUser(String? authToken) async {
     var uri = Uri.parse("$baseURL/user/suggested");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    print("APICALL: get game rec for the user called");
+    return response;
+  }
+  
+  Future<http.Response> createAnnotationGameBio(
+      String? authToken,
+      String gameID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/gamebio/$gameID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationGameBio(
+      String? authToken, String gameID) async {
+    var uri = Uri.parse("$baseURL/annotation/gamebio/$gameID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> createAnnotationThread(
+      String? authToken,
+      String threadID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/post/$threadID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationThread(
+      String? authToken, String threadID) async {
+    var uri = Uri.parse("$baseURL/annotation/post/$threadID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+
+  Future<http.Response> createAnnotationEntity(
+      String? authToken,
+      String entityID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/entity/$entityID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationEntity(
+      String? authToken, String entityID) async {
+    var uri = Uri.parse("$baseURL/annotation/entity/$entityID");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
@@ -775,6 +953,41 @@ class APIService {
 
   Future<http.Response> listGroups(String? authToken) async {
     var uri = Uri.parse("$baseURL/group/");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+    Future<http.Response> createAnnotationComment(
+      String? authToken,
+      String commentID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/comment/$commentID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationComment(
+      String? authToken, String commentID) async {
+    var uri = Uri.parse("$baseURL/annotation/comment/$commentID");
     final response = await http.get(uri, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
@@ -876,6 +1089,7 @@ class APIService {
       'Authorization': 'Bearer $authToken'
     });
     return response;
-  }
+ }
+
 
 }

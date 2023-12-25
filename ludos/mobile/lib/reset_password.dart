@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'login_page.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({super.key});
+  final UserProvider userProvider;
 
+  const ResetPassword({Key? key, required this.userProvider})
+      : super(key: key);
   @override
   State<ResetPassword> createState() => _ResetPasswordState();
 }
@@ -50,7 +53,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   void _navigateToLoginPage(BuildContext context) {
       timer?.cancel(); // Cancel the timer if it's still active.
       // Navigate to the Sign-Up page after a 2-second delay.
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage(userProvider: widget.userProvider)));
   }
 
   @override

@@ -239,7 +239,7 @@ class _DetailedGameSearchState extends State<DetailedGameSearch> {
                         setState(() {
                           if(widget.userProvider.username == ''){
                             SnackBar snackBar = SnackBar(
-                              content: Text('You must be logged in to use this feature'),
+                              content: const Text('You must be logged in to use this feature'),
                               backgroundColor: MyColors.red,
                             );
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);

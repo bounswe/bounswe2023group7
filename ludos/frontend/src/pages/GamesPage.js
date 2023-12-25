@@ -1,15 +1,27 @@
-import React, { useState } from "react";
-import { Typography } from "@mui/material";
+import React, { useState, useRef } from "react";
+import {
+  Button,
+  Typography,
+  Chip,
+  FormControl,
+  Grid,
+  Input,
+  Select,
+  MenuItem,
+  Checkbox,
+  FormControlLabel,
+  Pagination,
+} from "@mui/material";
 import Container from "@mui/material/Container";
 import TrendingGamesSlider from "../components/TrendingGamesSlider";
 import GameCard from "../components/GameCard";
-import TrendingGames from "../components/TrendingGames";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import ForumTopic from "../components/ForumTopic";
+/*
 const gameHighlight = [
   {
     title: "Baldur's Gate 3",
@@ -32,60 +44,7 @@ const gameHighlight = [
       "Take on the role of a football manager in Football Manager 2024, where every decision you make shapes the destiny of your team. Immerse yourself in the world of football, filled with tactics, transfers, and morally complex choices as you strive for victory on the pitch.",
   },
 ];
-
-// Mock data for TrendingGames
-const trendingGames = [
-  {
-    name: "EA FC24",
-    imageUrl:
-      "https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/f33dc5483be5538172f6e326dc2a4266/32/256x256.png",
-  },
-  {
-    name: "Spiderman 2",
-    imageUrl:
-      "https://sm.ign.com/t/ign_nordic/cover/m/marvels-sp/marvels-spider-man-2_fx3k.128.jpg",
-  },
-  {
-    name: "Resident Evil 4 Remake",
-    imageUrl:
-      "https://www.techpowerup.com/review/resident-evil-4-remake-dlss-and-xess-community-patch/images/small.png",
-  },
-  {
-    name: "Starfield",
-    imageUrl:
-      "https://www.techpowerup.com/review/starfield-fsr-2-2/images/small.png",
-  },
-  {
-    name: "Diablo VI",
-    imageUrl:
-      "https://b.thumbs.redditmedia.com/AgOjcpx7M7ji4yw0KORj1831_yY8kODhBL6wdxK8WJE.png",
-  },
-  {
-    name: "Valorant",
-    imageUrl:
-      "https://pbs.twimg.com/profile_images/1271880138507145216/jEx4bMW0_400x400.png",
-  },
-  {
-    name: "Call of Duty: Modern Warfare 3",
-    imageUrl:
-      "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2e965704-45d5-4545-a786-8281bc7fc34a/d49wyde-803bbc73-2696-4d42-8fba-623273051caf.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzJlOTY1NzA0LTQ1ZDUtNDU0NS1hNzg2LTgyODFiYzdmYzM0YVwvZDQ5d3lkZS04MDNiYmM3My0yNjk2LTRkNDItOGZiYS02MjMyNzMwNTFjYWYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.QR0J8DKc5mYXpnXgMSLM3paX78wgc37Lv9_VCoCAn74",
-  },
-  {
-    name: "Grand Theft Auto V",
-    imageUrl:
-      "https://i.pinimg.com/474x/d3/18/e8/d318e8b67185dd89c801153f19480ea9.jpg",
-  },
-  {
-    name: "Lost Ark",
-    imageUrl:
-      "https://styles.redditmedia.com/t5_5uyabk/styles/communityIcon_7jlrtwb7y3i81.png",
-  },
-  {
-    name: "Mount & Blade II: Bannerlord",
-    imageUrl:
-      "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/8efd62b4-05ec-4237-9336-abae8a8801fb/ddu05dr-1216baa8-bcb0-4401-8da0-b03a99718b87.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzhlZmQ2MmI0LTA1ZWMtNDIzNy05MzM2LWFiYWU4YTg4MDFmYlwvZGR1MDVkci0xMjE2YmFhOC1iY2IwLTQ0MDEtOGRhMC1iMDNhOTk3MThiODcucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.5zIK3XDBGnQeWicltw-QG8nybs0AvOG5w3Wr9Zh7V-M",
-  },
-];
+*/
 
 const convertToSlug = (text) => {
   return text
@@ -95,14 +54,30 @@ const convertToSlug = (text) => {
     .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
     .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
     .replace(/--+/g, "-"); // Replace multiple dashes with single dash
-}
+};
 
 export default function GamesPage() {
+  const myComponentRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
   const [searchKey, setSearchKey] = useState("");
   const [games, setGames] = useState([]);
   const [suggestedGames, setSuggestedGames] = useState([]);
+  const [upcomingTitles, setUpcomingTitles] = useState([]);
+  const [detailSearch, setDetailSearch] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [tags, setTags] = useState([]);
+  const [currTag, setCurrTag] = useState("");
+  const [developer, setDeveloper] = useState("");
+  const [sortBy, setSortBy] = useState("title");
+  const [sortOrder, setSortOrder] = useState("ASC");
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [page, setPage] = useState(1);
+  const [refresh, setRefresh] = useState(false);
+  const [auth, setAuth] = useState(false);
+  const [detailGames, setDetailGames] = useState([]);
+  const [pageCount, setPageCount] = useState(1);
 
+  const [gameHighlight, setGameHighlight] = useState([]);
 
   const axiosInstance = axios.create({
     baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -113,11 +88,107 @@ export default function GamesPage() {
 
   const navigate = useNavigate();
 
+  const handleDetailSearch = () => {
+    if (detailSearch) {
+      setDetailSearch(false);
+    } else {
+      setDetailSearch(true);
+    }
+  };
+
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const handleDeveloperInputChange = (event) => {
+    setDeveloper(event.target.value);
+  };
+  const handleTagsChange = (e) => {
+    setCurrTag(e.target.value);
+  };
+
+  const handleKeyUp = (e) => {
+    if (e.keyCode == 13) {
+      setTags((oldState) => [...oldState, e.target.value]);
+      setCurrTag("");
+    }
+  };
+
+  const handleDeleteTag = (item, index) => {
+    let arr = [...tags];
+    arr.splice(index, 1);
+    console.log(item);
+    setTags(arr);
+  };
+
+  const handleSortByChange = (event) => {
+    setSortBy(event.target.value);
+  };
+
+  const handleSortOrderChange = (event) => {
+    setSortOrder(event.target.value);
+  };
+
+  const handleIsFollowedChange = (event) => {
+    setIsFollowed(event.target.checked);
+  };
+
+  const handleFilterButtonClick = () => {
+    setPage(1);
+    setRefresh(!refresh);
+    console.log("girdim");
+  };
+
   const handleGameRoute = (value) => {
     navigate(`/game/${convertToSlug(value)}`);
   };
 
   useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      const link1 = `http://${process.env.REACT_APP_API_URL}/user/info`;
+      axios
+        .get(link1, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        })
+        .then(() => {
+          setAuth(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          setAuth(false);
+        });
+    } else {
+      setAuth(false);
+    }
+    const tagsString = tags.join("%2C");
+    const link = `http://${process.env.REACT_APP_API_URL}/game?page=${page}&searchKey=${searchInput}&tags=${tagsString}&developer=${developer}&order=${sortOrder}&isFollowed=${isFollowed}&orderByKey=${sortBy}`;
+    console.log(link);
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data.items);
+        setDetailGames(response.data.items);
+        setPageCount(response.data.meta.totalPages);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [refresh]);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    setRefresh(!refresh);
+  };
+
+  useEffect(() => {
+    fetchTrendingGames();
+
     axiosInstance
       .get(`/user/suggested`)
       .then((response) => {
@@ -129,6 +200,70 @@ export default function GamesPage() {
       });
   }, []);
 
+  const fetchTrendingGames = async () => {
+    try {
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_API_URL}/game?limit=3&order=DESC&orderByKey=followers`,
+      );
+
+      if (response.data) {
+        const formattedGames = response.data.items.map((game) => ({
+          title: game.title,
+          image: game.coverLink,
+          content: game.gameBio,
+        }));
+        setGameHighlight(formattedGames);
+        console.log("formatted games", formattedGames);
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
+  useEffect(() => {
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
+    };
+
+    axiosInstance
+      .get(
+        "/post?isLiked=false&isDisliked=false&isUpcomingTitle=true&order=ASC&orderByKey=numberOfLikes",
+      )
+      .then((response) => {
+        const formattedTopics = response.data.items.map((topic) => ({
+          title: topic?.title,
+          numOfReplies: topic?.numOfReplies,
+          userOpened: topic?.user.username,
+          imgsrc: topic?.user.avatar,
+          whenOpened: new Date(topic?.createdAt).toLocaleDateString(
+            "en-US",
+            options,
+          ),
+          forumTags: topic?.tags,
+          forumGame: topic?.game.title,
+          id: topic?.id,
+          userId: topic?.user.id,
+          isUpcomingTitle:
+            topic?.upcomingTitle != null
+              ? topic?.upcomingTitle?.isUpcomingTitle
+              : false,
+        }));
+        console.log("formattedTopics:");
+        console.log(formattedTopics);
+        setUpcomingTitles(formattedTopics);
+        console.log("upcomingTitles:");
+        console.log(upcomingTitles);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -147,6 +282,16 @@ export default function GamesPage() {
       fetchGames();
     }
   }, [searchKey]);
+
+  const paginStyle = {
+    backgroundColor: "rgba(204, 204, 255, 0.9)",
+    borderRadius: "10px",
+    border: "4px solid rgba(51, 153, 255, 1)", // Çerçeve rengi ve genişliği
+    boxSizing: "border-box", // Kutu modelini içerir
+    fontFamily: "Trebuchet MS, sans-serif",
+    width: "auto",
+    marginTop: "10px",
+  };
 
   return (
     <div
@@ -189,7 +334,11 @@ export default function GamesPage() {
         </Typography>
       </div>
 
-      <TrendingGamesSlider games={gameHighlight} />
+      {gameHighlight.length > 0 ? (
+        <TrendingGamesSlider games={gameHighlight} />
+      ) : (
+        <div>Loading trending games...</div> // Placeholder for loading state
+      )}
       {/* Other sections */}
       <div
         style={{
@@ -220,7 +369,9 @@ export default function GamesPage() {
           value={searchValue}
           onChange={(event, newValue) => {
             setSearchValue(newValue);
-            handleGameRoute(newValue);
+            if (newValue) {
+              handleGameRoute(newValue);
+            }
           }}
           options={games.map((game) => game.title)}
           onInputChange={(event, newInputValue) => {
@@ -261,6 +412,251 @@ export default function GamesPage() {
             borderRadius: "40px",
           }}
         />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            marginLeft: "20px",
+            marginBottom: "10px",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="secondary"
+            style={{ borderRadius: "40px", alignItems: "flex-start" }}
+            onClick={handleDetailSearch}
+          >
+            Detailed Search
+          </Button>
+
+          {detailSearch ? (
+            <div style={{ padding: "10px" }}>
+              <Grid
+                item
+                xs={12}
+                style={{
+                  backgroundColor: "rgba(151, 153, 255)",
+                  height: `${myComponentRef?.current?.clientHeight + 520}px`,
+                  borderRadius: "10px",
+                  paddingRight: "10px",
+                  marginTop: "10px",
+                  padding: "10px",
+                }}
+              >
+                {/* Search Input */}
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Game Title:
+                </Typography>
+                <TextField
+                  type="text"
+                  label="Search the GameTitle"
+                  placeholder="Search..."
+                  value={searchInput}
+                  onChange={handleSearchInputChange}
+                  variant="outlined"
+                  fullWidth
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                  }}
+                />
+
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Filter with Tags:
+                </Typography>
+                <div ref={myComponentRef}>
+                  <FormControl
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "20px",
+                      flexWrap: "wrap",
+                      flexDirection: "row",
+                      border: "2px solid lightgray",
+                      padding: 1,
+                      borderRadius: "4px",
+                      backgroundColor: "white",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <div className={"container"}>
+                      {tags.map((item, index) => (
+                        <Chip
+                          key={index}
+                          size="small"
+                          onDelete={() => handleDeleteTag(item, index)}
+                          label={item}
+                        />
+                      ))}
+                    </div>
+                    <Input
+                      value={currTag}
+                      onChange={handleTagsChange}
+                      onKeyDown={handleKeyUp}
+                    />
+                  </FormControl>
+                </div>
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Filter with Developer:
+                </Typography>
+                <TextField
+                  type="text"
+                  label="Search the Developer"
+                  placeholder="Search..."
+                  value={developer}
+                  onChange={handleDeveloperInputChange}
+                  variant="outlined"
+                  fullWidth
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                  }}
+                />
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Sort By:
+                </Typography>
+                <Select
+                  labelId="sort-by-label"
+                  id="sort-by"
+                  value={sortBy}
+                  onChange={handleSortByChange}
+                  label="Sort By Field"
+                  placeholder="Sort By Field"
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    width: "100%",
+                    borderRadius: "10px",
+                  }}
+                >
+                  {[
+                    { value: "title", label: "Title" },
+                    {
+                      value: "followers",
+                      label: "Followers",
+                    },
+                    {
+                      value: "id",
+                      label: "Id",
+                    },
+                    // Add other sorting options as needed
+                  ].map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Sort Order:
+                </Typography>
+                <Select
+                  labelId="sortTypeLabel"
+                  id="sortType"
+                  value={sortOrder}
+                  onChange={handleSortOrderChange}
+                  label="Sort By Field"
+                  placeholder="Sort By Field"
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    width: "100%",
+                    borderRadius: "10px",
+                  }}
+                >
+                  {[
+                    { value: "ASC", label: "Ascending" },
+                    { value: "DESC", label: "Descending" },
+                    // Add other sorting options as needed
+                  ].map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isFollowed}
+                      onChange={handleIsFollowedChange}
+                      name="isFollowed"
+                    />
+                  }
+                  label="Show followed games only"
+                />
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleFilterButtonClick}
+                  style={{
+                    backgroundColor: "pink",
+                    color: "white",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Filter
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} sm={9} md={9} lg={9}>
+                {detailGames?.map((game, index) => (
+                  <GameCard key={index} game={game} />
+                ))}
+                <Pagination
+                  count={pageCount}
+                  color="secondary"
+                  page={page}
+                  onChange={handlePageChange}
+                  style={paginStyle}
+                />
+              </Grid>
+            </div>
+          ) : (
+            <div />
+          )}
+        </div>
       </div>
 
       <div
@@ -290,7 +686,7 @@ export default function GamesPage() {
             variant="h4"
             gutterBottom
             style={{
-              color: "white",
+              color: "black",
               fontFamily: "Trebuchet MS, sans-serif",
               fontWeight: "bold",
             }}
@@ -307,11 +703,11 @@ export default function GamesPage() {
         </Container>
         <Container
           style={{
-            backgroundColor: "rgb(255, 255, 255, 0.6)",
+            backgroundColor: "rgb(255, 255, 255, 0.3)",
             flex: "1",
             borderRadius: "10px",
             textAlign: "center",
-            padding: "20px",
+            padding: "10px",
           }}
           sm={4}
         >
@@ -319,19 +715,21 @@ export default function GamesPage() {
             variant="h4"
             gutterBottom
             style={{
-              color: "white",
+              color: "black",
               fontFamily: "Trebuchet MS, sans-serif",
               fontWeight: "bold",
             }}
           >
-            Trending Games
+            Upcoming Titles
           </Typography>
           {/* Render your forum topics below */}
           <div>
             <div
               style={{ gap: "16px", display: "flex", flexDirection: "column" }}
             >
-              <TrendingGames games={trendingGames} />
+              {upcomingTitles.map((topic, index) => {
+                return <ForumTopic key={index} topic={topic} />;
+              })}
             </div>
           </div>
         </Container>

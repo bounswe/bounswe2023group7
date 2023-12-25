@@ -3,7 +3,10 @@ import {
   Controller,
   Get,
   Param,
-  Post
+  Post,
+  Delete,
+  HttpCode,
+  Query
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -16,7 +19,7 @@ import { AnnotationResponseDto } from '../dtos/annotation/response/response.dto'
 @ApiTags()
 @Controller()
 export class AnnotationController {
-  constructor(private readonly annotationService: AnnotationService) {}
+  constructor(private readonly annotationService: AnnotationService) { }
   @ApiOkResponse({
     description: 'Annotation created successfully',
     type: AnnotationResponseDto,
@@ -66,6 +69,21 @@ export class AnnotationController {
     return await this.annotationService.createAnnotationForPost(input, postId);
   }
   @ApiOkResponse({
+    description: 'Annotation created successfully',
+    type: AnnotationResponseDto,
+  })
+  @Post('image')
+  public async createAnnotationForImage(@Body() input: CreateAnnotationDto): Promise<AnnotationResponseDto> {
+    return await this.annotationService.createAnnotationForImage(input);
+  }
+  @ApiOkResponse({
+    type: [AnnotationResponseDto],
+  })
+  @Get('image')
+  public async getAnnotationsForImage(@Query("imageUrl") imageUrl: string): Promise<AnnotationResponseDto[]> {
+    return await this.annotationService.getAnnotationsForImage(imageUrl);
+  }
+  @ApiOkResponse({
     type: [AnnotationResponseDto],
   })
   @Get('gamebio/:gameId')
@@ -113,5 +131,40 @@ export class AnnotationController {
   @Get(':type/:itemId/:date')
   public async getAnnotationByDate(@Param("type") type: string, @Param("itemId") itemId: string, @Param("date") date: number): Promise<AnnotationResponseDto> {
     return await this.annotationService.getAnnotationByTypeAndItemIdAndDate(type, itemId, date);
+  }
+  // Delete a global resource
+  @ApiOkResponse({
+    description: 'Annotation deleted successfully',
+    status: 204,
+  })
+  @Delete(':source/:type/:itemId/:date')
+  @HttpCode(204)
+  async deleteAnnotationById(
+    @Param('source') source: string,
+    @Param('type') type: string,
+    @Param('itemId') itemId: string,
+    @Param('date') date: number,
+  ): Promise<void> {
+    // Generate global resource id
+    const annotationId = `${source}/${type}/${itemId}/${date}`;
+    return this.annotationService.deleteAnnotationById(annotationId);
+  }
+
+  @ApiOkResponse({
+    description: 'Annotation created successfully',
+    type: AnnotationResponseDto,
+  })
+
+  @Post('comment/:commentId')
+  public async createCommentAnnotation(@Body() input: CreateAnnotationDto, @Param('commentId') commentId: string): Promise<AnnotationResponseDto> {
+    return await this.annotationService.createCommentAnnotation(input, commentId);
+  }
+
+  @ApiOkResponse({
+    type: [AnnotationResponseDto],
+  })
+  @Get('comment/:commentId')
+  public async getAnnotationsForComment(@Param("commentId") commentId: string): Promise<AnnotationResponseDto[]> {
+    return await this.annotationService.getAnnotationsForComment(commentId);
   }
 }

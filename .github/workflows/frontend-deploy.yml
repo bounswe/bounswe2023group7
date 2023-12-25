@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build the Docker image
-        run: docker build ludos/frontend -t frontend --target=prod --build-arg REACT_APP_API_URL=3.125.225.39:8080
+        run: docker build ludos/frontend -t frontend --target=prod --build-arg REACT_APP_API_URL=164.92.195.35:8080
 
       - name: Save Docker image
         run: docker save frontend | gzip > frontend.tar.gz

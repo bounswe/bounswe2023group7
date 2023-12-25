@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
+import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
 import 'dart:async';
 import 'login_page.dart';
@@ -9,7 +10,9 @@ import 'helper/APIService.dart';
 
 class EnterActivation extends StatefulWidget {
   final String email;
-  const EnterActivation({Key? key, required this.email}) : super(key: key);
+  final UserProvider userProvider;
+
+  const EnterActivation({Key? key,required this.userProvider, required this.email}) : super(key: key);
 
   @override
   State<EnterActivation> createState() => _EnterActivationState();
@@ -55,7 +58,7 @@ class _EnterActivationState extends State<EnterActivation> {
     timer?.cancel(); // Cancel the timer if it's still active.
     // Navigate to the Sign-Up page after a 2-second delay.
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+        .pushReplacement(MaterialPageRoute(builder: (context) => LoginPage(userProvider:widget.userProvider)));
   }
 
   String activationCode = '';

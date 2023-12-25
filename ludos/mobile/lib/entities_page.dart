@@ -23,8 +23,8 @@ Future<List<EntitySummary>> fetchEntityData(
               type: item['type'],
               name: item['name'],
               content: EntityContent(
-                  image: item['content']['image'],
-                  role: (item['content']['description'] ?? "")),
+                  image: item['content']['image'] ?? item['content']['Image Link'] ?? "",
+                  role: (item['description'] ?? "")),
               id: item['id'],
               token: token,
               userProvider: userProvider))

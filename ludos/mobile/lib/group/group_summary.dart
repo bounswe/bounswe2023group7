@@ -214,23 +214,30 @@ class _GroupSummaryState extends State<GroupSummary> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: tags.map((tag) {
-                      return ElevatedButton(
-                        onPressed: () {
-                          // Handle button press for the specific tag
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: MyColors.orange.withOpacity(0.95),
-                          textStyle: const TextStyle(color: MyColors.lightBlue),
-                        ),
-                        child: Text(
-                          tag,
-                          style: const TextStyle(
-                            color: MyColors.darkBlue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17.0,
-                          ),
-                        ),
-                      );
+                      return Row( 
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Handle button press for the specific tag
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: MyColors.orange.withOpacity(0.95),
+                                  textStyle: const TextStyle(color: MyColors.lightBlue),
+                                ),
+                                child: Text(
+                                  tag,
+                                  style: const TextStyle(
+                                    color: MyColors.darkBlue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.0,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5
+                              )
+                             ],
+                          );
                     }).toList(),
                   ),
                 ),

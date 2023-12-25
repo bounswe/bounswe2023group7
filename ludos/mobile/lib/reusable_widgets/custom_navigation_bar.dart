@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/change_password.dart';
 import 'package:ludos_mobile_app/user_profile_page.dart';
@@ -8,8 +7,8 @@ import '../group/groups.dart';
 import '../helper/APIService.dart';
 import '../login_page.dart';
 import '../games_page.dart';
+import '../upcoming_titles.dart';
 import '../userProvider.dart';
-import 'package:provider/provider.dart';
 import '../helper/colors.dart';
 import '../detailed_user_search.dart';
 import '../main.dart';
@@ -29,8 +28,8 @@ class CustomNavigationBar extends StatelessWidget {
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Home(),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => Home(userProvider: userProvider),
                   ));
                 },
                 icon: const Icon(Icons.home)),
@@ -53,13 +52,15 @@ class CustomNavigationBar extends StatelessWidget {
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => UpcomingTitlePage(userProvider: userProvider, token: userProvider.token),
+                  ));
                 },
-                icon: const Icon(Icons.favorite)),
+                icon: const Icon(Icons.rocket)),
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => SearchLandingPage(userProvider: userProvider),
                   ));
                 },

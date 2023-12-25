@@ -129,7 +129,7 @@ class _SearchPagePostState extends State<SearchPagePost> {
       if (response.statusCode == 200) {
         print("Response: ${response.body}");
         final String responseData = response.body;
-        print("Response Data: $responseData");
+        print("Response Dataaaaaa: $responseData");
 
         List<dynamic> postLists = json.decode(responseData)['items'];
         print("Post Lists: $postLists");
@@ -142,8 +142,9 @@ class _SearchPagePostState extends State<SearchPagePost> {
           gameId: item['game']['id'],
           userId: item['user']['id'],
           username: item['user']['username'],
-          thumbUps: item['numberOfLikes'],
-          thumbDowns: item['NumberOfDislikes'],
+          userAvatar: item['user']['avatar'],
+          thumbUps: item['numberOfLikes'] ?? 0,
+          thumbDowns: item['NumberOfDislikes'] ?? 0,
           time: item['createdAt'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
@@ -160,55 +161,6 @@ class _SearchPagePostState extends State<SearchPagePost> {
       throw Exception('Failed to load threads!');
     }
   }
-
-  /*
-  Future<List<GameSummary>> fetchData(String? token) async {
-    //final response = await APIService().listSearchedGames(widget.userProvider.token, widget.searchKey);
-    //final response = await APIService().search(widget.userProvider.token, widget.searchKey!);
-    final response = await APIService().listGames(
-        widget.userProvider.token,
-        page: widget.page,
-        order: widget.order ?? '',
-        searchKey: widget.searchKey ?? '',
-        platforms: widget.platforms ?? '',
-        isFollowed: widget.isFollowed,
-        orderByKey: widget.criteria ?? '',
-        tags: widget.tags ?? '');
-    try {
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-
-        List<dynamic> gamesList = responseData['items'];
-        setState(() {
-          size = gamesList.length;
-        });
-        return gamesList
-            .map((dynamic item) => GameSummary(
-            title: item['title'],
-            averageRating: (item['averageRating'] == null
-                ? 0
-                : item['averageRating'].toDouble()),
-            coverLink: item['coverLink'],
-            numOfFollowers: item['followers'],
-            gameStory: item['gameStory'],
-            tags: item['tags'],
-            textColor: MyColors.white,
-            backgroundColor: MyColors.blue,
-            fontSize: 20,
-            id: item['id'],
-            token: widget.token,
-            userProvider: widget.userProvider))
-            .toList();
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
-        throw Exception('Failed to load games');
-      }
-    } catch (error) {
-      print("Error: $error");
-      throw Exception('Failed to load games');
-    }
-  }
-*/
 
   @override
   Widget build(BuildContext context) {

@@ -13,7 +13,7 @@ import '../thread_page.dart';
 class CustomWidgets{
   CustomWidgets._();
 
-  static needLoginSnackbar(BuildContext context, String message) {
+  static needLoginSnackbar(BuildContext context, String message, UserProvider userprovider) {
     ScaffoldMessenger.of(context)
         .showSnackBar(
         SnackBar(
@@ -43,7 +43,7 @@ class CustomWidgets{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => LoginPage()),
+                    builder: (context) => LoginPage(userProvider: userprovider)),
               );
             },
           ),
@@ -78,7 +78,7 @@ class CustomWidgets{
     );
   }
 
-  static deleteConfirmDialogThread(UserProvider userProvider, BuildContext context, String gameId, String type, String id){
+  static deleteConfirmDialogThread(UserProvider userProvider, BuildContext context, String gameName, String gameId, String type, String id){
     showDialog(
         context: context,
         builder: (context) {
@@ -128,7 +128,7 @@ class CustomWidgets{
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                builder: (context) => ForumPage(token: userProvider.token, userProvider: userProvider, gameid: gameId)
+                                builder: (context) => ForumPage(gameName: gameName,token: userProvider.token, userProvider: userProvider, gameid: gameId)
                               ));
                           } else {
                             Navigator.of(context).pop();

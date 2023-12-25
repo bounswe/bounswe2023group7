@@ -9,6 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthorizedRequest } from '../interfaces/common/authorized-request.interface';
 import { SerializerInterceptor } from '../interceptors/customSerializer.interceptor';
+import { SemanticSearchResponseDto } from '../dtos/search/response/semantic-search.response.dto';
 
 @Controller('search')
 @ApiTags('search')
@@ -20,7 +21,7 @@ export class SearchController {
   })
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Search for users, games and posts',
+    summary: 'Search for users, games, groups and posts',
   })
   @UseInterceptors(new SerializerInterceptor(SearchResponseDto))
   @Get('/:searchKey')
@@ -29,6 +30,24 @@ export class SearchController {
     @Param('searchKey') searchKey: string,
   ): Promise<SearchResponseDto> {
     return await this.searchService.search(
+      searchKey,
+      req.user ? req.user.id : undefined,
+    );
+  }
+  @ApiOkResponse({
+    type: SemanticSearchResponseDto,
+  })
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Semantic Search for users, games, groups and posts',
+  })
+  @UseInterceptors(new SerializerInterceptor(SemanticSearchResponseDto))
+  @Get('/semantic/:searchKey')
+  async semanticSearch(
+    @Req() req: AuthorizedRequest,
+    @Param('searchKey') searchKey: string,
+  ): Promise<SemanticSearchResponseDto> {
+    return await this.searchService.semanticSearch(
       searchKey,
       req.user ? req.user.id : undefined,
     );

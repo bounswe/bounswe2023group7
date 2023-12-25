@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/colors.dart';
-import 'login_page.dart';
-import 'main.dart';
 import 'reusable_widgets/game_summary.dart';
 import 'helper/APIService.dart';
 import 'create_game.dart';
@@ -90,7 +88,7 @@ class _SearchGameState extends State<SearchGame> {
                       token: widget.token, userProvider: widget.userProvider),
                 ));
               } else {
-                CustomWidgets.needLoginSnackbar(context, "Please log in to create a game! ");
+                CustomWidgets.needLoginSnackbar(context, "Please log in to create a game! ", widget.userProvider);
               }
             },
             child: const Icon(

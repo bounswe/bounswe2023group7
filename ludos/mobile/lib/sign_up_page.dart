@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:ludos_mobile_app/helper/colors.dart';
 import 'package:ludos_mobile_app/login_page.dart';
+import 'package:ludos_mobile_app/userProvider.dart';
 import 'helper/APIService.dart';
 import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
+  final UserProvider userProvider;
+
+  const SignUpPage({Key? key, required this.userProvider})
+      : super(key: key);
   @override
   SignUpPageState createState() => SignUpPageState();
 }
@@ -113,7 +118,7 @@ class SignUpPageState extends State<SignUpPage> {
                   int status = token.statusCode;
                   if (status == 200) {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => (LoginPage()),
+                      builder: (context) => (LoginPage(userProvider: widget.userProvider)),
                     ));
                   }
                   if (status == 409) {

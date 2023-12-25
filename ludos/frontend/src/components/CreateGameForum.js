@@ -171,12 +171,14 @@ const CreateGameForm = (formComp) => {
     // Add more platforms as needed
   ];
   const [currentStep, setCurrentStep] = useState(1);
+  const [releaseDateGiven, setReleaseDateGiven] = useState(false);
   const totalSteps = 4;
 
   useEffect(() => {
     if (formComp.formData !== null) {
       setFormData(formComp.formData);
       setIsTagSelected(formComp.formData.tags.length > 0);
+      setReleaseDateGiven(formComp.formData.releaseDate != "");
     }
   }, []);
 
@@ -210,6 +212,9 @@ const CreateGameForm = (formComp) => {
         ...prevData,
         [name]: parsedValue,
       }));
+      if (name === "releaseDate") {
+        setReleaseDateGiven(!!value); // Set releaseDateGiven to true if value is not empty
+      }
     }
   };
 
@@ -257,6 +262,17 @@ const CreateGameForm = (formComp) => {
       });
       return; // Prevent form submission
     }
+    if (!releaseDateGiven) {
+      toast.error("Please give a release date", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return; // Prevent form submission
+    }
 
     if (formComp.formData !== null) {
       const apiUrl = `http://${process.env.REACT_APP_API_URL}/game/${formComp.formData.id}/edit`;
@@ -277,6 +293,7 @@ const CreateGameForm = (formComp) => {
             pauseOnHover: true,
             draggable: true,
           });
+
           console.log("Game edited successfully:", response.data);
           navigate(`/game/${convertToSlug(formData.title)}`);
         })
@@ -311,8 +328,10 @@ const CreateGameForm = (formComp) => {
             pauseOnHover: true,
             draggable: true,
           });
+
           console.log("Game created successfully:", response.data);
           navigate(`/game/${convertToSlug(formData.title)}`);
+          window.location.reload();
         })
         .catch((error) => {
           // Error creating game
@@ -455,6 +474,7 @@ const CreateGameForm = (formComp) => {
               type="date"
               value={formData.releaseDate}
               onChange={handleInputChange}
+              required
               fullWidth
             />
             <TextField
