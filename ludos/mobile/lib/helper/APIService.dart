@@ -6,6 +6,7 @@ import 'dart:io';
 
 class APIService {
   var baseURL = "http://164.92.195.35:8080";
+
   String? token = "";
   Future<(String?, int)> login(String username, String password) async {
     var uri = Uri.parse("$baseURL/user/login");
@@ -107,6 +108,7 @@ class APIService {
       String content,
       List<String> media,
       List<String> tags,
+      Map<String, dynamic> upcomingTitle,
       String gameid) async {
     var uri = Uri.parse("$baseURL/post");
     final body = jsonEncode(<String, Object>{
@@ -115,6 +117,7 @@ class APIService {
       'gameId': gameid,
       'media': media,
       'tags': tags,
+      'upcomingTitle': upcomingTitle
     });
     final response = await http.post(uri, body: body, headers: {
       'content-type': "application/json",

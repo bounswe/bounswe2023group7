@@ -13,7 +13,14 @@ class ForumPage extends StatefulWidget {
   final String? token;
   final UserProvider userProvider;
   final String gameid;
-  const ForumPage({Key? key, required this.gameid, required this.token, required this.userProvider}) : super(key: key);
+  final String gameName;
+  const ForumPage(
+      {Key? key,
+      required this.gameName,
+      required this.gameid,
+      required this.token,
+      required this.userProvider}
+      ): super(key: key);
 
   @override
   State<ForumPage> createState() => _ForumPageState();
@@ -32,19 +39,24 @@ class _ForumPageState extends State<ForumPage> {
     threads = fetchData(widget.token);
   }
 
-  void searched(){
+  void searched() {
     threadsSearch = fetchDataSearch(widget.token);
   }
 
   Future<List<ThreadSummary>> fetchData(String? token) async {
-    final response = await APIService().listThreads(widget.gameid, widget.token);
+    final response =
+        await APIService().listThreads(widget.gameid, widget.token);
     try {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> postLists = responseData['items'];
 
-        return postLists.map((dynamic item) => ThreadSummary(
+        return postLists
+            .where((item) =>
+            item['upcomingTitle'] == null ||
+            item['upcomingTitle']['isUpcomingTitle'] == false)
+            .map((dynamic item) => ThreadSummary(
           token: widget.token,
           userProvider: widget.userProvider,
           threadId: item['id'],
@@ -53,8 +65,9 @@ class _ForumPageState extends State<ForumPage> {
           gameId: item['game']['id'],
           userId: item['user']['id'],
           username: item['user']['username'],
-          thumbUps: (item['numberOfLikes'] ?? 0),
-          thumbDowns: (item['numberOfDislikes'] ?? 0),
+          userAvatar: item['user']['avatar'],
+          thumbUps: item['numberOfLikes'],
+          thumbDowns: item['numberOfDislikes'],
           time: item['createdAt'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
@@ -62,6 +75,7 @@ class _ForumPageState extends State<ForumPage> {
           backgroundColor: MyColors.blue,
           fontSize: 20,
         )).toList();
+
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
@@ -73,15 +87,18 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Future<List<ThreadSummary>> fetchDataSearch(String? token) async {
-    final response = await APIService().listThreadsBySearch(searchText, widget.gameid, widget.token);
+    final response = await APIService()
+        .listThreadsBySearch(searchText, widget.gameid, widget.token);
     try {
-      print("here");
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> postLists = responseData['items'];
-        print(postLists);
-        return postLists.map((dynamic item) => ThreadSummary(
+        return postLists
+            .where((item) =>
+            item['upcomingTitle'] == null ||
+            item['upcomingTitle']['isUpcomingTitle'] == false)
+            .map((dynamic item) => ThreadSummary(
           token: widget.token,
           userProvider: widget.userProvider,
           threadId: item['id'],
@@ -90,8 +107,9 @@ class _ForumPageState extends State<ForumPage> {
           gameId: item['game']['id'],
           userId: item['user']['id'],
           username: item['user']['username'],
+          userAvatar: item['user']['avatar'],
           thumbUps: item['numberOfLikes'],
-          thumbDowns: item['NumberOfDislikes'],
+          thumbDowns: item['numberOfDislikes'],
           time: item['createdAt'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
@@ -125,13 +143,17 @@ class _ForumPageState extends State<ForumPage> {
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
-        title: const Text('Forum'),
+        title: Text('${widget.gameName} Forum'),
         actions: [
           TextButton(
             onPressed: () {
               if (widget.userProvider.isLoggedIn) {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => CreateThreadPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider),
+                  builder: (context) => CreateThreadPage(
+                      gameName: widget.gameName,
+                      gameid: widget.gameid,
+                      token: widget.token,
+                      userProvider: widget.userProvider),
                 ));
               } else {
                 CustomWidgets.needLoginSnackbar(context, "Please log in to add the thread! ", widget.userProvider);
@@ -164,11 +186,11 @@ class _ForumPageState extends State<ForumPage> {
                           color: MyColors.lightBlue,
                           fontWeight: FontWeight.bold),
                       border: UnderlineInputBorder(
-                          borderSide:
-                          BorderSide(color: MyColors.lightBlue, width: 2.0)),
+                          borderSide: BorderSide(
+                              color: MyColors.lightBlue, width: 2.0)),
                       focusedBorder: UnderlineInputBorder(
                         borderSide:
-                        BorderSide(color: MyColors.lightBlue, width: 2.0),
+                            BorderSide(color: MyColors.lightBlue, width: 2.0),
                       ),
                     ),
                     cursorColor: MyColors.lightBlue,
@@ -194,7 +216,7 @@ class _ForumPageState extends State<ForumPage> {
               ],
             ),
             //const SafeArea(child: SizedBox(height: 10)),
-            if(!ifSearched)
+            if (!ifSearched)
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: FutureBuilder<List<ThreadSummary>>(
@@ -220,7 +242,7 @@ class _ForumPageState extends State<ForumPage> {
                   },
                 ),
               ),
-            if(ifSearched)
+            if (ifSearched)
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: FutureBuilder<List<ThreadSummary>>(
@@ -255,10 +277,9 @@ class _ForumPageState extends State<ForumPage> {
   }
 }
 
-
-Future<List<ThreadSummary>> appendElements(ThreadSummary item, Future<List<ThreadSummary>> posts) async {
+Future<List<ThreadSummary>> appendElements(
+    ThreadSummary item, Future<List<ThreadSummary>> posts) async {
   final list = await posts;
   list.add(item);
   return list;
 }
-

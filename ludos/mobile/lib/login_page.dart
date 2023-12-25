@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'sign_up_page.dart';
 import 'forgot_password.dart';
@@ -19,6 +21,7 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  late Map<String, dynamic> userData = {};
   bool _isObscure = true;
 
   @override
@@ -102,10 +105,15 @@ class LoginPageState extends State<LoginPage> {
                 onPressed: () async {
                   (String?, int) token = await APIService()
                       .login(emailController.text, passwordController.text);
-                  //print(token);
                   if (token.$2 == 200) {
+                    var userT = await APIService().userInfo(token.$1);
+                    String typeOfUser = '';
+                    if(userT.statusCode == 200){
+                      userData = json.decode(userT.body);
+                      typeOfUser = userData['userType'].toString();
+                    }
                     var userProvider = Provider.of<UserProvider>(context, listen: false)
-                        .setLoggedIn(true, emailController.text, token.$1);
+                        .setLoggedIn(true, emailController.text, token.$1, typeOfUser);
 
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => Home(userProvider: userProvider),
