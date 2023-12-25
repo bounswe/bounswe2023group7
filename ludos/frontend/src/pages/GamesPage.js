@@ -9,7 +9,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ForumTopic from "../components/ForumTopic";
-
+/*
 const gameHighlight = [
   {
     title: "Baldur's Gate 3",
@@ -32,6 +32,7 @@ const gameHighlight = [
       "Take on the role of a football manager in Football Manager 2024, where every decision you make shapes the destiny of your team. Immerse yourself in the world of football, filled with tactics, transfers, and morally complex choices as you strive for victory on the pitch.",
   },
 ];
+*/
 
 const convertToSlug = (text) => {
   return text
@@ -49,6 +50,7 @@ export default function GamesPage() {
   const [games, setGames] = useState([]);
   const [suggestedGames, setSuggestedGames] = useState([]);
   const [upcomingTitles, setUpcomingTitles] = useState([]);
+  const [gameHighlight, setGameHighlight] = useState([]);
 
   const axiosInstance = axios.create({
     baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -64,6 +66,8 @@ export default function GamesPage() {
   };
 
   useEffect(() => {
+    fetchTrendingGames();
+
     axiosInstance
       .get(`/user/suggested`)
       .then((response) => {
@@ -74,6 +78,26 @@ export default function GamesPage() {
         console.log(error);
       });
   }, []);
+
+  const fetchTrendingGames = async () => {
+    try {
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_API_URL}/game?limit=3&order=DESC&orderByKey=followers`,
+      );
+
+      if (response.data) {
+        const formattedGames = response.data.items.map((game) => ({
+          title: game.title,
+          image: game.coverLink,
+          content: game.gameBio,
+        }));
+        setGameHighlight(formattedGames);
+        console.log("formatted games", formattedGames);
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
 
   useEffect(() => {
     const options = {
@@ -179,7 +203,11 @@ export default function GamesPage() {
         </Typography>
       </div>
 
-      <TrendingGamesSlider games={gameHighlight} />
+      {gameHighlight.length > 0 ? (
+        <TrendingGamesSlider games={gameHighlight} />
+      ) : (
+        <div>Loading trending games...</div> // Placeholder for loading state
+      )}
       {/* Other sections */}
       <div
         style={{
