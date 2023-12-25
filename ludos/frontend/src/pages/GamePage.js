@@ -22,6 +22,7 @@ import RelatedGames from "../components/RelatedGamesTab.js";
 import EntityTab from "../components/EntityTab.js";
 import GameForum from "../components/GameForums.js";
 import { useNavigate } from "react-router-dom";
+import GroupTab from "../components/GroupTab.js";
 import { FaIgloo } from "react-icons/fa";
 
 function GamePage(id) {
@@ -836,9 +837,7 @@ function GamePage(id) {
                 </Typography>
               </TabPanel>
               <TabPanel value="5">
-                <Typography
-                  style={{ fontSize: "15px", color: "white" }}
-                ></Typography>
+                <GroupTab id={game.id} />
               </TabPanel>
               <TabPanel value="6">
                 <Reviews data={[]} id={game.id} showButtons={auth} />
