@@ -789,6 +789,112 @@ class APIService {
     });
     return response;
   }
+  
+  Future<http.Response> createAnnotationGameBio(
+      String? authToken,
+      String gameID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/gamebio/$gameID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationGameBio(
+      String? authToken, String gameID) async {
+    var uri = Uri.parse("$baseURL/annotation/gamebio/$gameID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> createAnnotationThread(
+      String? authToken,
+      String threadID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/post/$threadID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationThread(
+      String? authToken, String threadID) async {
+    var uri = Uri.parse("$baseURL/annotation/post/$threadID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+
+  Future<http.Response> createAnnotationEntity(
+      String? authToken,
+      String entityID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/entity/$entityID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationEntity(
+      String? authToken, String entityID) async {
+    var uri = Uri.parse("$baseURL/annotation/entity/$entityID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
 
   Future<http.Response> createGroup(
       String? authToken,

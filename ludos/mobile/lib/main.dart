@@ -123,8 +123,10 @@ class _HomeState extends State<Home> {
       } else {
         throw Exception('Failed to load user data');
       }
-    } catch (e) {
-      throw Exception('Failed to load user data');
+    }
+    catch (e) {
+      return {};
+      //throw Exception('Failed to load user data');
     }
   }
 
@@ -151,7 +153,8 @@ class _HomeState extends State<Home> {
       }
     } catch (error) {
       print("Error: $error");
-      throw Exception('Failed to load games');
+      return [];
+      // throw Exception('Failed to load games');
     }
   }
 
