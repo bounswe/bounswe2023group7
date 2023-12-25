@@ -3,7 +3,6 @@ import { Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import TrendingGamesSlider from "../components/TrendingGamesSlider";
 import GameCard from "../components/GameCard";
-import TrendingGames from "../components/TrendingGames";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
@@ -34,59 +33,6 @@ const gameHighlight = [
   },
 ];
 
-// Mock data for TrendingGames
-const trendingGames = [
-  {
-    name: "EA FC24",
-    imageUrl:
-      "https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/f33dc5483be5538172f6e326dc2a4266/32/256x256.png",
-  },
-  {
-    name: "Spiderman 2",
-    imageUrl:
-      "https://sm.ign.com/t/ign_nordic/cover/m/marvels-sp/marvels-spider-man-2_fx3k.128.jpg",
-  },
-  {
-    name: "Resident Evil 4 Remake",
-    imageUrl:
-      "https://www.techpowerup.com/review/resident-evil-4-remake-dlss-and-xess-community-patch/images/small.png",
-  },
-  {
-    name: "Starfield",
-    imageUrl:
-      "https://www.techpowerup.com/review/starfield-fsr-2-2/images/small.png",
-  },
-  {
-    name: "Diablo VI",
-    imageUrl:
-      "https://b.thumbs.redditmedia.com/AgOjcpx7M7ji4yw0KORj1831_yY8kODhBL6wdxK8WJE.png",
-  },
-  {
-    name: "Valorant",
-    imageUrl:
-      "https://pbs.twimg.com/profile_images/1271880138507145216/jEx4bMW0_400x400.png",
-  },
-  {
-    name: "Call of Duty: Modern Warfare 3",
-    imageUrl:
-      "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2e965704-45d5-4545-a786-8281bc7fc34a/d49wyde-803bbc73-2696-4d42-8fba-623273051caf.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzJlOTY1NzA0LTQ1ZDUtNDU0NS1hNzg2LTgyODFiYzdmYzM0YVwvZDQ5d3lkZS04MDNiYmM3My0yNjk2LTRkNDItOGZiYS02MjMyNzMwNTFjYWYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.QR0J8DKc5mYXpnXgMSLM3paX78wgc37Lv9_VCoCAn74",
-  },
-  {
-    name: "Grand Theft Auto V",
-    imageUrl:
-      "https://i.pinimg.com/474x/d3/18/e8/d318e8b67185dd89c801153f19480ea9.jpg",
-  },
-  {
-    name: "Lost Ark",
-    imageUrl:
-      "https://styles.redditmedia.com/t5_5uyabk/styles/communityIcon_7jlrtwb7y3i81.png",
-  },
-  {
-    name: "Mount & Blade II: Bannerlord",
-    imageUrl:
-      "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/8efd62b4-05ec-4237-9336-abae8a8801fb/ddu05dr-1216baa8-bcb0-4401-8da0-b03a99718b87.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzhlZmQ2MmI0LTA1ZWMtNDIzNy05MzM2LWFiYWU4YTg4MDFmYlwvZGR1MDVkci0xMjE2YmFhOC1iY2IwLTQ0MDEtOGRhMC1iMDNhOTk3MThiODcucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.5zIK3XDBGnQeWicltw-QG8nybs0AvOG5w3Wr9Zh7V-M",
-  },
-];
 
 const convertToSlug = (text) => {
   return text
@@ -339,7 +285,7 @@ export default function GamesPage() {
             variant="h4"
             gutterBottom
             style={{
-              color: "white",
+              color: "black",
               fontFamily: "Trebuchet MS, sans-serif",
               fontWeight: "bold",
             }}
@@ -356,11 +302,11 @@ export default function GamesPage() {
         </Container>
         <Container
           style={{
-            backgroundColor: "rgb(255, 255, 255, 0.6)",
+            backgroundColor: "rgb(255, 255, 255, 0.3)",
             flex: "1",
             borderRadius: "10px",
             textAlign: "center",
-            padding: "20px",
+            padding: "10px",
           }}
           sm={4}
         >
@@ -368,7 +314,7 @@ export default function GamesPage() {
             variant="h4"
             gutterBottom
             style={{
-              color: "white",
+              color: "black",
               fontFamily: "Trebuchet MS, sans-serif",
               fontWeight: "bold",
             }}
