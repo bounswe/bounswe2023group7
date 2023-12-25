@@ -25,7 +25,12 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(context);
 
-    return Scaffold(
+    return  WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+      return false;
+    },
+    child: Scaffold(
       backgroundColor: const Color(0xFF101c2c),
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
@@ -199,6 +204,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           ],
         ),
       ),
+    ),
     );
   }
 }
