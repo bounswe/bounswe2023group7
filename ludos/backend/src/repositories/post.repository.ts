@@ -72,7 +72,7 @@ export class PostRepository extends Repository<Post> {
     if (searchKey) {
       searchKey = searchKey.trim().replace(/ /g, ' & ');
       queryBuilder.andWhere(
-        `to_tsvector(\'english\', posts.title || \' \' || posts.body) @@ to_tsquery('${searchKey}')`,
+        `to_tsvector(\'english\', posts.title || \' \' || posts.body) @@ to_tsquery(\'english\','${searchKey}')`,
       );
     }
     if (tags) {

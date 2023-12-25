@@ -72,7 +72,7 @@ class _GamesPageState extends State<GamesPage> {
   Widget build(BuildContext context) {
     return  WillPopScope(
         onWillPop: () async {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(userProvider: widget.userProvider)));
       return false;
     },
     child: Scaffold(
