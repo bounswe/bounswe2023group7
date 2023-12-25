@@ -393,7 +393,7 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
-        title: Text('${threadData['user']['username']}\'s Thread'),
+        title: (threadData.isNotEmpty) ? Text('${threadData['user']['username']}\'s Thread') : const Text('Thread'),
       ),
 
       body: FutureBuilder(
