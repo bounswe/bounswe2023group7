@@ -29,15 +29,15 @@ class CustomNavigationBar extends StatelessWidget {
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Home(),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => Home(userProvider: userProvider),
                   ));
                 },
                 icon: const Icon(Icons.home)),
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => GroupsPage(token: userProvider.token, userProvider: userProvider),
                   ));
                 },
@@ -45,7 +45,7 @@ class CustomNavigationBar extends StatelessWidget {
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
                   ));
                 },
@@ -59,7 +59,7 @@ class CustomNavigationBar extends StatelessWidget {
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => SearchLandingPage(userProvider: userProvider),
                   ));
                 },

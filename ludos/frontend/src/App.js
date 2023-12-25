@@ -23,6 +23,7 @@ import CreateEntityPage from "./pages/CreateEntityPage.js";
 import GroupPage from "./pages/GroupPage.js";
 import GroupsPage from "./pages/GroupsPage.js";
 import CreateGroupPage from "./pages/CreateGroupPage.js";
+import EmptyPage from "./pages/EmptyPage.js";
 
 function App() {
   const [games, setGames] = useState([]);
@@ -522,6 +523,14 @@ function App() {
             element={
               <Layout>
                 <CreateGroupPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Layout>
+                <EmptyPage />
               </Layout>
             }
           />

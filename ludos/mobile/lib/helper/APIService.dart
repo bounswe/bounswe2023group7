@@ -693,10 +693,7 @@ class APIService {
     var uri = Uri.parse("$baseURL/entity/$gameId");
     Map<String, String> con = {};
     con['image'] = image;
-    con['description'] = contentmsg;
-    for (int i = 0;
-        i < nameControllers.length && i < valueControllers.length;
-        i++) {
+    for (int i = 0; i < nameControllers.length && i < valueControllers.length; i++) {
       String name = nameControllers[i].text;
       String value = valueControllers[i].text;
       con[name] = value;
@@ -705,8 +702,9 @@ class APIService {
       'type': type,
       'name': name,
       'content': con,
-    });
-    print(body);
+      'description': contentmsg,
+      });
+      print(body);
     final response = await http.post(uri, body: body, headers: {
       'content-type': "application/json",
       'Authorization': 'Bearer $authToken'
@@ -816,6 +814,112 @@ class APIService {
       'Authorization': 'Bearer $authToken'
     });
     print("APICALL: get game rec for the user called");
+    return response;
+  }
+  
+  Future<http.Response> createAnnotationGameBio(
+      String? authToken,
+      String gameID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/gamebio/$gameID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationGameBio(
+      String? authToken, String gameID) async {
+    var uri = Uri.parse("$baseURL/annotation/gamebio/$gameID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> createAnnotationThread(
+      String? authToken,
+      String threadID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/post/$threadID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationThread(
+      String? authToken, String threadID) async {
+    var uri = Uri.parse("$baseURL/annotation/post/$threadID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+
+  Future<http.Response> createAnnotationEntity(
+      String? authToken,
+      String entityID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/entity/$entityID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationEntity(
+      String? authToken, String entityID) async {
+    var uri = Uri.parse("$baseURL/annotation/entity/$entityID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
     return response;
   }
 

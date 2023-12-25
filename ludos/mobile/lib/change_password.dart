@@ -27,7 +27,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
     return  WillPopScope(
         onWillPop: () async {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(userProvider: userProvider)));
       return false;
     },
     child: Scaffold(
@@ -171,7 +171,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                               'The password successfully changed!')),
                     );
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => (Home()),
+                      builder: (context) => (Home(userProvider: userProvider)),
                     ));
                   }
                   if (status == 400) {

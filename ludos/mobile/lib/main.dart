@@ -15,13 +15,15 @@ import 'reusable_widgets/custom_navigation_bar.dart';
 
 void main() => runApp(ChangeNotifierProvider(
       create: (context) => UserProvider(),
-      child: const MaterialApp(
-        home: Home(),
+      child: MaterialApp(
+        home: Home(userProvider: UserProvider()),
       ),
     ));
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final UserProvider userProvider;
+  const Home({Key? key, required this.userProvider}) : super(key: key);
+
 
   @override
   State<Home> createState() => _HomeState();
@@ -32,6 +34,18 @@ class _HomeState extends State<Home> {
   late Future<List<ThreadSummary>> threads;
   late Future<Map<String, dynamic>> userData;
   late Future<List<RecommendedGame>> recGameListforUser;
+
+
+  @override
+  initState() {
+    super.initState();
+    var userProvider = widget.userProvider;
+    games = fetchGameData(userProvider, userProvider.token);
+    threads = fetchThreadData(userProvider, userProvider.token);
+    userData = fetchUserData(userProvider, userProvider.token);
+    recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
+    print("getlisted");
+  }
 
   Future<List<HomeGameSum>> fetchGameData(
       UserProvider userProvider, String? token) async {
@@ -151,11 +165,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    var userProvider = Provider.of<UserProvider>(context);
-    games = fetchGameData(userProvider, userProvider.token);
-    threads = fetchThreadData(userProvider, userProvider.token);
-    userData = fetchUserData(userProvider, userProvider.token);
-    recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
+    var userProvider = widget.userProvider;
     return Scaffold(
       drawer: Drawer(
         child: Container(

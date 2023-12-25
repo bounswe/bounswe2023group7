@@ -95,11 +95,11 @@ class LoginPageState extends State<LoginPage> {
                       .login(emailController.text, passwordController.text);
                   //print(token);
                   if (token.$2 == 200) {
-                    Provider.of<UserProvider>(context, listen: false)
+                    var userProvider = Provider.of<UserProvider>(context, listen: false)
                         .setLoggedIn(true, emailController.text, token.$1);
 
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Home(),
+                      builder: (context) => Home(userProvider: userProvider),
                     ));
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
