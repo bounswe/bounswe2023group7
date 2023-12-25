@@ -1,21 +1,21 @@
 import React, { useEffect } from "react";
-import { Typography, Grid, Box, Link } from "@mui/material";
+import { Typography, Grid, Box } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 import GameCard from "./GameCard";
+import { Link } from "react-router-dom";
 
 function Description(data) {
-  const [suggestedGames, setSuggestedGames] = useState([]);
-
   const convertToSlug = (text) => {
     return text
-      ?.toString()
+      .toString()
       .toLowerCase()
       .trim()
       .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
       .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
       .replace(/--+/g, "-"); // Replace multiple dashes with single dash
   };
+  const [suggestedGames, setSuggestedGames] = useState([]);
 
   const axiosInstance = axios.create({
     baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -42,7 +42,7 @@ function Description(data) {
   return (
     <Grid
       container
-      xs={8}
+      xs={12}
       style={{
         display: "flex",
         flexDirection: "row",
@@ -63,18 +63,22 @@ function Description(data) {
           }}
         >
           {data.predecessors.map((predecessor, index1) => (
-            <Link to={`/game/${convertToSlug(predecessor)}`} key={index1}>
-              <Typography
-                variant="body1"
-                color="white"
-                align="center"
-                style={{
-                  fontFamily: "Trebuchet MS, sans-serif",
-                }}
+            <Typography
+              variant="body1"
+              color="white"
+              align="center"
+              style={{
+                fontFamily: "Trebuchet MS, sans-serif",
+              }}
+              key={index1}
+            >
+              <Link
+                style={{ color: "white", textDecoration: "none" }}
+                to={`/game/${convertToSlug(predecessor)}`}
               >
-                {predecessor}
-              </Typography>
-            </Link>
+                {predecessor}{" "}
+              </Link>
+            </Typography>
           ))}
         </Typography>
       </Grid>
@@ -102,7 +106,12 @@ function Description(data) {
               }}
               key={index1}
             >
-              {successor}
+              <Link
+                style={{ color: "white", textDecoration: "none" }}
+                to={`/game/${convertToSlug(successor)}`}
+              >
+                {successor}{" "}
+              </Link>
             </Typography>
           ))}
         </Typography>
