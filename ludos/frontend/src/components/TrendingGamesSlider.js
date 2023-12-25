@@ -91,7 +91,7 @@ const TrendingGamesSlider = ({ games }) => {
                           padding: "0 0 20px",
                         }}
                       >
-                        Trending Games of the Day
+                        Trending Games
                       </Typography>
                       <div
                         style={{
