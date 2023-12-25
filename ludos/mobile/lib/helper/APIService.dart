@@ -960,4 +960,39 @@ class APIService {
     return response;
   }
 
+    Future<http.Response> createAnnotationComment(
+      String? authToken,
+      String commentID,
+      String source,
+      int start,
+      int end,
+      String annotationBody) async {
+    var uri = Uri.parse("$baseURL/annotation/comment/$commentID");
+
+    final body = jsonEncode(<String, Object>{
+      '@context': "",
+      'type': "Annotation",
+      'body': annotationBody,
+      'target': {
+        'source': source,
+        'selector': {'start': start, 'end': end}
+      }
+    });
+    final response = await http.post(uri, body: body, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
+  Future<http.Response> getAnnotationComment(
+      String? authToken, String commentID) async {
+    var uri = Uri.parse("$baseURL/annotation/comment/$commentID");
+    final response = await http.get(uri, headers: {
+      'content-type': "application/json",
+      'Authorization': 'Bearer $authToken'
+    });
+    return response;
+  }
+
 }
