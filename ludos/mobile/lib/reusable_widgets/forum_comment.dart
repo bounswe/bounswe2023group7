@@ -480,7 +480,7 @@ class _CommentState extends State<Comment> {
                         onPressed: () => setState(() {
                           if (!widget.userProvider.isLoggedIn) {
                             CustomWidgets.needLoginSnackbar(
-                                context, "Please log in to like a comment! ");
+                                context, "Please log in to like a comment! ", widget.userProvider);
                           } else {
                             userPressed(true);
                           }
@@ -551,7 +551,7 @@ class _CommentState extends State<Comment> {
                         onPressed: () {
                           if (!widget.userProvider.isLoggedIn) {
                             CustomWidgets.needLoginSnackbar(
-                                context, "Please log in to reply a comment! ");
+                                context, "Please log in to reply a comment! ", widget.userProvider);
                           } else {
                             toggleFormVisibility();
                           }
