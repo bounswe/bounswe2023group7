@@ -33,7 +33,6 @@ const gameHighlight = [
   },
 ];
 
-
 const convertToSlug = (text) => {
   return text
     ?.toString()
@@ -42,7 +41,7 @@ const convertToSlug = (text) => {
     .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
     .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
     .replace(/--+/g, "-"); // Replace multiple dashes with single dash
-}
+};
 
 export default function GamesPage() {
   const [searchValue, setSearchValue] = useState("");
@@ -50,7 +49,6 @@ export default function GamesPage() {
   const [games, setGames] = useState([]);
   const [suggestedGames, setSuggestedGames] = useState([]);
   const [upcomingTitles, setUpcomingTitles] = useState([]);
-
 
   const axiosInstance = axios.create({
     baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -89,7 +87,9 @@ export default function GamesPage() {
     };
 
     axiosInstance
-      .get("/post?isLiked=false&isDisliked=false&isUpcomingTitle=true&order=ASC&orderByKey=numberOfLikes")
+      .get(
+        "/post?isLiked=false&isDisliked=false&isUpcomingTitle=true&order=ASC&orderByKey=numberOfLikes",
+      )
       .then((response) => {
         const formattedTopics = response.data.items.map((topic) => ({
           title: topic?.title,
@@ -109,7 +109,7 @@ export default function GamesPage() {
               ? topic?.upcomingTitle?.isUpcomingTitle
               : false,
         }));
-        console.log("formattedTopics:")
+        console.log("formattedTopics:");
         console.log(formattedTopics);
         setUpcomingTitles(formattedTopics);
         console.log("upcomingTitles:");
@@ -117,13 +117,8 @@ export default function GamesPage() {
       })
       .catch((error) => {
         console.log(error);
-      })
-
-
-
-
+      });
   }, []);
-
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -215,7 +210,9 @@ export default function GamesPage() {
           value={searchValue}
           onChange={(event, newValue) => {
             setSearchValue(newValue);
-            handleGameRoute(newValue);
+            if (newValue) {
+              handleGameRoute(newValue);
+            }
           }}
           options={games.map((game) => game.title)}
           onInputChange={(event, newInputValue) => {
@@ -327,9 +324,8 @@ export default function GamesPage() {
               style={{ gap: "16px", display: "flex", flexDirection: "column" }}
             >
               {upcomingTitles.map((topic, index) => {
-                return <ForumTopic key={index} topic={topic} />
+                return <ForumTopic key={index} topic={topic} />;
               })}
-
             </div>
           </div>
         </Container>
