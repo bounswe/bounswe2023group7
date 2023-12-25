@@ -1,12 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ForumsBackground from "../assets/forumBackground.png";
-import { Typography, Button, TextField, Container } from "@mui/material";
-import ForumTopic from "../components/ForumTopic";
+import {
+  Typography,
+  Button,
+  TextField,
+  Container,
+  Grid,
+  Select,
+  MenuItem,
+  FormControlLabel,
+  Pagination,
+  Checkbox,
+  Chip,
+  FormControl,
+  Input,
+
+} from "@mui/material";
+import ForumTopic from "../components/ForumTopicForGame";
 import Autocomplete from "@mui/material/Autocomplete";
 import axios from "axios";
 
 const ForumsPage = () => {
+  const myComponentRef = useRef(null);
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [searchKey, setSearchKey] = useState("");
@@ -18,6 +34,194 @@ const ForumsPage = () => {
     new Set(mergedThreads.map((item) => item.title)),
   );
   const [trendingTopics, setTrendingTopics] = useState([]);
+  const [detailSearch, setDetailSearch] = useState(false);
+  const [nameSearch, setNameSearch] = useState("");
+  const [tags, setTags] = useState([])
+  const [currTag, setCurrTag] = useState("");
+  const [detailGames, setDetailGames] = useState([]);
+  const [searchGame, setSearchGame] = useState("");
+  const [searchGroup, setSearchGroup] = useState("");
+  const [groups, setGroups] = useState([]);
+  const [sortBy, setSortBy] = useState("numberOfLikes");
+  const [sortOrder, setSortOrder] = useState("ASC");
+  const [searchUser, setSearchUser] = useState("");
+  const [users, setUsers] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  const [page, setPage] = useState(1);
+  const [auth, setAuth] = useState(false);
+  const [detailThreads, setDetailThreads] = useState([]);
+  const [pageCount, setPageCount] = useState(1);
+
+  const handleDetailSearch = () => {
+    setDetailSearch((prevDetailSearch) => !prevDetailSearch);
+  };
+
+  const handleNameSearchChange = (event) => {
+    setNameSearch(event.target.value);
+  }
+
+  const handleDeleteTag = (item, index) => {
+    let arr = [...tags];
+    arr.splice(index, 1);
+    console.log(item);
+    setTags(arr);
+  };
+
+  const handleTagsChange = (e) => {
+    setCurrTag(e.target.value);
+  };
+
+  const handleKeyUp = (e) => {
+    if (e.keyCode == 13) {
+      setTags((oldState) => [...oldState, e.target.value]);
+      setCurrTag("");
+    }
+  };
+
+  const handleGameChange = (event, option) => {
+    if (option) {
+      setSearchGame(option.value);
+    } else {
+      setSearchGame("");
+    }
+  };
+
+  const handleGameSearch = (event) => {
+    if (event?.target?.value) {
+      const link = `http://${process.env.REACT_APP_API_URL}/game?searchKey=${event.target.value}`;
+      axios
+        .get(link, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setDetailGames(response.data.items);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      setDetailGames([]);
+    }
+  };
+
+  const handleGroupChange = (event, option) => {
+    if (option) {
+      setSearchGroup(option.value);
+    } else {
+      setSearchGroup("");
+    }
+  };
+
+  const handleGroupSearch = (event) => {
+    if (event?.target?.value) {
+      const link = `http://${process.env.REACT_APP_API_URL}/group?searchKey=${event.target.value}`;
+      axios
+        .get(link, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setGroups(response.data.items);
+          console.log(groups);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      setGroups([]);
+    }
+  };
+
+  const handleUserChange = (event, option) => {
+    if (option) {
+      setSearchUser(option.value);
+    } else {
+      setSearchUser("");
+    }
+  };
+
+  const handleUserSearch = (event) => {
+    if (event?.target?.value) {
+      const link = `http://${process.env.REACT_APP_API_URL}/search/${event.target.value}`;
+      axios
+        .get(link, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setUsers(response.data.users);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      setUsers([]);
+    }
+  };
+
+  const handleSortByChange = (event) => {
+    setSortBy(event.target.value);
+  };
+
+  const handleSortOrderChange = (event) => {
+    setSortOrder(event.target.value);
+  };
+
+  const handleFilterButtonClick = () => {
+    setPage(1);
+    setRefresh(!refresh);
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      const link1 = `http://${process.env.REACT_APP_API_URL}/user/info`;
+      axios
+        .get(link1, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        })
+        .then(() => {
+          setAuth(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          setAuth(false);
+        });
+    } else {
+      setAuth(false);
+    }
+    const tagsString = tags.join("%2C");
+    const link = `http://${process.env.REACT_APP_API_URL}/post?page=${page}&searchKey=${nameSearch}&tags=${tagsString}&gameId=${searchGame}&ownerUserId=${searchUser}&order=${sortOrder}&orderByKey=${sortBy}`;
+    console.log(link);
+    axios
+      .get(link, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data.items);
+        setDetailThreads(response.data.items);
+        setPageCount(response.data.meta.totalPages);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [refresh]);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    setRefresh(!refresh);
+  };
+
 
   const handleThreadSearch = (threadId) => {
     //value should be the id of the thread
@@ -240,6 +444,16 @@ const ForumsPage = () => {
     },
     // Add more topics as needed...
   ]; */
+
+  const paginStyle = {
+    backgroundColor: "rgba(204, 204, 255, 0.9)",
+    borderRadius: "10px",
+    border: "4px solid rgba(51, 153, 255, 1)", // Çerçeve rengi ve genişliği
+    boxSizing: "border-box", // Kutu modelini içerir
+    fontFamily: "Trebuchet MS, sans-serif",
+    width: "auto",
+    marginTop: "10px",
+  };
   return (
     <div
       style={{
@@ -365,9 +579,320 @@ const ForumsPage = () => {
                 width: "100%",
               }}
             />
+            <div style={{ display: 'flex', justifyContent: 'flex-start', marginLeft: '20px', marginBottom: '10px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: '20px' }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  style={{ borderRadius: '40px', display: 'flex', backgroundColor: 'green' }}
+                  onClick={handleDetailSearch}
+                >
+                  {detailSearch ? "Close" : "Detailed Search"}
+                </Button>
+              </div>
+
+
+
+            </div>
           </div>
         </div>
       </div>
+
+      <Container xs={9} style={{ width: '60%' }}>
+        <div >
+          {detailSearch && (
+            <div>
+              <Grid
+                item
+                xs={9}
+                style={{
+                  backgroundColor: "rgba(51, 153, 255, 1)",
+                  borderRadius: "10px",
+                  paddingRight: "10px",
+                  marginTop: "10px",
+                  padding: '50px',
+                }}
+              >
+                <Typography
+                  variant="h3"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Detailed Search
+                </Typography>
+                {/* Search Input */}
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Thread Name:
+                </Typography>
+                <TextField
+                  type="text"
+                  label="Search the Thread Name"
+                  placeholder="Search..."
+                  value={nameSearch}
+                  onChange={handleNameSearchChange}
+                  variant="outlined"
+                  fullWidth
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                  }}
+                />
+
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Filter with Tags:
+                </Typography>
+                <div ref={myComponentRef}>
+                  <FormControl
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "20px",
+                      flexWrap: "wrap",
+                      flexDirection: "row",
+                      border: "2px solid lightgray",
+                      padding: 1,
+                      borderRadius: "4px",
+                      backgroundColor: "white",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <div className={"container"}>
+                      {tags.map((item, index) => (
+                        <Chip
+                          key={index}
+                          size="small"
+                          onDelete={() => handleDeleteTag(item, index)}
+                          label={item}
+                        />
+                      ))}
+                    </div>
+                    <Input
+                      value={currTag}
+                      onChange={handleTagsChange}
+                      onKeyDown={handleKeyUp}
+                    />
+                  </FormControl>
+                </div>
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Filter with Game:
+                </Typography>
+                <Autocomplete
+                  onChange={handleGameChange}
+                  options={detailGames.map((game) => ({
+                    label: game.title,
+                    value: game.id,
+                  }))}
+                  getOptionLabel={(option) => option.label || ""}
+                  onInputChange={handleGameSearch}
+                  required
+                  renderInput={(params) => (
+                    <TextField {...params} label="Search Game" width="90%" />
+                  )}
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                  }}
+                />
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Filter with Group:
+                </Typography>
+                <Autocomplete
+                  onChange={handleGroupChange}
+                  options={groups.map((group) => ({
+                    label: group.name,
+                    value: group.id,
+                  }))}
+                  getOptionLabel={(option) => option.label || ""}
+                  onInputChange={handleGroupSearch}
+                  required
+                  renderInput={(params) => (
+                    <TextField {...params} label="Search Group" width="90%" />
+                  )}
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                  }}
+                />
+
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Filter with User:
+                </Typography>
+                <Autocomplete
+                  onChange={handleUserChange}
+                  options={users.map((user) => ({
+                    label: user.username,
+                    value: user.id,
+                  }))}
+                  getOptionLabel={(option) => option.label || ""}
+                  onInputChange={handleUserSearch}
+                  required
+                  renderInput={(params) => (
+                    <TextField {...params} label="Search User" width="90%" />
+                  )}
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                  }}
+                />
+
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Sort By:
+                </Typography>
+                <Select
+                  labelId="sort-by-label"
+                  id="sort-by"
+                  value={sortBy}
+                  onChange={handleSortByChange}
+                  label="Sort By Field"
+                  placeholder="Sort By Field"
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    width: "100%",
+                    borderRadius: "10px",
+                  }}
+                >
+                  {[
+                    { value: "title", label: "Title" },
+                    {
+                      value: "numberOfLikes",
+                      label: "Number of Likes",
+                    },
+                    {
+                      value: "numberOfDislikes",
+                      label: "Number of Dislikes",
+                    },
+                    // Add other sorting options as needed
+                  ].map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Typography
+                  variant="h7"
+                  gutterBottom
+                  style={{
+                    color: "white",
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Sort Order:
+                </Typography>
+                <Select
+                  labelId="sortTypeLabel"
+                  id="sortType"
+                  value={sortOrder}
+                  onChange={handleSortOrderChange}
+                  label="Sort By Field"
+                  placeholder="Sort By Field"
+                  style={{
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    width: "100%",
+                    borderRadius: "10px",
+                  }}
+                >
+                  {[
+                    { value: "ASC", label: "Ascending" },
+                    { value: "DESC", label: "Descending" },
+                    // Add other sorting options as needed
+                  ].map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleFilterButtonClick}
+                  style={{
+                    backgroundColor: "pink",
+                    color: "white",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Filter
+                </Button>
+                {/* Main Content */}
+                {detailThreads.map((topic, index) => (
+                  <ForumTopic key={index} topic={topic} />
+                ))}
+                <Pagination
+                  count={pageCount}
+                  color="secondary"
+                  page={page}
+                  onChange={handlePageChange}
+                  style={paginStyle}
+                />
+              </Grid>
+
+
+
+            </div>
+          )}
+        </div>
+      </Container >
+
+
       <Container
         style={{
           backgroundColor: "rgb(30,30,30,0.9)",
@@ -489,7 +1014,7 @@ const ForumsPage = () => {
           </div>
         </Container>
       </div>
-    </div>
+    </div >
   );
 };
 

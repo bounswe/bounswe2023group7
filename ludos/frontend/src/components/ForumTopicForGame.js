@@ -9,7 +9,7 @@ import LaunchIcon from "@mui/icons-material/Launch";
 //isUpcomingTitle, launching date and demo link is needed
 function ForumTopic(data) {
   console.log(data.topic);
-  const directLink = `/profile-page/${data.topic.user.id}`;
+  const directLink = `/profile-page/${data.topic.user?.id}`;
   const tagBox = {
     display: "flex",
     justifyContent: "center",
@@ -82,7 +82,7 @@ function ForumTopic(data) {
     marginRight: "5px",
   };
 */
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   return (
     <Grid
@@ -123,7 +123,7 @@ function ForumTopic(data) {
             paddingBottom: "10px",
           }}
           src={
-            data.topic.user.avatar ||
+            data.topic.user?.avatar ||
             "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"
           }
         />
@@ -138,7 +138,7 @@ function ForumTopic(data) {
         >
           @
           <Link to={directLink} style={userStyle}>
-            {data.topic.user.username}
+            {data.topic.user?.username}
           </Link>
         </Typography>
       </Grid>
@@ -175,7 +175,7 @@ function ForumTopic(data) {
             }}
           >
             <Typography variant="caption" component="div" style={forumStyle}>
-              {data.topic.game.title}
+              {data.topic.game?.title}
             </Typography>
             {data.topic.upcomingTitle != null &&
               data.topic.upcomingTitle.isUpcomingTitle && (
@@ -190,7 +190,7 @@ function ForumTopic(data) {
           </Grid>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
             {data.topic &&
-              data.topic.tags.map((tag1, index1) => (
+              data.topic.tags?.map((tag1, index1) => (
                 <Typography
                   variant="caption"
                   component="div"
@@ -248,7 +248,7 @@ function ForumTopic(data) {
               flexDirection: "row",
               justifyContent:
                 data.topic.upcomingTitle != null &&
-                data.topic.upcomingTitle.isUpcomingTitle
+                  data.topic.upcomingTitle.isUpcomingTitle
                   ? "space-between"
                   : "flex-end",
             }}
@@ -322,7 +322,7 @@ function ForumTopic(data) {
                   marginRight: "3px",
                 }}
               >
-                @{data.topic.user.username}
+                @{data.topic.user?.username}
               </Typography>
               <AccessTimeIcon />
               <Typography
@@ -337,8 +337,8 @@ function ForumTopic(data) {
                   marginBottom: "10px",
                 }}
               >
-                {data.topic.createdAt.split("T")[0]}{" "}
-                {data.topic.createdAt.split("T")[1].split(".")[0]}
+                {data.topic.createdAt?.split("T")[0]}{" "}
+                {data.topic.createdAt?.split("T")[1].split(".")[0]}
               </Typography>
               <MapsUgcIcon />
               <Typography
