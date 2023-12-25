@@ -761,20 +761,6 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      IconButton(
-                        onPressed: () => setState(() {
-                          if (!widget.userProvider.isLoggedIn) {
-                            CustomWidgets.needLoginSnackbar(
-                                context, "Please log in to like a comment! ", widget.userProvider);
-                          } else {
-                            userPressed(true);
-                          }
-                        }),
-                        icon: Icon(
-                          Icons.thumb_up,
-                          color: isLiked ? Colors.green : Colors.white,
-                        ),
-                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -819,33 +805,14 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
                               }
                             },
                           ),
+                          Text(numberOfComments.toString(),
+                          style: TextStyle(color: Colors.white)),
                           const SizedBox(width: 10.0),
                           Text(
                             timeAgo(time),
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
-                      ),
-                      Text(numberOfComments.toString(),
-                          style: TextStyle(color: Colors.white)),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.comment,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          if (!widget.userProvider.isLoggedIn) {
-                            CustomWidgets.needLoginSnackbar(
-                                context, "Please log in to reply a comment! ", widget.userProvider);
-                          } else {
-                            toggleFormVisibility();
-                          }
-                        },
-                      ),
-                      const SizedBox(width: 10.0),
-                      Text(
-                        timeAgo(time),
-                        style: TextStyle(color: Colors.white),
                       ),
                     ],
                   ),

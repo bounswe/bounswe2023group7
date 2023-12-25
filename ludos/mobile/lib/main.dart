@@ -25,7 +25,6 @@ class Home extends StatefulWidget {
   final UserProvider userProvider;
   const Home({Key? key, required this.userProvider}) : super(key: key);
 
-
   @override
   State<Home> createState() => _HomeState();
 }
@@ -37,7 +36,6 @@ class _HomeState extends State<Home> {
   late Future<Map<String, dynamic>> userData;
   late Future<List<RecommendedGame>> recGameListforUser;
 
-
   @override
   initState() {
     super.initState();
@@ -45,6 +43,7 @@ class _HomeState extends State<Home> {
     games = fetchGameData(userProvider, userProvider.token);
     threads = fetchThreadData(userProvider, userProvider.token);
     threads2 = fetchDataUpc(userProvider, userProvider.token);
+    print(threads2);
     userData = fetchUserData(userProvider, userProvider.token);
     recGameListforUser = loadRecGamesforUser(userProvider, userProvider.token);
     print("getlisted");
@@ -88,29 +87,30 @@ class _HomeState extends State<Home> {
 
         List<dynamic> postLists = responseData['items'];
 
-         return postLists
+        return postLists
             .where((item) =>
-            item['upcomingTitle'] == null ||
-            item['upcomingTitle']['isUpcomingTitle'] == false)
+                item['upcomingTitle'] == null ||
+                item['upcomingTitle']['isUpcomingTitle'] == false)
             .map((dynamic item) => ThreadSummary(
-          token: token,
-          userProvider: userProvider,
-          threadId: item['id'],
-          title: item['title'],
-          game: item['game']['title'],
-          gameId: item['game']['id'],
-          userId: item['user']['id'],
-          username: item['user']['username'],
-          userAvatar: item['user']['avatar'],
-          thumbUps: (item['numberOfLikes'] ?? 0),
-          thumbDowns: (item['numberOfDislikes'] ?? 0),
-          time: item['createdAt'],
-          isLiked: (item['isLiked'] ?? false),
-          isDisliked: (item['isDisliked'] ?? false),
-          textColor: MyColors.white,
-          backgroundColor: MyColors.blue,
-          fontSize: 20,
-        )).toList();
+                  token: token,
+                  userProvider: userProvider,
+                  threadId: item['id'],
+                  title: item['title'],
+                  game: item['game']['title'],
+                  gameId: item['game']['id'],
+                  userId: item['user']['id'],
+                  username: item['user']['username'],
+                  userAvatar: item['user']['avatar'] ?? "",
+                  thumbUps: (item['numberOfLikes'] ?? 0),
+                  thumbDowns: (item['numberOfDislikes'] ?? 0),
+                  time: item['createdAt'],
+                  isLiked: (item['isLiked'] ?? false),
+                  isDisliked: (item['isDisliked'] ?? false),
+                  textColor: MyColors.white,
+                  backgroundColor: MyColors.blue,
+                  fontSize: 20,
+                ))
+            .toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
@@ -121,40 +121,42 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Future<List<UpcomingThread>> fetchDataUpc(UserProvider userProvider, String? token) async {
-    final response = await APIService().listAllThreads(token, limit: "3");
+  Future<List<UpcomingThread>> fetchDataUpc(
+      UserProvider userProvider, String? token) async {
+    final response = await APIService().listAllThreads(token);
     try {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> postLists = responseData['items'];
-
+        print(postLists);
         return postLists
             .where((item) =>
-            item['upcomingTitle'] != null &&
-            item['upcomingTitle']['isUpcomingTitle'] == true)
-            .map((dynamic item) =>
-            UpcomingThread(
-              token: token,
-              userProvider: userProvider,
-              threadId: item['id'],
-              title: item['title'],
-              game: item['game']['title'],
-              gameId: item['game']['id'],
-              userId: item['user']['id'],
-              username: item['user']['username'],
-              thumbUps: item['numberOfLikes'],
-              thumbDowns: item['NumberOfDislikes'],
-              time: item['createdAt'],
-              isUpcomingTitle: item['upcomingTitle']['isUpcomingTitle'] ?? false,
-              launchingDate: item['upcomingTitle']['launchingDate'] ?? '',
-              demoLink: item['upcomingTitle']['demoLink'] ?? '',
-              isLiked: (item['isLiked'] ?? false),
-              isDisliked: (item['isDisliked'] ?? false),
-              textColor: MyColors.white,
-              backgroundColor: MyColors.blue,
-              fontSize: 20,
-            )).toList();
+                item['upcomingTitle'] != null &&
+                item['upcomingTitle']['isUpcomingTitle'] == true)
+            .map((dynamic item) => UpcomingThread(
+                  token: token,
+                  userProvider: userProvider,
+                  threadId: item['id'],
+                  title: item['title'],
+                  game: item['game']['title'],
+                  gameId: item['game']['id'],
+                  userId: item['user']['id'],
+                  username: item['user']['username'],
+                  thumbUps: item['numberOfLikes'],
+                  thumbDowns: item['NumberOfDislikes'],
+                  time: item['createdAt'],
+                  isUpcomingTitle:
+                      item['upcomingTitle']['isUpcomingTitle'] ?? false,
+                  launchingDate: item['upcomingTitle']['launchingDate'] ?? '',
+                  demoLink: item['upcomingTitle']['demoLink'] ?? '',
+                  isLiked: (item['isLiked'] ?? false),
+                  isDisliked: (item['isDisliked'] ?? false),
+                  textColor: MyColors.white,
+                  backgroundColor: MyColors.blue,
+                  fontSize: 20,
+                ))
+            .toList();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
@@ -216,6 +218,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var userProvider = widget.userProvider;
+    threads2 = fetchDataUpc(userProvider, userProvider.token);
     return Scaffold(
       drawer: Drawer(
         child: Container(
@@ -301,7 +304,9 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       Navigator.pop(context);
                       CustomWidgets.needLoginSnackbar(
-                          context, "Please log in to visit the profile page! ", widget.userProvider);
+                          context,
+                          "Please log in to visit the profile page! ",
+                          widget.userProvider);
                     },
                   ),
                   decoration: const BoxDecoration(
@@ -329,9 +334,11 @@ class _HomeState extends State<Home> {
                   onTap: () {
                     userProvider.setLoggedIn(false, '', '', '');
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => LoginPage(userProvider: widget.userProvider,),
+                      builder: (context) => LoginPage(
+                        userProvider: widget.userProvider,
+                      ),
                     ));
-                    },
+                  },
                 ),
               if (!userProvider.isLoggedIn)
                 ListTile(
@@ -341,7 +348,9 @@ class _HomeState extends State<Home> {
                   ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LoginPage(userProvider: widget.userProvider,),
+                      builder: (context) => LoginPage(
+                        userProvider: widget.userProvider,
+                      ),
                     ));
                   },
                 ),
@@ -459,42 +468,43 @@ class _HomeState extends State<Home> {
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       // Handle the case when there is no data
                       return const Center(child: Text('No threads available.'));
-                      } else {
-                        // Display the fetched data
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: snapshot.data!,
-                        );
-                      }
-                    },
-                  ),
+                    } else {
+                      // Display the fetched data
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: snapshot.data!,
+                      );
+                    }
+                  },
                 ),
               ),
-              const SizedBox(height: 10),
-              const Text(
-                "Upcoming Titles ",
-                style: TextStyle(
-                  color: MyColors.orange,
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              "Upcoming Titles ",
+              style: TextStyle(
+                color: MyColors.orange,
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: FutureBuilder<List<UpcomingThread>>(
-                    future: threads2,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        // Show a loading indicator while fetching data
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        // Handle errors
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        // Handle the case when there is no data
-                        return const Center(child: Text('No upcoming title available.'));
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: FutureBuilder<List<UpcomingThread>>(
+                  future: threads2,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator while fetching data
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      // Handle errors
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      // Handle the case when there is no data
+                      return const Center(
+                          child: Text('No upcoming title available.'));
                     } else {
                       // Display the fetched data
                       return Column(
