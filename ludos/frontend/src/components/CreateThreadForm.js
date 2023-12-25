@@ -24,6 +24,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 const CreateThreadPage = () => {
   const [tags, setTags] = useState([]);
@@ -42,7 +45,13 @@ const CreateThreadPage = () => {
   const [serverError, setServerError] = useState(false);
   const [titleEmpty, setTitleEmpty] = useState(false);
   const [bodyEmpty, setBodyEmpty] = useState(false);
+  const [upcomingTitle, setUpcomingTitle] = useState({
+    isUpcomingTitle: false,
+    launchingDate: "",
+    demoLink: "",
+  });
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [userType, setUserType] = useState("gamer");
 
   const navigate = useNavigate();
 
@@ -52,6 +61,21 @@ const CreateThreadPage = () => {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
     },
   });
+
+  const handleUpcomingTitleChange = (event) => {
+    const isUpcoming = event.target.value === "yes";
+    setUpcomingTitle({ ...upcomingTitle, isUpcomingTitle: isUpcoming });
+  };
+
+  // Function to handle changes to the launching date
+  const handleLaunchingDateChange = (newValue) => {
+    setUpcomingTitle({ ...upcomingTitle, launchingDate: newValue });
+  };
+
+  // Function to handle changes to the demo link
+  const handleDemoLinkChange = (event) => {
+    setUpcomingTitle({ ...upcomingTitle, demoLink: event.target.value });
+  };
 
   const handleKeyUp = (e) => {
     if (e.keyCode == 13) {
@@ -102,7 +126,7 @@ const CreateThreadPage = () => {
   const handleRemoveImage = () => {
     setMedia([]);
     setPreviewUrl(null);
-  }
+  };
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -121,6 +145,22 @@ const CreateThreadPage = () => {
       fetchGames();
     }
   }, [searchKey]);
+
+  useEffect(() => {
+    axiosInstance
+      .get(`/user/info`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        setUserType(response.data.userType);
+        console.log(response.data.userType);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleDeleteTag = (item, index) => {
     let arr = [...tags];
@@ -156,7 +196,14 @@ const CreateThreadPage = () => {
     }
 
     let gameId = games.filter((game) => game.title === value)[0].id;
-
+    console.log("request body", {
+      title,
+      body,
+      gameId,
+      media,
+      tags,
+      upcomingTitle,
+    });
     axiosInstance
       .post("/post", {
         title,
@@ -164,6 +211,7 @@ const CreateThreadPage = () => {
         gameId,
         media,
         tags,
+        upcomingTitle,
       })
       .then((response) => {
         setSnackbarMessage("Thread created successfully!");
@@ -174,7 +222,7 @@ const CreateThreadPage = () => {
       .catch((error) => {
         setSnackbarMessage(
           "An error occurred while creating the thread!: " +
-          error.response.data.message,
+            error.response.data.message,
         );
         setServerError(true);
         console.log(error);
@@ -229,6 +277,73 @@ const CreateThreadPage = () => {
             renderInput={(params) => <TextField {...params} label="Forum" />}
           />
         </Grid>
+        {/** a section to choose "Is Upcoming Title? : (dot) yes (dot) no" */}
+        {/**If yes, it should open a section for choosing the launching date (date type) and below that a section to put demo link (string) */}
+        {userType == "developer" && (
+          <>
+            <Grid
+              item
+              xs={12}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "32px",
+                //alignItems: "flex-start",
+              }}
+            >
+              <h3>Is Upcoming Title?</h3>
+              <RadioGroup
+                row
+                value={upcomingTitle.isUpcomingTitle ? "yes" : "no"}
+                onChange={handleUpcomingTitleChange}
+              >
+                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="no" control={<Radio />} label="No" />
+              </RadioGroup>
+            </Grid>
+            {upcomingTitle.isUpcomingTitle && (
+              <>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ display: "flex", flexDirection: "row", gap: "32px" }}
+                >
+                  <h3 style={{ display: "flex", alignItems: "flex-start" }}>
+                    Launching Date:
+                  </h3>
+                  <TextField
+                    type="date"
+                    label="Launching Date"
+                    value={upcomingTitle.launchingDate}
+                    onChange={(event) => {
+                      setUpcomingTitle({
+                        ...upcomingTitle,
+                        launchingDate: event.target.value,
+                      });
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    //fullWidth
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <h3 style={{ display: "flex", alignItems: "flex-start" }}>
+                    Demo Link:
+                  </h3>
+                  <TextField
+                    fullWidth
+                    label="Demo Link"
+                    value={upcomingTitle.demoLink}
+                    onChange={handleDemoLinkChange}
+                  />
+                </Grid>
+              </>
+            )}
+          </>
+        )}
+
         <Grid item xs={12} spacing={1}>
           <h3 style={{ display: "flex", alignItems: "flex-start" }}>Tags:</h3>
           <FormControl
@@ -337,11 +452,15 @@ const CreateThreadPage = () => {
           </FormControl>
 
           {previewUrl && (
-            <div key={previewUrl} style={{ display: 'inline-block' }}>
+            <div key={previewUrl} style={{ display: "inline-block" }}>
               <h3 style={{ display: "flex", alignItems: "flex-start" }}>
                 Image:
               </h3>
-              <img src={previewUrl} alt="preview" style={{ maxHeight: '300px' }} />
+              <img
+                src={previewUrl}
+                alt="preview"
+                style={{ maxHeight: "300px" }}
+              />
               <Button
                 onClick={handleRemoveImage}
                 style={{

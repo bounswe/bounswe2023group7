@@ -17,6 +17,9 @@ export class ReviewGetInfoResponseDto {
   userId: string;
 
   @ApiProperty()
+  username: string;
+
+  @ApiProperty()
   gameId: string;
 
   @ApiProperty()

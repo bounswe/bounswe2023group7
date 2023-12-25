@@ -42,4 +42,10 @@ export class AnnotationRepository extends Repository<Annotation> {
       },
     });
   }
+
+  async createCommentAnnotation(data: Partial<Annotation>): Promise<Annotation> {
+    const comment = this.create(data);
+    await this.insert(comment)
+    return comment;
+  }
 }

@@ -240,12 +240,15 @@ export class ReviewService {
       rating: review.rating,
       createdAt: review.createdAt,
       userId: review.user.id,
+      username: review.user.username,
       gameId: review.game.id,
       likedUserCount: likedUserCount,
       dislikedUserCount: dislikedUserCount,
       isBelongToUser: userId && review.user.id == userId,
-      isLikedByUser: userId && review.likedUsers.some((user) => user.id === userId),
-      isDislikedByUser: userId && review.dislikedUsers.some((user) => user.id === userId),
+      isLikedByUser:
+        userId && review.likedUsers.some((user) => user.id === userId),
+      isDislikedByUser:
+        userId && review.dislikedUsers.some((user) => user.id === userId),
     };
   }
 
@@ -258,7 +261,6 @@ export class ReviewService {
       throw new NotFoundException('Game Not Found!');
     }
 
-
     const reviews = await this.reviewRepository.findReviewsByGame(game);
 
     const mappedReviews: ReviewGetInfoResponseDto[] = reviews.map((review) => ({
@@ -267,12 +269,15 @@ export class ReviewService {
       rating: review.rating,
       createdAt: review.createdAt,
       userId: review.user.id,
+      username: review.user.username,
       gameId: review.game.id,
       likedUserCount: review.likedUsers.length,
       dislikedUserCount: review.dislikedUsers.length,
       isBelongToUser: userId && review.user.id == userId,
-      isLikedByUser: userId && review.likedUsers.some((user) => user.id === userId),
-      isDislikedByUser: userId && review.dislikedUsers.some((user) => user.id === userId),
+      isLikedByUser:
+        userId && review.likedUsers.some((user) => user.id === userId),
+      isDislikedByUser:
+        userId && review.dislikedUsers.some((user) => user.id === userId),
     }));
     return mappedReviews;
   }
