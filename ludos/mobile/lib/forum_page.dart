@@ -43,7 +43,11 @@ class _ForumPageState extends State<ForumPage> {
 
         List<dynamic> postLists = responseData['items'];
 
-        return postLists.map((dynamic item) => ThreadSummary(
+        return postLists
+            .where((item) =>
+            item['upcomingTitle'] != null &&
+            item['upcomingTitle']['isUpcomingTitle'] == true)
+            .map((dynamic item) => ThreadSummary(
           token: widget.token,
           userProvider: widget.userProvider,
           threadId: item['id'],
@@ -55,9 +59,6 @@ class _ForumPageState extends State<ForumPage> {
           thumbUps: item['numberOfLikes'],
           thumbDowns: item['NumberOfDislikes'],
           time: item['createdAt'],
-          isUpcomingTitle: item['upcomingTitle']['isUpcomingTitle'],
-          launchingDate: item['upcomingTitle']['launchingDate'],
-          demoLink: item['upcomingTitle']['demoLink'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
           textColor: MyColors.white,
@@ -77,13 +78,15 @@ class _ForumPageState extends State<ForumPage> {
   Future<List<ThreadSummary>> fetchDataSearch(String? token) async {
     final response = await APIService().listThreadsBySearch(searchText, widget.gameid, widget.token);
     try {
-      print("here");
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> postLists = responseData['items'];
-        print(postLists);
-        return postLists.map((dynamic item) => ThreadSummary(
+        return postLists
+            .where((item) =>
+            item['upcomingTitle'] == null ||
+            item['upcomingTitle']['isUpcomingTitle'] == false)
+            .map((dynamic item) => ThreadSummary(
           token: widget.token,
           userProvider: widget.userProvider,
           threadId: item['id'],
@@ -95,9 +98,6 @@ class _ForumPageState extends State<ForumPage> {
           thumbUps: item['numberOfLikes'],
           thumbDowns: item['NumberOfDislikes'],
           time: item['createdAt'],
-          isUpcomingTitle: item['upcomingTitle']['isUpcomingTitle'],
-          launchingDate: item['upcomingTitle']['launchingDate'],
-          demoLink: item['upcomingTitle']['demoLink'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
           textColor: MyColors.white,

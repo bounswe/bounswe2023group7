@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 class APIService {
-  var baseURL = "http://3.125.225.39:8080";
+  var baseURL = "http://164.92.195.35:8080";
   String? token = "";
   Future<(String?, int)> login(String username, String password) async {
     var uri = Uri.parse("$baseURL/user/login");

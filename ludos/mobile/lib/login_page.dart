@@ -96,7 +96,6 @@ class LoginPageState extends State<LoginPage> {
                 onPressed: () async {
                   (String?, int) token = await APIService()
                       .login(emailController.text, passwordController.text);
-                  //print(token);
                   if (token.$2 == 200) {
                     var userT = await APIService().userInfo(token.$1);
                     String typeOfUser = '';

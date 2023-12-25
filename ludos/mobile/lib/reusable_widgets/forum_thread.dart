@@ -19,9 +19,6 @@ class ThreadSummary extends StatefulWidget {
    int? thumbUps;
    int? thumbDowns;
   final String time;
-  final bool isUpcomingTitle;
-  final String launchingDate;
-  final String demoLink;
   bool isLiked;
   bool isDisliked;
   final Color textColor;
@@ -43,9 +40,6 @@ class ThreadSummary extends StatefulWidget {
     required this.thumbUps,
     required this.thumbDowns,
     required this.time,
-    required this.isUpcomingTitle,
-    required this.launchingDate,
-    required this.demoLink,
     required this.textColor,
     required this.backgroundColor,
     required this.fontSize,
@@ -64,9 +58,6 @@ class ThreadSummary extends StatefulWidget {
     thumbUps: thumbUps,
     thumbDowns: thumbDowns,
     time: time,
-    isUpcomingTitle: isUpcomingTitle,
-    launchingDate: launchingDate,
-    demoLink: demoLink,
     isLiked: isLiked,
     isDisliked: isDisliked,
     textColor: textColor,
@@ -91,9 +82,6 @@ class _ThreadSummaryState extends State<ThreadSummary> {
    int? thumbUps;
    int? thumbDowns;
   final String time;
-  final bool isUpcomingTitle;
-  final String launchingDate;
-  final String demoLink;
   final Color textColor;
   final Color backgroundColor;
   final double fontSize;
@@ -112,9 +100,6 @@ class _ThreadSummaryState extends State<ThreadSummary> {
     required this.thumbUps,
     required this.thumbDowns,
     required this.time,
-    required this.isUpcomingTitle,
-    required this.launchingDate,
-    required this.demoLink,
     required this.textColor,
     required this.backgroundColor,
     required this.fontSize,

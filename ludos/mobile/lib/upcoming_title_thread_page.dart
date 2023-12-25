@@ -60,6 +60,7 @@ class _UpcomingTitleThreadPageState extends State<UpcomingTitleThreadPage>
       threadData = await APIService().getThread(
           widget.threadId, widget.token);
       lnDate = threadData['upcomingTitle']['launchingDate'].toString();
+
       await Future.delayed(const Duration(seconds: 1));
       return true;
     }
@@ -76,7 +77,6 @@ class _UpcomingTitleThreadPageState extends State<UpcomingTitleThreadPage>
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         numberOfComment = responseData.length;
-        print(responseData);
         return responseData.map((dynamic item) => Comment(
           token: widget.token,
           userProvider: widget.userProvider,
@@ -205,6 +205,7 @@ class _UpcomingTitleThreadPageState extends State<UpcomingTitleThreadPage>
   @override
   Widget build(BuildContext context)
   {
+    print(threadData);
     return SelectionArea(contextMenuBuilder:(context, editableTextState) {
       final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
       buttonItems.insert(
@@ -256,7 +257,7 @@ class _UpcomingTitleThreadPageState extends State<UpcomingTitleThreadPage>
                                   Text(
                                     "Planned Release Date: $lnDate",
                                     style: const TextStyle(
-                                      color: MyColors.darkBlue,
+                                      color: MyColors.lightBlue,
                                       fontSize: 18,
 
                                     ),

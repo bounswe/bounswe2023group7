@@ -206,9 +206,11 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
                       height: 200,
                       child: CupertinoDatePicker(
                         mode: CupertinoDatePickerMode.date,
+                        backgroundColor: MyColors.lightBlue,
                         initialDateTime: DateTime(2023, 12, 26),
                         onDateTimeChanged: (DateTime newDateTime) {
                           launchingDateController.text = formatDate(newDateTime);
+                          print(launchingDateController.text);
                         },
                       ),
                     ),
