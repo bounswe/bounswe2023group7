@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
+import 'package:ludos_mobile_app/userProvider.dart';
 import 'activation_for_password_reset.dart';
 import 'helper/colors.dart';
 import 'helper/APIService.dart';
 
 class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({super.key});
+  final UserProvider userProvider;
 
+  const ForgotPassword({Key? key, required this.userProvider})
+      : super(key: key);
   @override
   State<ForgotPassword> createState() => _ForgotPasswordState();
 }
@@ -89,6 +92,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => (EnterActivation(
                               email: emailController.text,
+                          userProvider: widget.userProvider,
                             ))));
                   } else {
                     CustomWidgets.statusNotOkay(context, "No user found with this email");

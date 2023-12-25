@@ -10,6 +10,10 @@ import 'package:provider/provider.dart';
 import 'userProvider.dart';
 
 class LoginPage extends StatefulWidget {
+
+  final UserProvider userProvider;
+  const LoginPage({Key? key, required this.userProvider})
+      : super(key: key);
   @override
   LoginPageState createState() => LoginPageState();
 }
@@ -22,7 +26,12 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(userProvider: widget.userProvider)));
+      return false;
+    },
+    child: Scaffold(
       backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
         child: Padding(
@@ -128,7 +137,7 @@ class LoginPageState extends State<LoginPage> {
                     shape: const StadiumBorder()),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ForgotPassword(),
+                    builder: (context) => ForgotPassword(userProvider: widget.userProvider,),
                   ));
                 },
                 child: const Text(
@@ -144,7 +153,7 @@ class LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   // Navigate to the sign-up page when the button is pressed.
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SignUpPage(),
+                    builder: (context) => SignUpPage(userProvider: widget.userProvider,),
                   ));
                 },
                 child: const Text(
@@ -156,6 +165,7 @@ class LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    ),
     );
   }
 }

@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 
 import '../helper/APIService.dart';
 import '../helper/colors.dart';
-import '../login_page.dart';
 import '../thread_page.dart';
 import '../userProvider.dart';
 import '../visit_user_page.dart';
@@ -491,21 +490,56 @@ class _CommentState extends State<Comment> {
                           color: isLiked ? Colors.green : Colors.white,
                         ),
                       ),
-                      Text(numberOfLikes.toString(),
-                          style: TextStyle(color: Colors.white)),
-                      IconButton(
-                        onPressed: () => setState(() {
-                          if (!widget.userProvider.isLoggedIn) {
-                            CustomWidgets.needLoginSnackbar(context,
-                                "Please log in to dislike a comment! ");
-                          } else {
-                            userPressed(false);
-                          }
-                        }),
-                        icon: Icon(
-                          Icons.thumb_down,
-                          color: isDisliked ? Colors.red : Colors.white,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                            onPressed: () => setState(() {
+                              if(!widget.userProvider.isLoggedIn){
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to like a comment! ", userProvider);
+                              } else {
+                                userPressed(true);
+                              }
+                            }),
+                            icon: Icon(
+                              Icons.thumb_up,
+                              color: isLiked ? Colors.green : Colors.white,
+                            ),
+                          ),
+                          Text(numberOfLikes.toString(),
+                          style: TextStyle(
+                            color: Colors.white
+                          )
+                          ),
+                          IconButton(
+                            onPressed: () => setState(() {
+                              if(!widget.userProvider.isLoggedIn){
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a comment! ", userProvider);
+                              } else {
+                                userPressed(false);
+                              }
+                            }),
+                            icon: Icon(
+                              Icons.thumb_down,
+                              color: isDisliked ? Colors.red : Colors.white,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.comment, color: Colors.white,),
+                            onPressed: () {
+                              if(!widget.userProvider.isLoggedIn){
+                                CustomWidgets.needLoginSnackbar(context, "Please log in to reply a comment! ", userProvider);
+                              } else {
+                                toggleFormVisibility();
+                              }
+                            },
+                          ),
+                          const SizedBox(width: 10.0),
+                          Text(
+                            timeAgo(time),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
                       ),
                       Text(numberOfComments.toString(),
                           style: TextStyle(color: Colors.white)),

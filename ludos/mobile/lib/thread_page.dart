@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ludos_mobile_app/forum_page.dart';
 import 'package:ludos_mobile_app/helper/colors.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_comment.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
@@ -389,7 +390,16 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
   @override
   Widget build(BuildContext context)
   {
-     return Scaffold(
+    return  WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ForumPage(
+        gameid: threadData['game']['id'],
+        token: widget.token,
+        userProvider: widget.userProvider,
+      ),));
+      return false;
+    },
+    child: Scaffold(
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
@@ -755,6 +765,7 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
         ),
 
         bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
+    ),
     );
   }
 }

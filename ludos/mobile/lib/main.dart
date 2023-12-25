@@ -301,7 +301,7 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       Navigator.pop(context);
                       CustomWidgets.needLoginSnackbar(
-                          context, "Please log in to visit the profile page! ");
+                          context, "Please log in to visit the profile page! ", widget.userProvider);
                     },
                   ),
                   decoration: const BoxDecoration(
@@ -328,10 +328,10 @@ class _HomeState extends State<Home> {
                   ),
                   onTap: () {
                     userProvider.setLoggedIn(false, '', '', '');
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LoginPage(),
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => LoginPage(userProvider: widget.userProvider,),
                     ));
-                  },
+                    },
                 ),
               if (!userProvider.isLoggedIn)
                 ListTile(
@@ -341,7 +341,7 @@ class _HomeState extends State<Home> {
                   ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LoginPage(),
+                      builder: (context) => LoginPage(userProvider: widget.userProvider,),
                     ));
                   },
                 ),
