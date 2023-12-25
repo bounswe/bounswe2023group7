@@ -212,55 +212,65 @@ class _ThreadPageState extends State<ThreadPage>
     );
   }
 
-  List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
-    List<TextSpan> textSpans = [];
-    styledRanges.sort((a, b) => a.start.compareTo(b.start));
-    int currentIndex = 0;
-    
-    Set<StyledRange> uniqueRanges = styledRanges.toSet();
-    styledRanges = uniqueRanges.toList();
-    for (var styledRange in styledRanges) {
-      // Add the unstyled text before the current range
-      textSpans.add(
-        TextSpan(
-          text: text.substring(currentIndex, styledRange.start),
-          style: const TextStyle(
-            color: MyColors.white,
-            fontSize: 15,
-          ),
-        ),
-      );
+List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
+  List<TextSpan> textSpans = [];
+  styledRanges.sort((a, b) => a.start.compareTo(b.start));
+  int currentIndex = 0;
+  
+  Set<StyledRange> uniqueRanges = styledRanges.toSet();
+  styledRanges = uniqueRanges.toList();
+  for (var i = 0; i < styledRanges.length; i++) {
+    var styledRange = styledRanges[i];
 
-      // Add the styled text within the current range
-      textSpans.add(
-        TextSpan(
-          recognizer: TapGestureRecognizer()
-            ..onTap = () {
-              showAnnotation(context, styledRange.annotation);
-            },
-          text: text.substring(styledRange.start, styledRange.end),
-          style: styledRange.style,
-        ),
-      );
-
-      // Update the current index
-      currentIndex = styledRange.end;
+    // Check for overlapping ranges
+    if (styledRange.start < currentIndex) {
+      continue; // Skip overlapping ranges
     }
 
-    // Add any remaining unstyled text after the last range
-    if (currentIndex < text.length) {
-      textSpans.add(
-        TextSpan(
-          text: text.substring(currentIndex),
-          style: const TextStyle(
-            color: MyColors.white,
-            fontSize: 15,
-          ),
+    // Add the unstyled text before the current range
+    textSpans.add(
+      TextSpan(
+        text: text.substring(currentIndex, styledRange.start),
+        style: const TextStyle(
+          color: MyColors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
-      );
-    }
-    return textSpans;
+      ),
+    );
+
+    // Add the styled text within the current range
+    textSpans.add(
+      TextSpan(
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            showAnnotation(context, styledRange.annotation);
+          },
+        text: text.substring(styledRange.start, styledRange.end),
+        style: styledRange.style,
+      ),
+    );
+
+    // Update the current index
+    currentIndex = styledRange.end;
   }
+
+  // Add any remaining unstyled text after the last range
+  if (currentIndex < text.length) {
+    textSpans.add(
+      TextSpan(
+        text: text.substring(currentIndex),
+        style: const TextStyle(
+          color: MyColors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  return textSpans;
+}
 
   Future<List<StyledRange>> getStyledRanges() async {
     final response =
