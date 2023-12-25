@@ -202,24 +202,24 @@ function ForumTopic(data) {
               ))}
           </Grid>
         </Grid>
-        <Typography
-          variant="body2"
-          component="div"
-          style={{
-            color: "white",
-            marginTop: "3px",
-            marginRight: "10px",
-            display: "flex",
-            marginLeft: "10px",
-            textAlign: "center",
-            lineHeight: "1.7",
-            fontSize: "20px",
-          }}
-        >
-          <Link to={`/thread/${data.topic.id}`} style={userStyle}>
+        <Link to={`/thread/${data.topic.id}`} style={userStyle}>
+          <Typography
+            variant="body2"
+            component="div"
+            style={{
+              color: "white",
+              marginTop: "3px",
+              marginRight: "10px",
+              display: "flex",
+              marginLeft: "10px",
+              textAlign: "center",
+              lineHeight: "1.7",
+              fontSize: "20px",
+            }}
+          >
             {data.topic.title}
-          </Link>
-        </Typography>
+          </Typography>
+        </Link>
         <Grid
           style={{
             display: "flex",
