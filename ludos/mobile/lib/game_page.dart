@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:core';
 import 'dart:ui';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,14 +11,18 @@ import 'package:ludos_mobile_app/edit_game.dart';
 import 'package:ludos_mobile_app/entities_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/game_review.dart';
 import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
+import 'package:ludos_mobile_app/reusable_widgets/rec_games.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
+import 'package:provider/provider.dart';
 import 'forum_page.dart';
 import 'game_properties.dart';
 import 'game_reviews_page.dart';
 import 'helper/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'helper/APIService.dart';
+import 'main.dart';
 import 'reusable_widgets/custom_navigation_bar.dart';
+import 'reusable_widgets/styledRange.dart';
 
 class GamePage extends StatefulWidget {
   final VoidCallback onRefresh;
@@ -34,15 +40,18 @@ class _GamePageState extends State<GamePage> {
   bool showForm = false;
   double rating = 0.0;
   late List<Review> reviews = [];
+  late List<StyledRange> annotations = [];
   final APIService apiService = APIService();
   Map<String, dynamic> gameData = {};
+  late Future<List<RecommendedGame>> recGameList;
 
   @override
   initState() {
     super.initState();
     loadGameData();
     initializeFollowState();
-    ToList(fetchReviewData(widget.token));
+    ToListAnnotation(getStyledRanges());
+    recGameList = loadRecGames(widget.userProvider, widget.userProvider.token);
     print("getlisted");
   }
 
@@ -64,7 +73,31 @@ class _GamePageState extends State<GamePage> {
       print("Error initializing follow state: $error");
     }
   }
-
+  Future<List<RecommendedGame>> loadRecGames(UserProvider userProvider, String? token) async {
+    final response = await apiService.getGameRecommendation(widget.token,widget.id);
+    try {
+      if (response.statusCode == 200) {
+        final  List<dynamic> gamesList = json.decode(response.body);
+        return gamesList
+            .map((dynamic item) => RecommendedGame(
+            title: item['title'],
+            averageRating: (item['averageRating'] == null
+                ? 0
+                : item['averageRating'].toDouble()),
+            coverLink: item['coverLink'],
+            id: item['id'],
+            token: token,
+            userProvider: userProvider))
+            .toList();
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+        throw Exception('Failed to load games');
+      }
+    } catch (error) {
+      print("Error: $error");
+      throw Exception('Failed to load games');
+    }
+  }
   Future<bool> getFollowState() async {
     var response = await APIService().userInfo(widget.token);
     var bool = false;
@@ -94,49 +127,250 @@ class _GamePageState extends State<GamePage> {
     });
   }
 
-  Future<List<Review>> fetchReviewData(String? token) async {
-    final response = await APIService().listReviews(widget.token, widget.id);
+  Future<void> ToListAnnotation(Future<List<StyledRange>> annotationList) async {
+    annotations = await annotationList;
+  }
+
+  void showAnnotation(BuildContext context, String annotationText) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: MyColors.darkBlue,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                20.0,
+              ),
+            ),
+          ),
+          contentPadding: const EdgeInsets.only(
+            top: 10.0,
+          ),
+          title: const Text(
+            "Annotation",
+            style: TextStyle(fontSize: 20.0, color: MyColors.white),
+          ),
+          content: Container(
+            height: 140,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      annotationText,
+                      style:
+                          const TextStyle(fontSize: 15, color: MyColors.white),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyColors.red,
+                        ),
+                        child: const Text("Close",
+                            style: TextStyle(color: MyColors.white)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void createAnnotation(
+      BuildContext context, String annotatedText, int start, int end) {
+    String annotationText =
+        ""; // Add a variable to store the text from the TextFormField
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: MyColors.darkBlue,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                20.0,
+              ),
+            ),
+          ),
+          contentPadding: const EdgeInsets.only(
+            top: 10.0,
+          ),
+          title: const Text(
+            "Annotate the Text",
+            style: TextStyle(fontSize: 20.0, color: MyColors.white),
+          ),
+          content: Container(
+            height: 180,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      onChanged: (value) {
+                        annotationText = value;
+                      },
+                      style:
+                          const TextStyle(fontSize: 15, color: MyColors.white),
+                      decoration: InputDecoration(
+                        hintText: "Enter annotation",
+                        hintStyle:
+                            TextStyle(color: MyColors.white.withOpacity(0.5)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyColors.red,
+                        ),
+                        child: const Text("Cancel",
+                            style: TextStyle(color: MyColors.white)),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Call the API to create the annotation
+                          apiService.createAnnotationGameBio(
+                              widget.token,
+                              widget.id,
+                              annotatedText,
+                              start,
+                              end,
+                              annotationText);
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyColors.green,
+                        ),
+                        child: const Text("Annotate",
+                            style: TextStyle(color: MyColors.white)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
+  List<TextSpan> textSpans = [];
+  styledRanges.sort((a, b) => a.start.compareTo(b.start));
+  int currentIndex = 0;
+  
+  Set<StyledRange> uniqueRanges = styledRanges.toSet();
+  styledRanges = uniqueRanges.toList();
+  for (var i = 0; i < styledRanges.length; i++) {
+    var styledRange = styledRanges[i];
+
+    // Check for overlapping ranges
+    if (styledRange.start < currentIndex) {
+      continue; // Skip overlapping ranges
+    }
+
+    // Add the unstyled text before the current range
+    textSpans.add(
+      TextSpan(
+        text: text.substring(currentIndex, styledRange.start),
+        style: const TextStyle(
+          color: MyColors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+    );
+
+    // Add the styled text within the current range
+    textSpans.add(
+      TextSpan(
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            showAnnotation(context, styledRange.annotation);
+          },
+        text: text.substring(styledRange.start, styledRange.end),
+        style: styledRange.style,
+      ),
+    );
+
+    // Update the current index
+    currentIndex = styledRange.end;
+  }
+
+  // Add any remaining unstyled text after the last range
+  if (currentIndex < text.length) {
+    textSpans.add(
+      TextSpan(
+        text: text.substring(currentIndex),
+        style: const TextStyle(
+          color: MyColors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  return textSpans;
+}
+
+  Future<List<StyledRange>> getStyledRanges() async {
+    final response =
+        await APIService().getAnnotationGameBio(widget.token, widget.id);
     try {
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         return Future.wait(
-            responseData.map<Future<Review>>((dynamic item) async {
-          final userResponse =
-              await APIService().userInfoById(item['userId'], widget.token);
-
-          if (userResponse.statusCode == 200) {
-            setState(() {});
-            return Review(
-              token: widget.token,
-              userProvider: widget.userProvider,
-              reviewId: item['reviewId'],
-              content: item['content'],
-              rating: item['rating'].toDouble(),
-              gameId: item['gameId'],
-              userId: item['userId'],
-              username: json.decode(userResponse.body)['username'],
-              thumbUps: item['likedUserCount'],
-              thumbDowns: item['dislikeUserCount'],
-              time: item['createdAt'],
-            );
-          } else {
-            print(
-                "Error fetching user info: ${userResponse.statusCode} - ${userResponse.body}");
-            throw Exception('Failed to load user info!');
-          }
+            responseData.map<Future<StyledRange>>((dynamic item) async {
+          return StyledRange(
+              item['target']['selector']['start'],
+              item['target']['selector']['end'],
+              item['body'],
+              const TextStyle(
+                backgroundColor: MyColors.blue,
+                color: MyColors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ));
         }).toList());
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
-        throw Exception('Failed to load reviews!');
+        return [];
       }
     } catch (error) {
       print("Error: $error");
-      throw Exception('Failed to load reviews from API!');
+      return [];
     }
-  }
-
-  Future<void> ToList(Future<List<Review>> reviewList) async {
-    reviews = await reviewList;
   }
 
   final TextEditingController contentController = TextEditingController();
@@ -144,23 +378,12 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SelectionArea(contextMenuBuilder:(context, editableTextState) {
-      final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
-      buttonItems.insert(
-        0,
-        ContextMenuButtonItem(
-          label: 'Annotate',
-          onPressed: () {
-            // Annotation code    
-          },
-        ),
-      );
-      return AdaptiveTextSelectionToolbar.buttonItems(
-        anchors: editableTextState.contextMenuAnchors,
-        buttonItems: buttonItems,
-      );
+    return WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(userProvider: widget.userProvider)));
+      return false;
     },
-      child: Scaffold(
+    child: Scaffold(
       endDrawer: Drawer(
         child: Container(
           color: MyColors.darkBlue, // Drawer background color
@@ -473,13 +696,39 @@ class _GamePageState extends State<GamePage> {
             ),
             const SizedBox(height: 20),
             if (gameData['gameBio'] != null)
-              Text(
-                gameData['gameBio'].toString(),
+              SelectableText.rich(
+                TextSpan(
+                    children: buildStyledText(
+                        gameData['gameBio'].toString(), annotations)),
                 style: const TextStyle(
                   color: MyColors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
+                contextMenuBuilder: (context, editableTextState) {
+                  final List<ContextMenuButtonItem> buttonItems =
+                      editableTextState.contextMenuButtonItems;
+                  buttonItems.insert(
+                    0,
+                    ContextMenuButtonItem(
+                      label: 'Annotate',
+                      onPressed: () {
+                        // Annotation code
+                        TextSelection text =
+                            editableTextState.textEditingValue.selection;
+                        String annotatedText = editableTextState
+                            .textEditingValue.text
+                            .substring(text.baseOffset, text.extentOffset);
+                        createAnnotation(context, annotatedText,
+                            text.baseOffset, text.extentOffset);
+                      },
+                    ),
+                  );
+                  return AdaptiveTextSelectionToolbar.buttonItems(
+                    anchors: editableTextState.contextMenuAnchors,
+                    buttonItems: buttonItems,
+                  );
+                },
               ),
             const SizedBox(height: 20),
             if (gameData['averageUserCompilationDuration'] != null)
@@ -491,6 +740,42 @@ class _GamePageState extends State<GamePage> {
                   fontSize: 16,
                 ),
               ),
+            const SizedBox(height: 20),
+            const Text(
+              'Recommended Games',
+              style: TextStyle(
+                color: MyColors.orange,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: FutureBuilder<List<RecommendedGame>>(
+                  future: recGameList,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator while fetching data
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      // Handle errors
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      // Handle the case when there is no data
+                      return const Center(child: Text('No games available.'));
+                    } else {
+                      // Display the fetched data
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: snapshot.data!,
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -655,20 +940,12 @@ class _GamePageState extends State<GamePage> {
                     ),
                   ]),
                 ),
-            Column(children: [
-              const Divider(
-                height: 4.0,
-                thickness: 4.0,
-                color: MyColors.lightBlue,
-              ),
-              if(reviews.isNotEmpty)
-                reviews[0],
-            ])
           ],
         ),
       ),
+
       bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
     )
-);
+    );
   }
 }

@@ -45,40 +45,6 @@ function ForumTopic(data) {
     lineHeight: "1",
   };
 
-  /*
-  const boxStyle = {
-    backgroundColor: "rgba(200, 200, 200, 0.9)",
-    borderRadius: "10px",
-    paddingTop: "15px",
-  };
-  const headerStyle = {
-    color: "black",
-    fontFamily: "Trebuchet MS, sans-serif",
-    marginBottom: "10px",
-  };
-  const forumStyle = { color: "rgb(100, 70, 144)", fontWeight: "bold" };
-  const gameStyle = {
-    backgroundColor: "rgb(9 ,63 ,83)",
-    color: "white", 
-    borderRadius: "10px",
-    padding: "2px",
-    fontWeight: "bold",
-    fontSize: "13px",
-  }
-  const userStyle = { color: "rgb(100, 80, 90)", marginRight: "2%" };
-
-  const tagBox = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgb(19, 142, 19)",
-    color: "white",
-    height: "6px",
-    borderRadius: "10px",
-    padding: "5px",
-    marginRight: "5px",
-  };
-*/
   useEffect(() => {}, []);
 
   return (
@@ -101,43 +67,66 @@ function ForumTopic(data) {
           flexDirection: "column",
           backgroundColor: "rgb(200,200,200,0.6)",
           width: "160px",
-          justifyContent: "center",
+          justifyContent: "space-evenly",
           borderBottomLeftRadius: "10px",
           borderTopLeftRadius: "10px",
-          paddingTop: "20px",
-          padding: "32.25px 40px 32.25px",
+          paddingTop: "0px", // Remove padding at the top
+          //paddingBottom: "32.25px",
+          // paddingLeft: "40px",
+          //paddingRight: "40px",
           alignItems: "center",
         }}
       >
-        <Box
-          onClick={() => handleClick(data.topic.userId)}
-          style={{ cursor: "pointer" }}
-          component="img"
-          sx={{
-            height: 48,
-            width: 48,
-            borderRadius: "50%",
-            alignSelf: "center",
-            paddingBottom: "10px",
-          }}
-          src={
-            data.topic.imgsrc ||
-            "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"
-          }
-        />
-        <Typography
-          onClick={() => handleClick(data.topic.userId)}
-          variant="caption"
-          component="div"
-          style={{
-            color: "white",
-            marginTop: "3px",
-            textAlign: "center",
-            cursor: "pointer",
-          }}
-        >
-          @{data.topic.userOpened}
-        </Typography>
+        {data.topic.isUpcomingTitle && (
+          <Typography
+            variant="caption"
+            style={{
+              paddingRight: "3px",
+              paddingLeft: "3px",
+              marginTop: "-20px",
+              backgroundColor: "#570080",
+              color: "white",
+              display: "flex",
+              borderRadius: "5px",
+              //marginBottom: "20px",
+              alignSelf: "flex-start",
+            }}
+          >
+            Upcoming Title
+          </Typography>
+        )}
+
+        <Grid>
+          <Box
+            onClick={() => handleClick(data.topic.userId)}
+            style={{ cursor: "pointer" }}
+            component="img"
+            sx={{
+              height: 48,
+              width: 48,
+              borderRadius: "50%",
+              alignSelf: "center",
+              paddingBottom: "10px",
+            }}
+            src={
+              data.topic.imgsrc ||
+              "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"
+            }
+          />
+          <Typography
+            onClick={() => handleClick(data.topic.userId)}
+            variant="caption"
+            component="div"
+            style={{
+              color: "white",
+              marginTop: "3px",
+              textAlign: "center",
+              cursor: "pointer",
+            }}
+          >
+            @{data.topic.userOpened}
+          </Typography>
+        </Grid>
       </Grid>
 
       <Grid

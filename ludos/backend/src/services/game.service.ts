@@ -13,7 +13,6 @@ import { GameRepository } from '../repositories/game.repository';
 import { RatingRepository } from '../repositories/rating.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { CompletionDurationRepository } from '../repositories/completion-duration.repository';
-import { GameGetResponseDto } from '../dtos/game/response/get.response';
 
 @Injectable()
 export class GameService {
@@ -192,27 +191,17 @@ export class GameService {
     }
   }
 
-  public async getRelatedGames(gameId: string): Promise<GameGetResponseDto[]> {
-
+  public async getRelatedGames(gameId: string): Promise<Game[]> {
     const game = await this.gameRepository.findGameById(gameId);
     if (!game) {
       throw new NotFoundException('Game not found');
     }
 
-    const relatedGames = await this.gameRepository.getRelatedGames(gameId, game.tags);
-    
-    const relatedGamesResponse: GameGetResponseDto[] = relatedGames.map((relatedGame : Game) => ({
-      id: relatedGame.id,
-      title: relatedGame.title,
-      coverLink : relatedGame.coverLink,
-      gameBio : relatedGame.gameBio,
-      releaseDate : relatedGame.releaseDate,
-      developer : relatedGame.developer,
-      userCompletionDuration : relatedGame.userCompletionDuration,
-      averageCompletionDuration : relatedGame.averageCompletionDuration
-    }));
+    const relatedGames = await this.gameRepository.getRelatedGames(
+      gameId,
+      game.tags,
+    );
 
-    return relatedGamesResponse;
+    return relatedGames;
   }
-
 }

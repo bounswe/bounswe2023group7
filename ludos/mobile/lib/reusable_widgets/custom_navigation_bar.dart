@@ -4,13 +4,14 @@ import 'package:ludos_mobile_app/change_password.dart';
 import 'package:ludos_mobile_app/user_profile_page.dart';
 import 'package:ludos_mobile_app/reusable_widgets/forum_thread.dart';
 import 'package:ludos_mobile_app/reusable_widgets/home_game_sum.dart';
+import '../group/groups.dart';
 import '../helper/APIService.dart';
 import '../login_page.dart';
 import '../games_page.dart';
 import '../userProvider.dart';
 import 'package:provider/provider.dart';
 import '../helper/colors.dart';
-import '../search_page.dart';
+import '../detailed_user_search.dart';
 import '../main.dart';
 import '../search_landing_page.dart';
 
@@ -28,20 +29,23 @@ class CustomNavigationBar extends StatelessWidget {
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Home(),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => Home(userProvider: userProvider),
                   ));
                 },
                 icon: const Icon(Icons.home)),
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => GroupsPage(token: userProvider.token, userProvider: userProvider),
+                  ));
                 },
                 icon: const Icon(Icons.group)),
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
                   ));
                 },
@@ -49,17 +53,14 @@ class CustomNavigationBar extends StatelessWidget {
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SearchLandingPage(userProvider: userProvider),
-                  ));
+
                 },
                 icon: const Icon(Icons.favorite)),
             IconButton(
                 color: MyColors.white,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    //builder: (context) => GamesPage(token: userProvider.token, userProvider: userProvider),
-                    builder: (context) => SearchPage(userProvider: userProvider),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => SearchLandingPage(userProvider: userProvider),
                   ));
                 },
                 icon: const Icon(Icons.search_outlined)),

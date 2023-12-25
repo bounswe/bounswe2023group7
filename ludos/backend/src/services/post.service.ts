@@ -158,6 +158,7 @@ export class PostService {
     userId?: string,
     isLiked?: boolean,
     isDisliked?: boolean,
+    isUpcomingTitle?: boolean,
     orderByKey?: keyof Post,
     order?: 'ASC' | 'DESC',
   ): Promise<Pagination<Post, IPaginationMeta>> {
@@ -182,6 +183,7 @@ export class PostService {
       userId,
       isLiked,
       isDisliked,
+      isUpcomingTitle,
       orderByKey,
       order,
     );

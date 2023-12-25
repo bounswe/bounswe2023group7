@@ -12,6 +12,7 @@ import {
 import { User } from './user.entity';
 import { Game } from './game.entity';
 import { Group } from './group.entity';
+import { UpcomingTitleDto } from '../dtos/post/upcomingTitle.dto';
 
 @Entity('posts')
 export class Post {
@@ -53,7 +54,7 @@ export class Post {
   })
   numberOfDislikes: number;
 
-  @ManyToOne("Group")
+  @ManyToOne('Group')
   group: Group;
 
   @Column('text', { array: true, default: [] })
@@ -75,4 +76,7 @@ export class Post {
   isLiked: boolean;
 
   isDisliked: boolean;
+
+  @Column({ nullable: true, type: 'jsonb' })
+  upcomingTitle: UpcomingTitleDto;
 }
