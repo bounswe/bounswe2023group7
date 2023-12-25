@@ -1,5 +1,17 @@
 import React, { useState, useRef } from "react";
-import { Button, Typography, Chip, FormControl, Grid, Input, Select, MenuItem, Checkbox, FormControlLabel, Pagination } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Chip,
+  FormControl,
+  Grid,
+  Input,
+  Select,
+  MenuItem,
+  Checkbox,
+  FormControlLabel,
+  Pagination,
+} from "@mui/material";
 import Container from "@mui/material/Container";
 import TrendingGamesSlider from "../components/TrendingGamesSlider";
 import GameCard from "../components/GameCard";
@@ -9,7 +21,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ForumTopic from "../components/ForumTopic";
-
+/*
 const gameHighlight = [
   {
     title: "Baldur's Gate 3",
@@ -32,6 +44,7 @@ const gameHighlight = [
       "Take on the role of a football manager in Football Manager 2024, where every decision you make shapes the destiny of your team. Immerse yourself in the world of football, filled with tactics, transfers, and morally complex choices as you strive for victory on the pitch.",
   },
 ];
+*/
 
 const convertToSlug = (text) => {
   return text
@@ -64,6 +77,7 @@ export default function GamesPage() {
   const [detailGames, setDetailGames] = useState([]);
   const [pageCount, setPageCount] = useState(1);
 
+  const [gameHighlight, setGameHighlight] = useState([]);
 
   const axiosInstance = axios.create({
     baseURL: `http://${process.env.REACT_APP_API_URL}`,
@@ -129,7 +143,6 @@ export default function GamesPage() {
     navigate(`/game/${convertToSlug(value)}`);
   };
 
-
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
       const link1 = `http://${process.env.REACT_APP_API_URL}/user/info`;
@@ -174,6 +187,8 @@ export default function GamesPage() {
   };
 
   useEffect(() => {
+    fetchTrendingGames();
+
     axiosInstance
       .get(`/user/suggested`)
       .then((response) => {
@@ -184,6 +199,26 @@ export default function GamesPage() {
         console.log(error);
       });
   }, []);
+
+  const fetchTrendingGames = async () => {
+    try {
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_API_URL}/game?limit=3&order=DESC&orderByKey=followers`,
+      );
+
+      if (response.data) {
+        const formattedGames = response.data.items.map((game) => ({
+          title: game.title,
+          image: game.coverLink,
+          content: game.gameBio,
+        }));
+        setGameHighlight(formattedGames);
+        console.log("formatted games", formattedGames);
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
 
   useEffect(() => {
     const options = {
@@ -248,8 +283,6 @@ export default function GamesPage() {
     }
   }, [searchKey]);
 
-
-
   const paginStyle = {
     backgroundColor: "rgba(204, 204, 255, 0.9)",
     borderRadius: "10px",
@@ -301,7 +334,11 @@ export default function GamesPage() {
         </Typography>
       </div>
 
-      <TrendingGamesSlider games={gameHighlight} />
+      {gameHighlight.length > 0 ? (
+        <TrendingGamesSlider games={gameHighlight} />
+      ) : (
+        <div>Loading trending games...</div> // Placeholder for loading state
+      )}
       {/* Other sections */}
       <div
         style={{
@@ -375,11 +412,19 @@ export default function GamesPage() {
             borderRadius: "40px",
           }}
         />
-        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginLeft: '20px', marginBottom: '10px' }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            marginLeft: "20px",
+            marginBottom: "10px",
+          }}
+        >
           <Button
             variant="contained"
             color="secondary"
-            style={{ borderRadius: '40px', alignItems: 'flex-start' }}
+            style={{ borderRadius: "40px", alignItems: "flex-start" }}
             onClick={handleDetailSearch}
           >
             Detailed Search
@@ -526,8 +571,8 @@ export default function GamesPage() {
                       label: "Followers",
                     },
                     {
-                      value: 'id',
-                      label: 'Id',
+                      value: "id",
+                      label: "Id",
                     },
                     // Add other sorting options as needed
                   ].map((option) => (
@@ -608,7 +653,9 @@ export default function GamesPage() {
                 />
               </Grid>
             </div>
-          ) : (<div />)}
+          ) : (
+            <div />
+          )}
         </div>
       </div>
 
@@ -687,6 +734,6 @@ export default function GamesPage() {
           </div>
         </Container>
       </div>
-    </div >
+    </div>
   );
 }
