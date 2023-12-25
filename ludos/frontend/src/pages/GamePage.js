@@ -576,7 +576,7 @@ function GamePage(id) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {game.averageRating}/5
+              {averageRating.toFixed(2)}/5
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} style={smallBoxStyle}>
@@ -606,7 +606,7 @@ function GamePage(id) {
               component="div"
               style={{ fontFamily: "Trebuchet MS, sans-serif" }}
             >
-              {game.averageCompletionDuration}
+              {game.averageCompletionDuration.toFixed(2)} Hours
             </Typography>
           </Grid>
         </Grid>

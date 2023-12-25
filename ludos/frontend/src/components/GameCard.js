@@ -109,49 +109,68 @@ export default function GameCard({ game }) {
           </Box>
         </Grid>
 
-        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'stretch', flexGrow: 1 }}>
-          <Box sx={{ marginRight: '16px', borderRadius: '20px' }}>
+        <Grid
+          item
+          xs={12}
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "stretch",
+            flexGrow: 1,
+          }}
+        >
+          <Box sx={{ marginRight: "16px", borderRadius: "20px" }}>
             <img
               src={game.coverLink}
               alt={game.title}
-              style={{ height: 150, width: 150, borderRadius: '20px' }}
+              style={{ height: 150, width: 150, borderRadius: "20px" }}
               onError={replaceImage}
             />
           </Box>
-          <Box sx={{
-            backgroundColor: '#7180B9',
-            padding: '20px',
-            borderRadius: '30px',
-            height: '150px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-          }}>
-            <Typography sx={{ color: 'white', width: '100%' }}>
+          <Box
+            sx={{
+              backgroundColor: "#7180B9",
+              padding: "20px",
+              borderRadius: "30px",
+              height: "150px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+            }}
+          >
+            <Typography sx={{ color: "white", width: "100%" }}>
               {game.gameBio.slice(0, 300)}...
             </Typography>
           </Box>
         </Grid>
 
-        <Grid item xs={12} sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+        <Grid
+          item
+          xs={12}
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <div>
             {game?.tags.map((tag, index) => (
               <Chip
                 key={index}
                 label={tag}
                 color="primary"
-                style={{ marginRight: '4px', backgroundColor: '#F75C03', fontWeight: 'bold' }}
+                style={{
+                  marginRight: "4px",
+                  backgroundColor: "#F75C03",
+                  fontWeight: "bold",
+                }}
               />
             ))}
           </div>
         </Grid>
       </Grid>
-    </Card >
+    </Card>
   );
 }
