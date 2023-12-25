@@ -103,7 +103,7 @@ class LoginPageState extends State<LoginPage> {
                       userData = json.decode(userT.body);
                       typeOfUser = userData['userType'].toString();
                     }
-                    var userPrpvider = Provider.of<UserProvider>(context, listen: false)
+                    var userProvider = Provider.of<UserProvider>(context, listen: false)
                         .setLoggedIn(true, emailController.text, token.$1, typeOfUser);
 
                     Navigator.of(context).push(MaterialPageRoute(

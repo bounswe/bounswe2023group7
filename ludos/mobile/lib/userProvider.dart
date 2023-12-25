@@ -12,7 +12,7 @@ class UserProvider extends ChangeNotifier {
   String get userType => _userType;
 
 
-  UserProvider setLoggedIn(bool value, String username, String? token) {
+  UserProvider setLoggedIn(bool value, String username, String? token, String userType) {
     _isLoggedIn = value;
     _username = username;
     _token = token;

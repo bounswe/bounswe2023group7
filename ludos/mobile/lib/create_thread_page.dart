@@ -254,6 +254,7 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
                                         fontSize: 16,
                                       ),
                                     ),
+                                    ),
                                   ],
                                 ),
                                 backgroundColor: MyColors.blue2,

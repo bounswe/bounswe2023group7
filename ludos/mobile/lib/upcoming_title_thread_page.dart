@@ -86,6 +86,7 @@ class _UpcomingTitleThreadPageState extends State<UpcomingTitleThreadPage>
           content: item['text'],
           userId: item['author']['id'],
           username: item['author']['username'],
+          userAvatar: item['author']['avatar'] ?? "",
           isDisliked: false,
           isLiked: false,
           thumbUps: item['likeCount'],
@@ -328,7 +329,7 @@ class _UpcomingTitleThreadPageState extends State<UpcomingTitleThreadPage>
                                           ),
                                           IconButton(
                                             onPressed: () {
-                                              CustomWidgets.deleteConfirmDialogThread(widget.userProvider, context, threadData['game']['id'] ,"thread",  widget.threadId);
+                                              CustomWidgets.deleteConfirmDialogThread(widget.userProvider, context, threadData['game']['title'], threadData['game']['id'] ,"thread",  widget.threadId);
                                             },
                                             icon: const Icon(Icons.delete, color: MyColors.orange),
                                           ),
