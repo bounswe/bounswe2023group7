@@ -61,6 +61,7 @@ class _GroupForumPageState extends State<GroupForumPage> {
                   gameId: item['game']['id'],
                   userId: item['user']['id'],
                   username: item['user']['username'],
+                  userAvatar: item['user']['avatar'],
                   thumbUps: (item['numberOfLikes'] ?? 0),
                   thumbDowns: (item['numberOfDislikes'] ?? 0),
                   time: item['createdAt'],
@@ -101,6 +102,7 @@ class _GroupForumPageState extends State<GroupForumPage> {
                   gameId: item['game']['id'],
                   userId: item['user']['id'],
                   username: item['user']['username'],
+                  userAvatar: item['user']['avatar'],
                   thumbUps: item['numberOfLikes'],
                   thumbDowns: item['numberOfDislikes'],
                   time: item['createdAt'],
@@ -142,7 +144,7 @@ class _GroupForumPageState extends State<GroupForumPage> {
                 ));
               } else {
                 CustomWidgets.needLoginSnackbar(
-                    context, "Please log in to add the thread! ");
+                    context, "Please log in to add the thread!", widget.userProvider);
               }
             },
             child: const Icon(
