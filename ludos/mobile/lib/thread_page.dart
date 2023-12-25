@@ -49,7 +49,6 @@ class _ThreadPageState extends State<ThreadPage>
   void initState()
   {
     super.initState();
-    fetchThreadData();
     ToListAnnotation(getStyledRanges());
     comments = fetchCommentData(widget.token);
   }

@@ -295,7 +295,7 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
 
     if (entityData.isNotEmpty) {
       entityData.forEach((key, value) {
-        if (key != "image" && key != "description") {
+        if (key != "image" && key != "description" && key != "Image Link") {
           // Create a row with two boxes for key and value
           list.add(Container(
             margin: const EdgeInsets.only(
@@ -390,11 +390,11 @@ List<TextSpan> buildStyledText(String text, List<StyledRange> styledRanges) {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 if (entityData['content'] != null &&
-                    entityData['content']['image'] != null)
+                    (entityData['content']['image'] != null || entityData['content']['Image Link'] != null))
                   Image.network(
+                    entityData['content']['image'] ?? entityData['content']['Image Link'] ?? "",
                     width: 200,
                     height: 200,
-                    entityData['content']['image'].toString(),
                     errorBuilder: (BuildContext context, Object exception,
                         StackTrace? stackTrace) {
                       return const Text('');
