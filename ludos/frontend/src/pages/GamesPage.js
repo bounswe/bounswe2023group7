@@ -43,6 +43,37 @@ const convertToSlug = (text) => {
     .replace(/--+/g, "-"); // Replace multiple dashes with single dash
 };
 
+const predefinedTags = [
+  "Action",
+  "Adventure",
+  "RPG",
+  "Strategy",
+  "Simulation",
+  "Sports",
+  "Fighting",
+  "Horror",
+  "Puzzle",
+  "Multiplayer",
+  "Indie",
+  "RTS",
+  "Racing",
+  "Open World",
+  "Educational",
+  "VR",
+  "Survival",
+  "Story-Driven",
+  "Retro",
+  "Anime",
+  "Hack and Slash",
+  "Mystery",
+  "Historical",
+  "Sci-Fi",
+  "Fantasy",
+  "Comedy",
+  "Artistic",
+  "Puzzle-Platformer",
+];
+
 export default function GamesPage() {
   const myComponentRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
@@ -63,6 +94,7 @@ export default function GamesPage() {
   const [auth, setAuth] = useState(false);
   const [detailGames, setDetailGames] = useState([]);
   const [pageCount, setPageCount] = useState(1);
+  const [isTagSelected, setIsTagSelected] = useState(false);
 
 
   const axiosInstance = axios.create({
@@ -129,6 +161,10 @@ export default function GamesPage() {
     navigate(`/game/${convertToSlug(value)}`);
   };
 
+  const handleTagSelect = (selectedTags) => {
+    setIsTagSelected(selectedTags.length > 0);
+    setTags(selectedTags);
+  };
 
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
@@ -375,15 +411,18 @@ export default function GamesPage() {
             borderRadius: "40px",
           }}
         />
-        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginLeft: '20px', marginBottom: '10px' }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            style={{ borderRadius: '40px', alignItems: 'flex-start' }}
-            onClick={handleDetailSearch}
-          >
-            Detailed Search
-          </Button>
+        <div style={{ display: 'flex', justifyContent: 'flex-start', marginLeft: '20px', marginBottom: '10px' }}>
+
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: '20px' }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              style={{ borderRadius: '40px', display: 'flex', backgroundColor: 'green' }}
+              onClick={handleDetailSearch}
+            >
+              {detailSearch ? "Close" : "Detailed Search"}
+            </Button>
+          </div>
 
           {detailSearch ? (
             <div style={{ padding: "10px" }}>
@@ -437,38 +476,29 @@ export default function GamesPage() {
                 >
                   Filter with Tags:
                 </Typography>
-                <div ref={myComponentRef}>
-                  <FormControl
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "20px",
-                      flexWrap: "wrap",
-                      flexDirection: "row",
-                      border: "2px solid lightgray",
-                      padding: 1,
-                      borderRadius: "4px",
-                      backgroundColor: "white",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <div className={"container"}>
-                      {tags.map((item, index) => (
-                        <Chip
-                          key={index}
-                          size="small"
-                          onDelete={() => handleDeleteTag(item, index)}
-                          label={item}
-                        />
+                <Select
+                  label="Tags"
+                  labelId="tags-label"
+                  id="tags"
+                  name="tags"
+                  multiple
+                  value={tags}
+                  onChange={(e) => handleTagSelect(e.target.value)}
+                  fullWidth
+                  renderValue={(selected) => (
+                    <div style={{ display: "flex", flexWrap: "wrap" }}>
+                      {selected.map((tag) => (
+                        <Chip key={tag} label={tag} style={{ margin: 2 }} />
                       ))}
                     </div>
-                    <Input
-                      value={currTag}
-                      onChange={handleTagsChange}
-                      onKeyDown={handleKeyUp}
-                    />
-                  </FormControl>
-                </div>
+                  )}
+                >
+                  {predefinedTags.map((tag) => (
+                    <MenuItem key={tag} value={tag}>
+                      {tag}
+                    </MenuItem>
+                  ))}
+                </Select>
                 <Typography
                   variant="h7"
                   gutterBottom
