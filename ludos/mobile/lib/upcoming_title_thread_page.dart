@@ -423,7 +423,7 @@ class _UpcomingTitleThreadPageState extends State<UpcomingTitleThreadPage>
                                       IconButton(
                                         onPressed: () => setState(() {
                                           if(!widget.userProvider.isLoggedIn){
-                                            CustomWidgets.needLoginSnackbar(context, "Please log in to like a thread! ");
+                                            CustomWidgets.needLoginSnackbar(context, "Please log in to like a thread! ", widget.userProvider);
                                           } else {
                                             userPressed(true);
                                           }
@@ -440,7 +440,7 @@ class _UpcomingTitleThreadPageState extends State<UpcomingTitleThreadPage>
                                       IconButton(
                                         onPressed: () => setState(() {
                                           if(!widget.userProvider.isLoggedIn){
-                                            CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a thread! ");
+                                            CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a thread! ", widget.userProvider);
                                           } else {
                                             userPressed(false);
                                           }

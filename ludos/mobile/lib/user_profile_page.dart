@@ -29,7 +29,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   void initState() {
     super.initState();
     loadUserData();
-    retrieveUserID();
+    // retrieveUserID();
     fetchLastActivities();
   }
 
@@ -63,12 +63,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
     }
   }
 
-  Future<void> retrieveUserID() async {
+
+  Future<void> fetchLastActivities() async {
     try {
       var response =
-          await apiService.search(widget.userProvider.token, widget.id!);
+      await apiService.search(widget.userProvider.token, widget.id!);
       if (response.statusCode == 200) {
         userData = json.decode(response.body);
+        //print(userData['users']);
         for (var i = 0; i < userData['users'].length; i++) {
           if (userData['users'][i]['username'] == widget.id) {
             userData = userData['users'][i];
@@ -87,9 +89,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     } catch (e) {
       print('Error loading user data: $e');
     }
-  }
-
-  Future<void> fetchLastActivities() async {
     final response = await apiService.lastActivities(
       widget.userProvider.token,
       limit: 5,
@@ -98,7 +97,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     try {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        //print(responseData);
+        // print(responseData);
         for (var i = 0; i < responseData["items"].length; i++) {
           if (responseData["items"][i]['user']['id'] == userID) {
             setState(() {
