@@ -2,6 +2,9 @@ import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import MyGamesIcon from "../assets/my_games.png";
@@ -30,6 +33,7 @@ const Header = ({ userLoggedIn }) => {
   const [searchKey, setSearchKey] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [datas, setDatas] = useState([]);
+  const [semantic, setSemantic] = useState(false);
   const navigate = useNavigate();
 
 
@@ -41,18 +45,29 @@ const Header = ({ userLoggedIn }) => {
     let options = [];
 
     if (datas.games) {
-      datas.games.map((game) => options.push("Game: " + game.title));
+      datas.games.map((game) => {
+        const title = semantic ? game.item.title : game.title;
+        options.push("Game: " + title);
+      });
     }
     if (datas.users) {
-      datas.users.map((user) => options.push("User: " + user.username));
+      datas.users.map((user) => {
+        const username = semantic ? user.item.username : user.username;
+        options.push("User: " + username);
+      });
     }
     if (datas.posts) {
-      datas.posts.map((post) => options.push("Thread: " + post.title));
+      datas.posts.map((post) => {
+        const title = semantic ? post.item.title : post.title;
+        options.push("Thread: " + title)
+      });
     }
     if (datas.groups) {
-      datas.groups.map((group) => options.push("Group: " + group.name));
+      datas.groups.map((group) => {
+        const name = semantic ? group.item.name : group.name;
+        options.push("Group: " + name);
+      });
     }
-
 
     return options;
   }
@@ -68,18 +83,19 @@ const Header = ({ userLoggedIn }) => {
     }
     else if (info.includes("User: ")) {
       info = info.replace("User: ", "");
-      let specUser = datas.users.find((user) => user.username === info);
-      path = `/profile-page/${specUser.id}`;
+      let specUser = semantic ? datas.users.find((user) => user.item.username === info) : datas.users.find((user) => user.username === info);
+      path = semantic ? `/profile-page/${specUser.item.id}` : `/profile-page/${specUser.id}`;
     }
     else if (info.includes("Thread: ")) {
       info = info.replace("Thread: ", "");
-      let specPost = datas.posts.find((post) => post.title === info);
-      path = `/thread/${specPost.id}`;
+      let specPost = semantic ? datas.posts.find((post) => post.item.title === info) : datas.posts.find((post) => post.title === info);
+      path = semantic ? `/thread/${specPost.item.id}` : `/thread/${specPost.id}`;
     }
     else if (info.includes("Group: ")) {
       info = info.replace("Group: ", "");
-      let specGroup = datas.grups.find((group) => group.name === info);
-      path = `/group/${specGroup.id}`;
+      let specGroup = semantic ? datas.groups.find((group) => group.item.name === info) : datas.groups.find((group) => group.name === info);
+      console.log(specGroup);
+      path = semantic ? `/group/${specGroup.item.id}` : `/group/${specGroup.id}`;
     }
     navigate(path);
     window.location.reload(false);
@@ -94,11 +110,13 @@ const Header = ({ userLoggedIn }) => {
   };
 
   useEffect(() => {
+    const param = semantic ? "semantic/" : ""
+
     const fetchData = async () => {
       axiosInstance
-        .get(`/search/${searchKey}`)
+        .get(`/search/${param}${searchKey}`)
         .then((response) => {
-          console.log(response);
+          console.log(response.data);
           setDatas(response.data);
         })
         .catch((error) => {
@@ -150,6 +168,21 @@ const Header = ({ userLoggedIn }) => {
             padding: "20px",
           }}
         >
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={semantic}
+                onChange={(event) => {
+                  setSemantic(event.target.checked);
+                  setDatas([]);
+                }}
+                name="isSemantic"
+                color="primary"
+              />
+            }
+            label="Semantic Search"
+            style={{ backgroundColor: '#7180b9', borderRadius: '20px', fontSize: '10px' }}
+          />
           <Autocomplete
             value={searchValue}
             onChange={(event, newValue) => {
