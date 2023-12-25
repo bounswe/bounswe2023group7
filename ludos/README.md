@@ -38,7 +38,7 @@ Before you begin, ensure you have the following installed:
 
 
 ### Deployed Version of frontend
-Go to our website link which is http://51.20.170.143:3000/.
+Go to our website link which we shared via Discord channel of the course.
 
 ## How to run mobile app?
 - You can download APK version of the app from [here](https://drive.google.com/file/d/1h2x1MLO_yyUC1Tq7dmDcOutZYBKyXXKt/view?usp=sharing) and directly run it in your Android device.
