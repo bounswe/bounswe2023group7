@@ -47,7 +47,7 @@ export class SearchService {
       undefined,
       undefined,
       userId,
-    )
+    );
     return {
       users: users.items,
       games: games.items,

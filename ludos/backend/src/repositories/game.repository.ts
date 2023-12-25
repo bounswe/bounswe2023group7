@@ -62,7 +62,7 @@ export class GameRepository extends Repository<Game> {
       searchKey = searchKey.trim().replace(/ /g, ':* & ');
       searchKey += ':*';
       queryBuilder.andWhere(
-        `to_tsvector(\'english\', games.title) @@ to_tsquery('${searchKey}')`,
+        `to_tsvector(\'english\', games.title) @@ to_tsquery(\'english\','${searchKey}')`,
       );
     }
     if (tags) {
@@ -89,6 +89,7 @@ export class GameRepository extends Repository<Game> {
     if (orderByKey) {
       queryBuilder.orderBy(`games_${orderByKey}`, order);
     }
+    console.log(queryBuilder.getQuery());
     const paginationResult = await paginate<Game>(queryBuilder, {
       page,
       limit,

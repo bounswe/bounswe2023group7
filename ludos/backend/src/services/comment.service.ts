@@ -17,7 +17,6 @@ export class CommentService {
     userId: string | null,
     commentId: string,
   ): Promise<GetCommentResponseDto> {
-
     if (!userId) {
       const user = await this.userRepository.findUserById(userId);
 
@@ -75,7 +74,6 @@ export class CommentService {
     userId: string | null,
     parentId: string,
   ): Promise<GetCommentResponseDto[]> {
-    
     if (!userId) {
       const user = await this.userRepository.findUserById(userId);
 

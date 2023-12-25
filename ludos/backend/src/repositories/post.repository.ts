@@ -60,6 +60,7 @@ export class PostRepository extends Repository<Post> {
     userId?: string, // denotes current user, used for like and dislike
     isLiked?: boolean,
     isDisliked?: boolean,
+    isUpcomingTitle?: boolean,
     orderByKey: keyof Post = 'createdAt',
     order: 'ASC' | 'DESC' = 'DESC',
   ): Promise<Pagination<Post, IPaginationMeta>> {
@@ -71,7 +72,7 @@ export class PostRepository extends Repository<Post> {
     if (searchKey) {
       searchKey = searchKey.trim().replace(/ /g, ' & ');
       queryBuilder.andWhere(
-        `to_tsvector(\'english\', posts.title || \' \' || posts.body) @@ to_tsquery('${searchKey}')`,
+        `to_tsvector(\'english\', posts.title || \' \' || posts.body) @@ to_tsquery(\'english\','${searchKey}')`,
       );
     }
     if (tags) {
@@ -87,6 +88,14 @@ export class PostRepository extends Repository<Post> {
     }
     if (ownerUserId) {
       queryBuilder.andWhere('posts.userId = :ownerUserId', { ownerUserId });
+    }
+    if (isUpcomingTitle) {
+      queryBuilder.andWhere(
+        'posts."upcomingTitle"->>\'isUpcomingTitle\' = :isUpcomingTitle',
+        {
+          isUpcomingTitle: isUpcomingTitle.toString(),
+        },
+      );
     }
     if (userId && isLiked) {
       const subQuery = this.createQueryBuilder()

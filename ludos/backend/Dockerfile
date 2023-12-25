@@ -1,7 +1,7 @@
-FROM node:19
+FROM node:19-alpine
 WORKDIR /app
 COPY package.json /app/
 COPY package-lock.json /app/
 RUN npm install
-CMD [ "npm", "start" ]
+CMD npm run build && node --max-old-space-size=8192 dist/main
 COPY . /app/

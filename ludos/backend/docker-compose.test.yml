@@ -6,17 +6,3 @@ services:
     build: .
     ports:
       - 8080:8080
-    links:
-      - postgres
-  postgres:
-    image: postgres:14-alpine
-    ports:
-      - 35432:5432
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=user
-      - POSTGRES_DB=ludos
-volumes:
-  postgres:

@@ -50,7 +50,7 @@ export class GroupRepository extends Repository<Group> {
       searchKey = searchKey.trim().replace(/ /g, ':* & ');
       searchKey += ':*';
       queryBuilder.andWhere(
-        `to_tsvector(\'english\', groups.name) @@ to_tsquery('${searchKey}')`,
+        `to_tsvector(\'english\', groups.name) @@ to_tsquery(\'english\','${searchKey}')`,
       );
     }
     if (tags) {
