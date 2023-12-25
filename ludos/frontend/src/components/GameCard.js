@@ -104,7 +104,7 @@ export default function GameCard({ game }) {
               {game.developer}
             </Typography>
             <Typography variant="body2">
-              Release Date: {formatDate(game.releaseDate)}
+              {game.releaseDate ? "Release Date: " + formatDate(game.releaseDate) : null}
             </Typography>
           </Box>
         </Grid>

@@ -30,9 +30,9 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
           ssl: {
             rejectUnauthorized: false,
           },
-        },   
+        },
       }),
-   
+
       entities: [
         User,
         ResetPassword,

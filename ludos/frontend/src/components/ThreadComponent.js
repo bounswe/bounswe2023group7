@@ -265,12 +265,16 @@ function ThreadComponent({
 
   const fetchImageAnnotations = async (anno, imageUrl, imageId) => {
     try {
-      const url = `http://${
-        process.env.REACT_APP_API_URL
-      }/annotation/image?imageUrl=${encodeURIComponent(imageUrl)}`;
-      const response = await axios.get(url);
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/image`;
+      const response = await axios.get(url, {
+        params: {
+          imageUrl: encodeURIComponent(imageUrl),
+        },
+      });
 
+      console.log(encodeURIComponent(imageUrl));
       if (response.data) {
+        console.log("url", url);
         displayImageAnnotations(anno, response.data, imageId);
       }
     } catch (error) {

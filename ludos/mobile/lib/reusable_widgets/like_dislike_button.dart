@@ -130,7 +130,7 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
         IconButton(
           onPressed: () => setState(() {
             if(!widget.userProvider.isLoggedIn){
-              CustomWidgets.needLoginSnackbar(context, "Please log in to like a thread! ");
+              CustomWidgets.needLoginSnackbar(context, "Please log in to like a thread! ", userProvider);
             } else {
               userPressed(true);
             }
@@ -147,7 +147,7 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
         IconButton(
           onPressed: () => setState(() {
             if(!widget.userProvider.isLoggedIn){
-              CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a thread! ");
+              CustomWidgets.needLoginSnackbar(context, "Please log in to dislike a thread! ", userProvider);
             } else {
               userPressed(false);
             }
