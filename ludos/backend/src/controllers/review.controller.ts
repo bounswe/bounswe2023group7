@@ -27,7 +27,6 @@ import { ReviewService } from '../services/review.service';
 import { ReviewEditDto } from '../dtos/review/request/edit.dto';
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiTags('review')
 @Controller('review')
 export class ReviewController {
@@ -45,6 +44,7 @@ export class ReviewController {
   })
   @HttpCode(201)
   @Post(':gameId')
+  @UseGuards(AuthGuard)
   public async createReview(
     @Req() req: AuthorizedRequest,
     @Param('gameId') gameId: string,
@@ -60,6 +60,7 @@ export class ReviewController {
 
   @HttpCode(200)
   @Post(':reviewId/like')
+  @UseGuards(AuthGuard)
   public async likeReview(
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
@@ -70,6 +71,7 @@ export class ReviewController {
 
   @HttpCode(200)
   @Post(':reviewId/dislike')
+  @UseGuards(AuthGuard)
   public async dislikeReview(
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
@@ -81,6 +83,7 @@ export class ReviewController {
   @ApiNotFoundResponse({ description: 'Review is not found!' })
   @HttpCode(204)
   @Delete(':reviewId')
+  @UseGuards(AuthGuard)
   public async deleteReview(
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
@@ -91,6 +94,7 @@ export class ReviewController {
 
   @HttpCode(200)
   @Put(':reviewId')
+  @UseGuards(AuthGuard)
   public async editReview(
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
@@ -107,14 +111,13 @@ export class ReviewController {
   @ApiOkResponse({ description: 'Review retrieved successfully', type: Review })
   @ApiNotFoundResponse({ description: 'Review is not found!' })
   @HttpCode(200)
-  @UseGuards(AuthGuard)
   @Get(':reviewId')
   public async getReviewById(
     @Req() req: AuthorizedRequest,
     @Param('reviewId') reviewId: string,
   ) {
     const review = await this.reviewService.getReviewById(
-      req.user.id,
+      req.user?.id,
       reviewId,
     );
     return review;
@@ -126,14 +129,13 @@ export class ReviewController {
   })
   @ApiNotFoundResponse({ description: 'Game is not found!' })
   @HttpCode(200)
-  @UseGuards(AuthGuard)
   @Get('game/:gameId')
   public async getReviewsByGameId(
     @Req() req: AuthorizedRequest,
     @Param('gameId') gameId: string,
   ) {
     const reviews = await this.reviewService.getReviewsByGameId(
-      req.user.id,
+      req.user?.id,
       gameId,
     );
     return reviews;

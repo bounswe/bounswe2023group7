@@ -20,7 +20,7 @@ export class SearchController {
   })
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Search for users, games and posts',
+    summary: 'Search for users, games, groups and posts',
   })
   @UseInterceptors(new SerializerInterceptor(SearchResponseDto))
   @Get('/:searchKey')

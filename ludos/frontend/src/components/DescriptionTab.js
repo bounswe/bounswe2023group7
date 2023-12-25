@@ -1,5 +1,15 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Typography, Grid } from "@mui/material";
+import { Recogito } from "@recogito/recogito-js";
+import axios from "axios";
+
+const axiosInstance = axios.create({
+  baseURL: `http://${process.env.REACT_APP_API_URL}`,
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("accessToken"),
+  },
+});
+
 
 function Description(data) {
   const headerStyle = {
@@ -8,6 +18,125 @@ function Description(data) {
     borderBottom: "2px solid gray",
     paddingBottom: "4px",
   };
+
+  const gameTriviaAnnotatorRef = useRef(null);
+
+  useEffect(() => {
+    if (data && data.trivia) {
+      gameTriviaAnnotatorRef.current = new Recogito({
+        content: "game-trivia",
+      })
+
+
+      fetchAnnotations();
+
+      gameTriviaAnnotatorRef.current.on(
+        "createAnnotation",
+        handleCreateAnnotation,
+      );
+      gameTriviaAnnotatorRef.current.on(
+        "deleteAnnotation",
+        handleDeleteAnnotation,
+      );
+    }
+  })
+
+  const parseId = (id) => {
+    const parts = id.split("/");
+    return {
+      source: parts[0],
+      type: parts[1],
+      itemId: parts[2],
+      date: parts[3],
+    };
+  };
+
+  const handleCreateAnnotation = async (annotation) => {
+    const requestBody = {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      type: "Annotation",
+      body: annotation.body[0].value, // You might need to format this according to your backend expectations
+      tags: annotation.tags,
+      target: {
+        source: window.location.href,
+        selector: {
+          start: annotation.target.selector[1].start, // Starting character index
+          end: annotation.target.selector[1].end, // Ending character index
+        },
+      },
+    };
+
+    axiosInstance.post(`/annotation/gametrivia/${data.gameId}`, requestBody)
+      .then((response) => {
+        console.log("Annotation saved:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error saving annotation:", error);
+      })
+
+  }
+
+  const handleDeleteAnnotation = async (annotation) => {
+
+    try {
+      const { source, type, itemId, date } = parseId(annotation.id);
+      const url = `http://${process.env.REACT_APP_API_URL}/annotation/${source}/${type}/${itemId}/${date}`;
+
+      const response = await axios.delete(url);
+
+      console.log("Annotation deleted:", response.data);
+    } catch (error) {
+      console.error("Error deleting annotation:", error);
+    }
+  };
+
+  const fetchAnnotations = async () => {
+    try {
+      await axiosInstance.get(`/annotation/gametrivia/${data?.gameId}`)
+        .then((response) => {
+          if (response.data) {
+            displayGameTriviaAnnotations(response.data);
+          }
+        })
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const displayGameTriviaAnnotations = (gameTriviaAnnotations) => {
+    if (gameTriviaAnnotatorRef.current) {
+      gameTriviaAnnotations.forEach((annotation) => {
+        console.log("annotator annotation", annotation);
+        gameTriviaAnnotatorRef.current.addAnnotation({
+          "@context": "http://www.w3.org/ns/anno.jsonld",
+          type: "Annotation",
+          id: annotation.id,
+          body: [
+            {
+              type: "TextualBody",
+              value: annotation.body,
+              purpose: "commenting",
+            },
+          ],
+          target: {
+            selector: [
+              {
+                type: "TextQuoteSelector",
+                exact: annotation.body,
+              },
+              {
+                type: "TextPositionSelector",
+                start: annotation.target.selector.start,
+                end: annotation.target.selector.end,
+              },
+            ],
+          },
+        });
+      });
+    }
+  }
+
+
   return (
     <Grid style={{ width: "100%" }}>
       <Typography variant="h5" color="gray" align="left" style={headerStyle}>
@@ -42,6 +171,8 @@ function Description(data) {
         TRIVIA
       </Typography>
       <Typography
+        component="div"
+        id="game-trivia"
         variant="body1"
         color="white"
         align="left"

@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -126,6 +135,27 @@ export class AnnotationController {
   ): Promise<AnnotationResponseDto> {
     return await this.annotationService.createAnnotationForPost(input, postId);
   }
+  @ApiOperation({ summary: 'Create Annotation For Image Endpoint' })
+  @ApiOkResponse({
+    description: 'Annotation created successfully',
+    type: AnnotationResponseDto,
+  })
+  @Post('image')
+  public async createAnnotationForImage(
+    @Body() input: CreateAnnotationDto,
+  ): Promise<AnnotationResponseDto> {
+    return await this.annotationService.createAnnotationForImage(input);
+  }
+  @ApiOperation({ summary: 'Get Annotations For Image Endpoint' })
+  @ApiOkResponse({
+    type: [AnnotationResponseDto],
+  })
+  @Get('image')
+  public async getAnnotationsForImage(
+    @Query('imageUrl') imageUrl: string,
+  ): Promise<AnnotationResponseDto[]> {
+    return await this.annotationService.getAnnotationsForImage(imageUrl);
+  }
   @ApiOperation({ summary: 'Get Annotations For Game Bio of Game Endpoint' })
   @ApiOkResponse({
     type: [AnnotationResponseDto],
@@ -203,5 +233,58 @@ export class AnnotationController {
     @Param('postId') postId: string,
   ): Promise<AnnotationResponseDto[]> {
     return await this.annotationService.getAnnotationsForPost(postId);
+  }
+
+  @ApiOperation({ summary: 'Delete annotation with id' })
+  @ApiOkResponse({
+    description: 'Annotation is deleted successfully.',
+    status: 204,
+  })
+  @ApiNotFoundResponse({
+    description: 'Annotation with id not found',
+  })
+  @HttpCode(204)
+  @Delete(':source/:type/:itemId/:date')
+  public async deleteAnnotationById(
+    @Param('source') source: string,
+    @Param('type') type: string,
+    @Param('itemId') itemId: string,
+    @Param('date') date: number,
+  ) {
+    const annotationId = `${source}/${type}/${itemId}/${date}`;
+    return this.annotationService.deleteAnnotationById(annotationId);
+  }
+
+  @ApiOperation({ summary: 'Create Annotation For Comment Endpoint' })
+  @ApiOkResponse({
+    description: 'Annotation created successfully',
+    type: AnnotationResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Comment annotation not found',
+  })
+  @Post('comment/:commentId')
+  public async createAnnotationForComment(
+    @Body() input: CreateAnnotationDto,
+    @Param('commentId') commentId: string,
+  ): Promise<AnnotationResponseDto> {
+    return await this.annotationService.createAnnotationForComment(
+      input,
+      commentId,
+    );
+  }
+
+  @ApiOperation({ summary: 'Get Annotations For Comment Endpoint' })
+  @ApiOkResponse({
+    type: [AnnotationResponseDto],
+  })
+  @ApiNotFoundResponse({
+    description: 'Comment not found',
+  })
+  @Get('comment/:commentId')
+  public async getAnnotationsForComment(
+    @Param('commentId') commentId: string,
+  ): Promise<AnnotationResponseDto[]> {
+    return await this.annotationService.getAnnotationsForComment(commentId);
   }
 }
