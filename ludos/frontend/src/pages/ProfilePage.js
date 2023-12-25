@@ -15,11 +15,12 @@ import steamLogo from "../assets/steam.png";
 //import itchioLogo from "../assets/itchio.png";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import Gamer from "../assets/gamer.png";
 import Developer from "../assets/developer.png";
 import EsportPlayer from "../assets/esportplayer.png";
 import GroupTopic from "../components/GroupTopic";
+import Admin from "../assets/admin.png";
+import AdminTick from "../assets/certification.png";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ function ProfilePage() {
     fullName: "",
     steamUrl: "",
     aboutMe: "",
+    associatedCompany: "",
   });
   const [open, setOpen] = useState(false);
   const [auth, setAuth] = useState(false);
@@ -377,6 +379,8 @@ function ProfilePage() {
         return Developer;
       case "esport player":
         return EsportPlayer;
+      case "admin":
+        return Admin;
       default:
         return null; // Or a default image if userType doesn't match any specific type
     }
@@ -439,17 +443,17 @@ function ProfilePage() {
                     fontFamily: "Trebuchet MS, sans-serif",
                     color: "rgb(0, 150, 255)",
                     marginTop: "2%",
-                    marginLeft: "30%",
                   }}
                 >
                   @{profile.username}
                 </Typography>
-                <Button>
-                  <NotificationsIcon
-                    style={{ color: "red" }}
-                    className="notification-icon"
+                {userType === "admin" && (
+                  <img
+                    src={AdminTick}
+                    style={{ height: 15, width: 15, marginTop: "3.5%" }}
+                    alt="Admin"
                   />
-                </Button>
+                )}
               </Grid>
 
               <Grid style={{ marginTop: "3%" }}>
@@ -668,6 +672,34 @@ function ProfilePage() {
                         multiline
                         maxRows={4}
                       />
+                      {profile.userType === "developer" && (
+                        <>
+                          <Typography
+                            component="legend"
+                            style={{
+                              fontFamily: "Trebuchet MS, sans-serif",
+                              marginTop: "2%",
+                              marginLeft: "5%",
+                              marginRight: "5%",
+                            }}
+                          >
+                            Associated Company:
+                          </Typography>
+                          <TextField
+                            id="aboutMe"
+                            value={formData.associatedCompany}
+                            onChange={handleChange}
+                            style={{
+                              backgroundColor: "white",
+                              marginTop: "2%",
+                              marginLeft: "5%",
+                              marginRight: "5%",
+                            }}
+                            multiline
+                            maxRows={4}
+                          />
+                        </>
+                      )}
                       <Button
                         variant="contained"
                         style={{
@@ -689,36 +721,41 @@ function ProfilePage() {
                 </Grid>
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12} style={genreBoxStyle}>
-                <Typography
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  User Type:
-                </Typography>
-                {userTypeImage && (
-                  <img
-                    src={userTypeImage}
-                    alt={userType}
+                <Grid>
+                  <Typography
+                    component="legend"
                     style={{
-                      width: "100px",
-                      marginBottom: "10px",
-                      marginTop: "10px",
+                      fontFamily: "Trebuchet MS, sans-serif",
+                      color: "rgb(0, 150, 255)",
                     }}
-                  />
+                  >
+                    User Type:
+                  </Typography>
+                  {userTypeImage && (
+                    <img
+                      src={userTypeImage}
+                      alt={userType}
+                      style={{
+                        width: "100px",
+                        marginBottom: "10px",
+                        marginTop: "10px",
+                      }}
+                    />
+                  )}
+                  <Typography
+                    variant="caption"
+                    component="legend"
+                    style={{
+                      fontFamily: "Trebuchet MS, sans-serif",
+                      color: "rgb(0, 150, 255)",
+                    }}
+                  >
+                    {userType}
+                  </Typography>
+                </Grid>
+                {userType === "esport player" && (
+                  <Grid style={{ height: "20%" }}>asa</Grid>
                 )}
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  {userType}
-                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -838,17 +875,17 @@ function ProfilePage() {
                     fontFamily: "Trebuchet MS, sans-serif",
                     color: "rgb(0, 150, 255)",
                     marginTop: "2%",
-                    marginLeft: "30%",
                   }}
                 >
                   @{profile.username}
                 </Typography>
-                <Button>
-                  <NotificationsIcon
-                    style={{ color: "red" }}
-                    className="notification-icon"
+                {userType === "admin" && (
+                  <img
+                    src={AdminTick}
+                    style={{ height: 15, width: 15, marginTop: "3.5%" }}
+                    alt="Admin"
                   />
-                </Button>
+                )}
               </Grid>
 
               <Grid style={{ marginTop: "3%" }}>
