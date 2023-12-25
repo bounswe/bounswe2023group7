@@ -47,7 +47,7 @@ Go to our website link which is http://51.20.170.143:3000/.
   - Then you can easily run the application on Android Studio following [this guide](https://www.geeksforgeeks.org/how-to-import-existing-flutter-project-in-android-studio/).
 
 ## How to run backend application?
-Deployed Swagger Documentation: http://3.125.225.39:8080/api 
+Deployed Swagger Documentation: http://164.92.195.35:8080/api
 
 ```WORKDIR=./ludos/backend```<br/>
 1. Create a .env file for the environment variables. Please ask for the variables. The name of the variables are included in .env.example file. <br/>
