@@ -29,7 +29,7 @@ function EntityTab(data) {
             chars.push(entity);
           } else if (entity.type === "item") {
             its.push(entity);
-          } else if (entity.type === "area") {
+          } else if (entity.type === "environment") {
             ars.push(entity);
           } else if (entity.type === "package") {
             pcks.push(entity);
