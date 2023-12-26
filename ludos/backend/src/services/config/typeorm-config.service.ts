@@ -10,6 +10,7 @@ import { Post } from '../../entities/post.entity';
 import { Rating } from '../../entities/rating.entity';
 import { Entity } from '../../entities/entity.entity';
 import { CompletionDuration } from '../../entities/completion-duration.entity';
+import { Group } from '../../entities/group.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -23,6 +24,15 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       password: this.configService.get<string>('DB_PASSWORD'),
       port: this.configService.get<number>('DB_PORT'),
       database: this.configService.get<string>('DB_NAME'),
+      ...(process.env.PROD && {
+        ssl: true,
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
+      }),
+
       entities: [
         User,
         ResetPassword,
@@ -33,6 +43,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         Post,
         Entity,
         CompletionDuration,
+        Group,
       ],
       synchronize: true,
     };

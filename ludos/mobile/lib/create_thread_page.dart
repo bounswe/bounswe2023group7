@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 import 'helper/colors.dart';
@@ -61,17 +63,22 @@ Widget getbox(String hintText, TextEditingController controller,
     ],
   );
 }
+String formatDate(DateTime dateTime) {
+  return "${dateTime.year}-${dateTime.month}-${dateTime.day}";
+}
 
 class CreateThreadPage extends StatefulWidget {
   final String? token;
   final UserProvider userProvider;
   final String gameid;
-  const CreateThreadPage(
-    {Key? key,
+  final String gameName;
+  const CreateThreadPage({
+    Key? key,
+    required this.gameName,
     required this.gameid,
     required this.token,
     required this.userProvider,
-    }) : super(key: key);
+  }) : super(key: key);
 
   @override
   State<CreateThreadPage> createState() => _CreateThreadPageState();
@@ -91,10 +98,12 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
   final TextEditingController bodyController = TextEditingController();
   final TextEditingController tagsController = TextEditingController();
   final TextEditingController coverLinkController = TextEditingController();
+  final TextEditingController demoLinkController = TextEditingController();
+  final TextEditingController launchingDateController = TextEditingController();
+  bool isUpcomingTitleController = false;
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF2f5b7a),
@@ -102,11 +111,11 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
         title: const Text('Create Thread'),
       ),
       backgroundColor: MyColors.darkBlue,
-      body : SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 20),
                 getbox("Title", titleController, true, false),
@@ -170,17 +179,61 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
+                if(widget.userProvider.userType == "developer")
+                  Row(
+                      children:[
+                        const Text('It is upcoming title!',
+                            style: TextStyle(
+                                color: MyColors.lightBlue,
+                                fontWeight: FontWeight.bold
+                            )
+                        ),
+                        Switch(
+                          value: isUpcomingTitleController,
+                          onChanged: (value) {
+                            setState(() {
+                              isUpcomingTitleController = value;
+                            });
+                          },
+                        ),
+                      ]
+
+                  ),
+                  if(widget.userProvider.userType == "developer" && isUpcomingTitleController)
+                    getbox("Demo Link", demoLinkController, true, false),
+                  const SizedBox(height: 20),
+                  if(widget.userProvider.userType == "developer" && isUpcomingTitleController)
+                    SizedBox(
+                      height: 200,
+                      child: CupertinoDatePicker(
+                        mode: CupertinoDatePickerMode.date,
+                        backgroundColor: MyColors.lightBlue,
+                        initialDateTime: DateTime(2023, 12, 26),
+                        onDateTimeChanged: (DateTime newDateTime) {
+                          launchingDateController.text = formatDate(newDateTime);
+                          print(launchingDateController.text);
+                        },
+                      ),
+                    ),
+                  const SizedBox(height: 20),
+
                   TextButton(
                       style: TextButton.styleFrom(
                         backgroundColor: MyColors.lightBlue,
                       ),
                       onPressed: () async {
+                        final Map<String, dynamic> upcomingTitle = {
+                          "demoLink": demoLinkController.text,
+                          "launchingDate": launchingDateController.text,
+                          "isUpcomingTitle": isUpcomingTitleController
+                        };
                         http.Response token = await APIService().createThread(
                             widget.token,
                             titleController.text,
                             bodyController.text,
                             [coverLinkController.text],
                             tagValues,
+                            upcomingTitle,
                             widget.gameid);
                         if (token.statusCode == 201) {
                           ScaffoldMessenger.of(context)
@@ -201,70 +254,55 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
                                         fontSize: 16,
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              backgroundColor: MyColors.blue2,
-                              duration: const Duration(seconds: 5),
-                              action: SnackBarAction(
-                                label: 'OK',
-                                textColor: MyColors.blue,
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ForumPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider)),
-                                  );
-                                },
-                              ),
-                            ),
-                          )
-                              .closed
-                              .then((reason) => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ForumPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider)),
-                          ));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: Text(
-                                  json.decode(token.body)["message"],
-                                  style: const TextStyle(
-                                    color: MyColors.blue,
-                                    fontSize: 16,
-                                  ),
+                                    ),
+                                  ],
+                                ),
+                                backgroundColor: MyColors.blue2,
+                                duration: const Duration(seconds: 5),
+                                action: SnackBarAction(
+                                  label: 'OK',
+                                  textColor: MyColors.blue,
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ForumPage(
+                                              gameName: widget.gameName,
+                                              gameid: widget.gameid,
+                                              token: widget.token,
+                                              userProvider: widget.userProvider)
+                                              ),
+                                    );
+                                  },
                                 ),
                               ),
-                              backgroundColor: MyColors.blue2,
-                              duration: const Duration(seconds: 10),
-                              action: SnackBarAction(
-                                label: 'OK',
-                                textColor: MyColors.blue,
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                },
-                              ),
-                            ),
-                          );
-                        }
-                      },
+                            )
+                            .closed
+                            .then((reason) => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ForumPage(
+                                          gameName: widget.gameName,
+                                          gameid: widget.gameid,
+                                          token: widget.token,
+                                          userProvider: widget.userProvider)),
+                                ));
+                      } else {
+                        CustomWidgets.statusNotOkay(
+                            context, json.decode(token.body)["message"]);
+                      }
+                    },
                     child: const Text(
                       'Save Thread',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ]),
-            ]
-          ),
+              ]),
         ),
       ),
-
     );
   }
 }
@@ -296,4 +334,3 @@ class _Chip extends StatelessWidget {
     );
   }
 }
-

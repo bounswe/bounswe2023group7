@@ -190,4 +190,18 @@ export class GameService {
       throw new NotFoundException('Completion Duration Not Found!');
     }
   }
+
+  public async getRelatedGames(gameId: string): Promise<Game[]> {
+    const game = await this.gameRepository.findGameById(gameId);
+    if (!game) {
+      throw new NotFoundException('Game not found');
+    }
+
+    const relatedGames = await this.gameRepository.getRelatedGames(
+      gameId,
+      game.tags,
+    );
+
+    return relatedGames;
+  }
 }

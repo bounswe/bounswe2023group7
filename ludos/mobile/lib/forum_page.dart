@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
-import 'games_page.dart';
+import 'package:ludos_mobile_app/game_page.dart';
+import 'package:ludos_mobile_app/reusable_widgets/custom_widgets.dart';
 import 'helper/APIService.dart';
 import 'helper/colors.dart';
-import 'main.dart';
 import 'reusable_widgets/forum_thread.dart';
 import 'dart:convert';
 import 'package:ludos_mobile_app/userProvider.dart';
 import 'create_thread_page.dart';
+import 'reusable_widgets/custom_navigation_bar.dart';
 
 class ForumPage extends StatefulWidget {
   final String? token;
   final UserProvider userProvider;
   final String gameid;
-  const ForumPage({Key? key, required this.gameid, required this.token, required this.userProvider}) : super(key: key);
+  final String gameName;
+  const ForumPage(
+      {Key? key,
+      required this.gameName,
+      required this.gameid,
+      required this.token,
+      required this.userProvider}
+      ): super(key: key);
 
   @override
   State<ForumPage> createState() => _ForumPageState();
@@ -31,19 +39,24 @@ class _ForumPageState extends State<ForumPage> {
     threads = fetchData(widget.token);
   }
 
-  void searched(){
+  void searched() {
     threadsSearch = fetchDataSearch(widget.token);
   }
 
   Future<List<ThreadSummary>> fetchData(String? token) async {
-    final response = await APIService().listThreads(widget.gameid, widget.token);
+    final response =
+        await APIService().listThreads(widget.gameid, widget.token);
     try {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> postLists = responseData['items'];
 
-        return postLists.map((dynamic item) => ThreadSummary(
+        return postLists
+            .where((item) =>
+            item['upcomingTitle'] == null ||
+            item['upcomingTitle']['isUpcomingTitle'] == false)
+            .map((dynamic item) => ThreadSummary(
           token: widget.token,
           userProvider: widget.userProvider,
           threadId: item['id'],
@@ -52,8 +65,9 @@ class _ForumPageState extends State<ForumPage> {
           gameId: item['game']['id'],
           userId: item['user']['id'],
           username: item['user']['username'],
+          userAvatar: item['user']['avatar'] ?? "",
           thumbUps: item['numberOfLikes'],
-          thumbDowns: item['NumberOfDislikes'],
+          thumbDowns: item['numberOfDislikes'],
           time: item['createdAt'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
@@ -61,6 +75,7 @@ class _ForumPageState extends State<ForumPage> {
           backgroundColor: MyColors.blue,
           fontSize: 20,
         )).toList();
+
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
         throw Exception('Failed to load posts');
@@ -72,15 +87,18 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Future<List<ThreadSummary>> fetchDataSearch(String? token) async {
-    final response = await APIService().listThreadsBySearch(searchText, widget.gameid, widget.token);
+    final response = await APIService()
+        .listThreadsBySearch(searchText, widget.gameid, widget.token);
     try {
-      print("here");
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         List<dynamic> postLists = responseData['items'];
-        print(postLists);
-        return postLists.map((dynamic item) => ThreadSummary(
+        return postLists
+            .where((item) =>
+            item['upcomingTitle'] == null ||
+            item['upcomingTitle']['isUpcomingTitle'] == false)
+            .map((dynamic item) => ThreadSummary(
           token: widget.token,
           userProvider: widget.userProvider,
           threadId: item['id'],
@@ -89,8 +107,9 @@ class _ForumPageState extends State<ForumPage> {
           gameId: item['game']['id'],
           userId: item['user']['id'],
           username: item['user']['username'],
+          userAvatar: item['user']['avatar'] ?? "",
           thumbUps: item['numberOfLikes'],
-          thumbDowns: item['NumberOfDislikes'],
+          thumbDowns: item['numberOfDislikes'],
           time: item['createdAt'],
           isLiked: (item['isLiked'] ?? false),
           isDisliked: (item['isDisliked'] ?? false),
@@ -110,17 +129,35 @@ class _ForumPageState extends State<ForumPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GamePage(
+        id: widget.gameid,
+        token: widget.token,
+        userProvider: widget.userProvider,
+        onRefresh: () {},
+      ),));
+      return false;
+    },
+    child: Scaffold(
       backgroundColor: MyColors.darkBlue,
       appBar: AppBar(
         backgroundColor: const Color(0xFFf89c34),
-        title: const Text('Forum'),
+        title: Text('${widget.gameName} Forum'),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CreateThreadPage(gameid: widget.gameid, token: widget.token, userProvider: widget.userProvider),
-              ));
+              if (widget.userProvider.isLoggedIn) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CreateThreadPage(
+                      gameName: widget.gameName,
+                      gameid: widget.gameid,
+                      token: widget.token,
+                      userProvider: widget.userProvider),
+                ));
+              } else {
+                CustomWidgets.needLoginSnackbar(context, "Please log in to add the thread! ", widget.userProvider);
+              }
             },
             child: const Icon(
               Icons.add,
@@ -149,11 +186,11 @@ class _ForumPageState extends State<ForumPage> {
                           color: MyColors.lightBlue,
                           fontWeight: FontWeight.bold),
                       border: UnderlineInputBorder(
-                          borderSide:
-                          BorderSide(color: MyColors.lightBlue, width: 2.0)),
+                          borderSide: BorderSide(
+                              color: MyColors.lightBlue, width: 2.0)),
                       focusedBorder: UnderlineInputBorder(
                         borderSide:
-                        BorderSide(color: MyColors.lightBlue, width: 2.0),
+                            BorderSide(color: MyColors.lightBlue, width: 2.0),
                       ),
                     ),
                     cursorColor: MyColors.lightBlue,
@@ -179,7 +216,7 @@ class _ForumPageState extends State<ForumPage> {
               ],
             ),
             //const SafeArea(child: SizedBox(height: 10)),
-            if(!ifSearched)
+            if (!ifSearched)
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: FutureBuilder<List<ThreadSummary>>(
@@ -205,7 +242,7 @@ class _ForumPageState extends State<ForumPage> {
                   },
                 ),
               ),
-            if(ifSearched)
+            if (ifSearched)
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: FutureBuilder<List<ThreadSummary>>(
@@ -234,52 +271,15 @@ class _ForumPageState extends State<ForumPage> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-          color: MyColors.orange,
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Home(),
-                    ));
-                  },
-                  icon: const Icon(Icons.home)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                  },
-                  icon: const Icon(Icons.group)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => GamesPage(token: widget.token, userProvider: widget.userProvider),
-                    ));
-                  },
-                  icon: const Icon(Icons.games)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite)),
-              IconButton(
-                  color: MyColors.white,
-                  onPressed: () {},
-                  icon: const Icon(Icons.search_outlined)),
-            ],
-          )
-      ),
+      bottomNavigationBar: CustomNavigationBar(userProvider: widget.userProvider),
+    ),
     );
   }
 }
 
-
-Future<List<ThreadSummary>> appendElements(ThreadSummary item, Future<List<ThreadSummary>> posts) async {
+Future<List<ThreadSummary>> appendElements(
+    ThreadSummary item, Future<List<ThreadSummary>> posts) async {
   final list = await posts;
   list.add(item);
   return list;
 }
-

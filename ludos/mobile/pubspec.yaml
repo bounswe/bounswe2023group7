@@ -37,6 +37,7 @@ dependencies:
   multi_dropdown: ^2.1.0
   intl: ^0.17.0
   url_launcher: ^6.0.13
+  dropdown_search: ^5.0.3
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -55,6 +56,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   flutter_rating_bar: ^4.0.0
+  image_picker: ^0.8.3
+  url_launcher: ^6.0.9
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

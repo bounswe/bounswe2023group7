@@ -173,4 +173,23 @@ export class UserController {
   public async getUserById(@Param('userId') userId: string) {
     return await this.userService.getUserInfo(userId);
   }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Get Suggested Games For User Endpoint' })
+  @ApiNotFoundResponse({ description: 'User is not found!' })
+  @Get('/suggested')
+  public async getSuggestedGames(@Req() req: AuthorizedRequest) {
+    const suggestedGames = await this.userService.getSuggestedGames(
+      req.user.id,
+    );
+    return suggestedGames;
+  }
+
+  @ApiOperation({ summary: 'Get User Id By Username' })
+  @ApiNotFoundResponse({ description: 'User is not found!' })
+  @Get('/:username')
+  public async getUserIdByUsername(@Param('userId') username: string) {
+    return await this.userService.getUserIdByUsername(username);
+  }
 }

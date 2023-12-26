@@ -38,7 +38,7 @@ Before you begin, ensure you have the following installed:
 
 
 ### Deployed Version of frontend
-Go to our website link which is http://51.20.170.143:3000/.
+Go to our website link which we shared via Discord channel of the course.
 
 ## How to run mobile app?
 - You can download APK version of the app from [here](https://drive.google.com/file/d/1h2x1MLO_yyUC1Tq7dmDcOutZYBKyXXKt/view?usp=sharing) and directly run it in your Android device.
@@ -47,7 +47,7 @@ Go to our website link which is http://51.20.170.143:3000/.
   - Then you can easily run the application on Android Studio following [this guide](https://www.geeksforgeeks.org/how-to-import-existing-flutter-project-in-android-studio/).
 
 ## How to run backend application?
-Deployed Swagger Documentation: http://3.125.225.39:8080/api 
+Deployed Swagger Documentation: http://164.92.195.35:8080/api
 
 ```WORKDIR=./ludos/backend```<br/>
 1. Create a .env file for the environment variables. Please ask for the variables. The name of the variables are included in .env.example file. <br/>

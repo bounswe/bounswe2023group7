@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'sign_up_page.dart';
 import 'forgot_password.dart';
@@ -8,6 +10,10 @@ import 'package:provider/provider.dart';
 import 'userProvider.dart';
 
 class LoginPage extends StatefulWidget {
+
+  final UserProvider userProvider;
+  const LoginPage({Key? key, required this.userProvider})
+      : super(key: key);
   @override
   LoginPageState createState() => LoginPageState();
 }
@@ -15,11 +21,17 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  late Map<String, dynamic> userData = {};
   bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  WillPopScope(
+        onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(userProvider: widget.userProvider)));
+      return false;
+    },
+    child: Scaffold(
       backgroundColor: MyColors.darkBlue,
       body: SingleChildScrollView(
         child: Padding(
@@ -93,13 +105,18 @@ class LoginPageState extends State<LoginPage> {
                 onPressed: () async {
                   (String?, int) token = await APIService()
                       .login(emailController.text, passwordController.text);
-                  //print(token);
                   if (token.$2 == 200) {
-                    Provider.of<UserProvider>(context, listen: false)
-                        .setLoggedIn(true, emailController.text, token.$1);
+                    var userT = await APIService().userInfo(token.$1);
+                    String typeOfUser = '';
+                    if(userT.statusCode == 200){
+                      userData = json.decode(userT.body);
+                      typeOfUser = userData['userType'].toString();
+                    }
+                    var userProvider = Provider.of<UserProvider>(context, listen: false)
+                        .setLoggedIn(true, emailController.text, token.$1, typeOfUser);
 
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Home(),
+                      builder: (context) => Home(userProvider: userProvider),
                     ));
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -120,7 +137,7 @@ class LoginPageState extends State<LoginPage> {
                     shape: const StadiumBorder()),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ForgotPassword(),
+                    builder: (context) => ForgotPassword(userProvider: widget.userProvider,),
                   ));
                 },
                 child: const Text(
@@ -136,7 +153,7 @@ class LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   // Navigate to the sign-up page when the button is pressed.
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SignUpPage(),
+                    builder: (context) => SignUpPage(userProvider: widget.userProvider,),
                   ));
                 },
                 child: const Text(
@@ -148,6 +165,7 @@ class LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    ),
     );
   }
 }

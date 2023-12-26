@@ -55,21 +55,24 @@ export class PostRepository extends Repository<Post> {
     searchKey?: string,
     tags?: string[],
     gameId?: string,
+    groupId?: string,
     ownerUserId?: string,
     userId?: string, // denotes current user, used for like and dislike
     isLiked?: boolean,
     isDisliked?: boolean,
+    isUpcomingTitle?: boolean,
     orderByKey: keyof Post = 'createdAt',
     order: 'ASC' | 'DESC' = 'DESC',
   ): Promise<Pagination<Post, IPaginationMeta>> {
     const queryBuilder = this.createQueryBuilder('posts')
       .leftJoinAndSelect('posts.user', 'user')
       .leftJoinAndSelect('posts.game', 'game')
+      .leftJoinAndSelect('posts.group', 'group')
       .where('1=1');
     if (searchKey) {
       searchKey = searchKey.trim().replace(/ /g, ' & ');
       queryBuilder.andWhere(
-        `to_tsvector(\'english\', posts.title || \' \' || posts.body) @@ to_tsquery('${searchKey}')`,
+        `to_tsvector(\'english\', posts.title || \' \' || posts.body) @@ to_tsquery(\'english\','${searchKey}')`,
       );
     }
     if (tags) {
@@ -78,8 +81,21 @@ export class PostRepository extends Repository<Post> {
     if (gameId) {
       queryBuilder.andWhere('posts.gameId = :gameId', { gameId });
     }
+    if (groupId) {
+      queryBuilder.andWhere('posts.groupId = :groupId', { groupId });
+    } else {
+      queryBuilder.andWhere('posts.groupId IS NULL');
+    }
     if (ownerUserId) {
       queryBuilder.andWhere('posts.userId = :ownerUserId', { ownerUserId });
+    }
+    if (isUpcomingTitle) {
+      queryBuilder.andWhere(
+        'posts."upcomingTitle"->>\'isUpcomingTitle\' = :isUpcomingTitle',
+        {
+          isUpcomingTitle: isUpcomingTitle.toString(),
+        },
+      );
     }
     if (userId && isLiked) {
       const subQuery = this.createQueryBuilder()

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
+import { UpcomingTitleDto } from '../upcomingTitle.dto';
 
 export class PostCreateDto {
   @ApiProperty({
@@ -25,6 +26,14 @@ export class PostCreateDto {
   gameId?: string;
 
   @ApiProperty({
+    description: 'Id of the group',
+    required: false,
+  })
+  @IsUUID()
+  @IsOptional()
+  groupId?: string;
+
+  @ApiProperty({
     description: 'Optional list of links for media',
     required: false,
   })
@@ -39,4 +48,9 @@ export class PostCreateDto {
   @IsArray()
   @IsOptional()
   tags: string[];
+
+  @ApiProperty({
+    description: 'Upcoming Title',
+  })
+  upcomingTitle: UpcomingTitleDto;
 }

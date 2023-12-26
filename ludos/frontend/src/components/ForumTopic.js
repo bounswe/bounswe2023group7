@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, Grid } from "@mui/material";
 import Person2Icon from "@mui/icons-material/Person2";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import MapsUgcIcon from "@mui/icons-material/MapsUgc";
+//import MapsUgcIcon from "@mui/icons-material/MapsUgc";
 import { Link } from "react-router-dom";
 
 function ForumTopic(data) {
@@ -11,6 +11,16 @@ function ForumTopic(data) {
 
   const handleClick = (userId) => {
     navigate(`/profile-page/${userId}`);
+  };
+
+  const convertToSlug = (text) => {
+    return text
+      ?.toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[\s_]/g, "-") // Replace spaces or underscores with dashes
+      .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+      .replace(/--+/g, "-"); // Replace multiple dashes with single dash
   };
 
   const tagBox = {
@@ -21,52 +31,20 @@ function ForumTopic(data) {
     color: "white",
     height: "6px",
     borderRadius: "10px",
-    padding: "5px",
+    padding: "10px",
     marginRight: "5px",
+    lineHeight: "1",
   };
   const forumStyle = {
     backgroundColor: "rgb(200, 10, 10)",
     color: "white",
     borderRadius: "10px",
-    padding: "2px",
+    padding: "3px",
     marginBottom: "8px",
     fontWeight: "bold",
+    lineHeight: "1",
   };
 
-  /*
-  const boxStyle = {
-    backgroundColor: "rgba(200, 200, 200, 0.9)",
-    borderRadius: "10px",
-    paddingTop: "15px",
-  };
-  const headerStyle = {
-    color: "black",
-    fontFamily: "Trebuchet MS, sans-serif",
-    marginBottom: "10px",
-  };
-  const forumStyle = { color: "rgb(100, 70, 144)", fontWeight: "bold" };
-  const gameStyle = {
-    backgroundColor: "rgb(9 ,63 ,83)",
-    color: "white", 
-    borderRadius: "10px",
-    padding: "2px",
-    fontWeight: "bold",
-    fontSize: "13px",
-  }
-  const userStyle = { color: "rgb(100, 80, 90)", marginRight: "2%" };
-
-  const tagBox = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgb(19, 142, 19)",
-    color: "white",
-    height: "6px",
-    borderRadius: "10px",
-    padding: "5px",
-    marginRight: "5px",
-  };
-*/
   useEffect(() => {}, []);
 
   return (
@@ -89,43 +67,66 @@ function ForumTopic(data) {
           flexDirection: "column",
           backgroundColor: "rgb(200,200,200,0.6)",
           width: "160px",
-          justifyContent: "center",
+          justifyContent: "space-evenly",
           borderBottomLeftRadius: "10px",
           borderTopLeftRadius: "10px",
-          paddingTop: "20px",
-          padding: "32.25px 40px 32.25px",
+          paddingTop: "0px", // Remove padding at the top
+          //paddingBottom: "32.25px",
+          // paddingLeft: "40px",
+          //paddingRight: "40px",
           alignItems: "center",
         }}
       >
-        <Box
-          onClick={() => handleClick(data.topic.user_id)}
-          style={{ cursor: "pointer" }}
-          component="img"
-          sx={{
-            height: 48,
-            width: 48,
-            borderRadius: "50%",
-            alignSelf: "center",
-            paddingBottom: "10px",
-          }}
-          src={
-            data.topic.imgsrc ||
-            "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"
-          }
-        />
-        <Typography
-          onClick={() => handleClick(data.topic.user_id)}
-          variant="caption"
-          component="div"
-          style={{
-            color: "white",
-            marginTop: "3px",
-            textAlign: "center",
-            cursor: "pointer",
-          }}
-        >
-          @{data.topic.userOpened}
-        </Typography>
+        {data.topic.isUpcomingTitle && (
+          <Typography
+            variant="caption"
+            style={{
+              paddingRight: "3px",
+              paddingLeft: "3px",
+              marginTop: "-20px",
+              backgroundColor: "#570080",
+              color: "white",
+              display: "flex",
+              borderRadius: "5px",
+              //marginBottom: "20px",
+              alignSelf: "flex-start",
+            }}
+          >
+            Upcoming Title
+          </Typography>
+        )}
+
+        <Grid>
+          <Box
+            onClick={() => handleClick(data.topic.userId)}
+            style={{ cursor: "pointer" }}
+            component="img"
+            sx={{
+              height: 48,
+              width: 48,
+              borderRadius: "50%",
+              alignSelf: "center",
+              paddingBottom: "10px",
+            }}
+            src={
+              data.topic.imgsrc ||
+              "https://p7.hiclipart.com/preview/173/464/909/clip-art-pokeball-png.jpg"
+            }
+          />
+          <Typography
+            onClick={() => handleClick(data.topic.userId)}
+            variant="caption"
+            component="div"
+            style={{
+              color: "white",
+              marginTop: "3px",
+              textAlign: "center",
+              cursor: "pointer",
+            }}
+          >
+            @{data.topic.userOpened}
+          </Typography>
+        </Grid>
       </Grid>
 
       <Grid
@@ -148,12 +149,17 @@ function ForumTopic(data) {
           lg={12}
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Typography variant="caption" component="div" style={forumStyle}>
-            {data.topic.forumGame}
-          </Typography>
+          <a
+            href={`/game/${convertToSlug(data.topic.forumGame)}`}
+            style={{ textDecoration: "none" }}
+          >
+            <Typography variant="caption" component="div" style={forumStyle}>
+              {data.topic.forumGame}
+            </Typography>
+          </a>
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
-            {data.topic &&
-              data.topic.forumTags.map((tag1, index1) => (
+            {data?.topic &&
+              data.topic?.forumTags?.map((tag1, index1) => (
                 <Typography
                   variant="caption"
                   component="div"
@@ -165,28 +171,26 @@ function ForumTopic(data) {
               ))}
           </Grid>
         </Grid>
-
-        <Typography
-          variant="body2"
-          component="div"
-          style={{
-            color: "white",
-            marginTop: "3px",
-            marginRight: "10px",
-            display: "flex",
-            marginLeft: "10px",
-            textAlign: "center",
-            lineHeight: "1.7",
-          }}
+        <Link
+          to={`/thread/${data.topic.id}`}
+          style={{ textDecoration: "none", color: "inherit" }}
         >
-          <Link
-            to={`/thread/${data.topic.id}`}
-            style={{ textDecoration: "none", color: "inherit" }}
+          <Typography
+            variant="body2"
+            component="div"
+            style={{
+              color: "white",
+              marginTop: "3px",
+              marginRight: "10px",
+              display: "flex",
+              marginLeft: "10px",
+              textAlign: "center",
+              lineHeight: "1.7",
+            }}
           >
             {data.topic.title}
-          </Link>
-        </Typography>
-
+          </Typography>
+        </Link>
         <Grid
           style={{
             display: "flex",
@@ -213,15 +217,19 @@ function ForumTopic(data) {
               marginRight: "20px",
             }}
           >
-            <Person2Icon />
+            <Person2Icon
+              onClick={() => handleClick(data.topic.userId)}
+              style={{ cursor: "pointer" }}
+            />
             <Typography
+              onClick={() => handleClick(data.topic.userId)}
               variant="caption"
               component="div"
               style={{
                 color: "white",
                 marginTop: "3px",
-                marginLeft: "3px",
-                marginRight: "3px",
+                marginRight: "5px",
+                cursor: "pointer",
               }}
             >
               @{data.topic.userOpened}
@@ -233,15 +241,14 @@ function ForumTopic(data) {
               style={{
                 color: "white",
                 marginTop: "3px",
-                marginRight: "3px",
+
                 display: "flex",
-                marginLeft: "3px",
                 marginBottom: "10px",
               }}
             >
               {data.topic.whenOpened}
             </Typography>
-            <MapsUgcIcon />
+            {/** <MapsUgcIcon />
             <Typography
               variant="caption"
               component="div"
@@ -252,7 +259,7 @@ function ForumTopic(data) {
               }}
             >
               {data.topic.numOfReplies}
-            </Typography>
+            </Typography>*/}
           </Grid>
         </Grid>
       </Grid>

@@ -11,6 +11,7 @@ import {
   MenuItem,
   Stack,
   Paper,
+  Button,
 } from "@mui/material";
 
 import HomeIcon from "@mui/icons-material/Home";
@@ -61,8 +62,31 @@ const circleIcon = {
   height: "3rem",
 };
 
+const menuItemStyle = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "rgb(50, 150, 30)",
+  color: "white",
+  borderRadius: "10px",
+  padding: "10px",
+  margin: "10px",
+};
+
 function Sidebar({ userLoggedIn }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl2, setAnchorEl2] = useState(null);
+  const handleMenuOpen = (event) => {
+    setMenuOpen(true);
+    setAnchorEl2(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuOpen(false);
+    setAnchorEl2(null);
+  };
+
   const navigate = useNavigate();
 
   const handleProfileClick = (event) => {
@@ -81,18 +105,54 @@ function Sidebar({ userLoggedIn }) {
       // If the user is not logged in, redirect to the login page
       navigate("/signup");
     }
+    setMenuOpen(false);
+    setAnchorEl2(null);
+  };
+
+  const handleCreateThreadClick = () => {
+    if (userLoggedIn) {
+      // If the user is logged in, redirect to the create game page
+      navigate("/create-thread");
+    } else {
+      // If the user is not logged in, redirect to the login page
+      navigate("/signup");
+    }
+    setMenuOpen(false);
+    setAnchorEl2(null);
+  };
+
+  const handleCreateGroupClick = () => {
+    if (userLoggedIn) {
+      // If the user is logged in, redirect to the create game page
+      navigate("/create-group");
+    } else {
+      // If the user is not logged in, redirect to the login page
+      navigate("/signup");
+    }
+    setMenuOpen(false);
+    setAnchorEl2(null);
   };
 
   function handleLogout() {
     localStorage.removeItem("accessToken");
   }
+  const menuStyle = {
+    position: "absolute",
+    width: "400px", // Adjust the width as needed
+    //maxHeight: "300px", // Adjust the max height as needed
+    borderRadius: "10px",
+    padding: "15px",
+    //top: "50%", // Position at 50% from the top
+    //left: "50%", // Position at 50% from the left
+    transform: "translate(130%, -50%)", // Center the menu
+  };
 
   return (
     <div style={rootSx}>
       <Drawer style={drawer} variant="permanent">
         <Paper style={drawerPaper}>
           <List>
-            <ListItem button component={Link} to="/">
+            <ListItem Button component={Link} to="/">
               <div>
                 <ListItemIcon style={listItem}>
                   <div style={circleIcon}>
@@ -113,7 +173,7 @@ function Sidebar({ userLoggedIn }) {
                 </ListItemIcon>
               </div>
             </ListItem>
-            <ListItem button component={Link} to="/games">
+            <ListItem Button component={Link} to="/games">
               <div>
                 <ListItemIcon style={listItem}>
                   <div style={circleIcon}>
@@ -134,7 +194,7 @@ function Sidebar({ userLoggedIn }) {
                 </ListItemIcon>
               </div>
             </ListItem>
-            <ListItem button component={Link} to="/groups">
+            <ListItem Button component={Link} to="/groups">
               <div>
                 <ListItemIcon style={listItem}>
                   <div style={circleIcon}>
@@ -155,7 +215,7 @@ function Sidebar({ userLoggedIn }) {
                 </ListItemIcon>
               </div>
             </ListItem>
-            <ListItem button component={Link} to="/forums">
+            <ListItem Button component={Link} to="/forums">
               <div>
                 <ListItemIcon style={listItem}>
                   <div style={circleIcon}>
@@ -176,15 +236,19 @@ function Sidebar({ userLoggedIn }) {
                 </ListItemIcon>
               </div>
             </ListItem>
-            <ListItem button onClick={handleCreateGameClick}>
+            <ListItem
+              Button
+              //onClick={handleCreateGameClick}
+              style={{ cursor: "pointer" }}
+            >
               <div>
-                <ListItemIcon style={listItem}>
+                <ListItemIcon style={listItem} onClick={handleMenuOpen}>
                   <div style={circleIcon}>
                     <AddCircleIcon />
                   </div>
                   <Stack direction="column" alignItems="center">
                     <ListItemText
-                      primary="Create Game"
+                      primary="Create"
                       primaryTypographyProps={{
                         style: {
                           fontSize: "15px",
@@ -195,6 +259,59 @@ function Sidebar({ userLoggedIn }) {
                     />
                   </Stack>
                 </ListItemIcon>
+
+                <Menu
+                  anchorEl={anchorEl2}
+                  open={menuOpen}
+                  onClose={handleMenuClose}
+                  PaperComponent={Paper}
+                  PaperProps={{
+                    style: menuStyle, // Applying styles to the Paper component
+                  }}
+                  anchorOrigin={{
+                    vertical: "center",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "center",
+                    horizontal: "center",
+                  }}
+                >
+                  <MenuItem
+                    onClick={handleCreateThreadClick}
+                    style={menuItemStyle}
+                  >
+                    Create Thread
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleCreateGameClick}
+                    style={menuItemStyle}
+                  >
+                    Create Game
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleCreateGroupClick}
+                    style={menuItemStyle}
+                  >
+                    Create Group
+                  </MenuItem>
+                </Menu>
+
+                {/* You can apply a darkened background behind the menu by using an overlay */}
+                {menuOpen && (
+                  <div
+                    style={{
+                      position: "fixed",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the opacity for darkness
+                      zIndex: 999, // Ensure it's above other elements
+                    }}
+                    onClick={handleMenuClose} // Close the menu if clicked outside
+                  />
+                )}
               </div>
             </ListItem>
           </List>

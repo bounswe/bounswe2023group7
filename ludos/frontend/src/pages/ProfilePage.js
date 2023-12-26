@@ -15,7 +15,12 @@ import steamLogo from "../assets/steam.png";
 //import itchioLogo from "../assets/itchio.png";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import Gamer from "../assets/gamer.png";
+import Developer from "../assets/developer.png";
+import EsportPlayer from "../assets/esportplayer.png";
+import GroupTopic from "../components/GroupTopic";
+import Admin from "../assets/admin.png";
+import AdminTick from "../assets/certification.png";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -38,6 +43,8 @@ function ProfilePage() {
     fullName: "",
     steamUrl: "",
     aboutMe: "",
+    associatedCompany: "",
+    associatedTeam: "",
   });
   const [open, setOpen] = useState(false);
   const [auth, setAuth] = useState(false);
@@ -47,6 +54,8 @@ function ProfilePage() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbar, setSnackbar] = useState(false);
   const [myProfile, setMyProfile] = useState(false);
+  const [userType, setUserType] = useState(null);
+  const [groups, setGroups] = useState([]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -120,25 +129,37 @@ function ProfilePage() {
           },
         })
         .then((response) => {
-          console.log("BUGCHECK");
-          console.log(username);
-          console.log(response.data.id);
           if (response.data.id === username || username === undefined) {
             setMyProfile(true);
             setProfile(response.data);
             setAvatarImage(response.data.avatar);
+            setUserType(response.data.userType);
             setFormData({
               fullName: response.data.fullName,
               steamUrl: response.data.steamUrl,
               aboutMe: response.data.aboutMe,
+              associatedCompany: response.data.associatedCompany,
+              associatedTeam: response.data.associatedTeam,
             });
             if (response.data.followedGames.length > 10) {
               setFavGames(response.data.followedGames.slice(0, 10));
             } else {
               setFavGames(response.data.followedGames);
             }
-            console.log(favGames);
-            console.log(response.data);
+            const link3 = `http://${process.env.REACT_APP_API_URL}/group?page=1&adminId=${response.data.id}`;
+            axios
+              .get(link3, {
+                headers: {
+                  Authorization:
+                    "Bearer " + localStorage.getItem("accessToken"),
+                },
+              })
+              .then((response) => {
+                setGroups(response.data.items);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           } else {
             const link1 = `http://${process.env.REACT_APP_API_URL}/user/byId/${username}`;
 
@@ -151,17 +172,34 @@ function ProfilePage() {
               })
               .then((response1) => {
                 setProfile(response1.data);
+                setUserType(response1.data.userType);
                 setAvatarImage(response1.data.avatar);
                 setFormData({
                   fullName: response1.data.fullName,
                   steamUrl: response1.data.steamUrl,
                   aboutMe: response1.data.aboutMe,
+                  associatedCompany: response1.data.associatedCompany,
+                  associatedTeam: response1.data.associatedTeam,
                 });
                 if (response1.data.followedGames.length > 10) {
                   setFavGames(response1.data.followedGames.slice(0, 10));
                 } else {
                   setFavGames(response1.data.followedGames);
                 }
+                const link3 = `http://${process.env.REACT_APP_API_URL}/group?page=1&adminId=${response1.data.id}`;
+                axios
+                  .get(link3, {
+                    headers: {
+                      Authorization:
+                        "Bearer " + localStorage.getItem("accessToken"),
+                    },
+                  })
+                  .then((response) => {
+                    setGroups(response.data.items);
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
               })
               .catch((error) => {
                 console.log(error);
@@ -198,6 +236,8 @@ function ProfilePage() {
           fullName: formData.fullName,
           steamUrl: formData.steamUrl,
           aboutMe: formData.aboutMe,
+          associatedCompany: formData.associatedCompany,
+          associatedTeam: formData.associatedTeam,
         },
         {
           headers: {
@@ -296,7 +336,32 @@ function ProfilePage() {
     color: "rgb(0, 150, 255)",
     borderRadius: "15px",
     width: "auto",
-    height: "73%",
+    height: "75%",
+    marginTop: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    display: "flex",
+    padding: "10px", // Add padding to give some space between the content and the border
+  };
+  const assoBoxStyle = {
+    color: "rgb(0, 150, 255)",
+    borderRadius: "15px",
+    width: "auto",
+    height: "90px",
+    marginTop: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    display: "flex",
+    padding: "10px", // Add padding to give some space between the content and the border
+  };
+  const genreBoxStyleOther = {
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    color: "rgb(0, 150, 255)",
+    borderRadius: "15px",
+    width: "auto",
+    height: "85%",
     marginTop: "10px",
     justifyContent: "center",
     alignItems: "center",
@@ -325,6 +390,22 @@ function ProfilePage() {
     borderRadius: "50%",
   };
 
+  const getImageForUserType = (userType) => {
+    switch (userType) {
+      case "gamer":
+        return Gamer;
+      case "developer":
+        return Developer;
+      case "e-sports_player":
+        return EsportPlayer;
+      case "admin":
+        return Admin;
+      default:
+        return null; // Or a default image if userType doesn't match any specific type
+    }
+  };
+
+  const userTypeImage = getImageForUserType(userType);
   return (
     <>
       {auth && myProfile ? (
@@ -381,17 +462,17 @@ function ProfilePage() {
                     fontFamily: "Trebuchet MS, sans-serif",
                     color: "rgb(0, 150, 255)",
                     marginTop: "2%",
-                    marginLeft: "30%",
                   }}
                 >
                   @{profile.username}
                 </Typography>
-                <Button>
-                  <NotificationsIcon
-                    style={{ color: "red" }}
-                    className="notification-icon"
+                {userType === "admin" && (
+                  <img
+                    src={AdminTick}
+                    style={{ height: 15, width: 15, marginTop: "3.5%" }}
+                    alt="Admin"
                   />
-                </Button>
+                )}
               </Grid>
 
               <Grid style={{ marginTop: "3%" }}>
@@ -610,6 +691,62 @@ function ProfilePage() {
                         multiline
                         maxRows={4}
                       />
+                      {profile.userType === "developer" && (
+                        <>
+                          <Typography
+                            component="legend"
+                            style={{
+                              fontFamily: "Trebuchet MS, sans-serif",
+                              marginTop: "2%",
+                              marginLeft: "5%",
+                              marginRight: "5%",
+                            }}
+                          >
+                            Associated Company:
+                          </Typography>
+                          <TextField
+                            id="associatedCompany"
+                            value={formData.associatedCompany}
+                            onChange={handleChange}
+                            style={{
+                              backgroundColor: "white",
+                              marginTop: "2%",
+                              marginLeft: "5%",
+                              marginRight: "5%",
+                            }}
+                            multiline
+                            maxRows={4}
+                          />
+                        </>
+                      )}
+                      {profile.userType === "e-sports_player" && (
+                        <>
+                          <Typography
+                            component="legend"
+                            style={{
+                              fontFamily: "Trebuchet MS, sans-serif",
+                              marginTop: "2%",
+                              marginLeft: "5%",
+                              marginRight: "5%",
+                            }}
+                          >
+                            Associated Team:
+                          </Typography>
+                          <TextField
+                            id="associatedTeam"
+                            value={formData.associatedTeam}
+                            onChange={handleChange}
+                            style={{
+                              backgroundColor: "white",
+                              marginTop: "2%",
+                              marginLeft: "5%",
+                              marginRight: "5%",
+                            }}
+                            multiline
+                            maxRows={4}
+                          />
+                        </>
+                      )}
                       <Button
                         variant="contained"
                         style={{
@@ -631,55 +768,66 @@ function ProfilePage() {
                 </Grid>
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12} style={genreBoxStyle}>
-                <Typography
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  Favorite Genres:
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  Action
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  Hack-and-Slash
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  Sports
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  FPS
-                </Typography>
+                <Grid>
+                  <Typography
+                    component="legend"
+                    style={{
+                      fontFamily: "Trebuchet MS, sans-serif",
+                      color: "rgb(0, 150, 255)",
+                    }}
+                  >
+                    User Type:
+                  </Typography>
+                  {userTypeImage && (
+                    <img
+                      src={userTypeImage}
+                      alt={userType}
+                      style={{
+                        width: "100px",
+                        marginBottom: "10px",
+                        marginTop: "10px",
+                      }}
+                    />
+                  )}
+                  <Typography
+                    variant="caption"
+                    component="legend"
+                    style={{
+                      fontFamily: "Trebuchet MS, sans-serif",
+                      color: "rgb(0, 150, 255)",
+                    }}
+                  >
+                    {userType}
+                  </Typography>
+                  {(profile.associatedTeam || profile.associatedCompany) && (
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <Grid style={assoBoxStyle}>
+                        <Typography
+                          component="legend"
+                          style={{
+                            fontFamily: "Trebuchet MS, sans-serif",
+                            color: "rgb(0, 150, 255)",
+                          }}
+                        >
+                          {profile.associatedTeam && "Team"}
+                          {!profile.associatedTeam &&
+                            profile.associatedCompany &&
+                            "Company"}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          component="legend"
+                          style={{
+                            fontFamily: "Trebuchet MS, sans-serif",
+                            color: "rgb(0, 150, 255)",
+                          }}
+                        >
+                          {profile.associatedTeam || profile.associatedCompany}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  )}
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -692,7 +840,7 @@ function ProfilePage() {
                   fontFamily: "Trebuchet MS, sans-serif",
                 }}
               >
-                Favorite Games of the User
+                My Games
               </Typography>
             </Grid>
             {favGames.map((game, index1) => (
@@ -734,6 +882,32 @@ function ProfilePage() {
               </Grid>
             ))}
           </Grid>
+          <Grid container spacing={1} style={gameBoxStyle}>
+            <Grid
+              id="myGroupsSection"
+              item
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              style={{ marginBottom: "25px" }}
+            >
+              <Typography
+                style={{
+                  fontSize: "25px",
+                  color: "white",
+                  fontFamily: "Trebuchet MS, sans-serif",
+                }}
+              >
+                My Groups
+              </Typography>
+            </Grid>
+            <Grid style={{ width: "98%", marginLeft: "1%" }}>
+              {groups.map((group, index1) => (
+                <GroupTopic key={index1} topic={group} />
+              ))}
+            </Grid>
+          </Grid>
         </Container>
       ) : (
         <Container
@@ -773,17 +947,17 @@ function ProfilePage() {
                     fontFamily: "Trebuchet MS, sans-serif",
                     color: "rgb(0, 150, 255)",
                     marginTop: "2%",
-                    marginLeft: "30%",
                   }}
                 >
                   @{profile.username}
                 </Typography>
-                <Button>
-                  <NotificationsIcon
-                    style={{ color: "red" }}
-                    className="notification-icon"
+                {userType === "admin" && (
+                  <img
+                    src={AdminTick}
+                    style={{ height: 15, width: 15, marginTop: "3.5%" }}
+                    alt="Admin"
                   />
-                </Button>
+                )}
               </Grid>
 
               <Grid style={{ marginTop: "3%" }}>
@@ -914,7 +1088,14 @@ function ProfilePage() {
                   }}
                 ></Grid>
               </Grid>
-              <Grid item xs={12} sm={12} md={12} lg={12} style={genreBoxStyle}>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
+                style={genreBoxStyleOther}
+              >
                 <Typography
                   component="legend"
                   style={{
@@ -922,28 +1103,19 @@ function ProfilePage() {
                     color: "rgb(0, 150, 255)",
                   }}
                 >
-                  Favorite Genres:
+                  User Type:
                 </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  Action
-                </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  Hack-and-Slash
-                </Typography>
+                {userTypeImage && (
+                  <img
+                    src={userTypeImage}
+                    alt={userType}
+                    style={{
+                      width: "100px",
+                      marginBottom: "10px",
+                      marginTop: "10px",
+                    }}
+                  />
+                )}
                 <Typography
                   variant="caption"
                   component="legend"
@@ -952,18 +1124,37 @@ function ProfilePage() {
                     color: "rgb(0, 150, 255)",
                   }}
                 >
-                  Sports
+                  {userType}
                 </Typography>
-                <Typography
-                  variant="caption"
-                  component="legend"
-                  style={{
-                    fontFamily: "Trebuchet MS, sans-serif",
-                    color: "rgb(0, 150, 255)",
-                  }}
-                >
-                  FPS
-                </Typography>
+                {(profile.associatedTeam || profile.associatedCompany) && (
+                  <Grid item xs={12} sm={12} md={12} lg={12}>
+                    <Grid style={assoBoxStyle}>
+                      <Typography
+                        component="legend"
+                        style={{
+                          fontFamily: "Trebuchet MS, sans-serif",
+                          color: "rgb(0, 150, 255)",
+                        }}
+                      >
+                        {profile.associatedTeam && "Team"}
+                        {!profile.associatedTeam &&
+                          profile.associatedCompany &&
+                          "Company"}
+                      </Typography>
+
+                      <Typography
+                        variant="caption"
+                        component="legend"
+                        style={{
+                          fontFamily: "Trebuchet MS, sans-serif",
+                          color: "rgb(0, 150, 255)",
+                        }}
+                      >
+                        {profile.associatedTeam || profile.associatedCompany}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -1005,15 +1196,44 @@ function ProfilePage() {
                   src={game.coverLink}
                 />
                 <Typography
-                  component="legend"
                   onClick={() => handleClick(game.title)}
-                  style={{ fontFamily: "Trebuchet MS, sans-serif" }}
+                  component="legend"
+                  style={{
+                    fontFamily: "Trebuchet MS, sans-serif",
+                    cursor: "pointer",
+                  }}
                   color="white"
                 >
                   {game.title}
                 </Typography>
               </Grid>
             ))}
+          </Grid>
+          <Grid container spacing={1} style={gameBoxStyle}>
+            <Grid
+              id="myGroupsSection"
+              item
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              style={{ marginBottom: "25px" }}
+            >
+              <Typography
+                style={{
+                  fontSize: "25px",
+                  color: "white",
+                  fontFamily: "Trebuchet MS, sans-serif",
+                }}
+              >
+                Groups of the User
+              </Typography>
+            </Grid>
+            <Grid style={{ width: "98%", marginLeft: "1%" }}>
+              {groups.map((group, index1) => (
+                <GroupTopic key={index1} topic={group} />
+              ))}
+            </Grid>
           </Grid>
         </Container>
       )}

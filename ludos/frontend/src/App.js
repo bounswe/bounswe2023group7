@@ -13,14 +13,21 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ForumsPage from "./pages/ForumsPage.js";
 import ProfilePage from "./pages/ProfilePage";
 import CreateThreadPage from "./pages/CreateThreadPage.js";
+import EditThreadPage from "./pages/EditThreadPage.js";
 import GamesPage from "./pages/GamesPage.js";
-import ThreadPage from "./pages/ThreadPage.js"
+import ThreadPage from "./pages/ThreadPage.js";
+import EntityPage from "./pages/EntityPage.js";
 import axios from "axios";
 import SampleThreadPage from "./pages/SampleThreadPage.js";
+import CreateEntityPage from "./pages/CreateEntityPage.js";
+import GroupPage from "./pages/GroupPage.js";
+import GroupsPage from "./pages/GroupsPage.js";
+import CreateGroupPage from "./pages/CreateGroupPage.js";
+import EmptyPage from "./pages/EmptyPage.js";
 
 function App() {
   const [games, setGames] = useState([]);
-  const limit = 50; // Set the desired limit (number of games per request)
+  const limit = 70; // Set the desired limit (number of games per request)
   const link = `http://${process.env.REACT_APP_API_URL}/game/?limit=${limit}`;
 
   const convertToSlug = (text) => {
@@ -403,6 +410,14 @@ function App() {
             }
           />
           <Route
+            path="/edit-thread/:threadId"
+            element={
+              <Layout>
+                <EditThreadPage />
+              </Layout>
+            }
+          />
+          <Route
             path="/game/Tekken-5"
             element={
               <Layout>
@@ -468,6 +483,54 @@ function App() {
             element={
               <Layout>
                 <SampleThreadPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/entity/:entityId"
+            element={
+              <Layout>
+                <EntityPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/create-entity"
+            element={
+              <Layout>
+                <CreateEntityPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/group/:groupId"
+            element={
+              <Layout>
+                <GroupPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/groups"
+            element={
+              <Layout>
+                <GroupsPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/create-group"
+            element={
+              <Layout>
+                <CreateGroupPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Layout>
+                <EmptyPage />
               </Layout>
             }
           />

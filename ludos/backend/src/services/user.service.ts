@@ -24,6 +24,7 @@ import { Payload } from '../interfaces/user/payload.interface';
 import { ResetPasswordRepository } from '../repositories/reset-password.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { GetUserInfoResponseDto } from '../dtos/user/response/get-user-info-response.dto';
+import { Game } from '../entities/game.entity';
 
 @Injectable()
 export class UserService {
@@ -207,5 +208,20 @@ export class UserService {
     );
     delete response.password;
     return response;
+  }
+
+  public async getSuggestedGames(userId: string): Promise<Game[]> {
+    const suggestedGames = await this.userRepository.getSuggestedGames(userId);
+    return suggestedGames;
+  }
+
+  public async getUserIdByUsername(username: string): Promise<string | null> {
+    const user = await this.userRepository.findUserByUsername(username);
+
+    if (user) {
+      return user.id;
+    }
+
+    return null;
   }
 }
