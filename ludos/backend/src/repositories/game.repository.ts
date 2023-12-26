@@ -89,7 +89,6 @@ export class GameRepository extends Repository<Game> {
     if (orderByKey) {
       queryBuilder.orderBy(`games_${orderByKey}`, order);
     }
-    console.log(queryBuilder.getQuery());
     const paginationResult = await paginate<Game>(queryBuilder, {
       page,
       limit,

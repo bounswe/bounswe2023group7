@@ -197,7 +197,7 @@ export class SearchService {
 
     const groupsResponse: GroupSemanticResponseDto[] = [];
     groupsNameSemanticSearchResult.forEach((group: SemanticResponse) => {
-      if (group.score > 0.5) {
+      if (group.score > 0.3) {
         groupsResponse.push({
           item: groups.items.find((g) => g.id === group.id),
           score: group.score,
@@ -206,7 +206,7 @@ export class SearchService {
     });
     const gamesResponse: GameSemanticResponseDto[] = [];
     gamesTitleSemanticSearchResult.forEach((game: SemanticResponse) => {
-      if (game.score > 0.5) {
+      if (game.score > 0.3) {
         gamesResponse.push({
           item: games.items.find((g) => g.id === game.id),
           score: game.score,
@@ -215,7 +215,7 @@ export class SearchService {
     });
     const usersResponse: UserSemanticResponseDto[] = [];
     usersUsernameSemanticSearchResult.forEach((user: SemanticResponse) => {
-      if (user.score > 0.5) {
+      if (user.score > 0.3) {
         const sameUser = usersFullNameSemanticSearchResult.find(
           (u) => u.id === user.id,
         );
@@ -225,12 +225,12 @@ export class SearchService {
               item: users.items.find((u) => u.id === user.id),
               score: sameUser.score,
             });
-            usersFullNameSemanticSearchResult.splice(
-              usersFullNameSemanticSearchResult.indexOf(sameUser),
-              1,
-            );
             return;
           }
+          usersFullNameSemanticSearchResult.splice(
+            usersFullNameSemanticSearchResult.indexOf(sameUser),
+            1,
+          );
         }
         usersResponse.push({
           item: users.items.find((u) => u.id === user.id),
@@ -239,7 +239,7 @@ export class SearchService {
       }
     });
     usersFullNameSemanticSearchResult.forEach((user: SemanticResponse) => {
-      if (user.score > 0.5) {
+      if (user.score > 0.3) {
         usersResponse.push({
           item: users.items.find((u) => u.id === user.id),
           score: user.score,
@@ -248,7 +248,7 @@ export class SearchService {
     });
     const postsResponse: PostSemanticResponseDto[] = [];
     postsTitleSemanticSearchResult.forEach((post: SemanticResponse) => {
-      if (post.score > 0.5) {
+      if (post.score > 0.3) {
         const samePost = postsBodySemanticSearchResult.find(
           (p) => p.id === post.id,
         );
@@ -258,12 +258,12 @@ export class SearchService {
               item: posts.items.find((p) => p.id === post.id),
               score: samePost.score,
             });
-            postsBodySemanticSearchResult.splice(
-              postsBodySemanticSearchResult.indexOf(samePost),
-              1,
-            );
             return;
           }
+          postsBodySemanticSearchResult.splice(
+            postsBodySemanticSearchResult.indexOf(samePost),
+            1,
+          );
         }
         postsResponse.push({
           item: posts.items.find((p) => p.id === post.id),
@@ -272,7 +272,7 @@ export class SearchService {
       }
     });
     postsBodySemanticSearchResult.forEach((post: SemanticResponse) => {
-      if (post.score > 0.5) {
+      if (post.score > 0.3) {
         postsResponse.push({
           item: posts.items.find((p) => p.id === post.id),
           score: post.score,
