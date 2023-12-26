@@ -16,7 +16,7 @@ const axiosInstance = axios.create({
   },
 });
 
-const CreateEntityForm = () => {
+const CreateEntityForm = ({ entity }) => {
   const [searchKey, setSearchKey] = useState("");
   const [name, setName] = useState("");
   const [nameEmpty, setNameEmpty] = useState(false);
@@ -35,10 +35,30 @@ const CreateEntityForm = () => {
   ]);
   const [imageError, setImageError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
-
+  const [entityImage, setEntityImage] = useState("");
   const navigate = useNavigate();
 
   const types = ["Character", "Environment", "Item", "Package"];
+
+  useEffect(() => {
+    if (entity) {
+      console.log("Received entity for editing:", entity);
+      setName(entity.name);
+      setType(entity.type);
+      setDescription(entity.description);
+      setGame(entity.game?.title);
+      setEntityImage(entity.content?.image);
+      if (entity.content?.image) {
+        setImageError(false);
+      }
+      const additionalProps = Object.keys(entity.content || {})
+        .filter((key) => !["image"].includes(key))
+        .map((key) => ({ name: key, value: entity.content[key] }));
+      setAdditionalProperties(additionalProps);
+
+      console.log("Set description to:", entity.type);
+    }
+  }, [entity]);
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -110,6 +130,7 @@ const CreateEntityForm = () => {
     setSnackbar(false);
   };
 
+  const isEditing = entity != null;
   const handleSubmit = () => {
     if (name === "") {
       setNameEmpty(true);
@@ -123,9 +144,7 @@ const CreateEntityForm = () => {
       return;
     }
 
-    if (
-      description === "" || description === null
-    ) {
+    if (description === "" || description === null) {
       setDescriptionError(true);
       setSnackbarMessage("Description cannot be empty!");
       setServerError(true);
@@ -137,11 +156,15 @@ const CreateEntityForm = () => {
       defaultProperties[0].value === "" ||
       defaultProperties[0].value === null
     ) {
-      setImageError(true);
-      setSnackbarMessage("Image Link cannot be empty!");
-      setServerError(true);
-      setSnackbar(true);
-      return;
+      if (entity?.content.image == null || entity?.content.image == "") {
+        setImageError(true);
+        setSnackbarMessage("Image Link cannot be empty!");
+        setServerError(true);
+        setSnackbar(true);
+        return;
+      } else {
+        defaultProperties[0].value = entity?.content.image;
+      }
     }
 
     let gameId = games.filter((value) => value.title === game)[0].id;
@@ -154,14 +177,25 @@ const CreateEntityForm = () => {
       description,
     };
 
-    axiosInstance
-      .post(`/entity/${gameId}`, data)
+    const method = isEditing ? "put" : "post";
+    const url = isEditing ? `/entity/${entity.id}` : `/entity/${gameId}`;
+
+    axiosInstance[method](url, data)
       .then((response) => {
         console.log(response);
-        setSnackbarMessage("Entity created successfully.");
+        if (isEditing) {
+          setSnackbarMessage("Entity edited successfully.");
+        } else {
+          setSnackbarMessage("Entity created successfully.");
+        }
+
         setServerError(false);
         setSnackbar(true);
-        navigate(`/entity/${response.data.id}`);
+        if (isEditing) {
+          navigate(`/entity/${entity.id}`);
+        } else {
+          navigate(`/entity/${response.data.id}`);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -169,6 +203,9 @@ const CreateEntityForm = () => {
         setSnackbarMessage("An error occured while creating the entity.");
         setSnackbar(true);
       });
+  };
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   };
 
   return (
@@ -186,13 +223,14 @@ const CreateEntityForm = () => {
             justifyContent: "center",
           }}
         >
-          Create Entity
+          {isEditing ? "Edit Entity" : "Create Entity"}
         </h1>
         <Grid item xs={12} spacing={1}>
           <h3 style={{ display: "flex", alignItems: "flex-start" }}>Name:</h3>
           <TextField
             label="Name of the Entity"
             required
+            value={name}
             fullWidth
             margin="auto"
             id="name"
@@ -225,6 +263,7 @@ const CreateEntityForm = () => {
           </h3>
           <Autocomplete
             disablePortal
+            value={capitalizeFirstLetter(type)}
             onChange={(event, newValue) => {
               setType(newValue);
             }}
@@ -260,9 +299,7 @@ const CreateEntityForm = () => {
                 minRows={4}
                 label="Description"
                 value={description}
-                onChange={(e) =>
-                  handleDescriptionChange(e.target.value)
-                }
+                onChange={(e) => handleDescriptionChange(e.target.value)}
                 error={descriptionError}
                 helperText={
                   descriptionError ? "Description cannot be empty." : ""
@@ -288,7 +325,11 @@ const CreateEntityForm = () => {
                 fullWidth
                 required
                 label="Image Link"
-                value={defaultProperties[0].value}
+                value={
+                  defaultProperties[0].value
+                    ? defaultProperties[0].value
+                    : entity?.content.image
+                }
                 onChange={(e) =>
                   handleImageLinkChange(0, "value", e.target.value)
                 }

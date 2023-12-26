@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Container, Grid, Box, Typography } from "@mui/material";
+import { Container, Grid, Box, Typography, Button } from "@mui/material";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Recogito } from "@recogito/recogito-js";
 
 const axiosInstance = axios.create({
@@ -11,8 +11,8 @@ const axiosInstance = axios.create({
   },
 });
 
-
 function EntityPage() {
+  const navigate = useNavigate();
   const [shortEntityFeatures, setShortEntityFeatures] = useState({});
   const [longEntityFeatures, setLongEntityFeatures] = useState({});
   const [entity, setEntity] = useState({});
@@ -28,13 +28,9 @@ function EntityPage() {
 
       fetchAnnotations();
 
-      entityAnnotatorRef.current.on(
-        "createAnnotation",
-        handleCreateAnnotation,
-      );
-
+      entityAnnotatorRef.current.on("createAnnotation", handleCreateAnnotation);
     }
-  })
+  });
 
   const handleCreateAnnotation = async (annotation) => {
     // Prepare your API request body
@@ -66,18 +62,17 @@ function EntityPage() {
 
   const fetchAnnotations = async () => {
     try {
-      await axiosInstance.get(`/annotation/entity/${entityId}`)
+      await axiosInstance
+        .get(`/annotation/entity/${entityId}`)
         .then((response) => {
-
           if (response.data) {
             displayEntityDescAnnotations(response.data);
           }
-        })
+        });
     } catch (error) {
       console.log(error);
     }
-  }
-
+  };
 
   const displayEntityDescAnnotations = (entityDescAnnotation) => {
     if (entityAnnotatorRef.current) {
@@ -110,9 +105,7 @@ function EntityPage() {
         });
       });
     }
-  }
-
-
+  };
 
   useEffect(() => {
     const link = `http://${process.env.REACT_APP_API_URL}/entity/${entityId}`;
@@ -223,6 +216,20 @@ function EntityPage() {
           </Typography>
         </Box>
         <Grid item xs={12} sm={3} md={3} lg={3} style={imageBoxStyle}>
+          <Button
+            variant="contained"
+            style={{
+              position: "relative",
+              marginBottom: "5px",
+              height: "fit-content",
+              zIndex: 1,
+            }}
+            onClick={() => {
+              navigate("/create-entity", { state: entity });
+            }}
+          >
+            Edit Entity
+          </Button>
           <img
             src={entity?.content?.image}
             alt={entity?.name}
