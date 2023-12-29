@@ -67,10 +67,6 @@ Here are the general overview of functionalities we support in our app:
 
 Our final milestone demo went quite well overall. As in the previous milestone, we received positive comments from people regarding to our application and demo. We are proud of the final milestone demo and we believe that the customers were also satisfied with the presentation we did!
 
-
-## **Summary of Project Status**
-Provide a summary of your project status in terms of requirements.
-
 ## **Final release notes**
 
 What we added to our application:
