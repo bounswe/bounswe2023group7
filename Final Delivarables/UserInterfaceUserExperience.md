@@ -515,6 +515,4 @@ User Interface designs and the links to the source code in the project repositor
 
 
 
----
-* For each user of your user interface designs, provide the relevant links to the source code in your project repository
-* Provide screenshots with meaningful content for the Web and Mobile user interfaces you have implemented.
+
