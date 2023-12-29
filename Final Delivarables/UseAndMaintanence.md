@@ -279,10 +279,10 @@
 
 
 ### Deployed Version of frontend
-Go to our [website link](http://51.20.170.143:3000/) which we also shared via Discord channel of the course.
+Go to our website link which we also shared via Discord channel of the course and submitted through moodle.
 
 ## How to run mobile app?
-- You can download APK version of the app from [here](https://drive.google.com/file/d/1h2x1MLO_yyUC1Tq7dmDcOutZYBKyXXKt/view?usp=sharing) and directly run it in your Android device.
+- You can download APK version of the app from the link provided in the submitted version of this file and directly run it in your Android device.
 - If you want to use an emulator to open the application:
   - You can download an Android emulator with Android Studio through [this link](https://developer.android.com/studio?hl=tr).
   - Then you can easily run the application on Android Studio following [this guide](https://www.geeksforgeeks.org/how-to-import-existing-flutter-project-in-android-studio/).
@@ -296,10 +296,10 @@ Go to our [website link](http://51.20.170.143:3000/) which we also shared via Di
 -It creates an APK and loads it to emulator, you can use it like an Android device. 
 
 ## How to run backend application?
-Deployed Swagger Documentation: http://164.92.195.35:8080/api
+Deployed Swagger Documentation: provided in the submitted version of this file
 
 ```WORKDIR=./ludos/backend```<br/>
-1. Create a .env file for the environment variables. It is included in the zip file. <br/>
+1. Create a .env file for the environment variables. It is included in the zip file submitted to moodle. <br/>
 2. Run ```docker compose up --build``` <br/>
 3. Now, the api is available with localhost:8080 base url.
 
